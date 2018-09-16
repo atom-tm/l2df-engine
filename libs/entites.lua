@@ -23,7 +23,7 @@ function LoadingBeforeBattle() -- функция вызывается перед
 	entity_list = {}
 
 	for i in pairs(loading_list) do
-		table.insert(entity_list, LoadEntity(data_list[loading_list[i]]))
+		table.insert(entity_list, LoadEntity(loading_list[i]))
 	end -- цикл последовательной загрузки объектов из списка
 
 	for i in pairs(loading_list) do
@@ -50,9 +50,9 @@ function CreateDataList() -- вызываемая при запуске игры
 end
 
 
-function LoadEntity(file) -- функция парсинга кода dat файла в возвращаемую таблицу "объекта"
+function LoadEntity(id) -- функция парсинга кода dat файла в возвращаемую таблицу "объекта"
 -------------------------------------
-
+	local file = data_list[id] -- помещаем ссылку на загружаемый объект
 	local en = {} -- создаём объект
 
 	local dat = love.filesystem.read(file) -- помещаем в строку содержимое файла персонажа
