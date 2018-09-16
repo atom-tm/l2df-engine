@@ -1,0 +1,39 @@
+<head>
+
+name: Test
+type: character
+
+hp: 100
+
+sprite: {
+	file: "sprites/huiatstu.png"
+	w: 80 h: 80
+	row: 3 col: 2
+}
+sprite: {
+	file: "sprites/BG_1.png"
+	w: 80 h: 80
+	row: 3 col: 1
+}
+
+</head>
+
+<variables>
+sex: man
+width: 10
+</variables>
+
+
+<frame> 0 standing
+pic: 0  next: 1  wait: 7
+body: {
+	x: 0  y: 0  w: 10  h: 10 
+}
+</frame>
+
+<frame> 1 standing
+pic: 2  next: 0  wait: 7
+itr: {
+	x: 10 y: 10 w: 1 h: 1
+}
+</frame>
