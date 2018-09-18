@@ -1,8 +1,9 @@
 head_list = {} -- таблица в которой будут храниться имена персонажей, их айди и аватарки для меню выбора персонажа
 
 data_list = {} -- таблица, содержащая в себе id каждого объекта из data.txt и путь до файла этого объекта
+maps_list = {}
 
-loading_list = {"2","2","4"} -- список файлов, которые нужно загрузить в память перед началом боя 
+loading_list = {"4"} -- список файлов, которые нужно загрузить в память перед началом боя 
 
 entity_list = {} -- массив, хранящий в себе все объекты, находящиеся на сцене
 
@@ -63,29 +64,40 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 		-- | Загрузка головной части объекта | --
 		
 		local head = string.match(dat, "<head>(.*)</head>")
-		en.name = string.match(head, "name: ([%w_% ]+)")
-		en.type = string.match(head, "type: ([%w]+)")
-		en.max_hp = string.match(head, "hp: ([%d]+)")
-
-
-		-- | Загрузка спрайтовой части объекта | --
-		en.sprites = {}
-		for s in string.gmatch(head, "sprite: {([^{}]*)}") do
+		if not (head == nil) then
+			en.name = string.match(head, "name: ([%w_% ]+)")
+			en.type = string.match(head, "type: ([%w]+)")
+			en.weight = Get(string.match(head, "weight: ([%d]+)"))
+			en.physic = Get(string.match(head, "physic: ([%w]+)"))
 			
-			local path = string.match(s, "file: \"(.*)\"")
-			local w = string.match(s, "w: (%d+)")
-			local h = string.match(s, "h: (%d+)")
-			local row = string.match(s, "row: (%d+)")
-			local col = string.match(s, "col: (%d+)")
+			if(en.physic == "true") then 
+				en.physic = true
+			else
+				en.physic = false 
+			end
 
-			local sprites = {
-				file = LoadImage(path),
-				pics = SpriteCutting(w,h,row,col)
-			}
 
-			table.insert(en.sprites,sprites)
+			-- | Загрузка спрайтовой части объекта | --
+			en.sprites = {}
+			for s in string.gmatch(head, "sprite: {([^{}]*)}") do
+				
+				local path = string.match(s, "file: \"(.*)\"")
+				local image = LoadImage(path)
+				local w = string.match(s, "w: (%d+)")
+				local h = string.match(s, "h: (%d+)")
+				local row = string.match(s, "row: (%d+)")
+				local col = string.match(s, "col: (%d+)")
+				local pics = SpriteCutting(w,h,row,col,image)
+
+				local sprites = {
+					file = image,
+					pics = pics,
+					name = path
+				}
+
+				table.insert(en.sprites,sprites)
+			end
 		end
-
 
 		-- | Загрузка "специальных" переменных | --
 
@@ -105,29 +117,42 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			local frame = {}
 			local frame_number = string.match(f, "(%d+)")
 
-			frame.pic = string.match(f, "pic: (%d+)")
-			frame.next = string.match(f, "next: (%d+)")
-			frame.wait = string.match(f, "wait: (%d+)")
+			frame.pic = tonumber(Get(string.match(f, "pic: (%d+)")))
+			frame.next = tonumber(Get(string.match(f, "next: (-%d+)")))
+			frame.wait = tonumber(Get(string.match(f, "wait: (%d+)")))
+			frame.centerx = tonumber(Get(string.match(f, "centerx: ([-%d]+)")))
+			frame.centery = tonumber(Get(string.match(f, "centery: ([-%d]+)")))
+			frame.shadow = tonumber(Get(string.match(f, "shadow: (%d+)")))
 			
 			frame.collaiders = {}
 
 			for b in string.gmatch(f, "body: {([^{}]*)}") do
 				local collaider = {}
 				collaider.type = "body"
-				collaider.x = string.match(b, "x: (%d+)")
-				collaider.y = string.match(b, "y: (%d+)")
-				collaider.w = string.match(b, "w: (%d+)")
-				collaider.h = string.match(b, "h: (%d+)")
+				collaider.x = tonumber(string.match(b, "x: ([-%d]+)"))
+				collaider.y = tonumber(string.match(b, "y: ([-%d]+)"))
+				collaider.w = tonumber(string.match(b, "w: ([-%d]+)"))
+				collaider.h = tonumber(string.match(b, "h: ([-%d]+)"))
 				table.insert(frame.collaiders, collaider)
 			end
 
 			for i in string.gmatch(f, "itr: {([^{}]*)}") do
 				local collaider = {}
 				collaider.type = "itr"
-				collaider.x = string.match(i, "x: (%d+)")
-				collaider.y = string.match(i, "y: (%d+)")
-				collaider.w = string.match(i, "w: (%d+)")
-				collaider.h = string.match(i, "h: (%d+)")
+				collaider.x = tonumber(string.match(i, "x: ([-%d]+)"))
+				collaider.y = tonumber(string.match(i, "y: ([-%d]+)"))
+				collaider.w = tonumber(string.match(i, "w: ([-%d]+)"))
+				collaider.h = tonumber(string.match(i, "h: ([-%d]+)"))
+				table.insert(frame.collaiders, collaider)
+			end
+
+			for p in string.gmatch(f, "platform: {([^{}]*)}") do
+				local collaider = {}
+				collaider.type = "platform"
+				collaider.x = tonumber(string.match(p, "x: ([-%d]+)"))
+				collaider.y = tonumber(string.match(p, "y: ([-%d]+)"))
+				collaider.w = tonumber(string.match(p, "w: ([-%d]+)"))
+				collaider.h = tonumber(string.match(p, "h: ([-%d]+)"))
 				table.insert(frame.collaiders, collaider)
 			end
 
@@ -137,10 +162,18 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 
 		--| Загрузка системных значений |--
 		
-		en.x = 0
-		en.y = 0
+		en.x = math.random(30, 400)
+		en.y = 100
 		en.z = 0
 		en.hp = en.max_hp
+		en.facing = 1
+		en.frame = 1
+		en.velocity_x = 0
+		en.velocity_y = 0
+		en.velocity_z = 0
+		en.in_air = false
+		en.collisions = {}
+		en.test = false
 
 	end
 
@@ -148,14 +181,15 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 end
 
 
-
-
-
-
-
-
-
-
+function Get(var)
+	local result
+	if not (var == nil) then
+		result = var
+	else
+		result = 0
+	end
+	return result
+end
 
 
 
@@ -186,6 +220,6 @@ function Draw(en)
 
 	love.graphics.draw(frame.list, frame.frames[pic], x, y, 0, 1 * en.facing, 1)
 	love.graphics.setColor(0, 0, 0, 0.7)
-	love.graphics.draw(frame.list, frame.frames[pic], x - ((frame.w * 0.4)), en.y * 2 - y, 0, 1 * en.facing, -1, 0, 0, 0.4 * en.facing, 0)
+	love.graphics.draw(frame.list, frame.frames[pic], x, en.y * 2 - y, 0, 1 * en.facing, -1, 0, 0, 0.4 * en.facing, 0)
 	love.graphics.setColor(255, 255, 255, 1)
 end

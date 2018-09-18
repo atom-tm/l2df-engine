@@ -1,0 +1,13 @@
+<map>
+	name: TestMap
+
+	size: 1000 250
+	area: 50	-- ВРЕМЕННО УКАЗЫВАЕТСЯ ЛИШЬ ОДНО ЧИСЛО ДЛЯ ОСИ Y
+	light: 10 10 1 1
+	glass: false
+
+	<layers>
+		{ file: "sprites/BG_1.png", x: 0, y: 0 }
+	<layers>
+	
+</map>

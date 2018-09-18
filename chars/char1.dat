@@ -2,38 +2,27 @@
 
 name: Test
 type: character
+weight: 1
+physic: true
 
 hp: 100
 
 sprite: {
 	file: "sprites/huiatstu.png"
 	w: 80 h: 80
-	row: 3 col: 2
-}
-sprite: {
-	file: "sprites/BG_1.png"
-	w: 80 h: 80
-	row: 3 col: 1
+	row: 10 col: 14
 }
 
 </head>
 
-<variables>
+<vars>
 sex: man
 width: 10
-</variables>
+</vars>
 
-
-<frame> 0 standing
-pic: 0  next: 1  wait: 7
-body: {
-	x: 0  y: 0  w: 10  h: 10 
-}
-</frame>
 
 <frame> 1 standing
-pic: 2  next: 0  wait: 7
-itr: {
-	x: 10 y: 10 w: 1 h: 1
-}
+pic: 2  next: 2  wait: 7  centerx: 15  centery: 79
+itr: { x: 3 y: 29 w: 30 h: 50 }
+body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>

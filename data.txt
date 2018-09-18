@@ -1,2 +1,3 @@
+[characters]
 id: 4	file: chars/char1.dat
 id: 2	file: chars/test.dat
