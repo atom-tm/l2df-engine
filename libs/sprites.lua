@@ -79,24 +79,42 @@ function DrawEntity(en) -- функция рисует объект или пе�
 
 		end
 
-			for key, c in pairs(GetCollaiders(en)) do
 
-				if c.type == "itr" then
-					love.graphics.setColor(1, 0, 0, 1)
-				elseif c.type == "body" then
-					love.graphics.setColor(0, 0, 1, 1)
-				else
-					love.graphics.setColor(1, 1, 1, 1)
-				end
 
-				love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
-				love.graphics.setColor(1, 1, 1, 1)
-				
+
+
+
+		--| Отладочная информация персонажа |--
+		
+		if debug_info == true then
+			frame = GetFrame(en)
+			for c_key, col in pairs(frame.itrs) do
+				local colaider = GetCollider(col, en)
+			love.graphics.setColor(.87, .11, .11, 1)
+				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
 			end
+			for c_key, col in pairs(frame.bodys) do
+				local colaider = GetCollider(col, en)
+			love.graphics.setColor(.25, .37, .85, 1)
+				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
+			end
+			for c_key, col in pairs(frame.platforms) do
+				local colaider = GetCollider(col, en)
+			love.graphics.setColor(1, 1, 1, 1)
+				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
+			end
+			
+			love.graphics.setColor(1, 1, 1, 1)
+			love.graphics.setNewFont(10)
+			love.graphics.print(
+				"x: " .. string.format("%2.1f", en.x) .. " y: " .. string.format("%2.1f", en.y) .. "\n" ..
+				"vel_x: " .. string.format("%2.1f", en.velocity_x) .. "\n" ..
+				"vel_y: " .. string.format("%2.1f", en.velocity_y) .. "\n" ..
+				"Col: " .. #en.collisions .. "\n" ..
+				"Facing: " .. en.facing .. "\n"
+				, en.x + 25, en.y - 50)
+		end
 
-		love.graphics.setColor(1, 0, 0, 1)
-		love.graphics.points(en.x, en.y, en.x-1, en.y, en.x+1, en.y, en.x, en.y+1, en.x, en.y-1)
-		love.graphics.setColor(1, 1, 1, 1)
 
 	end
 end

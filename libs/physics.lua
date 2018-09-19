@@ -1,4 +1,4 @@
-function CollaidersVerification(col1, col2) -- функция проверки двух коллайдеров на пересечение
+function collidersVerification(col1, col2) -- функция проверки двух коллайдеров на пересечение
 ---------------------------------------------------------------------
 
 	local result = {
@@ -8,7 +8,7 @@ function CollaidersVerification(col1, col2) -- функция проверки �
 		collision_direction_x = "undefined",
 		collision_direction_y = "undefined",
 		entity_id = nil,
-		collaider_id  = nil
+		collider_id  = nil
 	} -- переменная, которая будет возвращаться после выполнения функции сравнения
 
 	local col1x1 = col1.x -- получение координаты x1 первого коллайдера
@@ -74,9 +74,6 @@ function Gravity(en) -- отвечает за гравитацию, иннерц
 		en.in_air = false
 
 		for key, val in ipairs(en.collisions) do
-			if (val.e_collaider.type == "position") and (val.t_collaider.type == "platform") then 
-				en.in_air = true
-			end
 		end
 
 		if en.in_air then 
@@ -101,86 +98,85 @@ end
 
 
 
-function GetCollaiders(en) -- возвращает список коллайдеров персонажа, при этом высчитывает реальные координаты каждого коллайдера
--------------------------------------
-	local collaiders = {}
-	local frame = en.frames[tostring(en.frame)]
-
-	for k, col in pairs(frame.collaiders) do
-
-		local collaider = {}
-		collaider.type = col.type
-		if en.facing == 1 then
-			collaider.x = en.x + col.x - frame.centerx
-		else
-			collaider.x = en.x - col.x + frame.centerx - col.w
-		end
-		collaider.y = en.y + col.y - Get(frame.centery)
-		
-		collaider.w = col.w
-		collaider.h = col.h
-		table.insert(collaiders, collaider)
-
-	end
-
-	return collaiders
-end
-
 function CheckCollisions(en_id) -- для каждого коллайдера каждого загруженного объекта проверяет столкновения с другими коллайдерами и записывает информацию обо всех столкновениях в датку персонажа
 -------------------------------------
-	en = entity_list[en_id]
-	en.collisions = {}
+	local en = entity_list[en_id] -- получаем объект
+	local en_frame = GetFrame(en) -- получаем фрейм объекта
 
-	local en_collaiders = GetCollaiders(en)
-	local position_collaider = {
-		x = en.x,
-		y = en.y,
-		w = 1,
-		h = 1,
-		type = "position" 
-	} -- проверка по позиции персонажа
-	table.insert(en_collaiders, position_collaider)
+	local max_rad = en_frame.itr_radius + en_frame.body_radius +  en_frame.platform_radius
 
-	for t_id = 1, #entity_list do
-		if t_id ~= en_id then
-			target = entity_list[t_id]
-			target_collaiders = GetCollaiders(target)
-			for tc_id, target_collaider in ipairs(target_collaiders) do
-				for ec_id, en_collaider in ipairs(en_collaiders) do
-					if not (en_collaider.type == target_collaider.type) then
-						local result = CollaidersVerification(en_collaider, target_collaider)
-						if result.collision then
-							local collision = {
-								target = target,
-								t_collaider = target_collaider,
-								e_collaider = en_collaider,
-								info = result
-							} -- объект с информацией о коллизии
-							if not (en_collaider == "position") then
-								table.insert(en.collisions, collision)
+	if max_rad > 0 then
+		for t_id = 1, #entity_list do -- для каждого объекта на карте
+			if t_id ~= en_id then -- если проверяемый объект не является проверяющим объектом
+
+				local target = entity_list[t_id] -- получает проверяемый объект
+				local t_frame = GetFrame(target) -- получаем фрейм проверяемого объекта
+
+				local distantion = math.sqrt(math.abs((en.x - target.x)^2) + math.abs((en.y - target.y)^2))
+
+				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
+					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
+						for itr_id = 1, #en_frame.itrs do
+							for body_id = 1, #t_frame.bodys do
+								local itr = GetCollider(en_frame.itrs[itr_id], en)
+								local body = GetCollider(t_frame.bodys[body_id], target)
+								local result = collidersVerification(itr,body)
+								if result.collision then
+									local collision_entity = {
+										target = t_id,
+										itr = itr_id,
+										body = body_id,
+										info = result
+									}
+									table.insert(en.collisions, collision_entity)
+								end
+							end
+						end
+					end
+				end
+
+				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
+					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
+						for itr_id = 1, #en_frame.itrs do
+							for body_id = 1, #t_frame.bodys do
+								local itr = GetCollider(en_frame.itrs[itr_id], en)
+								local body = GetCollider(t_frame.bodys[body_id], target)
+								local result = collidersVerification(itr,body)
+								if result.collision then
+									local collision_entity = {
+										target = t_id,
+										itr = itr_id,
+										body = body_id,
+										info = result
+									}
+									table.insert(en.collisions, collision_entity)
+								end
+							end
+						end
+					end
+				end
+
+				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
+					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
+						for itr_id = 1, #en_frame.itrs do
+							for body_id = 1, #t_frame.bodys do
+								local itr = GetCollider(en_frame.itrs[itr_id], en)
+								local body = GetCollider(t_frame.bodys[body_id], target)
+								local result = collidersVerification(itr,body)
+								if result.collision then
+									local collision_entity = {
+										target = t_id,
+										itr = itr_id,
+										body = body_id,
+										info = result
+									}
+									table.insert(en.collisions, collision_entity)
+								end
 							end
 						end
 					end
 				end
 			end
 		end
-	end
-end
-
-
-
-function CheckCollisions2(en_id)
-	en = entity_list[en_id]
-	en.collisions = {}
-	
-	for t_id = 1, #entity_list do
-		if (t_id ~= en_id) and (entity_list[t_id] ~= nil) and (#entity_list[t_id].frames[entity_list[t_id].frame].collaiders > 0) then
-
-		end
-	end
-
-	for i = 1, #entity_list do
-		local collisions = GetCollaiders(entity_list[i])
-		table.insert(collaiders, collisions)
 	end
 end

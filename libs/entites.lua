@@ -3,7 +3,7 @@ head_list = {} -- таблица в которой будут храниться
 data_list = {} -- таблица, содержащая в себе id каждого объекта из data.txt и путь до файла этого объекта
 maps_list = {}
 
-loading_list = {"4"} -- список файлов, которые нужно загрузить в память перед началом боя 
+loading_list = {} -- список файлов, которые нужно загрузить в память перед началом боя 
 
 entity_list = {} -- массив, хранящий в себе все объекты, находящиеся на сцене
 
@@ -124,51 +124,83 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			frame.centery = tonumber(Get(string.match(f, "centery: ([-%d]+)")))
 			frame.shadow = tonumber(Get(string.match(f, "shadow: (%d+)")))
 			
-			frame.collaiders = {}
 
+
+			--| Загрузка коллайдеров |--
+
+
+			frame.bodys = {} -- массив с телами персонажа
+			local r = {} -- переменная для нахождения радиуса хитбоксов
 			for b in string.gmatch(f, "body: {([^{}]*)}") do
 				local collaider = {}
-				collaider.type = "body"
 				collaider.x = tonumber(string.match(b, "x: ([-%d]+)"))
 				collaider.y = tonumber(string.match(b, "y: ([-%d]+)"))
 				collaider.w = tonumber(string.match(b, "w: ([-%d]+)"))
 				collaider.h = tonumber(string.match(b, "h: ([-%d]+)"))
-				table.insert(frame.collaiders, collaider)
+				-- загрузка координат коллайдера в массив для нахождения радиуса --
+				table.insert(r, math.abs(collaider.x))
+				table.insert(r, math.abs(collaider.x + collaider.w))
+				table.insert(r, math.abs(collaider.y))
+				table.insert(r, math.abs(collaider.y + collaider.h))
+				
+				table.insert(frame.bodys, collaider) -- загрузка коллайдера в массив
 			end
+			frame.body_radius = FindMaximum(r) -- получение радиуса коллайдеров
 
+
+
+			frame.itrs = {} -- массив с итрами персонажа
+			r = {} -- переменная для нахождения радиуса хитбоксов
 			for i in string.gmatch(f, "itr: {([^{}]*)}") do
 				local collaider = {}
-				collaider.type = "itr"
 				collaider.x = tonumber(string.match(i, "x: ([-%d]+)"))
 				collaider.y = tonumber(string.match(i, "y: ([-%d]+)"))
 				collaider.w = tonumber(string.match(i, "w: ([-%d]+)"))
 				collaider.h = tonumber(string.match(i, "h: ([-%d]+)"))
-				table.insert(frame.collaiders, collaider)
-			end
+				-- загрузка координат коллайдера в массив для нахождения радиуса --
+				table.insert(r, math.abs(collaider.x))
+				table.insert(r, math.abs(collaider.x + collaider.w))
+				table.insert(r, math.abs(collaider.y))
+				table.insert(r, math.abs(collaider.y + collaider.h))
 
+				table.insert(frame.itrs, collaider) -- загрузка коллайдера в массив
+			end
+			frame.itr_radius = FindMaximum(r) -- получение радиуса коллайдеров
+
+
+
+			frame.platforms = {} -- массив с платформами персонажа
+			r = {} -- переменная для нахождения радиуса хитбоксов
 			for p in string.gmatch(f, "platform: {([^{}]*)}") do
 				local collaider = {}
-				collaider.type = "platform"
 				collaider.x = tonumber(string.match(p, "x: ([-%d]+)"))
 				collaider.y = tonumber(string.match(p, "y: ([-%d]+)"))
 				collaider.w = tonumber(string.match(p, "w: ([-%d]+)"))
 				collaider.h = tonumber(string.match(p, "h: ([-%d]+)"))
-				table.insert(frame.collaiders, collaider)
-			end
+				-- загрузка координат коллайдера в массив для нахождения радиуса --
+				table.insert(r, math.abs(collaider.x))
+				table.insert(r, math.abs(collaider.x + collaider.w))
+				table.insert(r, math.abs(collaider.y))
+				table.insert(r, math.abs(collaider.y + collaider.h))
 
-			en.frames[frame_number] = frame
+				table.insert(frame.platforms, collaider) -- загрузка коллайдера в массив
+			end
+			frame.platform_radius = FindMaximum(r) -- получение радиуса коллайдеров
+
+
+			en.frames[frame_number] = frame -- добавление фрейма в массив фреймов
 		end
 
 
 		--| Загрузка системных значений |--
 		
-		en.x = math.random(30, 400)
-		en.y = 100
+		en.x = math.random(100, 550)
+		en.y = math.random(50, 250)
 		en.z = 0
 		en.hp = en.max_hp
 		en.facing = 1
 		en.frame = 1
-		en.velocity_x = 0
+		en.velocity_x = math.random(-2, 2)
 		en.velocity_y = 0
 		en.velocity_z = 0
 		en.in_air = false
@@ -181,45 +213,5 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 end
 
 
-function Get(var)
-	local result
-	if not (var == nil) then
-		result = var
-	else
-		result = 0
-	end
-	return result
-end
 
 
-
------------------------------------------------------
-
-
-function Draw(en)
-
-	local pic = en.data[en.frame].pic
-	local x = en.x
-
-	if en.facing == -1 then
-		x = x + en.data[en.frame].centerx
-	else
-		x = x - en.data[en.frame].centerx
-	end
-
-	local y = en.y - en.data[en.frame].centery
-
-	local frame
-	for s = 1, #en.sprite do
-		if pic > #char1.sprite[s].frames then
-			pic = pic - #char1.sprite[s].frames
-		else
-			frame = char1.sprite[s]
-		end
-	end
-
-	love.graphics.draw(frame.list, frame.frames[pic], x, y, 0, 1 * en.facing, 1)
-	love.graphics.setColor(0, 0, 0, 0.7)
-	love.graphics.draw(frame.list, frame.frames[pic], x, en.y * 2 - y, 0, 1 * en.facing, -1, 0, 0, 0.4 * en.facing, 0)
-	love.graphics.setColor(255, 255, 255, 1)
-end
