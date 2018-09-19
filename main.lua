@@ -10,8 +10,6 @@ function love.load()
 	CreateDataList()
 	loading_list = {"4","4", "2"}
 	LoadingBeforeBattle()
-  for en_id = 1, #entity_list do
-    end
 end 
 
 function love.update(dt)
