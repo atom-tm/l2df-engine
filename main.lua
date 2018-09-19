@@ -44,10 +44,8 @@ end
 function love.draw()
 	for key, val in pairs(entity_list) do
 		DrawEntity(val)
-		love.graphics.print(#val.collisions, 20, 20 * key)
 	end
-		love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
-		love.graphics.print(delta_time, 70, 20)
-		love.graphics.print("Objects: "..tostring(#entity_list), 90, 10)
+		love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+		love.graphics.print("Objects: "..tostring(#entity_list), 10, 30)
 end 
 
