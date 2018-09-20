@@ -200,7 +200,7 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 		en.hp = en.max_hp
 		en.facing = 1
 		en.frame = 1
-		en.velocity_x = math.random(-2, 2)
+		en.velocity_x = 0
 		en.velocity_y = 0
 		en.velocity_z = 0
 		en.in_air = false

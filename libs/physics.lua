@@ -87,11 +87,11 @@ end
 
 function Motion(en_id, dt)
 	en = entity_list[en_id]
-	en.y = en.y + en.velocity_y * (dt * 100)
-	en.x = en.x + en.velocity_x * (dt * 100)
+	en.y = en.y + en.velocity_y
+	en.x = en.x + en.velocity_x
 
 	if (en.velocity_x ~= 0) or (en.velocity_y ~= 0) then
-		CheckCollisions(en_id)
+		--CheckCollisions(en_id)
 	end
 end
 
@@ -102,6 +102,7 @@ function CheckCollisions(en_id) -- для каждого коллайдера к
 -------------------------------------
 	local en = entity_list[en_id] -- получаем объект
 	local en_frame = GetFrame(en) -- получаем фрейм объекта
+	en.collisions = {}
 
 	local max_rad = en_frame.itr_radius + en_frame.body_radius +  en_frame.platform_radius
 
