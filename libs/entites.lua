@@ -69,11 +69,17 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			en.type = string.match(head, "type: ([%w]+)")
 			en.weight = Get(string.match(head, "weight: ([%d]+)"))
 			en.physic = Get(string.match(head, "physic: ([%w]+)"))
-			
 			if(en.physic == "true") then 
 				en.physic = true
 			else
 				en.physic = false 
+			end
+
+			en.collision = Get(string.match(head, "collision: ([%w]+)"))
+			if(en.collision == "true") then 
+				en.collision = true
+			else
+				en.collision = false 
 			end
 
 
@@ -200,12 +206,16 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 		en.hp = en.max_hp
 		en.facing = 1
 		en.frame = 1
-		en.velocity_x = 0
-		en.velocity_y = 0
+		en.vel_x = math.random(-10,5)
+		en.vel_y = math.random(-5,10)
 		en.velocity_z = 0
 		en.in_air = false
 		en.collisions = {}
 		en.test = false
+		en.wait = 0
+		en.next_frame = 1
+		en.arest = 0
+		en.vrest = 0
 
 	end
 

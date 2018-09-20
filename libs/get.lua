@@ -30,25 +30,6 @@ function Get(var)
 	return result
 end
 
-
-
-function GetCollider(collider, en) -- возвращает коллайдер персонажа, при этом высчитывает реальные координаты этого коллайдера
--------------------------------------
-	local result = {}
-
-	local frame = en.frames[tostring(en.frame)] -- получаем фрейм объекта
-
-	if en.facing == 1 then -- проверка на facing
-		result.x = en.x + collider.x - frame.centerx -- получаем x коллайдера
-	else
-		result.x = en.x - collider.x + frame.centerx - collider.w -- x, если объект повёрнут
-	end
-
-	result.y = en.y + collider.y - Get(frame.centery) -- получаем y коллайдера
-
-	result.w = collider.w
-	result.h = collider.h
-
-	return result -- возвращаем коллайдер
-
+function GetDistance (x1,y1,x2,y2)
+	return math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
 end

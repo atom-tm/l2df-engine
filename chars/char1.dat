@@ -4,6 +4,7 @@ name: Test
 type: character
 weight: 1
 physic: true
+collision: true
 
 hp: 100
 

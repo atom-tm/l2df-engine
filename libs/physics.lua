@@ -7,8 +7,6 @@ function collidersVerification(col1, col2) -- функция проверки д
 		collision_center_y = "none",
 		collision_direction_x = "undefined",
 		collision_direction_y = "undefined",
-		entity_id = nil,
-		collider_id  = nil
 	} -- переменная, которая будет возвращаться после выполнения функции сравнения
 
 	local col1x1 = col1.x -- получение координаты x1 первого коллайдера
@@ -85,15 +83,23 @@ function Gravity(en) -- отвечает за гравитацию, иннерц
 end
 
 
-function Motion(en_id, dt)
-	en = entity_list[en_id]
-	en.y = en.y + en.velocity_y
-	en.x = en.x + en.velocity_x
-
-	if (en.velocity_x ~= 0) or (en.velocity_y ~= 0) then
-		--CheckCollisions(en_id)
+function Motion(en, dt)
+	en.y = en.y + en.vel_y
+	en.x = en.x + en.vel_x
+	w, h, k = love.window.getMode()
+	
+	if (en.x > w) or (en.x < 0) then
+		en.vel_x = en.vel_x * -1
 	end
+
+	if (en.y > h) or (en.y < 0) then
+		en.vel_y = en.vel_y * -1
+	end
+
 end
+
+
+
 
 
 
@@ -102,82 +108,55 @@ function CheckCollisions(en_id) -- для каждого коллайдера к
 -------------------------------------
 	local en = entity_list[en_id] -- получаем объект
 	local en_frame = GetFrame(en) -- получаем фрейм объекта
-	en.collisions = {}
 
+	en.collisions = {}
 	local max_rad = en_frame.itr_radius + en_frame.body_radius +  en_frame.platform_radius
 
-	if max_rad > 0 then
-		for t_id = 1, #entity_list do -- для каждого объекта на карте
-			if t_id ~= en_id then -- если проверяемый объект не является проверяющим объектом
+	if max_rad > 0 and en.arest == 0 and en.vrest == 0 then
 
-				local target = entity_list[t_id] -- получает проверяемый объект
-				local t_frame = GetFrame(target) -- получаем фрейм проверяемого объекта
+		for t_id = en_id + 1, #entity_list do -- для каждого объекта на карте
 
-				local distantion = math.sqrt(math.abs((en.x - target.x)^2) + math.abs((en.y - target.y)^2))
+			local target = entity_list[t_id] -- получает проверяемый объект
+			local t_frame = GetFrame(target) -- получаем фрейм проверяемого объекта
 
-				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
-					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
-						for itr_id = 1, #en_frame.itrs do
-							for body_id = 1, #t_frame.bodys do
-								local itr = GetCollider(en_frame.itrs[itr_id], en)
-								local body = GetCollider(t_frame.bodys[body_id], target)
-								local result = collidersVerification(itr,body)
-								if result.collision then
-									local collision_entity = {
-										target = t_id,
-										itr = itr_id,
-										body = body_id,
-										info = result
-									}
-									table.insert(en.collisions, collision_entity)
-								end
-							end
-						end
-					end
-				end
+			local distantion = math.sqrt(math.abs((en.x - target.x)^2) + math.abs((en.y - target.y)^2))
 
-				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
-					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
-						for itr_id = 1, #en_frame.itrs do
-							for body_id = 1, #t_frame.bodys do
-								local itr = GetCollider(en_frame.itrs[itr_id], en)
-								local body = GetCollider(t_frame.bodys[body_id], target)
-								local result = collidersVerification(itr,body)
-								if result.collision then
-									local collision_entity = {
-										target = t_id,
-										itr = itr_id,
-										body = body_id,
-										info = result
-									}
-									table.insert(en.collisions, collision_entity)
-								end
-							end
-						end
-					end
-				end
 
-				if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
-					if distantion < (en_frame.itr_radius + t_frame.body_radius) then
-						for itr_id = 1, #en_frame.itrs do
-							for body_id = 1, #t_frame.bodys do
-								local itr = GetCollider(en_frame.itrs[itr_id], en)
-								local body = GetCollider(t_frame.bodys[body_id], target)
-								local result = collidersVerification(itr,body)
-								if result.collision then
-									local collision_entity = {
-										target = t_id,
-										itr = itr_id,
-										body = body_id,
-										info = result
-									}
-									table.insert(en.collisions, collision_entity)
-								end
+
+
+
+			if (en_frame.itr_radius > 0) and (t_frame.body_radius > 0) then
+				if distantion < (en_frame.itr_radius + t_frame.body_radius) then
+					for itr_id = 1, #en_frame.itrs do
+						for body_id = 1, #t_frame.bodys do
+							
+							local itr = GetCollider(en_frame.itrs[itr_id], en)
+							local body = GetCollider(t_frame.bodys[body_id], target)
+
+							local result = CheckCollision(itr.x, itr.y, itr.x + itr.w, itr.y + itr.h, body.x, body.y, body.x + body.w, body.y + body.h)
+
+							if result then
+							--[[if result.collision then
+								local collision_entity = {
+									target = t_id,
+									itr = itr_id,
+									body = body_id,
+									info = result
+								}]]--
+								table.insert(collisions_list, result)
 							end
 						end
 					end
 				end
 			end
+
+
+
+
+
+
+
+
 		end
 	end
 end
