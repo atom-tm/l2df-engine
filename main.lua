@@ -5,77 +5,34 @@ require "libs.sprites"
 require "libs.physics"
 require "libs.collisions"
 require "libs.get"
+require "libs.controls"
+require "libs.battle_processing"
 math.randomseed(love.timer.getTime())
 
-
 debug_info = false
-key_pressed = ""
 
 function love.load()
+	love.graphics.setBackgroundColor(.49, .67, .46, 1)
 	CreateDataList()
-	for i = 1, 100 do
+	for i = 1, 2 do
 		table.insert(loading_list, "4")
 	end
 	table.insert(loading_list, "2")
 	LoadingBeforeBattle()
+	entity_list[#entity_list].x = 0
+	entity_list[#entity_list].y = love.graphics.getHeight() - 20
+	
+	min_dt = 1/60
+    next_time = love.timer.getTime()
 end
 
 function love.update(dt)
+	next_time = next_time + min_dt
 	delta_time = dt
 
-		--| Цикл последовательной обработки объектов |--
-		
-		for en_id = 1, #entity_list do
-			local en = entity_list[en_id]
-			local frame = GetFrame(en)
-
-			if en.physic == true then
-
-			end
-
-			if (en.vel_x ~= 0) or (en.vel_y ~= 0) then
-				Motion(en, dt)
-			end
-
-			if en.collision then
-				if (en.arest == 0) and (frame.itr_radius > 0) then
-					table.insert(collisioners.itr, en_id)
-				end
-				if (en.vrest == 0) and (frame.body_radius > 0) then
-					table.insert(collisioners.body, en_id)
-				end
-				if (frame.platform_radius > 0) then
-					table.insert(collisioners.platform, en_id)
-				end
-			end
-
-			-- тут будет ещё обработка стейтов --
-		end
-
-		CollisionersProcessing()
-
-
-
-
-
-
-
-
-	if love.keyboard.isDown("w") then
-		entity_list[1].vel_y = entity_list[1].vel_y - 0.1
-	end
-	if love.keyboard.isDown("s") then
-		entity_list[1].vel_y = entity_list[1].vel_y + 0.1
-	end
-	if love.keyboard.isDown("a") then
-		entity_list[1].vel_x = entity_list[1].vel_x - 0.1
-		entity_list[1].facing = -1
-	end
-	if love.keyboard.isDown("d") then
-		entity_list[1].vel_x = entity_list[1].vel_x + 0.1
-		entity_list[1].facing = 1
-	end
-
+	BattleProcessing() -- обработка боя
+	CollisionersProcessing() -- поиск столкновений
+	CollisionsProcessing() -- обработка столкновений
 end 
 
 
@@ -85,30 +42,46 @@ function love.draw()
 		DrawEntity(val)
 	end
 
+	ControlCheck()
 
 
 	--| Общая отладочная информация |--
 
 	love.graphics.setNewFont(12)
 	love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)
-		love.graphics.print("Objects: "..tostring(#collisioners.itr + #collisioners.body), 10, 30)
-		love.graphics.print("Objects: "..tostring(#collisions_list), 10, 50)
 	
 	if debug_info == true then
 		love.graphics.print("Objects: "..tostring(#entity_list), 10, 30)
 		love.graphics.print("Key: ".. key_pressed, 10, 50)
 	end
+
+	local cur_time = love.timer.getTime()
+   if next_time <= cur_time then
+      next_time = cur_time
+      return
+   end
+   love.timer.sleep(next_time - cur_time)
 end 
 
-function love.keypressed( key, scancode, isrepeat ) 
-	--key_pressed = key
+function love.keypressed( button, scancode, isrepeat )
 	
-	if key == "f1" then
+	if button == "f1" then
 		if debug_info then
 			debug_info = false
 		else
 			debug_info = true
 		end
 	end
+
+	for player, en_id in pairs(players) do
+		for key, val in pairs(control_settings[player]) do
+			if button == val then
+				key_pressed[player][key] = 1
+			end
+		end
+	end
+
+
+
 
 end

@@ -104,6 +104,7 @@ function DrawEntity(en) -- функция рисует объект или пе�
 				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
 			end
 			
+			
 			love.graphics.setColor(1, 1, 1, 1)
 			love.graphics.setNewFont(10)
 			love.graphics.print(
@@ -111,12 +112,25 @@ function DrawEntity(en) -- функция рисует объект или пе�
 				"vel_x: " .. string.format("%2.1f", en.vel_x) .. "\n" ..
 				"vel_y: " .. string.format("%2.1f", en.vel_y) .. "\n" ..
 				"Col: " .. #en.collisions .. "\n" ..
-				"Facing: " .. en.facing .. "\n" .. 
-				"itr_rad: " .. frame.body_radius .. "\n" ..
-				"body_rad: " .. frame.itr_radius .. "\n"
+				"Facing: " .. en.facing .. "\n" ..
+				"w: " .. tostring(frame.w) .. "\n" ..
+				"h: " .. tostring(frame.h) .. "\n" ..
+				"air: " .. tostring(en.in_air) .. "\n" .. 
+				"pl_rad: " .. frame.platform_radius .. "\n" ..
+				"itr_rad: " .. frame.itr_radius .. "\n" ..
+				"body_rad: " .. frame.body_radius .. "\n"
 				, en.x + 25, en.y - 50)
 		end
 
+			love.graphics.print(
+				"up: " .. en.key_timer["up"] .. "\n" ..
+				"down: " .. en.key_timer["down"] .. "\n" ..
+				"left: " .. en.key_timer["left"] .. "\n" ..
+				"right: " .. en.key_timer["right"] .. "\n" ..
+				"attack: " .. en.key_timer["attack"] .. "\n" ..
+				"jump: " .. en.key_timer["jump"] .. "\n" ..
+				"defend: " .. en.key_timer["defend"] .. "\n"
+				, en.x + 25, en.y - 50)
 
 	end
 end

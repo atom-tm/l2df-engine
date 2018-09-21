@@ -1,9 +1,11 @@
 head_list = {} -- таблица в которой будут храниться имена персонажей, их айди и аватарки для меню выбора персонажа
 
 data_list = {} -- таблица, содержащая в себе id каждого объекта из data.txt и путь до файла этого объекта
-maps_list = {}
+maps_list = {} -- таблица, содержащая в себе id каждой карты из data.txt
 
 loading_list = {} -- список файлов, которые нужно загрузить в память перед началом боя 
+
+sourse_list = {} -- массив, хранящий в себе все объекты, доступные к загрузке
 
 entity_list = {} -- массив, хранящий в себе все объекты, находящиеся на сцене
 
@@ -124,11 +126,13 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			local frame_number = string.match(f, "(%d+)")
 
 			frame.pic = tonumber(Get(string.match(f, "pic: (%d+)")))
-			frame.next = tonumber(Get(string.match(f, "next: (-%d+)")))
+			frame.next = tonumber(Get(string.match(f, "next: ([-%d]+)")))
 			frame.wait = tonumber(Get(string.match(f, "wait: (%d+)")))
 			frame.centerx = tonumber(Get(string.match(f, "centerx: ([-%d]+)")))
 			frame.centery = tonumber(Get(string.match(f, "centery: ([-%d]+)")))
 			frame.shadow = tonumber(Get(string.match(f, "shadow: (%d+)")))
+			frame.w = tonumber(Get(string.match(f, "w: ([-%d]+)")))
+			frame.h = tonumber(Get(string.match(f, "h: ([-%d]+)")))
 			
 
 
@@ -200,22 +204,42 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 
 		--| Загрузка системных значений |--
 		
-		en.x = math.random(100, 550)
-		en.y = math.random(50, 250)
+		en.x = math.random(200, 300)
+		en.y = math.random(100, 350)
 		en.z = 0
 		en.hp = en.max_hp
 		en.facing = 1
 		en.frame = 1
-		en.vel_x = math.random(-5, 5)
-		en.vel_y = math.random(-5, 5)
+		en.vel_x = 0
+		en.vel_y = 0
 		en.velocity_z = 0
 		en.in_air = false
 		en.collisions = {}
-		en.test = false
 		en.wait = 0
 		en.next_frame = 1
-		en.arest = math.random(0, 10)
-		en.vrest = math.random(0, 10)
+		en.arest = 0
+		en.vrest = 0
+
+		en.key_timer = {
+			up = 0,
+			down = 0,
+			left = 0,
+			right = 0,
+			attack = 0,
+			jump = 0,
+			defend = 0
+		}
+
+		en.key_pressed = {
+			up = 0,
+			down = 0,
+			left = 0,
+			right = 0,
+			attack = 0,
+			jump = 0,
+			defend = 0
+		}
+
 
 	end
 
@@ -224,4 +248,9 @@ end
 
 
 
-
+function SetFrame(en, frame_num)
+	en.frame = frame_num
+	local frame = GetFrame(en)
+	en.wait = frame.wait
+	en.next_frame = frame.next
+end

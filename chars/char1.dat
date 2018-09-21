@@ -2,8 +2,9 @@
 
 name: Test
 type: character
-weight: 1
+
 physic: true
+weight: 10
 collision: true
 
 hp: 100
@@ -23,8 +24,18 @@ width: 10
 
 
 <frame> 1 standing
-pic: 2  next: 2  wait: 7  centerx: 15  centery: 79
-itr: { x: 3 y: 29 w: 80 h: 50 }
-itr: { x: 3 y: 29 w: 80 h: 50 }
-body: { x: 3 y: 29 w: 60 h: 50 }
+pic: 1  next: 2  wait: 5  centerx: 15  centery: 79
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 2 standing
+pic: 2  next: 3  wait: 5  centerx: 15  centery: 79
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 3 standing
+pic: 3  next: 4  wait: 5  centerx: 15  centery: 79
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 4 standing
+pic: 4  next: 1  wait: 5  centerx: 15  centery: 79
+body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
