@@ -1,17 +1,15 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
---camera = require "libs.gamera"
+camera = require "libs.gamera"
 require "libs.entites"
 require "libs.sprites"
 require "libs.physics"
 require "libs.collisions"
 require "libs.get"
-
 math.randomseed(love.timer.getTime())
+
 
 debug_info = false
 key_pressed = ""
-checker = true
-
 
 function love.load()
 	CreateDataList()
@@ -25,9 +23,6 @@ end
 function love.update(dt)
 	delta_time = dt
 
-
-	if checker then
-
 		--| Цикл последовательной обработки объектов |--
 		
 		for en_id = 1, #entity_list do
@@ -36,14 +31,11 @@ function love.update(dt)
 
 			if en.physic == true then
 
-
-
 			end
 
-			if (en.vel_x + en.vel_y) ~= 0 then
+			if (en.vel_x ~= 0) or (en.vel_y ~= 0) then
 				Motion(en, dt)
 			end
-
 
 			if en.collision then
 				if (en.arest == 0) and (frame.itr_radius > 0) then
@@ -57,16 +49,10 @@ function love.update(dt)
 				end
 			end
 
-
-			checker = false
 			-- тут будет ещё обработка стейтов --
 		end
-	else
 
 		CollisionersProcessing()
-		checker = true
-
-	end
 
 
 

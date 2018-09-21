@@ -89,17 +89,17 @@ function DrawEntity(en) -- функция рисует объект или пе�
 		if debug_info == true then
 			frame = GetFrame(en)
 			for c_key, col in pairs(frame.itrs) do
-				local colaider = GetCollider(col, en)
+				local colaider = CollaiderCords(col, en.x, en.y, frame.centerx, frame.centery, en.facing)
 			love.graphics.setColor(.87, .11, .11, 1)
 				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
 			end
 			for c_key, col in pairs(frame.bodys) do
-				local colaider = GetCollider(col, en)
+				local colaider = CollaiderCords(col, en.x, en.y, frame.centerx, frame.centery, en.facing)
 			love.graphics.setColor(.25, .37, .85, 1)
 				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
 			end
 			for c_key, col in pairs(frame.platforms) do
-				local colaider = GetCollider(col, en)
+				local colaider = CollaiderCords(col, en.x, en.y, frame.centerx, frame.centery, en.facing)
 			love.graphics.setColor(1, 1, 1, 1)
 				love.graphics.rectangle("line", colaider.x, colaider.y, colaider.w, colaider.h)
 			end
@@ -108,10 +108,12 @@ function DrawEntity(en) -- функция рисует объект или пе�
 			love.graphics.setNewFont(10)
 			love.graphics.print(
 				"x: " .. string.format("%2.1f", en.x) .. " y: " .. string.format("%2.1f", en.y) .. "\n" ..
-				"vel_x: " .. string.format("%2.1f", en.velocity_x) .. "\n" ..
-				"vel_y: " .. string.format("%2.1f", en.velocity_y) .. "\n" ..
+				"vel_x: " .. string.format("%2.1f", en.vel_x) .. "\n" ..
+				"vel_y: " .. string.format("%2.1f", en.vel_y) .. "\n" ..
 				"Col: " .. #en.collisions .. "\n" ..
-				"Facing: " .. en.facing .. "\n"
+				"Facing: " .. en.facing .. "\n" .. 
+				"itr_rad: " .. frame.body_radius .. "\n" ..
+				"body_rad: " .. frame.itr_radius .. "\n"
 				, en.x + 25, en.y - 50)
 		end
 

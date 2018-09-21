@@ -31,5 +31,5 @@ function Get(var)
 end
 
 function GetDistance (x1,y1,x2,y2)
-	return math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
+	return math.sqrt(math.abs((x1 - x2)^2) + math.abs((y1 - y2)^2))
 end

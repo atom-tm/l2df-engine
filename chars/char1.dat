@@ -24,6 +24,7 @@ width: 10
 
 <frame> 1 standing
 pic: 2  next: 2  wait: 7  centerx: 15  centery: 79
-itr: { x: 3 y: 29 w: 30 h: 50 }
-body: { x: 3 y: 29 w: 30 h: 50 }
+itr: { x: 3 y: 29 w: 80 h: 50 }
+itr: { x: 3 y: 29 w: 80 h: 50 }
+body: { x: 3 y: 29 w: 60 h: 50 }
 </frame>
