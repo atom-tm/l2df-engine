@@ -24,18 +24,43 @@ width: 10
 
 
 <frame> 1 standing
-pic: 1  next: 2  wait: 5  centerx: 15  centery: 79
+pic: 1  next: 2  wait: 5  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 2 standing
-pic: 2  next: 3  wait: 5  centerx: 15  centery: 79
+pic: 2  next: 3  wait: 5  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 3 standing
-pic: 3  next: 4  wait: 5  centerx: 15  centery: 79
+pic: 3  next: 4  wait: 5  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 4 standing
-pic: 4  next: 1  wait: 5  centerx: 15  centery: 79
+pic: 4  next: 1  wait: 5  centerx: 15  centery: 79 double_left: 5
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+
+<frame> 5 running
+pic: 5  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 6
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 6 running
+pic: 6  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 7
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 7 running
+pic: 7  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 8
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 8 running
+pic: 8  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 9
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 9 running
+pic: 9  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 10
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 10 running
+pic: 10  next: 1  wait: 5  centerx: 15  centery: 79 hold_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>

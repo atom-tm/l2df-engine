@@ -3,8 +3,10 @@ function BattleProcessing(...)
 		local en = entity_list[en_id]
 		local frame = GetFrame(en)
 
+		hit_Check(en, frame)
+
 		if en.wait == 0 then
-			SetFrame(en,en.next_frame)
+			SetFrame(en, en.next_frame)
 		else en.wait = en.wait - 1 end
 
 		if en.physic == true then

@@ -134,6 +134,9 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			frame.w = tonumber(Get(string.match(f, "w: ([-%d]+)")))
 			frame.h = tonumber(Get(string.match(f, "h: ([-%d]+)")))
 			
+			--| Управление |--
+			frame.hold_left = tonumber(Get(string.match(f, "hold_left: ([-%d]+)")))
+			frame.double_left = tonumber(Get(string.match(f, "double_left: ([-%d]+)")))
 
 
 			--| Загрузка коллайдеров |--
@@ -162,6 +165,7 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			frame.itrs = {} -- массив с итрами персонажа
 			r = {} -- переменная для нахождения радиуса хитбоксов
 			for i in string.gmatch(f, "itr: {([^{}]*)}") do
+				
 				local collaider = {}
 				collaider.x = tonumber(string.match(i, "x: ([-%d]+)"))
 				collaider.y = tonumber(string.match(i, "y: ([-%d]+)"))
@@ -204,7 +208,7 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 
 		--| Загрузка системных значений |--
 		
-		en.x = math.random(200, 300)
+		en.x = math.random(150, 600)
 		en.y = math.random(100, 350)
 		en.z = 0
 		en.hp = en.max_hp
@@ -227,7 +231,19 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			right = 0,
 			attack = 0,
 			jump = 0,
-			defend = 0
+			defend = 0,
+			jutsu = 0
+		}
+
+		en.double_key_timer = {
+			up = 0,
+			down = 0,
+			left = 0,
+			right = 0,
+			attack = 0,
+			jump = 0,
+			defend = 0,
+			jutsu = 0
 		}
 
 		en.key_pressed = {
@@ -237,7 +253,8 @@ function LoadEntity(id) -- функция парсинга кода dat файл
 			right = 0,
 			attack = 0,
 			jump = 0,
-			defend = 0
+			defend = 0,
+			jutsu = 0
 		}
 
 

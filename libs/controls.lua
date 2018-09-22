@@ -12,7 +12,8 @@ key_pressed = {
 		right = 0,
 		attack = 0,
 		jump = 0,
-		defend = 0
+		defend = 0,
+		jutsu = 0
 	},
 	player2 = {
 		up = 0,
@@ -21,7 +22,8 @@ key_pressed = {
 		right = 0,
 		attack = 0,
 		jump = 0,
-		defend = 0
+		defend = 0,
+		jutsu = 0
 	}
 }
 
@@ -33,7 +35,8 @@ control_settings = {
 		right = "d",
 		attack = "f",
 		jump = "g",
-		defend = "h"
+		defend = "h",
+		jutsu = "j"
 	},
 	player2 = {
 		up = "o",
@@ -42,7 +45,8 @@ control_settings = {
 		right = ";",
 		attack = "p",
 		jump = "[",
-		defend = "]"
+		defend = "]",
+		jutsu = "\\"
 	}
 }
 
@@ -60,11 +64,33 @@ function ControlCheck()
 			end
 			for key, val in pairs(key_pressed[player]) do
 				if (val == 1) and (en.key_timer[key] == 0) then
-					en.key_timer[key] = 5
+					en.key_timer[key] = 13
+					if en.double_key_timer[key] == 0 then
+						en.double_key_timer[key] = -14
+					elseif en.double_key_timer[key] < 0 then
+						en.double_key_timer[key] = 13
+					end
+				elseif en.key_timer[key] > 0 then
+					en.key_timer[key] = en.key_timer[key] - 1
+				end
+
+					if en.double_key_timer[key] > 0 then
+						en.double_key_timer[key] = en.double_key_timer[key] - 1
+					elseif en.double_key_timer[key] < 0 then
+						en.double_key_timer[key] = en.double_key_timer[key] + 1
+					end
+			end
+
+			for key, val in pairs(key_pressed[player]) do
+				if (val == 1) and (en.double_key_timer[key] == 0) then
+					
+				elseif (val == 1) and (en.double_key_timer[key] < 0) then
 				elseif en.key_timer[key] > 0 then
 					en.key_timer[key] = en.key_timer[key] - 1
 				end
 			end
+
+
 			for key, val in pairs(control_settings[player]) do
 				key_pressed[player][key] = 0
 			end
@@ -75,6 +101,14 @@ end
 
 function hit_Check(en, frame)
 
+	if (en.double_key_timer.left > 0) and (frame.double_left ~= 0) then
+		SetFrame(en, frame.double_left)
+		en.facing = -1
+	end
+
+	if (en.key_pressed.left == 1) and (frame.hold_left ~= 0) then
+		en.next_frame = frame.hold_left
+	end
 
 
 end

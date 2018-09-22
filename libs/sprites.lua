@@ -129,8 +129,17 @@ function DrawEntity(en) -- функция рисует объект или пе�
 				"right: " .. en.key_timer["right"] .. "\n" ..
 				"attack: " .. en.key_timer["attack"] .. "\n" ..
 				"jump: " .. en.key_timer["jump"] .. "\n" ..
-				"defend: " .. en.key_timer["defend"] .. "\n"
-				, en.x + 25, en.y - 50)
+				"defend: " .. en.key_timer["defend"] .. "\n"..
+				"jutsu: " .. en.key_timer["jutsu"] .. "\n"..
+				"up: " .. en.double_key_timer["up"] .. "\n" ..
+				"down: " .. en.double_key_timer["down"] .. "\n" ..
+				"left: " .. en.double_key_timer["left"] .. "\n" ..
+				"right: " .. en.double_key_timer["right"] .. "\n" ..
+				"attack: " .. en.double_key_timer["attack"] .. "\n" ..
+				"jump: " .. en.double_key_timer["jump"] .. "\n" ..
+				"defend: " .. en.double_key_timer["defend"] .. "\n" ..
+				"jutsu: " .. en.double_key_timer["jutsu"] .. "\n"
+				, en.x + 25, en.y - 100)
 
 	end
 end
