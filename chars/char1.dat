@@ -24,19 +24,19 @@ width: 10
 
 
 <frame> 1 standing
-pic: 1  next: 2  wait: 5  centerx: 15  centery: 79 double_left: 5
+pic: 1  next: 2  wait: 6  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 2 standing
-pic: 2  next: 3  wait: 5  centerx: 15  centery: 79 double_left: 5
+pic: 2  next: 3  wait: 6  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 3 standing
-pic: 3  next: 4  wait: 5  centerx: 15  centery: 79 double_left: 5
+pic: 3  next: 4  wait: 6  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 4 standing
-pic: 4  next: 1  wait: 5  centerx: 15  centery: 79 double_left: 5
+pic: 4  next: 1  wait: 6  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 

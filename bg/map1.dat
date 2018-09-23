@@ -1,13 +1,8 @@
-<map>
-	name: TestMap
+name: TestMap
 
-	size: 1000 250
-	area: 50	-- ВРЕМЕННО УКАЗЫВАЕТСЯ ЛИШЬ ОДНО ЧИСЛО ДЛЯ ОСИ Y
-	light: 10 10 1 1
-	glass: false
+width: 1000
+height: 500
 
-	<layers>
-		{ file: "sprites/BG_1.png", x: 0, y: 0 }
-	<layers>
-	
-</map>
+area: 50	-- ВРЕМЕННО УКАЗЫВАЕТСЯ ЛИШЬ ОДНО ЧИСЛО ДЛЯ ОСИ Y
+
+layer: { file: "sprites/BG_1.png", x: 0, y: 0 }
