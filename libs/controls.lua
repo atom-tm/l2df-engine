@@ -1,6 +1,6 @@
 players = {
-	player1 = 1,
-	player2 = 2
+	player1 = nil,
+	player2 = nil
 }
 
 

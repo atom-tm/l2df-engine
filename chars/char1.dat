@@ -30,6 +30,7 @@ body: { x: 3 y: 29 w: 30 h: 50 }
 <frame> 2 standing
 pic: 2  next: 3  wait: 6  centerx: 15  centery: 79 double_left: 5
 body: { x: 3 y: 29 w: 30 h: 50 }
+itr: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 3 standing
 pic: 3  next: 4  wait: 6  centerx: 15  centery: 79 double_left: 5

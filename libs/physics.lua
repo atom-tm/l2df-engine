@@ -1,18 +1,19 @@
 function Gravity(en_id) -- отвечает за гравитацию, иннерцию и скорость персонажа по всем осям. функция не выполняет перемещение, а лишь высчитывает поведение скоростей исходя из всех факторов.
 -------------------------------------
 	local en = entity_list[en_id]
+	en.in_air = true
 
 	if en.physic then
-		if en.y >= 350 + en.vel_y then
-			en.y = 350
+		if en.y >= map.border_up + en.vel_y then
 			en.in_air = false
+			en.vel_y = 0
 		end
 
 		if not (en.in_air) then 
 			if en.vel_y > 0 then en.vel_y = 0 end
 			en.vel_x = en.vel_x * 0.8
 		else
-			en.vel_y = en.vel_y + en.weight * delta_time
+			en.vel_y = en.vel_y + en.weight
 			en.vel_x = en.vel_x * 0.99
 		end
 	end

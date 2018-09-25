@@ -10,7 +10,6 @@ function CollisionersProcessing()
 	collisions_list = {}
 
 	for i = 1, #collisioners.itr do
-		
 		local entity = entity_list[collisioners.itr[i]]
 		local entity_frame = GetFrame(entity)
 		

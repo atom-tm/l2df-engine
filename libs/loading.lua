@@ -29,6 +29,7 @@ function CreateDataList() -- вызываемая при запуске игры
 
 	for id, file in string.gmatch(characters, "id: (%d+)%s+file: ([%w._/]+)") -- для каждого персонажа
 	do
+		id = tonumber(id)
 		if data_list[id] == nil then -- смотрим в список объектов, проверяем на схожесть id
 			data_list[id] = file -- если id свободен, загружаем персонажа под этим id
 
@@ -39,6 +40,7 @@ function CreateDataList() -- вызываемая при запуске игры
 
 	for id, file in string.gmatch(objects, "id: (%d+)%s+file: ([%w._/]+)") -- для каждого объекта
 	do
+		id = tonumber(id)
 		if data_list[id] == nil then -- смотрим в список объектов, проверяет на схожесть id
 			data_list[id] = file -- если id свободен, загружаем персонажа под этим id
 		else -- если id занят, уведомим об этом игрока с помощью ошибки (хз зачем) 
@@ -48,6 +50,7 @@ function CreateDataList() -- вызываемая при запуске игры
 
 	for id, file in string.gmatch(maps, "id: (%d+)%s+file: ([%w._/]+)") -- для каждой карты
 	do
+		id = tonumber(id)
 		if maps_list[id] == nil then -- смотрим в список карт, проверяем на схожесть id
 			maps_list[id] = file -- если id свободен, загружаем карту под этим id
 		else -- если id занят, опять уведомим игрока, люблю ошибочки
@@ -64,13 +67,16 @@ function LoadingBeforeBattle() -- функция вызывается перед
 	images_list = {}
 	sourse_list = {}
 	entity_list = {}
-	map = {}
+	map = nil
 	collectgarbage()
 
 	for i in pairs(loading_list.characters) do
 		LoadEntity(loading_list.characters[i])
 		CreateEntity(loading_list.characters[i]) -- временно это будет тут
 	end -- цикл загрузки объектов из списка
+
+	map = LoadMap(loading_list.map)
+	CameraSet(map.width, map.height)
 
 end
 
@@ -133,17 +139,49 @@ function LoadMap(map_id) -- функция загружает, путём пар
 		map.width = PNumber(dat, "width")
 		map.height = PNumber(dat, "height")
 
-		map.layers = {} -- массив слоёв карты
+		map.border_up = PNumber(dat, "border_up")
+		map.border_down = PNumber(dat, "border_down")
+
+		map.area = math.abs(map.border_down - map.border_up)
+		map.z_center = (map.border_up + map.border_down) * 0.5
+
+		map.area_mass = {}
+		for i = 1, map.area do
+			table.insert(map.area_mass, {})
+		end
+
+		map.layers = {} -- массив задников карты
 		for l in string.gmatch(dat, "layer: {([^{}]*)}") do -- для каждого блока layer: {}
 			
 			local layer = {} -- переменная слоя
 			local path = string.match(l, "file: \"(.*)\"") -- путь до файла слоя
 			
 			layer.image = LoadImage(path)
+
+			if PBool(l, "fsaa") then
+				layer.image:setFilter("linear","linear")
+			else
+				layer.image:setFilter("nearest","nearest")
+			end
+
+
 			layer.x = PNumber(l, "x")
 			layer.y = PNumber(l, "y")
 
 			table.insert(map.layers, layer) -- загрузка коллайдера в массив
+		end
+		
+		map.filters = {} -- массив фильтров карты
+		for f in string.gmatch(dat, "filter: {([^{}]*)}") do -- для каждого блока filter: {}
+			
+			local filter = {} -- переменная слоя
+			local path = string.match(f, "file: \"(.*)\"") -- путь до файла слоя
+			
+			filter.image = LoadImage(path)
+			filter.x = PNumber(f, "x")
+			filter.y = PNumber(f, "y")
+
+			table.insert(map.filters, filter) -- загрузка коллайдера в массив
 		end
 	end
 	return map
@@ -302,9 +340,9 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 	if created_object ~= nil then -- если мы нашли этот объект, выставляем ему начальные значения и добавляем
 
-		created_object.x = math.random(100,300)
-		created_object.y = 200
-		created_object.z = 0
+		created_object.x = math.random(900,1300)
+		created_object.y = 500
+		created_object.z = math.random(0)
 
 		created_object.vel_x = 0
 		created_object.vel_y = 0
@@ -355,16 +393,16 @@ function CreateEntity(id) -- функция создания экземпляр�
 			jutsu = 0
 		}
 
-		created_object.dynamic_id = #entity_list + 1
+		created_object.dynamic_id = id
 		created_object.real_id = id
 
-		for free_id = 1, #entity_list do
-			if entity_list[free_id] == "nil" then
+		for free_id = 1, #entity_list + 1 do
+			if (entity_list[free_id] == "nil") or (entity_list[free_id] == nil) then
+				created_object.dynamic_id = free_id
 				entity_list[free_id] = created_object
-				return
+				break
 			end
 		end
-		table.insert(entity_list, created_object)
 	end
 end
 
@@ -383,6 +421,10 @@ end
 
 
 function RemoveEntity(en_id)
-	entity_list[en_id] = "nil"
-	collectgarbage()
+	if (entity_list[en_id] ~= "nil") and (entity_list[en_id] ~= nil) then
+		for key in pairs(entity_list[en_id]) do
+			entity_list[en_id][key] = nil
+		end
+		entity_list[en_id] = "nil"
+	end
 end
