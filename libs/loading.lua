@@ -72,11 +72,12 @@ function LoadingBeforeBattle() -- функция вызывается перед
 
 	for i in pairs(loading_list.characters) do
 		LoadEntity(loading_list.characters[i])
-		CreateEntity(loading_list.characters[i]) -- временно это будет тут
 	end -- цикл загрузки объектов из списка
 
 	map = LoadMap(loading_list.map)
 	CameraSet(map.width, map.height)
+
+	Spawner() -- функция отвечающая за спавн всех игроков на карте
 
 end
 
@@ -139,16 +140,14 @@ function LoadMap(map_id) -- функция загружает, путём пар
 		map.width = PNumber(dat, "width")
 		map.height = PNumber(dat, "height")
 
+		map.shadow = PBool(dat, "shadow")
+		map.shadow_opacity = PNumber(dat, "shadow_opacity")
+
 		map.border_up = PNumber(dat, "border_up")
 		map.border_down = PNumber(dat, "border_down")
 
 		map.area = math.abs(map.border_down - map.border_up)
 		map.z_center = (map.border_up + map.border_down) * 0.5
-
-		map.area_mass = {}
-		for i = 1, map.area do
-			table.insert(map.area_mass, {})
-		end
 
 		map.layers = {} -- массив задников карты
 		for l in string.gmatch(dat, "layer: {([^{}]*)}") do -- для каждого блока layer: {}
@@ -164,7 +163,6 @@ function LoadMap(map_id) -- функция загружает, путём пар
 				layer.image:setFilter("nearest","nearest")
 			end
 
-
 			layer.x = PNumber(l, "x")
 			layer.y = PNumber(l, "y")
 
@@ -178,11 +176,32 @@ function LoadMap(map_id) -- функция загружает, путём пар
 			local path = string.match(f, "file: \"(.*)\"") -- путь до файла слоя
 			
 			filter.image = LoadImage(path)
+
+			if PBool(f, "fsaa") then
+				filter.image:setFilter("linear","linear")
+			else
+				filter.image:setFilter("nearest","nearest")
+			end
+
 			filter.x = PNumber(f, "x")
 			filter.y = PNumber(f, "y")
 
 			table.insert(map.filters, filter) -- загрузка коллайдера в массив
 		end
+
+		map.spawn_points = {} -- массив фильтров карты
+		for sp in string.gmatch(dat, "spawn_point: {([^{}]*)}") do -- для каждого блока filter: {}
+			local spawn_point = {} -- переменная слоя
+			spawn_point.x = PNumber(sp, "x")
+			spawn_point.y = PNumber(sp, "y")
+			spawn_point.z = PNumber(sp, "z")
+			spawn_point.rx = PNumber(sp, "rx")
+			spawn_point.ry = PNumber(sp, "ry")
+			spawn_point.rz = PNumber(sp, "rz")
+			spawn_point.facing = PNumber(sp, "facing")
+			table.insert(map.spawn_points, spawn_point) -- загрузка коллайдера в массив
+		end
+
 	end
 	return map
 end
@@ -230,7 +249,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					local h = PNumber(s, "h")
 					local row = PNumber(s, "row")
 					local col = PNumber(s, "col")
-					local pics = SpriteCutting(w,h,row,col,image, false) -- получение "сетки" спрайтов
+					local border = PBool(s, "border")
+					local pics = SpriteCutting(w,h,row,col,image, border) -- получение "сетки" спрайтов
 
 					local sprites = {
 						file = image,
@@ -340,9 +360,9 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 	if created_object ~= nil then -- если мы нашли этот объект, выставляем ему начальные значения и добавляем
 
-		created_object.x = math.random(900,1300)
-		created_object.y = 500
-		created_object.z = math.random(0)
+		created_object.x = 0
+		created_object.y = 0
+		created_object.z = 0
 
 		created_object.vel_x = 0
 		created_object.vel_y = 0
@@ -403,6 +423,7 @@ function CreateEntity(id) -- функция создания экземпляр�
 				break
 			end
 		end
+		return created_object.dynamic_id
 	end
 end
 

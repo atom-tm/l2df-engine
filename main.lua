@@ -29,7 +29,10 @@ function love.load()
 
     CreateDataList() -- создание листа со всеми персонажами
 
-    loading_list.characters = {4,4,4}
+    for i = 1, 10 do
+    	table.insert(loading_list.characters, 4)
+    end
+
     loading_list.map = 1
     LoadingBeforeBattle()
 
@@ -49,6 +52,31 @@ function love.update(dt)
 	if love.keyboard.isDown("j") then
 		scale = scale - 0.01
 	end
+
+	if love.keyboard.isDown("t") then
+		entity_list[3].z = entity_list[3].z - 0.5
+	end
+
+	if love.keyboard.isDown("g") then
+		entity_list[3].z = entity_list[3].z + 0.5
+	end
+
+	if love.keyboard.isDown("d") then
+		entity_list[3].x = entity_list[3].x + 0.5
+	end
+
+	if love.keyboard.isDown("a") then
+		entity_list[3].x = entity_list[3].x - 0.5
+	end
+
+	if love.keyboard.isDown("w") then
+		entity_list[3].y = entity_list[3].y + 0.5
+	end
+
+	if love.keyboard.isDown("s") then
+		entity_list[3].y = entity_list[3].y - 0.5
+	end
+
 
 	if love.keyboard.isDown("up") then
 		camera_y = camera_y - 3
@@ -83,7 +111,7 @@ function love.draw()
 		love.graphics.setNewFont(12)
 		love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)
 		love.graphics.print("Objects: "..tostring(#entity_list).." Collisions: "..tostring(#collisions_list), 10, 25)
-		love.graphics.print("FPS: "..tostring(map.Ypoint), 10, 40)
+		love.graphics.print("FPS: "..tostring(#objects_for_drawing), 10, 40)
 	end
 
 	local cur_time = love.timer.getTime()

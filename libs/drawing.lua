@@ -1,3 +1,6 @@
+objects_for_drawing = {}
+
+
 function CameraCreate() -- отвечает за изначальное создание камеры
 -------------------------------------
 	local width, height, flags = love.window.getMode( )
@@ -17,7 +20,7 @@ end
 
 
 
-function DrawEntity(en) -- функция рисует объект или персонажа
+--[[function DrawEntity(en) -- функция рисует объект или персонажа
 -------------------------------------
 	
 	local facing = en.facing
@@ -54,7 +57,7 @@ function DrawEntity(en) -- функция рисует объект или пе�
 		love.graphics.print(en.real_id, en.x + 20, en.y - 50)
 		end
 	end
-end
+end]]
 
 
 
@@ -79,14 +82,89 @@ function ForegroundDraw ()
 end
 
 
+
+
 function ObjectsDraw()
 
-	love.graphics.setColor(255/255, 50/255, 50/255, 1)
-	love.graphics.rectangle("line", 0, map.border_up, map.width, map.area)
-	love.graphics.setColor(1, 1, 1, 1)
-
-	for i = 1, #entity_list do
-		love.graphics.print("player", entity_list[i].x, entity_list[i].y)
+	for i = #objects_for_drawing, 1, -1 do
+		for j = 1, i - 1 do
+			local tid = objects_for_drawing[j].id
+			local tz = objects_for_drawing[j].z
+			if tz < objects_for_drawing[j+1].z then
+				objects_for_drawing[j].id = objects_for_drawing[j+1].id
+				objects_for_drawing[j].z = objects_for_drawing[j+1].z
+				objects_for_drawing[j+1].id = tid
+				objects_for_drawing[j+1].z = tz
+			end
+		end
+		DrawEntity(objects_for_drawing[i].id)
 	end
 
+
+
+	--[[for i = #objects_for_drawing, 1, -1 do
+		for j = 1, i, 1 do
+			love.window.showMessageBox( "..", i.." "..j, "info", true)
+			local j1 = objects_for_drawing[j].z
+			if(j1 < objects_for_drawing[j+1].z) then
+				objects_for_drawing[j] = objects_for_drawing[j+1]
+				objects_for_drawing[j+1] = j1
+			end
+		end
+		DrawEntity(objects_for_drawing[i].id)
+	end]]
+end
+
+
+function DrawEntity (en_id)
+
+	local en = entity_list[en_id]
+	local frame = GetFrame(en)
+
+	if frame ~= nil then
+
+		local x = en.x - frame.centerx * en.facing
+		local y = map.border_up - en.y - frame.centery + en.z
+
+		local sizex = 1 * en.facing
+		local sizey = 1
+
+		local pic = frame.pic
+
+		if not (pic == 0) then 
+
+		local list
+		local sprite
+			
+			for s = 1, #en.sprites do
+				if pic > #en.sprites[s].pics then
+					pic = pic - #en.sprites[s].pics
+				else
+					list = en.sprites[s].file
+					sprite = en.sprites[s].pics[pic]
+					break
+				end
+			end
+
+			love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
+
+		if map.shadow then
+
+			local shadow_x = en.x - frame.centerx * en.facing
+			local shadow_y = map.border_up + en.y + frame.centery + en.z
+
+			local shadow_sizex = 1 * en.facing
+			local shadow_sizey = -1
+
+			local shadow_opacity = map.shadow_opacity - en.y * 0.005
+
+			love.graphics.setColor(0, 0, 0, shadow_opacity)
+			love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, 0, 0, 0)
+			love.graphics.setColor(1, 1, 1, 1)
+		end
+
+		
+			--love.graphics.print("player", en.x - frame.centerx, map.border_up + en.z - frame.centery)
+		end
+	end
 end

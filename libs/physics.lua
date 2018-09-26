@@ -1,36 +1,18 @@
 function Gravity(en_id) -- отвечает за гравитацию, иннерцию и скорость персонажа по всем осям. функция не выполняет перемещение, а лишь высчитывает поведение скоростей исходя из всех факторов.
 -------------------------------------
-	local en = entity_list[en_id]
-	en.in_air = true
 
-	if en.physic then
-		if en.y >= map.border_up + en.vel_y then
-			en.in_air = false
-			en.vel_y = 0
-		end
-
-		if not (en.in_air) then 
-			if en.vel_y > 0 then en.vel_y = 0 end
-			en.vel_x = en.vel_x * 0.8
-		else
-			en.vel_y = en.vel_y + en.weight
-			en.vel_x = en.vel_x * 0.99
-		end
-	end
 end
 
 
 function Motion(en, dt)
-	en.y = en.y + en.vel_y
-	en.x = en.x + en.vel_x
-	w, h, k = love.window.getMode()
-	
-	if (en.x > w) or (en.x < 0) then
-		en.vel_x = en.vel_x * -1
-	end
 
-	if (en.y > h) or (en.y < 0) then
-		en.vel_y = en.vel_y * -1
-	end
+end
 
+function BordersCheck(en)
+	if en.y < 0 then en.y = 0 end
+	if en.y > map.border_up then en.y = map.border_up end
+	if en.z < 0 then en.z = 0 end
+	if en.z > map.area then en.z = map.area end
+	if en.x < 0 then en.x = 0 end
+	if en.x > map.width then en.x = map.width end
 end

@@ -1,0 +1,41 @@
+<head>
+
+name: Sasuke
+type: character
+
+physic: true
+weight: 10
+collision: true
+
+hp: 100
+
+sprite: {
+	file: "sprites/akasasuke_1.png"
+	w: 115 h: 115
+	row: 10 col: 6
+	border: true
+}
+sprite: {
+	file: "sprites/akasasuke_2.png"
+	w: 115 h: 115
+	row: 10 col: 6
+}
+</head>
+
+
+<frame> 1 standing
+pic: 1  next: 2  wait: 6  centerx: 15  centery: 113
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 2 standing
+pic: 2  next: 3  wait: 6  centerx: 15  centery: 113
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 3 standing
+pic: 3  next: 4  wait: 6  centerx: 15  centery: 113
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
+<frame> 4 standing
+pic: 4  next: 1  wait: 6  centerx: 15  centery: 113
+body: { x: 3 y: 29 w: 30 h: 50 }
+</frame>
