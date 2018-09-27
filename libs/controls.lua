@@ -1,8 +1,12 @@
 players = {
 	player1 = nil,
 	player2 = nil
-}
+} -- массив в котором будут храниться ссылки на привязанных к игрокам персонажей
 
+players_flags = {
+	player1 = false,
+	player2 = true
+} -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
 
 key_pressed = {
 	player1 = {
@@ -25,7 +29,7 @@ key_pressed = {
 		defend = 0,
 		jutsu = 0
 	}
-}
+} -- если была нажата какая-то из кнопок управления
 
 control_settings = {
 	player1 = {
@@ -48,7 +52,7 @@ control_settings = {
 		defend = "]",
 		jutsu = "\\"
 	}
-}
+} -- тут лежат все настройки управления
 
 
 function ControlCheck()

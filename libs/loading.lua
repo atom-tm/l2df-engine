@@ -283,6 +283,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.centerx = PNumber(f,"centerx")
 				frame.centery = PNumber(f,"centery")
 				frame.shadow = PNumber(f,"shadow")
+				frame.zoom = PNumber(f,"zoom")
 				
 				frame.hold_left = PNumber(f,"hold_left")
 				frame.double_left = PNumber(f,"double_left")
@@ -368,10 +369,12 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.vel_y = 0
 		created_object.vel_z = 0
 
+		created_object.scale = 1
+		created_object.facing = 1
+
 
 		created_object.in_air = false
 
-		created_object.facing = 1
 
 		created_object.frame = 1
 		created_object.next_frame = 1

@@ -50,10 +50,9 @@ function BattleProcessing()
 
 	CollisionersProcessing()
 
+	CameraBinding()
+
 	RemoveProcessing(remove_list) -- функция удаления объектов, помеченых к удалению
-
-
-
 end
 
 
@@ -76,6 +75,8 @@ end
 
 
 function Spawner()
+	players.player1 = nil
+	players.player2 = nil
 	for char = 1, #loading_list.characters do
 		local id = CreateEntity(loading_list.characters[char])
 		local object = entity_list[id]
@@ -93,6 +94,13 @@ function Spawner()
 			end
 		elseif (spawn.facing == -1) or (spawn.facing == 1) then
 			object.facing = spawn.facing
+		end
+
+		for key, val in pairs(players_flags) do
+			if (players_flags[key] == true) and (players[key] == nil) then
+				players[key] = id
+				break
+			end
 		end
 	end
 end

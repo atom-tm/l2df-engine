@@ -19,6 +19,122 @@ function CameraSet(w,h) -- задаёт положение камеры, раз�
 end
 
 
+function CameraBinding () -- функция отвечает за поведение камеры
+-- если игрок один, камера привязывается к нему и следует за ним, отдаляясь при наборе игроком скорости
+-------------------------------------
+	
+	local players_count = 0 -- переменная для подсчета количества игроков
+	local player = nil
+	for k in pairs(players) do
+		if players[k] ~= nil then
+			players_count = players_count + 1
+			player = players[k]
+		end
+	end
+
+	if players_count == 1 then -- если игрок один
+		
+		local en = entity_list[player]
+		local frame = GetFrame(en)
+
+		local camera_x, camera_y = camera:getPosition()
+		local camera_scale = camera:getScale()
+
+		local target_x = en.x + ((frame.centerx + 20) * en.facing) + en.vel_x
+		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) + en.vel_y
+		local target_scale = en.scale + 0.3 - (math.abs(en.vel_x) + math.abs(en.vel_y)) * 0.005 + frame.zoom + en.vel_z
+
+
+		if target_scale > 3.5 then target_scale = 3.5
+		elseif target_scale < 0.5 then target_scale = 0.5 end
+
+
+		if camera_x > target_x then
+			local speed = (camera_x - target_x) * 0.05
+			camera_x = camera_x - speed
+		elseif camera_x < target_x then
+			local speed = (target_x - camera_x) * 0.05
+			camera_x = camera_x + speed
+		end
+
+		if camera_y > target_y then
+			local speed = (camera_y - target_y) * 0.05
+			camera_y = camera_y - speed
+		elseif camera_y < target_y then
+			local speed = (target_y - camera_y) * 0.05
+			camera_y = camera_y + speed
+		end
+
+		if camera_scale > target_scale then
+			local speed = (camera_scale - target_scale) * 0.05
+			camera_scale = camera_scale - speed
+		elseif camera_scale < target_scale then
+			local speed = (target_scale - camera_scale) * 0.05
+			camera_scale = camera_scale + speed
+		end
+
+		camera:setPosition(camera_x, camera_y)
+		camera:setScale(camera_scale)
+		--camera:setAngle()
+
+
+
+
+	elseif players_count == 2 then -- если игроков двое
+
+		local en1 = entity_list[players.player1]
+		local frame1 = GetFrame(en1)
+		
+		local en2 = entity_list[players.player2]
+		local frame2 = GetFrame(en2)
+
+		local camera_x, camera_y = camera:getPosition()
+		local camera_scale = camera:getScale()
+
+		local target_x = (en1.x + en2.x) * 0.5 + (frame1.centerx * en1.facing) + (frame2.centerx * en2.facing)
+		local target_y = ((map.border_up + en1.z - en1.y) + (map.border_up + en2.z - en2.y)) * 0.46
+		local target_scale = (en1.scale + en2.scale) * 0.5 - math.sqrt((en1.x - en2.x)^2 + (en1.y - en2.y)^2 + (en1.z - en2.z)^2) * 0.001 + 0.3 - ((math.abs(en1.vel_x) + math.abs(en1.vel_y)) + (math.abs(en2.vel_x) + math.abs(en2.vel_y))) * 0.001
+
+		if target_scale > 3.5 then target_scale = 3.5
+		elseif target_scale < 0.1 then target_scale = 0.1 end
+
+
+		if camera_x > target_x then
+			local speed = (camera_x - target_x) * 0.05
+			camera_x = camera_x - speed
+		elseif camera_x < target_x then
+			local speed = (target_x - camera_x) * 0.05
+			camera_x = camera_x + speed
+		end
+
+		if camera_y > target_y then
+			local speed = (camera_y - target_y) * 0.05
+			camera_y = camera_y - speed
+		elseif camera_y < target_y then
+			local speed = (target_y - camera_y) * 0.05
+			camera_y = camera_y + speed
+		end
+
+		if camera_scale > target_scale then
+			local speed = (camera_scale - target_scale) * 0.05
+			camera_scale = camera_scale - speed
+		elseif camera_scale < target_scale then
+			local speed = (target_scale - camera_scale) * 0.05
+			camera_scale = camera_scale + speed
+		end
+
+		camera:setPosition(camera_x, camera_y)
+		camera:setScale(camera_scale)
+
+	else -- для всех остальных случаев
+
+
+	end
+end
+
+
+
+
 
 --[[function DrawEntity(en) -- функция рисует объект или персонажа
 -------------------------------------
@@ -100,6 +216,11 @@ function ObjectsDraw()
 		DrawEntity(objects_for_drawing[i].id)
 	end
 
+	for key, val in pairs(players) do
+		en = entity_list[val]
+		frame = GetFrame(en)
+		love.graphics.print("V", en.x, map.border_up - en.y - frame.centery + en.z)
+	end
 
 
 	--[[for i = #objects_for_drawing, 1, -1 do
