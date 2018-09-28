@@ -369,6 +369,20 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.vel_y = 0
 		created_object.vel_z = 0
 
+		created_object.speed_x = 0
+		created_object.speed_y = 0
+		created_object.speed_z = 0
+
+		created_object.accel_x = 0
+		created_object.accel_y = 0
+		created_object.accel_z = 0
+
+		created_object.taccel_x = 0
+		created_object.taccel_y = 0
+		created_object.taccel_z = 0
+
+
+
 		created_object.scale = 1
 		created_object.facing = 1
 

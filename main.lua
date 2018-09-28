@@ -30,7 +30,7 @@ function love.load()
     CreateDataList() -- создание листа со всеми персонажами
 
     for i = 1, 10 do
-    	table.insert(loading_list.characters, 3)
+    	table.insert(loading_list.characters, math.random(3, 4))
     end
 
     loading_list.map = 1
@@ -47,39 +47,40 @@ function love.update(dt)
 	BattleProcessing()
 
 
-	if love.keyboard.isDown("t") then
-		entity_list[1].z = entity_list[1].z - 2
+	if love.keyboard.isDown("w") then
+		entity_list[1].accel_z = -15
 	end
 
-	if love.keyboard.isDown("g") then
-		entity_list[1].z = entity_list[1].z + 2
+	if love.keyboard.isDown("s") then
+		entity_list[1].accel_z = 15
 	end
 
 	if love.keyboard.isDown("d") then
-		entity_list[1].x = entity_list[1].x + 3
+		entity_list[1].accel_x = 50
 		entity_list[1].facing = 1
 	end
 
 	if love.keyboard.isDown("a") then
-		entity_list[1].x = entity_list[1].x - 3
+		entity_list[1].accel_x = -50
 		entity_list[1].facing = -1
 	end
 
-	if love.keyboard.isDown("w") then
-		entity_list[1].y = entity_list[1].y + 4
+	if love.keyboard.isDown("c") then
+		entity_list[1].speed_x = 50
+		entity_list[1].facing = 1
 	end
 
-	if love.keyboard.isDown("s") then
-		entity_list[1].y = entity_list[1].y - 4
+	if love.keyboard.isDown("x") then
+		entity_list[1].speed_x = -50
+		entity_list[1].facing = -1
 	end
 
 	if love.keyboard.isDown("y") then
-		entity_list[1].vel_x = entity_list[1].vel_x + 1
+		entity_list[1].vel_x = 0
+		entity_list[1].vel_y = 0
+		entity_list[1].vel_z = 0
 	end
 
-	if love.keyboard.isDown("h") then
-		entity_list[1].vel_x = entity_list[1].vel_x - 1
-	end
 
 end 
 
@@ -93,7 +94,7 @@ function love.draw()
 	end)
 
 
-	--love.graphics.print(t3.." - "..t4, 500, 30)
+	love.graphics.print(entity_list[1].vel_x.." \n "..entity_list[1].taccel_x.." \n "..entity_list[1].accel_x.."\n".. delta_time * 0.99, 100, 30)
 	if debug_info then
 		love.graphics.setNewFont(12)
 		love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)

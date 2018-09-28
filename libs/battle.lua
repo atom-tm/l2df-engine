@@ -1,7 +1,7 @@
 function BattleProcessing()
 
 	ControlCheck() -- функция проверки управления для всех игроков
-	objects_for_drawing = {}
+	objects_for_drawing = {} -- обнуление массива объектов на отрисовку
 
 	local remove_list = {} -- список объектов для удаления
 	local creating_list = {} -- список объектов для создания
@@ -14,11 +14,11 @@ function BattleProcessing()
 			local frame = GetFrame(en) -- получаем фрейм объекта
 
 			if en.physic == true then -- если физика включена
-				Gravity(en_id) -- функция ответственная за гравитацию
+				Gravity(en) -- функция ответственная за гравитацию
 			end
 
-			if (en.vel_x ~= 0) or (en.vel_y ~= 0) then -- если объект имеет скорость
-				Motion(en, dt) -- функция ответственная за передвижение
+			if (en.vel_x ~= 0) or (en.vel_y ~= 0) or (en.vel_z ~= 0) then -- если объект имеет скорость
+				Motion(en) -- функция ответственная за передвижение
 			end
 
 			BordersCheck(en)
@@ -38,13 +38,15 @@ function BattleProcessing()
 			local draw_object = { id = en_id, z = en.z }
 			table.insert(objects_for_drawing, draw_object)
 
-			if en.wait == 0 then -- если вайт подошёл к концу, переходим в указанный кадр
+			if en.wait < 0 then -- если вайт подошёл к концу, переходим в указанный кадр
 				if en.next_frame == 0 then
 					table.insert(remove_list, en_id)
 				else
 					SetFrame(en, en.next_frame)
 				end
-			else en.wait = en.wait - 1 end
+			else
+				en.wait = en.wait - 1 * delta_time * 100
+			end
 		end
 	end
 

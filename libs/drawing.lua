@@ -40,9 +40,9 @@ function CameraBinding () -- функция отвечает за поведен
 		local camera_x, camera_y = camera:getPosition()
 		local camera_scale = camera:getScale()
 
-		local target_x = en.x + ((frame.centerx + 20) * en.facing) + en.vel_x
-		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) + en.vel_y
-		local target_scale = en.scale + 0.3 - (math.abs(en.vel_x) + math.abs(en.vel_y)) * 0.005 + frame.zoom + en.vel_z
+		local target_x = en.x + ((frame.centerx + 50) * en.facing) + en.vel_x
+		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) + en.vel_y + en.vel_z
+		local target_scale = en.scale + 0.3 - (math.abs(en.vel_x) + math.abs(en.vel_y) + math.abs(en.vel_z)) * 0.005 + frame.zoom
 
 
 		if target_scale > 3.5 then target_scale = 3.5
@@ -50,26 +50,26 @@ function CameraBinding () -- функция отвечает за поведен
 
 
 		if camera_x > target_x then
-			local speed = (camera_x - target_x) * 0.05
+			local speed = (camera_x - target_x) * delta_time * 5
 			camera_x = camera_x - speed
 		elseif camera_x < target_x then
-			local speed = (target_x - camera_x) * 0.05
+			local speed = (target_x - camera_x) * delta_time * 5
 			camera_x = camera_x + speed
 		end
 
 		if camera_y > target_y then
-			local speed = (camera_y - target_y) * 0.05
+			local speed = (camera_y - target_y) * delta_time * 5
 			camera_y = camera_y - speed
 		elseif camera_y < target_y then
-			local speed = (target_y - camera_y) * 0.05
+			local speed = (target_y - camera_y) * delta_time * 5
 			camera_y = camera_y + speed
 		end
 
 		if camera_scale > target_scale then
-			local speed = (camera_scale - target_scale) * 0.05
+			local speed = (camera_scale - target_scale) * delta_time * 5
 			camera_scale = camera_scale - speed
 		elseif camera_scale < target_scale then
-			local speed = (target_scale - camera_scale) * 0.05
+			local speed = (target_scale - camera_scale) * delta_time * 5
 			camera_scale = camera_scale + speed
 		end
 

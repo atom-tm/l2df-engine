@@ -4,7 +4,7 @@ name: Sasuke
 type: character
 
 physic: true
-weight: 10
+weight: 55
 collision: true
 
 hp: 100
@@ -24,18 +24,18 @@ sprite: {
 
 
 <frame> 1 standing
-pic: 1  next: 2  wait: 6  centerx: 18  centery: 113
+pic: 1  next: 2  wait: 9  centerx: 18  centery: 113
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 2 standing
-pic: 2  next: 3  wait: 6  centerx: 18  centery: 113
+pic: 2  next: 3  wait: 9  centerx: 18  centery: 113
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 3 standing
-pic: 3  next: 4  wait: 6  centerx: 18  centery: 113
+pic: 3  next: 4  wait: 9  centerx: 18  centery: 113
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
 <frame> 4 standing
-pic: 4  next: 1  wait: 6  centerx: 18  centery: 113
+pic: 4  next: 1  wait: 9  centerx: 18  centery: 113
 body: { x: 3 y: 29 w: 30 h: 50 }
 </frame>
