@@ -13,15 +13,9 @@ function BattleProcessing()
 			local en = entity_list[en_id] -- получаем объект
 			local frame = GetFrame(en) -- получаем фрейм объекта
 
-			if en.physic == true then -- если физика включена
-				Gravity(en) -- функция ответственная за гравитацию
-			end
-
-			if (en.vel_x ~= 0) or (en.vel_y ~= 0) or (en.vel_z ~= 0) then -- если объект имеет скорость
-				Motion(en) -- функция ответственная за передвижение
-			end
-
-			BordersCheck(en)
+			Gravity(en) -- гравитация
+			Motion(en) -- передвижение объекта
+			BordersCheck(en) -- проверка на пересечение границ карты
 
 			if en.collision then -- если коллизии включены, выполняется проверка на наличие коллайдеров в текущем кадре. если коллайдеры имеются, они заносятся в списки для дальнейшей обработки
 				if (en.arest == 0) and (frame.itr_radius > 0) then
@@ -47,10 +41,12 @@ function BattleProcessing()
 			else
 				en.wait = en.wait - 1 * delta_time * 100
 			end
+
 		end
 	end
 
 	CollisionersProcessing()
+	CollisionsProcessing()
 
 	CameraBinding()
 

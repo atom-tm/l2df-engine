@@ -29,8 +29,8 @@ function love.load()
 
     CreateDataList() -- создание листа со всеми персонажами
 
-    for i = 1, 10 do
-    	table.insert(loading_list.characters, math.random(3, 4))
+    for i = 1, 2 do
+    	table.insert(loading_list.characters, 1)
     end
 
     loading_list.map = 1
@@ -48,11 +48,11 @@ function love.update(dt)
 
 
 	if love.keyboard.isDown("w") then
-		entity_list[1].accel_z = -15
+		entity_list[1].accel_z = -20
 	end
 
 	if love.keyboard.isDown("s") then
-		entity_list[1].accel_z = 15
+		entity_list[1].accel_z = 20
 	end
 
 	if love.keyboard.isDown("d") then
@@ -74,11 +74,13 @@ function love.update(dt)
 		entity_list[1].speed_x = -50
 		entity_list[1].facing = -1
 	end
+	
+	if love.keyboard.isDown("t") then
+		entity_list[1].accel_y = 45
+	end
 
 	if love.keyboard.isDown("y") then
-		entity_list[1].vel_x = 0
-		entity_list[1].vel_y = 0
-		entity_list[1].vel_z = 0
+    	LoadingBeforeBattle()
 	end
 
 
@@ -94,7 +96,8 @@ function love.draw()
 	end)
 
 
-	love.graphics.print(entity_list[1].vel_x.." \n "..entity_list[1].taccel_x.." \n "..entity_list[1].accel_x.."\n".. delta_time * 0.99, 100, 30)
+	love.graphics.print("", 100, 30)
+	
 	if debug_info then
 		love.graphics.setNewFont(12)
 		love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)

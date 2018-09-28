@@ -1,0 +1,31 @@
+<head>
+
+name: Itachi
+type: character
+
+physic: true
+collision: true
+
+hp: 100
+
+sprite: {
+	file: "chars/itachi/sprites/1.png"
+	w: 115 h: 115
+	row: 10 col: 6
+	border: true
+}
+</head>
+
+
+<frame> 1 standing
+pic: 1  next: 2  wait: 9  centerx: 18  centery: 113
+</frame>
+<frame> 2 standing
+pic: 2  next: 3  wait: 9  centerx: 18  centery: 113
+</frame>
+<frame> 3 standing
+pic: 3  next: 4  wait: 9  centerx: 16  centery: 113
+</frame>
+<frame> 4 standing
+pic: 4  next: 1  wait: 9  centerx: 18  centery: 113
+</frame>

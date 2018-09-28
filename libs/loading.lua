@@ -339,6 +339,7 @@ function LoadCollider(c,r)
 		collaider.y = tonumber(string.match(c, "y: ([-%d]+)"))
 		collaider.w = tonumber(string.match(c, "w: ([-%d]+)"))
 		collaider.h = tonumber(string.match(c, "h: ([-%d]+)"))
+		collaider.z = tonumber(string.match(c, "z: ([-%d]+)"))
 		-- загрузка координат коллайдера в массив для нахождения радиуса --
 		table.insert(r, math.abs(collaider.x))
 		table.insert(r, math.abs(collaider.x + collaider.w))
@@ -387,7 +388,7 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.facing = 1
 
 
-		created_object.in_air = false
+		created_object.on_platform = false
 
 
 		created_object.frame = 1

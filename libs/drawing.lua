@@ -40,8 +40,8 @@ function CameraBinding () -- функция отвечает за поведен
 		local camera_x, camera_y = camera:getPosition()
 		local camera_scale = camera:getScale()
 
-		local target_x = en.x + ((frame.centerx + 50) * en.facing) + en.vel_x
-		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) + en.vel_y + en.vel_z
+		local target_x = en.x + (80 * en.facing) + en.vel_x
+		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) - en.vel_y * 0.5 + en.vel_z
 		local target_scale = en.scale + 0.3 - (math.abs(en.vel_x) + math.abs(en.vel_y) + math.abs(en.vel_z)) * 0.005 + frame.zoom
 
 
@@ -61,7 +61,7 @@ function CameraBinding () -- функция отвечает за поведен
 			local speed = (camera_y - target_y) * delta_time * 5
 			camera_y = camera_y - speed
 		elseif camera_y < target_y then
-			local speed = (target_y - camera_y) * delta_time * 5
+			local speed = (target_y - camera_y) * delta_time * 7
 			camera_y = camera_y + speed
 		end
 
@@ -221,19 +221,6 @@ function ObjectsDraw()
 		frame = GetFrame(en)
 		love.graphics.print("V", en.x, map.border_up - en.y - frame.centery + en.z)
 	end
-
-
-	--[[for i = #objects_for_drawing, 1, -1 do
-		for j = 1, i, 1 do
-			love.window.showMessageBox( "..", i.." "..j, "info", true)
-			local j1 = objects_for_drawing[j].z
-			if(j1 < objects_for_drawing[j+1].z) then
-				objects_for_drawing[j] = objects_for_drawing[j+1]
-				objects_for_drawing[j+1] = j1
-			end
-		end
-		DrawEntity(objects_for_drawing[i].id)
-	end]]
 end
 
 
@@ -241,6 +228,25 @@ function DrawEntity (en_id)
 
 	local en = entity_list[en_id]
 	local frame = GetFrame(en)
+
+	for i = 1, #frame.bodys do
+		local c = CollaiderCords(frame.bodys[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+		love.graphics.setColor(.11, .8, .45, 1)
+		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+		love.graphics.setColor(1, 1, 1, 1)
+	end
+	for i = 1, #frame.itrs do
+		local c = CollaiderCords(frame.itrs[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+		love.graphics.setColor(.11, .8, .45, 1)
+		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+		love.graphics.setColor(1, 1, 1, 1)
+	end
+	for i = 1, #frame.platforms do
+		local c = CollaiderCords(frame.platforms[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+		love.graphics.setColor(.11, .8, .45, 1)
+		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+		love.graphics.setColor(1, 1, 1, 1)
+	end
 
 	if frame ~= nil then
 
@@ -254,38 +260,35 @@ function DrawEntity (en_id)
 
 		if not (pic == 0) then 
 
-		local list
-		local sprite
-			
-			for s = 1, #en.sprites do
-				if pic > #en.sprites[s].pics then
-					pic = pic - #en.sprites[s].pics
-				else
-					list = en.sprites[s].file
-					sprite = en.sprites[s].pics[pic]
-					break
+			local list
+			local sprite
+				
+				for s = 1, #en.sprites do
+					if pic > #en.sprites[s].pics then
+						pic = pic - #en.sprites[s].pics
+					else
+						list = en.sprites[s].file
+						sprite = en.sprites[s].pics[pic]
+						break
+					end
 				end
+
+				love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
+
+			if map.shadow then
+
+				local shadow_x = en.x - frame.centerx * en.facing
+				local shadow_y = map.border_up + en.y + frame.centery + en.z
+
+				local shadow_sizex = 1 * en.facing
+				local shadow_sizey = -1
+
+				local shadow_opacity = map.shadow_opacity - en.y * 0.005
+
+				love.graphics.setColor(0, 0, 0, shadow_opacity)
+				love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, 0, 0, 0)
+				love.graphics.setColor(1, 1, 1, 1)
 			end
-
-			love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
-
-		if map.shadow then
-
-			local shadow_x = en.x - frame.centerx * en.facing
-			local shadow_y = map.border_up + en.y + frame.centery + en.z
-
-			local shadow_sizex = 1 * en.facing
-			local shadow_sizey = -1
-
-			local shadow_opacity = map.shadow_opacity - en.y * 0.005
-
-			love.graphics.setColor(0, 0, 0, shadow_opacity)
-			love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, 0, 0, 0)
-			love.graphics.setColor(1, 1, 1, 1)
-		end
-
-		
-			--love.graphics.print("player", en.x - frame.centerx, map.border_up + en.z - frame.centery)
 		end
 	end
 end

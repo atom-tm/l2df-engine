@@ -20,18 +20,21 @@ function CollisionersProcessing()
 				local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
 				if distantion < (entity_frame.itr_radius + target_frame.body_radius) then
 					for itr_id = 1, #entity_frame.itrs do
-						local itr = CollaiderCords(entity_frame.itrs[itr_id], entity.x, entity.y, entity_frame.centerx, entity_frame.centery, entity.facing)
+						local itr = CollaiderCords(entity_frame.itrs[itr_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
 						for body_id = 1, #target_frame.bodys do
-							local body = CollaiderCords(target_frame.bodys[body_id], target.x, target.y, target_frame.centerx, target_frame.centery, target.facing)
-							if (CheckCollision(itr, body)) then
-								local collision = {
-									type = "itr_to_body",
-									entity_id = collisioners.itr[i],
-									target_id = collisioners.body[j],
-									itr_id = itr_id,
-									body_id = body_id
-								}
-								table.insert(collisions_list, collision)
+							local body = CollaiderCords(target_frame.bodys[body_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
+							
+							if entity.z + itr.z * 0.5 > target.z and entity.z - itr.z * 0.5 < target.z then
+								if (CheckCollision(itr, body)) then
+									local collision = {
+										type = "itr_to_body",
+										entity_id = collisioners.itr[i],
+										target_id = collisioners.body[j],
+										itr_id = itr_id,
+										body_id = body_id
+									}
+									table.insert(collisions_list, collision)
+								end
 							end
 						end
 					end
@@ -45,18 +48,21 @@ function CollisionersProcessing()
 			local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
 			if distantion < (entity_frame.itr_radius + target_frame.itr_radius) then
 				for itr1_id = 1, #entity_frame.itrs do
-					local itr1 = CollaiderCords(entity_frame.itrs[itr1_id], entity.x, entity.y, entity_frame.centerx, entity_frame.centery, entity.facing)
+					local itr1 = CollaiderCords(entity_frame.itrs[itr1_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
 					for itr2_id = 1, #target_frame.itrs do
-						local itr2 = CollaiderCords(target_frame.itrs[itr2_id], target.x, target.y, target_frame.centerx, target_frame.centery, target.facing)
-						if (CheckCollision(itr1, itr2)) then
-							local collision = {
-								type = "itr_to_itr",
-								entity_id = collisioners.itr[i],
-								target_id = collisioners.itr[j],
-								itr1_id = itr1_id,
-								itr2_id = itr2_id
-							}
-							table.insert(collisions_list, collision)
+						local itr2 = CollaiderCords(target_frame.itrs[itr2_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
+						
+						if (entity.z + itr1.z * 0.5 > target.z and entity.z - itr1.z * 0.5 < target.z) or (target.z + itr2.z * 0.5 > entity.z and target.z - itr2.z * 0.5 < entity.z) then
+							if (CheckCollision(itr1, itr2)) then
+								local collision = {
+									type = "itr_to_itr",
+									entity_id = collisioners.itr[i],
+									target_id = collisioners.itr[j],
+									itr1_id = itr1_id,
+									itr2_id = itr2_id
+								}
+								table.insert(collisions_list, collision)
+							end
 						end
 					end
 				end
@@ -77,14 +83,14 @@ function CollisionersProcessing()
 					if distantion < target_frame.platform_radius then
 						for p_id = 1, #target_frame.platforms do
 
-							local platform = CollaiderCords(target_frame.platforms[p_id], target.x, target.y, target_frame.centerx, target_frame.centery, target.facing)
+							local platform = CollaiderCords(target_frame.platforms[p_id], target.x, target.y, target.z, target_frame.centerx, target_frame.centery, target.facing)
 							local unit = {
 								x = entity.x,
-								y = entity.y,
+								y = map.border_up - entity.y + entity.z,
 								w = 1,
-								h = 1
+								h = 1,
+								z = 1
 							}
-
 							if (CheckCollision(platform, unit)) then
 								local collision = {
 									type = "unit_to_platform",
@@ -114,12 +120,13 @@ function CheckCollision(c1,c2)
 end
 
 
-function CollaiderCords(collaider, x, y, centerx, centery, facing)
+function CollaiderCords(collaider, x, y, z, centerx, centery, facing)
 	local real_cords = {
 		x,
-		y = collaider.y + y - centery,
+		y = map.border_up + collaider.y - y + z - centery,
 		w = collaider.w,
-		h = collaider.h
+		h = collaider.h,
+		z = collaider.z
 	}
 	if facing == 1 then 
 		real_cords.x = x + (collaider.x - centerx)
@@ -138,7 +145,7 @@ function CollisionsProcessing()
 		local collision = collisions_list[c_id]
 
 			if collision.type == "unit_to_platform" then
-				entity_list[collision.target_id].in_air = false
+				
 			end
 
 	end
