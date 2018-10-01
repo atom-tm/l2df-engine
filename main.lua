@@ -11,33 +11,29 @@ require "libs.get"
 require "libs.controls"
 require "libs.battle"
 require "libs.loading"
+require "libs.states"
 
 debug_info = false
-camera_x = 0
-camera_y = 0
+t1 = 0
 
 function love.load()
 
 	camera = CameraCreate() -- создание камеры
+	path = love.filesystem.getSourceBaseDirectory( )
 
 	-- FPS Локер --
 	min_dt = 1/60 -- требуемое фпс
     next_time = love.timer.getTime()
     ---------------
-
 	love.graphics.setBackgroundColor(.49, .67, .46, 1) -- установка фона
-
     CreateDataList() -- создание листа со всеми персонажами
 
-    for i = 1, 2 do
+    for i = 1, 1 do
     	table.insert(loading_list.characters, 1)
     end
-
+    --table.insert(loading_list.characters, 1)
     loading_list.map = 1
     LoadingBeforeBattle()
-
-    scale = 1
-
 end
 
 function love.update(dt)
@@ -45,45 +41,6 @@ function love.update(dt)
 	delta_time = dt
 
 	BattleProcessing()
-
-
-	if love.keyboard.isDown("w") then
-		entity_list[1].accel_z = -20
-	end
-
-	if love.keyboard.isDown("s") then
-		entity_list[1].accel_z = 20
-	end
-
-	if love.keyboard.isDown("d") then
-		entity_list[1].accel_x = 50
-		entity_list[1].facing = 1
-	end
-
-	if love.keyboard.isDown("a") then
-		entity_list[1].accel_x = -50
-		entity_list[1].facing = -1
-	end
-
-	if love.keyboard.isDown("c") then
-		entity_list[1].speed_x = 50
-		entity_list[1].facing = 1
-	end
-
-	if love.keyboard.isDown("x") then
-		entity_list[1].speed_x = -50
-		entity_list[1].facing = -1
-	end
-	
-	if love.keyboard.isDown("t") then
-		entity_list[1].accel_y = 45
-	end
-
-	if love.keyboard.isDown("y") then
-    	LoadingBeforeBattle()
-	end
-
-
 end 
 
 
@@ -95,8 +52,11 @@ function love.draw()
 		ForegroundDraw()
 	end)
 
+	local width, height, flags = love.window.getMode()
+	love.graphics.print(entity_list[1].frame, 10, height - 20)
+	love.graphics.print(entity_list[1].walking_frame, 10, height - 40)
 
-	love.graphics.print("", 100, 30)
+	love.graphics.print(t1, 100, 30)
 	
 	if debug_info then
 		love.graphics.setNewFont(12)

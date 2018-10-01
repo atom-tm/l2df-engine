@@ -1,9 +1,9 @@
 function GetFrame (en, num)
 	local frame
 	if num ~= nil then
-		frame = en.frames[tostring(num)]
+		frame = en.frames[num]
 	else
-		frame = en.frames[tostring(en.frame)]
+		frame = en.frames[en.frame]
 	end
 	return frame
 end

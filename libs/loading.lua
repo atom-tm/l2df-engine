@@ -240,11 +240,41 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.collision = PBool(head, "collision")
 
 				en.sprites = {} -- массив со спрайтами персонажа
+				
+				en.walking_frames = {}
+				local walking_frames_string = string.match(head, "walking_frames: {([^{}]*)}")
+				if walking_frames_string ~= nil then
+					for i in string.gmatch(walking_frames_string, "(%d+)") do
+						table.insert(en.walking_frames, tonumber(i))
+					end
+				end
+
+				en.running_frames = {}
+				local running_frames_string = string.match(head, "running_frames: {([^{}]*)}")
+				if running_frames_string ~= nil then
+					for i in string.gmatch(running_frames_string, "(%d+)") do
+						table.insert(en.running_frames, tonumber(i))
+					end
+				end
+
+				en.idle_frame = PNumber(head, "idle_frame")
+				en.running_stop = PNumber(head, "running_stop")
+				en.walking_stop = PNumber(head, "walking_stop")
+
+				en.walking_speed_x = PNumber(head, "walking_speed_x")
+				en.walking_speed_z = PNumber(head, "walking_speed_z")	
+				en.running_speed_x = PNumber(head, "running_speed_x")
+				en.running_speed_z = PNumber(head, "running_speed_z")
 
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
 
 					local path = string.match(s, "file: \"(.*)\"")
 					local image = LoadImage(path) -- получение спрайт листа из массива изображений
+					if PBool(s, "fsaa") then
+						image:setFilter("linear","linear")
+					else
+						image:setFilter("nearest","nearest")
+					end
 					local w = PNumber(s, "w")
 					local h = PNumber(s, "h")
 					local row = PNumber(s, "row")
@@ -275,7 +305,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 			for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
 				
 				local frame = {} -- создаём пустой фрейм
-				local frame_number = string.match(f, "(%d+)") -- получаем номер фрейма 
+				local frame_number = tonumber(string.match(f, "(%d+)")) -- получаем номер фрейма 
 
 				frame.pic = PNumber(f,"pic")
 				frame.next = PNumber(f,"next")
@@ -320,6 +350,26 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.platform_radius = FindMaximum(r) -- получение радиуса коллайдеров
 
 
+				frame.states = {} -- массив со всех сте
+				for state_number, s in string.gmatch(f, "state: (%d+) {([^{}]*)}") do
+					local state = {}
+					state.num = state_number
+					for key, val in string.gmatch(s, "([%w_]+): ([%w_]+)") do
+						if val == "true" then
+							state[key] = true
+						elseif val == "false" then
+							state[key] = false
+						else
+							state[key] = tostring(val)
+						end
+					end
+					for key, val in string.gmatch(s, "([%w_]+): ([-%d%.]+)") do
+						state[key] = tonumber(val)
+					end
+					table.insert(frame.states, state)
+				end
+
+
 				en.frames[frame_number] = frame -- добавление фрейма в массив фреймов
 			end
 		end
@@ -335,11 +385,11 @@ end
 
 function LoadCollider(c,r)
 	local collaider = {}
-		collaider.x = tonumber(string.match(c, "x: ([-%d]+)"))
-		collaider.y = tonumber(string.match(c, "y: ([-%d]+)"))
-		collaider.w = tonumber(string.match(c, "w: ([-%d]+)"))
-		collaider.h = tonumber(string.match(c, "h: ([-%d]+)"))
-		collaider.z = tonumber(string.match(c, "z: ([-%d]+)"))
+		collaider.x = PNumber(c,"x")
+		collaider.y = PNumber(c,"y")
+		collaider.w = PNumber(c,"w")
+		collaider.h = PNumber(c,"h")
+		collaider.z = PNumber(c,"z")
 		-- загрузка координат коллайдера в массив для нахождения радиуса --
 		table.insert(r, math.abs(collaider.x))
 		table.insert(r, math.abs(collaider.x + collaider.w))
@@ -381,6 +431,9 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.taccel_x = 0
 		created_object.taccel_y = 0
 		created_object.taccel_z = 0
+
+		created_object.walking_frame = 1
+		created_object.running_frame = 1
 
 
 

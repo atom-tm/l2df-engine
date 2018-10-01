@@ -13,34 +13,23 @@ function BattleProcessing()
 			local en = entity_list[en_id] -- получаем объект
 			local frame = GetFrame(en) -- получаем фрейм объекта
 
-			Gravity(en) -- гравитация
-			Motion(en) -- передвижение объекта
-			BordersCheck(en) -- проверка на пересечение границ карты
+			StatesCheck(en_id) -- проверка стейтов
 
-			if en.collision then -- если коллизии включены, выполняется проверка на наличие коллайдеров в текущем кадре. если коллайдеры имеются, они заносятся в списки для дальнейшей обработки
-				if (en.arest == 0) and (frame.itr_radius > 0) then
-					table.insert(collisioners.itr, en_id)
-				end
-				if (en.vrest == 0) and (frame.body_radius > 0) then
-					table.insert(collisioners.body, en_id)
-				end
-				if (frame.platform_radius > 0) then
-					table.insert(collisioners.platform, en_id)
-				end
-			end
+			Gravity(en_id) -- гравитация
+			Motion(en_id) -- передвижение объекта
+			BordersCheck(en_id) -- проверка на пересечение границ карты
+			CollaidersFind(en_id)
 
 			local draw_object = { id = en_id, z = en.z }
 			table.insert(objects_for_drawing, draw_object)
 
-			if en.wait < 0 then -- если вайт подошёл к концу, переходим в указанный кадр
-				if en.next_frame == 0 then
-					table.insert(remove_list, en_id)
-				else
-					SetFrame(en, en.next_frame)
-				end
+
+			if en.wait <= 0 then -- если вайт подошёл к концу, переходим в указанный кадр
+				SetFrame(en, en.next_frame)
 			else
 				en.wait = en.wait - 1 * delta_time * 100
 			end
+
 
 		end
 	end
@@ -50,7 +39,7 @@ function BattleProcessing()
 
 	CameraBinding()
 
-	RemoveProcessing(remove_list) -- функция удаления объектов, помеченых к удалению
+	-- RemoveProcessing(remove_list) -- функция удаления объектов, помеченых к удалению
 end
 
 

@@ -1,7 +1,8 @@
-function Gravity(en) -- отвечает за гравитацию, иннерцию и скорость персонажа по всем осям. функция не выполняет перемещение, а лишь высчитывает поведение скоростей исходя из всех факторов.
+function Gravity(en_id) -- отвечает за гравитацию, иннерцию и скорость персонажа по всем осям. функция не выполняет перемещение, а лишь высчитывает поведение скоростей исходя из всех факторов.
 -------------------------------------
+	local en = entity_list[en_id]
 
-	local friction = 8
+	local friction = 9
 	if en.y > 0 and en.on_platform == false then friction = 0 end
 
 	if en.physic == true then
@@ -28,20 +29,20 @@ function Gravity(en) -- отвечает за гравитацию, иннерц
 		if en.accel_x ~= 0 and en.physic == true then
 			if en.taccel_x < en.accel_x and en.accel_x > 0 then
 				if(en.taccel_x < -1) then
-					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * friction)
+					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
 				else
-					en.taccel_x = en.taccel_x + delta_time * (en.accel_x)
+					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
 				end
 			elseif en.taccel_x > en.accel_x and en.accel_x < 0 then
 				if(en.taccel_x > 1) then
-					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * friction)
+					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
 				else
-					en.taccel_x = en.taccel_x + delta_time * (en.accel_x)
+					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
 				end
 			end
 			en.accel_x = 0
 		else
-			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction / 2))
+			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
 		end
 	end
 
@@ -49,15 +50,15 @@ function Gravity(en) -- отвечает за гравитацию, иннерц
 		if en.accel_z ~= 0 then
 			if en.taccel_z < en.accel_z and en.accel_z > 0 then
 				if(en.taccel_z < -1) then
-					en.taccel_z = en.taccel_z * (0.99 - (delta_time) * friction)
+					en.taccel_z = en.taccel_z * (0.99 - (delta_time) * (friction))
 				else
-					en.taccel_z = en.taccel_z + delta_time * (en.accel_z)
+					en.taccel_z = en.taccel_z + delta_time * (en.accel_z) * (friction)
 				end
 			elseif en.taccel_z > en.accel_z and en.accel_z < 0 then
 				if(en.taccel_z > 1) then
-					en.taccel_z = en.taccel_z * (0.99 - (delta_time) * friction)
+					en.taccel_z = en.taccel_z * (0.99 - (delta_time) * (friction))
 				else
-					en.taccel_z = en.taccel_z + delta_time * (en.accel_z)
+					en.taccel_z = en.taccel_z + delta_time * (en.accel_z) * (friction)
 				end
 			end
 			en.accel_z = 0
@@ -74,7 +75,9 @@ function Gravity(en) -- отвечает за гравитацию, иннерц
 
 end
 
-function Motion(en)
+function Motion(en_id)
+	local en = entity_list[en_id]
+
 	if en.vel_x ~= 0 then
 		en.x = en.x + en.vel_x * delta_time * 10
 	end
@@ -86,7 +89,9 @@ function Motion(en)
 	end
 end
 
-function BordersCheck(en)
+function BordersCheck(en_id)
+	local en = entity_list[en_id]
+
 	if en.y < 0 then en.y = 0 end
 	if en.y > map.border_up then en.y = map.border_up end
 	if en.z < 0 then en.z = 0 en.accel_z = 0 en.taccel_z = 0 end

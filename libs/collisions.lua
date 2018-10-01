@@ -84,14 +84,8 @@ function CollisionersProcessing()
 						for p_id = 1, #target_frame.platforms do
 
 							local platform = CollaiderCords(target_frame.platforms[p_id], target.x, target.y, target.z, target_frame.centerx, target_frame.centery, target.facing)
-							local unit = {
-								x = entity.x,
-								y = map.border_up - entity.y + entity.z,
-								w = 1,
-								h = 1,
-								z = 1
-							}
-							if (CheckCollision(platform, unit)) then
+
+							if (entity.x < platform.x + platform.w and entity.x > platform.x and entity.z < target.z + (platform.z * 0.5) and entity.z > target.z - (platform.z * 0.5) and map.border_up - entity.y < platform.y and map.border_up - entity.y > platform.y - platform.h) then
 								local collision = {
 									type = "unit_to_platform",
 									entity_id = collisioners.platform[j],
@@ -148,6 +142,25 @@ function CollisionsProcessing()
 				
 			end
 
+	end
+
+end
+
+function CollaidersFind (en_id)
+
+	local en = entity_list[en_id]
+	local frame = GetFrame(en)
+
+	if en.collision then -- если коллизии включены, выполняется проверка на наличие коллайдеров в текущем кадре. если коллайдеры имеются, они заносятся в списки для дальнейшей обработки
+		if (en.arest == 0) and (frame.itr_radius > 0) then
+			table.insert(collisioners.itr, en_id)
+		end
+		if (en.vrest == 0) and (frame.body_radius > 0) then
+			table.insert(collisioners.body, en_id)
+		end
+		if (frame.platform_radius > 0) then
+			table.insert(collisioners.platform, en_id)
+		end
 	end
 
 end

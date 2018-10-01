@@ -91,9 +91,9 @@ function CameraBinding () -- функция отвечает за поведен
 		local camera_x, camera_y = camera:getPosition()
 		local camera_scale = camera:getScale()
 
-		local target_x = (en1.x + en2.x) * 0.5 + (frame1.centerx * en1.facing) + (frame2.centerx * en2.facing)
+		local target_x = (en1.x + en2.x) * 0.5 + (60 * en1.facing) + (60 * en2.facing)
 		local target_y = ((map.border_up + en1.z - en1.y) + (map.border_up + en2.z - en2.y)) * 0.46
-		local target_scale = (en1.scale + en2.scale) * 0.5 - math.sqrt((en1.x - en2.x)^2 + (en1.y - en2.y)^2 + (en1.z - en2.z)^2) * 0.001 + 0.3 - ((math.abs(en1.vel_x) + math.abs(en1.vel_y)) + (math.abs(en2.vel_x) + math.abs(en2.vel_y))) * 0.001
+		local target_scale = (en1.scale + en2.scale) * 0.5 - math.sqrt((en1.x - en2.x)^2 + (en1.y - en2.y)^2 + (en1.z - en2.z)^2) * 0.0005 - ((math.abs(en1.vel_x) + math.abs(en1.vel_y)) + (math.abs(en2.vel_x) + math.abs(en2.vel_y))) * 0.001
 
 		if target_scale > 3.5 then target_scale = 3.5
 		elseif target_scale < 0.1 then target_scale = 0.1 end

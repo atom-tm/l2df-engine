@@ -4,8 +4,8 @@ players = {
 } -- массив в котором будут храниться ссылки на привязанных к игрокам персонажей
 
 players_flags = {
-	player1 = false,
-	player2 = true
+	player1 = true,
+	player2 = false
 } -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
 
 key_pressed = {
@@ -72,7 +72,7 @@ function ControlCheck()
 					if en.double_key_timer[key] == 0 then
 						en.double_key_timer[key] = -14
 					elseif en.double_key_timer[key] < 0 then
-						en.double_key_timer[key] = 13
+						en.double_key_timer[key] = 26
 					end
 				elseif en.key_timer[key] > 0 then
 					en.key_timer[key] = en.key_timer[key] - 1
