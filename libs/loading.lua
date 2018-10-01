@@ -139,9 +139,12 @@ function LoadMap(map_id) -- функция загружает, путём пар
 		map.name = PString(dat, "name")
 		map.width = PNumber(dat, "width")
 		map.height = PNumber(dat, "height")
+		map.friction = PNumber(dat, "friction")
+		map.gravity = PNumber(dat, "gravity")
 
 		map.shadow = PBool(dat, "shadow")
 		map.shadow_opacity = PNumber(dat, "shadow_opacity")
+		map.start_anim = PNumber(dat, "start_anim")
 
 		map.border_up = PNumber(dat, "border_up")
 		map.border_down = PNumber(dat, "border_down")
@@ -258,6 +261,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				end
 
 				en.idle_frame = PNumber(head, "idle_frame")
+				en.starting_frame = PNumber(head, "starting_frame")
 				en.running_stop = PNumber(head, "running_stop")
 				en.walking_stop = PNumber(head, "walking_stop")
 
@@ -265,6 +269,13 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.walking_speed_z = PNumber(head, "walking_speed_z")	
 				en.running_speed_x = PNumber(head, "running_speed_x")
 				en.running_speed_z = PNumber(head, "running_speed_z")
+
+				en.air_frame = PNumber(head, "air_frame")
+				en.jump_frame = PNumber(head, "jump_frame")
+				en.landing_frame = PNumber(head, "landing_frame")
+				en.jump_height = PNumber(head, "jump_height")
+				en.jump_width = PNumber(head, "jump_width")
+				en.jump_widthz = PNumber(head, "jump_widthz")
 
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
 

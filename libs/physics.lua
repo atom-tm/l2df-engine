@@ -2,7 +2,7 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 -------------------------------------
 	local en = entity_list[en_id]
 
-	local friction = 9
+	local friction = map.friction
 	if en.y > 0 and en.on_platform == false then friction = 0 end
 
 	if en.physic == true then
@@ -11,8 +11,8 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 			en.accel_y = 0
 		end
 		if en.y > 0 and en.on_platform == false then
-			if en.taccel_y > -90 and en.speed_y == 0 then
-				en.taccel_y = en.taccel_y - delta_time * (100 + friction)
+			if en.taccel_y > -map.gravity and en.speed_y == 0 then
+				en.taccel_y = en.taccel_y - delta_time * map.gravity
 			end
 		else
 			if en.taccel_y < 0 then
@@ -29,20 +29,20 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 		if en.accel_x ~= 0 and en.physic == true then
 			if en.taccel_x < en.accel_x and en.accel_x > 0 then
 				if(en.taccel_x < -1) then
-					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
+					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 1.5))
 				else
 					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
 				end
 			elseif en.taccel_x > en.accel_x and en.accel_x < 0 then
 				if(en.taccel_x > 1) then
-					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
+					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 1.5))
 				else
 					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
 				end
 			end
 			en.accel_x = 0
 		else
-			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction))
+			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 0.7))
 		end
 	end
 

@@ -52,11 +52,7 @@ function love.draw()
 		ForegroundDraw()
 	end)
 
-	local width, height, flags = love.window.getMode()
-	love.graphics.print(entity_list[1].frame, 10, height - 20)
-	love.graphics.print(entity_list[1].walking_frame, 10, height - 40)
-
-	love.graphics.print(t1, 100, 30)
+	--love.graphics.print(t1, 100, 30)
 	
 	if debug_info then
 		love.graphics.setNewFont(12)

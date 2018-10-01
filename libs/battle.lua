@@ -73,6 +73,16 @@ function Spawner()
 		object.y = spawn.y + math.random(-spawn.ry, spawn.ry)
 		object.z = spawn.z + math.random(-spawn.rz, spawn.rz)
 
+		if map.start_anim then
+			if object.starting_frame ~= 0 then
+				SetFrame(object, object.starting_frame)
+			elseif object.idle_frame ~= 0 then
+				SetFrame(object, object.idle_frame)
+			else
+				SetFrame(object, 0)
+			end
+		end
+
 		if spawn.facing == 0 then
 			if math.random(1,2) == 1 then
 				object.facing = 1

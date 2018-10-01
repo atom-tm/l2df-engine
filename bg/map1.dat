@@ -10,6 +10,9 @@ shadow: true
 shadow_opacity: 0.95
 shadow_center: 1000
 
+friction: 15
+gravity: 150
+
 spawn_point: { x: 1300  y: 0  z: 110  rx: 700 rz: 30 ry: 0 facing: 0 }
 
 layer: { file: "sprites/BG_1.png"  x: 0  y: 0 fsaa: true }

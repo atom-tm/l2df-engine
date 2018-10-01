@@ -70,7 +70,7 @@ function ControlCheck()
 				if (val == 1) and (en.key_timer[key] == 0) then
 					en.key_timer[key] = 13
 					if en.double_key_timer[key] == 0 then
-						en.double_key_timer[key] = -14
+						en.double_key_timer[key] = -15
 					elseif en.double_key_timer[key] < 0 then
 						en.double_key_timer[key] = 26
 					end

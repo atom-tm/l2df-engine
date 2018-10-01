@@ -21,84 +21,141 @@ sprite: {
 	border: true
 }
 
+idle_frame: 1
+starting_frame: 1
+
 walking_frames: {5, 6 ,7, 8, 9, 10}
 walking_speed_x: 9
-walking_speed_z: 4
+walking_speed_z: 6
 
 running_frames: {11,12,13,14,15,16}
 running_speed_x: 52
-running_speed_z: 5
+running_speed_z: 7
 running_stop: 18
+
+jump_frame: 20
+air_frame: 22
+landing_frame: 25
+
+jump_height: 65
+jump_width: 45
+jump_widthz: 15
+
 </head>
 
 
 <frame> 1 standing
-pic: 1  next: 2  wait: 9  centerx: 18  centery: 113
+pic: 0  next: 2  wait: 9  centerx: 18  centery: 113
+body: { x: 2 w: 28 y: 38 h: 70}
 state: 1 {  }
 </frame>
 <frame> 2 standing
-pic: 2  next: 3  wait: 9  centerx: 18  centery: 113
+pic: 1  next: 3  wait: 9  centerx: 18  centery: 113
+body: { x: 2 w: 28 y: 38 h: 70}
 state: 1 {  }
 </frame>
 <frame> 3 standing
-pic: 3  next: 4  wait: 9  centerx: 16  centery: 113
+pic: 2  next: 4  wait: 9  centerx: 16  centery: 113
+body: { x: 0 w: 28 y: 38 h: 70}
 state: 1 {  }
 </frame>
 <frame> 4 standing
-pic: 4  next: 1  wait: 9  centerx: 18  centery: 113
+pic: 3  next: 1  wait: 9  centerx: 18  centery: 113
+body: { x: 2 w: 28 y: 38 h: 70}
 state: 1 {  }
 </frame>
 
-<frame> 5 standing
-pic: 121  next: 0  wait: 10  centerx: 18  centery: 113
+<frame> 5 walking
+pic: 120  next: 0  wait: 10  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
 state: 2 {  }
 </frame>
-<frame> 6 standing
-pic: 122  next: 0  wait: 9  centerx: 18  centery: 113
+<frame> 6 walking
+pic: 121  next: 0  wait: 9  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
+state: 2 { x: 3 }
+</frame>
+<frame> 7 walking
+pic: 122  next: 0  wait: 8  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
 state: 2 {  }
 </frame>
-<frame> 7 standing
-pic: 123  next: 0  wait: 8  centerx: 18  centery: 113
+<frame> 8 walking
+pic: 123  next: 0  wait: 13  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
 state: 2 {  }
 </frame>
-<frame> 8 standing
-pic: 124  next: 0  wait: 10  centerx: 18  centery: 113
-state: 2 {  }
+<frame> 9 walking
+pic: 124  next: 0  wait: 9  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
+state: 2 { x: 3 }
 </frame>
-<frame> 9 standing
-pic: 125  next: 0  wait: 9  centerx: 18  centery: 113
-state: 2 {  }
-</frame>
-<frame> 10 standing
-pic: 126  next: 0  wait: 8  centerx: 18  centery: 113
+<frame> 10 walking
+pic: 125  next: 0  wait: 8  centerx: 18  centery: 113
+body: { x: 8 w: 28 y: 38 h: 70}
 state: 2 {  }
 </frame>
 
-<frame> 11 standing
-pic: 5  next: 0  wait: 8  centerx: 18  centery: 113
+<frame> 11 running
+pic: 4  next: 0  wait: 8  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
-<frame> 12 standing
-pic: 6  next: 0  wait: 7  centerx: 18  centery: 113
+<frame> 12 running
+pic: 5  next: 0  wait: 7  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
-<frame> 13 standing
-pic: 7  next: 0  wait: 6  centerx: 18  centery: 113
+<frame> 13 running
+pic: 6  next: 0  wait: 6  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
-<frame> 14 standing
-pic: 8  next: 0  wait: 8  centerx: 18  centery: 113
+<frame> 14 running
+pic: 7  next: 0  wait: 8  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
-<frame> 15 standing
-pic: 9  next: 0  wait: 7  centerx: 18  centery: 113
+<frame> 15 running
+pic: 8  next: 0  wait: 7  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
-<frame> 16 standing
-pic: 10  next: 0  wait: 6  centerx: 18  centery: 113
+<frame> 16 running
+pic: 9  next: 0  wait: 6  centerx: 18  centery: 113
+body: { x: 4 w: 58 y: 65 h: 45}
 state: 3 {  }
 </frame>
 
 <frame> 18 standing
-pic: 16  next: 0  wait: 11  centerx: 18  centery: 113
+pic: 15  next: 0  wait: 11  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
+</frame>
+
+<frame> 20 standing
+pic: 10  next: 21  wait: 17  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
+state: 10 { }
+</frame>
+<frame> 21 standing
+pic: 11  next: 0  wait: 11  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
+state: 4 { }
+state: 10 { }
+</frame>
+
+<frame> 22 standing
+pic: 12  next: 0  wait: 11  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
+state: 5 { }
+state: 10 { }
+</frame>
+
+<frame> 25 standing
+pic: 10  next: 26  wait: 9  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
+</frame>
+<frame> 26 standing
+pic: 15  next: 0  wait: 7  centerx: 16  centery: 113
+body: { x: 1 w: 28 y: 44 h: 70}
 </frame>

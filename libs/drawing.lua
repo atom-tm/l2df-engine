@@ -256,7 +256,7 @@ function DrawEntity (en_id)
 		local sizex = 1 * en.facing
 		local sizey = 1
 
-		local pic = frame.pic
+		local pic = frame.pic + 1
 
 		if not (pic == 0) then 
 
