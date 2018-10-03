@@ -30,6 +30,8 @@ function CollisionersProcessing()
 										type = "itr_to_body",
 										entity_id = collisioners.itr[i],
 										target_id = collisioners.body[j],
+										entity_frame = entity.frame,
+										target_frame = target.frame,
 										itr_id = itr_id,
 										body_id = body_id
 									}
@@ -58,6 +60,8 @@ function CollisionersProcessing()
 									type = "itr_to_itr",
 									entity_id = collisioners.itr[i],
 									target_id = collisioners.itr[j],
+									entity_frame = entity.frame,
+									target_frame = target.frame,
 									itr1_id = itr1_id,
 									itr2_id = itr2_id
 								}
@@ -136,15 +140,66 @@ end
 function CollisionsProcessing()
 
 	for c_id = 1, #collisions_list do
-		local collision = collisions_list[c_id]
+	local collision = collisions_list[c_id]
 
-			if collision.type == "unit_to_platform" then
-				
+		if collision.type == "itr_to_body" then -- обработка удара itr'a по body
+			
+			local attacker = entity_list[collision.entity_id] -- получаем атакующего
+			local target = entity_list[collision.target_id] -- получаем получающего урон
+			local itr = attacker.frames[collision.entity_frame].itrs[collision.itr_id] -- получаем itr
+			local body = attacker.frames[collision.target_frame].bodys[collision.body_id] -- получаем body
+
+			if itr.kind == 1 then -- если kind: 1 (обычная атака)
+				attacker.arest = itr.arest -- установка таймера до следующего нанесения урона атакующим
+				target.vrest = itr.vrest -- установка таймера до следующего получения урона целью
+				target.defend = target.defend - itr.bdefend -- уменьшаем броню цели
+				target.defend_timer = target.defend_timer + 60 -- добавляем таймер восстановления к броне
+				if target.defend <= 0 then -- если пробили броню
+					target.defend_timer = target.defend_timer + 60 -- добавляем бонусный таймер восстановления к броне
+					target.fall = target.fall - itr.fall -- уменьшение fall'a
+					if target.fall <= 0 then -- если fall пробит
+						target.fall = target.max_fall -- моментально восстанавливаем fall
+						target.fall_timer = 0 -- обнуляем таймер
+
+						-- ПАДЕНИЕ --
+
+					else -- если fall не пробит
+						target.fall_timer = 120 -- таймер восстанавления fall'a
+
+						target.taccel_x = target.taccel_x + itr.dvx * attacker.facing -- dvx
+
+						local injury_frame = 0 -- ставим кадр повреждений
+
+						if #target.injury_frames > 0 then -- берём рандомный кадр повреждения из списка
+							injury_frame = target.injury_frames[math.random(1, #target.injury_frames)]
+						end
+
+						if math.abs(itr.dvx) >= 5 then -- если удар спереди\\сзади и у цели имеются спец. кадры повреждений на этот случай, меняем кадр повреждения
+							if target.facing == attacker.facing then
+								if target.injury_backward_frame ~= 0 then
+									injury_frame = target.injury_backward_frame
+								end
+							else
+								if target.injury_forward_frame ~= 0 then
+									injury_frame = target.injury_forward_frame
+								end
+							end
+						end
+
+						if itr.damage_type > 0 and #target.injury_types >= itr.damage_type then -- для специальных типов урона используем свои кадры повреждения
+							injury_frame = target.injury_types[itr.damage_type]
+						end
+
+						SetFrame(target, injury_frame)
+					end
+				else -- если броня не пробита
+					target.taccel_x = target.taccel_x + ( itr.dvx * attacker.facing ) * 0.9
+				end
 			end
-
+		end
 	end
-
 end
+
 
 function CollaidersFind (en_id)
 

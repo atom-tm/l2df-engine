@@ -13,6 +13,7 @@ function BattleProcessing()
 			local en = entity_list[en_id] -- получаем объект
 			local frame = GetFrame(en) -- получаем фрейм объекта
 
+			Accelerations(en_id) -- проверка ускорений
 			StatesCheck(en_id) -- проверка стейтов
 
 			Gravity(en_id) -- гравитация
@@ -23,6 +24,32 @@ function BattleProcessing()
 			local draw_object = { id = en_id, z = en.z }
 			table.insert(objects_for_drawing, draw_object)
 
+
+			if en.arest > 0 then
+				en.arest = en.arest - 1
+			end
+
+			if en.vrest > 0 then
+				en.vrest = en.vrest - 1
+			end
+
+			if en.defend < en.max_defend then
+				if en.defend_timer <= 0 then
+					en.defend_timer = 0
+					en.defend = en.max_defend
+				else
+					en.defend_timer = en.defend_timer - 1
+				end
+			end
+
+			if en.fall < en.max_fall then
+				if en.fall_timer <= 0 then
+					en.fall_timer = 0
+					en.fall = en.max_fall
+				else
+					en.fall_timer = en.fall_timer - 1
+				end
+			end
 
 			if en.wait <= 0 then -- если вайт подошёл к концу, переходим в указанный кадр
 				SetFrame(en, en.next_frame)

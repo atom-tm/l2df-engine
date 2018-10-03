@@ -28,7 +28,7 @@ function love.load()
 	love.graphics.setBackgroundColor(.49, .67, .46, 1) -- установка фона
     CreateDataList() -- создание листа со всеми персонажами
 
-    for i = 1, 1 do
+    for i = 1, 2 do
     	table.insert(loading_list.characters, 1)
     end
     --table.insert(loading_list.characters, 1)

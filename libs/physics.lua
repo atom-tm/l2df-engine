@@ -21,8 +21,6 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 		end
 	end
 
-	en.vel_y = en.taccel_y + en.speed_y
-	en.speed_y = 0
 
 
 	if en.physic == true then -- ускорение и замедление после перемещения по оси x
@@ -69,7 +67,8 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 
 	en.vel_x = en.taccel_x + en.speed_x -- задача скорости по оси x
 	en.speed_x = 0
-
+	en.vel_y = en.taccel_y + en.speed_y
+	en.speed_y = 0
 	en.vel_z = en.taccel_z + en.speed_z -- задача скорости по оси x
 	en.speed_z = 0
 
@@ -98,4 +97,21 @@ function BordersCheck(en_id)
 	if en.z > map.area then en.z = map.area en.accel_z = 0 en.taccel_z = 0 end
 	if en.x < 0 then en.x = 0 en.accel_x = 0 en.taccel_x = 0 end
 	if en.x > map.width then en.x = map.width en.accel_x = 0 en.taccel_x = 0 end
+end
+
+function Accelerations(en_id)
+	local en = entity_list[en_id]
+	local frame = GetFrame(en)
+
+	en.speed_x = en.speed_x + frame.dx * en.facing
+	en.speed_y = en.speed_y + frame.dy
+	en.speed_z = en.speed_z + frame.dz
+
+	en.accel_x = en.accel_x + frame.dsx * en.facing
+	en.accel_y = en.accel_y + frame.dsy
+	en.accel_z = en.accel_z + frame.dsz
+
+	en.taccel_x = en.taccel_x + frame.dvx * en.facing
+	en.taccel_y = en.taccel_y + frame.dvy
+	en.taccel_z = en.taccel_z + frame.dvz
 end

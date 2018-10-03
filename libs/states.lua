@@ -18,6 +18,11 @@ function StatesCheck(en_id)
 			if en.key_timer["jump"] > 0 and en.jump_frame ~= 0 then
 				SetFrame(en, en.jump_frame)
 			end
+			if en.key_timer["attack"] > 0 then
+				if #en.attack_frames > 0 then
+					SetFrame(en, en.attack_frames[math.random(1, #en.attack_frames)])
+				end
+			end
 		end
 
 
@@ -54,6 +59,12 @@ function StatesCheck(en_id)
 			if en.key_timer["jump"] > 0 and en.jump_frame ~= 0 then
 				SetFrame(en, en.jump_frame)
 			end
+
+			if en.key_timer["attack"] > 0 then
+				if #en.attack_frames > 0 then
+					SetFrame(en, en.attack_frames[math.random(1, #en.attack_frames)])
+				end
+			end
 		end
 
 		if state.num == "3" then -- бег
@@ -82,8 +93,12 @@ function StatesCheck(en_id)
 				en.accel_x = en.running_speed_x * 0.8 * en.facing
 			end	
 
-			if en.key_timer["jump"] > 0 and en.jump_frame ~= 0 then
-				SetFrame(en, en.jump_frame)
+			if en.key_timer["jump"] > 0 and en.dash_frame ~= 0 then
+				SetFrame(en, en.dash_frame)
+			end
+
+			if en.key_timer["attack"] > 0 then
+				SetFrame(en, en.run_attack_frame)
 			end
 		end
 
@@ -100,7 +115,7 @@ function StatesCheck(en_id)
 				end
 			elseif en.taccel_y < 0 then
 				SetFrame(en, en.air_frame)
-			elseif en.taccel_y >= 0 then
+			elseif en.taccel_y >= 0 and en.next_frame ~= 0 and en.next_frame ~= 999 then
 				en.next_frame = en.frame
 			end
 		end
@@ -111,11 +126,49 @@ function StatesCheck(en_id)
 			end
 		end
 
+		if state.num == "6" then
+			if not (en.y > 0 and en.on_platform == false) then
+				en.accel_y = en.dash_height
+				en.taccel_x = en.taccel_x + en.dash_width * en.facing
+				if en.key_pressed["up"] > 0 then
+					en.taccel_z = en.dash_widthz * -1
+				elseif en.key_pressed["down"] > 0 then
+					en.taccel_z = en.dash_widthz * 1
+				end
+			elseif en.taccel_y < 0 then
+				SetFrame(en, en.air_frame)
+			elseif en.taccel_y >= 0 and en.next_frame ~= 0 and en.next_frame ~= 999 then
+				en.next_frame = en.frame
+			end
+		end
+
+
+
+
+
 		if state.num == "10" then
 			if en.key_pressed["right"] > 0 then
 				en.facing = 1
 			elseif en.key_pressed["left"] > 0 then
 				en.facing = -1
+			end
+		end
+
+		if state.num == "550" then
+			if state.x == true then
+				en.accel_x = 0
+				en.taccel_x = 0
+				en.speed_x = 0
+			end
+			if state.y == true then
+				en.accel_y = 0
+				en.taccel_y = 0
+				en.speed_y = 0
+			end
+			if state.z == true then
+				en.accel_z = 0
+				en.taccel_z = 0
+				en.speed_z = 0
 			end
 		end
 	end

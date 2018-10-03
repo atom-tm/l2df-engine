@@ -242,6 +242,10 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.physic = PBool(head, "physic")
 				en.collision = PBool(head, "collision")
 
+				en.max_defend = PNumber(head, "defend")
+				en.max_fall = PNumber(head, "fall")
+				en.max_hp = PNumber(head, "hp")
+
 				en.sprites = {} -- массив со спрайтами персонажа
 				
 				en.walking_frames = {}
@@ -260,6 +264,30 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
+				en.attack_frames = {}
+				local attack_frames_string = string.match(head, "attack_frames: {([^{}]*)}")
+				if attack_frames_string ~= nil then
+					for i in string.gmatch(attack_frames_string, "(%d+)") do
+						table.insert(en.attack_frames, tonumber(i))
+					end
+				end
+
+				en.injury_frames = {}
+				local injury_frames_string = string.match(head, "injury_frames: {([^{}]*)}")
+				if injury_frames_string ~= nil then
+					for i in string.gmatch(injury_frames_string, "(%d+)") do
+						table.insert(en.injury_frames, tonumber(i))
+					end
+				end
+
+				en.injury_types = {}
+				local injury_types_string = string.match(head, "injury_types: {([^{}]*)}")
+				if injury_types_string ~= nil then
+					for i in string.gmatch(injury_types_string, "(%d+)") do
+						table.insert(en.injury_types, tonumber(i))
+					end
+				end
+
 				en.idle_frame = PNumber(head, "idle_frame")
 				en.starting_frame = PNumber(head, "starting_frame")
 				en.running_stop = PNumber(head, "running_stop")
@@ -271,11 +299,27 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.running_speed_z = PNumber(head, "running_speed_z")
 
 				en.air_frame = PNumber(head, "air_frame")
-				en.jump_frame = PNumber(head, "jump_frame")
 				en.landing_frame = PNumber(head, "landing_frame")
+
+				en.jump_frame = PNumber(head, "jump_frame")
 				en.jump_height = PNumber(head, "jump_height")
 				en.jump_width = PNumber(head, "jump_width")
 				en.jump_widthz = PNumber(head, "jump_widthz")
+
+				en.dash_frame = PNumber(head, "dash_frame")
+				en.dash_height = PNumber(head, "dash_height")
+				en.dash_width = PNumber(head, "dash_width")
+				en.dash_widthz = PNumber(head, "dash_widthz")
+				
+				en.run_attack_frame = PNumber(head, "run_attack_frame")
+				en.jump_attack_frame = PNumber(head, "jump_attack_frame")
+				en.dash_attack_frame = PNumber(head, "dash_attack_frame")
+
+
+				en.injury_backward_frame = PNumber(head, "injury_backward_frame")
+				en.injury_forward_frame = PNumber(head, "injury_forward_frame")
+
+
 
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
 
@@ -323,8 +367,21 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.wait = PNumber(f,"wait")
 				frame.centerx = PNumber(f,"centerx")
 				frame.centery = PNumber(f,"centery")
+
 				frame.shadow = PNumber(f,"shadow")
 				frame.zoom = PNumber(f,"zoom")
+
+				frame.dvx = PNumber(f,"dvx")
+				frame.dsx = PNumber(f,"dsx")
+				frame.dx = PNumber(f,"dx")
+
+				frame.dvy = PNumber(f,"dvy")
+				frame.dsy = PNumber(f,"dsy")
+				frame.dy = PNumber(f,"dy")
+
+				frame.dvz = PNumber(f,"dvz")
+				frame.dsz = PNumber(f,"dsz")
+				frame.dz = PNumber(f,"dz")
 				
 				frame.hold_left = PNumber(f,"hold_left")
 				frame.double_left = PNumber(f,"double_left")
@@ -344,9 +401,28 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.itrs = {} -- массив с коллайдерами itr персонажа
 				r = {} -- переменная для нахождения радиуса хитбоксов
 				for i in string.gmatch(f, "itr: {([^{}]*)}") do -- для каждого блока itr: {}
-					local collaider = LoadCollider(i,r) -- получение коллайдера
+					local itr = LoadCollider(i,r) -- получение коллайдера
 					-- сюда вставлять дополнительные теги
-					table.insert(frame.itrs, collaider) -- загрузка коллайдера в массив
+					
+					itr.kind = PNumber(i,"kind")
+					
+					itr.dvx = PNumber(i,"dvx")
+					itr.dvy = PNumber(i,"dvy")
+					itr.dvz = PNumber(i,"dvz")
+
+					itr.injury = PNumber(i,"injury")
+					itr.bdefend = PNumber(i,"bdefend")
+					itr.fall = PNumber(i,"fall")
+
+					itr.arest = PNumber(i,"arest")
+					itr.vrest = PNumber(i,"vrest")
+
+					itr.damage_type = PNumber(i,"damage_type")
+
+					if itr.arest <= 0 then itr.arest = 5 end
+					if itr.vrest <= 0 then itr.vrest = 5 end
+
+					table.insert(frame.itrs, itr) -- загрузка коллайдера в массив
 				end
 				frame.itr_radius = FindMaximum(r) -- получение радиуса коллайдеров
 
@@ -401,6 +477,9 @@ function LoadCollider(c,r)
 		collaider.w = PNumber(c,"w")
 		collaider.h = PNumber(c,"h")
 		collaider.z = PNumber(c,"z")
+		if collaider.z <= 0 then
+			collaider.z = 7
+		end
 		-- загрузка координат коллайдера в массив для нахождения радиуса --
 		table.insert(r, math.abs(collaider.x))
 		table.insert(r, math.abs(collaider.x + collaider.w))
@@ -458,6 +537,11 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.frame = 1
 		created_object.next_frame = 1
 		created_object.wait = 0
+
+		created_object.fall = created_object.max_fall
+		created_object.fall_timer = 0
+		created_object.defend = created_object.max_defend
+		created_object.defend_timer = 0
 
 		created_object.arest = 0
 		created_object.vrest = 0
