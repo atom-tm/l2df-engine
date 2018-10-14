@@ -459,6 +459,22 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				end
 				frame.platform_radius = FindMaximum(r) -- получение радиуса коллайдеров
 
+				frame.opoints = {} -- массив с опоинтами персонажа
+				for o in string.gmatch(f, "opoint: {([^{}]*)}") do -- для каждого блока platform: {}
+					local opoint = {}
+
+					opoint.id = PNumber(o, "id")
+					opoint.action = PNumber(o, "action")
+					opoint.count = PNumber(o, "count")
+
+					opoint.x = PNumber(o, "x")
+					opoint.y = PNumber(o, "y")
+					opoint.z = PNumber(o, "z")
+
+					opoint.facing = PNumber(o, "facing")
+
+					table.insert(frame.opoints, opoint) -- загрузка коллайдера в массив
+				end
 
 				frame.states = {} -- массив со всех сте
 				for state_number, s in string.gmatch(f, "state: (%d+) {([^{}]*)}") do
@@ -526,6 +542,7 @@ function CreateEntity(id) -- функция создания экземпляр�
 	if created_object ~= nil then -- если мы нашли этот объект, выставляем ему начальные значения и добавляем
 
 		created_object.destroy_flag = false
+		created_object.first_tick_flag = true
 
 		created_object.x = 0
 		created_object.y = 0
@@ -614,6 +631,8 @@ function CreateEntity(id) -- функция создания экземпляр�
 			end
 		end
 		return created_object.dynamic_id
+	else
+		return false
 	end
 end
 

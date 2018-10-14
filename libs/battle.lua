@@ -25,7 +25,13 @@ function BattleProcessing()
 			Gravity(en_id) -- гравитация
 			Motion(en_id) -- передвижение объекта
 			BordersCheck(en_id) -- проверка на пересечение границ карты
+			
 			CollaidersFind(en_id)
+
+			if en.first_tick_flag then
+				OpointProcessing(en_id)
+				en.first_tick_flag = false
+			end
 
 			local draw_object = { id = en_id, z = en.z }
 			table.insert(objects_for_drawing, draw_object)

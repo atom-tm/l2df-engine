@@ -48,7 +48,7 @@ dash_height: 45
 dash_width: 70
 dash_widthz: 15
 
-attack_frames: { 30, 35 }
+attack_frames: { 30 }
 run_attack_frame: 42
 jump_attack_frame: 0
 dash_attack_frame: 0
@@ -187,20 +187,20 @@ state: 6 { }
 
 
 <frame> 30 dash
-pic: 30  next: 31  wait: 9  centerx: 16  centery: 113
+pic: 56  next: 31  wait: 9  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 31 dash
-pic: 31  next: 32  wait: 3 dvx: 5  centerx: 16  centery: 113
+pic: 58  next: 32  wait: 3 dvx: 0  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
-itr: { kind: 1 x: 20 w: 60 y: 50 h: 30 z: 15 dvx: 30 bdefend: 10 }
+opoint: { id: 1  action: 42  x: 80 y: 0 z: 0 facing: 1 }
 </frame>
 <frame> 32 dash
-pic: 32  next: 33  wait: 12  centerx: 16  centery: 113
+pic: 58  next: 33  wait: 12  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 33 dash
-pic: 33  next: 999  wait: 9  centerx: 16  centery: 113 hit_a: 35
+pic: 58  next: 999  wait: 9  centerx: 16  centery: 83 hit_a: 35
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
@@ -231,42 +231,43 @@ pic: 39  next: 999  wait: 13  centerx: 16  centery: 113 hit_a: 42
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
+
 <frame> 42 run_attack
-pic: 55  next: 43  wait: 6  centerx: 16  centery: 113
+pic: 112  next: 43  wait: 4  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 43 run_attack
-pic: 56  next: 44  wait: 6  centerx: 16  centery: 113
+pic: 113  next: 44  wait: 4  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 44 run_attack
-pic: 57  next: 45  wait: 5 dvx: 30 centerx: 16  centery: 113
+pic: 114  next: 45  wait: 3 dvx: 30 centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
 itr: { kind: 1 x: 15 w: 45 y: 54 h:50 z: 55 dvx: 150 bdefend: 20 }
 </frame>
 <frame> 45 run_attack
-pic: 58  next: 46  wait: 8  centerx: 16  centery: 113
+pic: 115  next: 46  wait: 7  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 46 run_attack
-pic: 59  next: 47  wait: 8  centerx: 16  centery: 113
+pic: 116  next: 47  wait: 7  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 47 run_attack
-pic: 39  next: 999  wait: 9  centerx: 16  centery: 113
+pic: 117  next: 999  wait: 11  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
 
 <frame> 50 injury
-pic: 19  next: 999  wait: 55  centerx: 16  centery: 113
+pic: 35  next: 999  wait: 55  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 51 injury
-pic: 20  next: 999  wait: 55  centerx: 16  centery: 113
+pic: 36  next: 999  wait: 55  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 52 injury
-pic: 21  next: 1000  wait: 55  centerx: 16  centery: 113
+pic: 37  next: 1000  wait: 55  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
