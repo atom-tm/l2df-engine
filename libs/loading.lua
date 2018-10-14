@@ -465,11 +465,17 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 					opoint.id = PNumber(o, "id")
 					opoint.action = PNumber(o, "action")
+					opoint.action_random = PNumber(o, "action_random")
+					
 					opoint.count = PNumber(o, "count")
 
 					opoint.x = PNumber(o, "x")
 					opoint.y = PNumber(o, "y")
 					opoint.z = PNumber(o, "z")
+
+					opoint.x_random = PNumber(o, "x_random")
+					opoint.y_random = PNumber(o, "y_random")
+					opoint.z_random = PNumber(o, "z_random")
 
 					opoint.facing = PNumber(o, "facing")
 
