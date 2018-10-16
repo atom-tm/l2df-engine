@@ -5,7 +5,10 @@ head_list = {} -- таблица в которой будут храниться
 
 loading_list = {
 	characters = {},
-	map = ""
+	map = "",
+	system = {
+		sparks = 100
+	}
 } -- список файлов, которые нужно загрузить в память перед началом боя 
 sourse_list = {} -- массив, хранящий в себе все объекты, доступные к загрузке
 
@@ -13,6 +16,9 @@ images_list = {} -- таблица в которой хранятся все и�
 
 entity_list = {} -- массив, хранящий в себе все объекты, находящиеся на сцене
 map = {} -- таблица с информацией о текущей карте
+
+
+
 
 
 
@@ -73,6 +79,11 @@ function LoadingBeforeBattle() -- функция вызывается перед
 	for i in pairs(loading_list.characters) do
 		LoadEntity(loading_list.characters[i])
 	end -- цикл загрузки объектов из списка
+
+	for i in pairs(loading_list.system) do
+		LoadEntity(loading_list.system[i])
+	end -- цикл загрузки объектов из списка
+
 
 	map = LoadMap(loading_list.map)
 	CameraSet(map.width, map.height)
@@ -241,6 +252,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 		local file = data_list[id] -- помещаем ссылку на файл загружаемого объекта
 		local dat = love.filesystem.read(file) -- помещаем в строку содержимое файла персонажа
 
+		local opoint_objects = {}
+
 
 		if not (dat == nil) then -- если датка не пустая, пытаемся её парсить
 
@@ -254,9 +267,14 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.physic = PBool(head, "physic")
 				en.collision = PBool(head, "collision")
 
-				en.shadow = PNumber(head, "shadow")
+				en.shadow = PBool(head, "shadow")
 
-				en.max_defend = PNumber(head, "defend")
+
+				en.script_file = string.match(head, "script_file: \"([%w%d\\/%.]+)%.lua\"")
+				t2 = en.script_file
+
+				en.max_defend = PNumber(head, "strength")
+				en.defend_up = PNumber(head, "defend")
 				en.max_fall = PNumber(head, "fall")
 				en.max_hp = PNumber(head, "hp")
 
@@ -329,6 +347,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.jump_attack_frame = PNumber(head, "jump_attack_frame")
 				en.dash_attack_frame = PNumber(head, "dash_attack_frame")
 
+				en.defend_frame = PNumber(head, "defend_frame")
+
 
 				en.injury_backward_frame = PNumber(head, "injury_backward_frame")
 				en.injury_forward_frame = PNumber(head, "injury_forward_frame")
@@ -365,8 +385,17 @@ function LoadEntity(id) -- функция загружает, путём пар�
 			local vars = string.match(dat, "<vars>(.*)</vars>") -- получаем содержимое блока <vars></vars>
 			
 			if not (vars == nil) then -- если блок содержит что-то, пытаемся парсить это на переменные
-				for key, value in string.gmatch(vars, "([%w_]+): ([%w_-%d%.])") do
-					en.vars[key] = value
+				for key, value in string.gmatch(vars, "([%w%d_]+): ([%w_]+)") do
+					if value == "true" then
+						en.vars[key] = true
+					elseif value == "false" then
+						en.vars[key] = false
+					else
+						en.vars[key] = tostring(value)
+					end
+				end
+				for key, value in string.gmatch(vars, "([%w%d_]+): ([-%d%.]+)") do
+					en.vars[key] = tonumber(value)
 				end
 			end
 
@@ -383,7 +412,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.centerx = PNumber(f,"centerx")
 				frame.centery = PNumber(f,"centery")
 
-				frame.shadow = PBool(f,"shadow")
+				frame.shadow = not PBool(f,"shadow")
 				frame.zoom = PNumber(f,"zoom")
 
 				frame.dvx = PNumber(f,"dvx")
@@ -440,6 +469,15 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					itr.arest = PNumber(i,"arest")
 					itr.vrest = PNumber(i,"vrest")
 
+					itr.spark = PNumber(i,"spark")
+					itr.ospark = PNumber(i,"ospark")
+					itr.fspark = PNumber(i,"fspark")
+					itr.dspark = PNumber(i,"dspark")
+					itr.bdspark = PNumber(i,"bdspark")
+
+
+					itr.friendly_fire = PBool(i,"friendly_fire")
+
 					itr.damage_type = PNumber(i,"damage_type")
 
 					if itr.arest <= 0 then itr.arest = 5 end
@@ -480,6 +518,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					opoint.facing = PNumber(o, "facing")
 
 					table.insert(frame.opoints, opoint) -- загрузка коллайдера в массив
+					table.insert(opoint_objects, opoint.id)				
+
 				end
 
 				frame.states = {} -- массив со всех сте
@@ -511,6 +551,9 @@ function LoadEntity(id) -- функция загружает, путём пар�
 			en = en
 		} -- создаём ресурс
 		table.insert(sourse_list,sourse) -- добавляем в список ресурсов, чтобы избежать повторных загрузок этого-же объекта и разгрузить процессор
+		for i = 1, #opoint_objects do
+			LoadEntity(opoint_objects[i])
+		end
 	end
 end
 
@@ -593,6 +636,10 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.arest = 0
 		created_object.vrest = 0
 
+		if created_object.script_file ~= nil then
+			created_object.script = require(created_object.script_file)
+		end
+
 		created_object.key_timer = {
 			up = 0,
 			down = 0,
@@ -628,10 +675,12 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 		created_object.dynamic_id = id
 		created_object.real_id = id
+		created_object.team = 0
 
 		for free_id = 1, #entity_list + 1 do
 			if (entity_list[free_id] == "nil") or (entity_list[free_id] == nil) then
 				created_object.dynamic_id = free_id
+				created_object.owner = free_id
 				entity_list[free_id] = created_object
 				break
 			end

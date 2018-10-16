@@ -228,7 +228,7 @@ function DrawEntity (en_id)
 
 				if map.shadow then
 					if en.shadow then
-						if not frame.shadow then
+						if frame.shadow then
 
 							local shadow_sizex
 							local shadow_sizey
@@ -282,7 +282,11 @@ function DrawEntity (en_id)
 						love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
 						love.graphics.setColor(1, 1, 1, 1)
 					end
+
+					love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall, en.x, map.border_up + en.y + en.z + 15)
 				end
+
+
 
 					--[[local shadow_x = en.x - frame.centerx * en.facing
 					local shadow_y = map.border_up + frame.centery * 0.5 + en.z + en.y * 0.01

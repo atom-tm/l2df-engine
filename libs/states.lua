@@ -22,6 +22,9 @@ function StatesCheck(en_id)
 					SetFrame(en, en.attack_frames[math.random(1, #en.attack_frames)])
 				end
 			end
+			if en.key_timer["defend"] > 0 then
+				SetFrame(en, en.defend_frame)
+			end
 		end
 
 
@@ -64,7 +67,12 @@ function StatesCheck(en_id)
 					SetFrame(en, en.attack_frames[math.random(1, #en.attack_frames)])
 				end
 			end
+
+			if en.key_timer["defend"] > 0 then
+				SetFrame(en, en.defend_frame)
+			end
 		end
+
 
 		if state.num == "3" then -- бег
 			if en.wait <= 0 then
@@ -141,8 +149,11 @@ function StatesCheck(en_id)
 			end
 		end
 
-
-
+		if state.num == "7" then -- блок
+			if en.wait == frame.wait then
+				en.defend = en.defend + en.defend_up
+			end
+		end
 
 
 		if state.num == "10" then
@@ -170,5 +181,8 @@ function StatesCheck(en_id)
 				en.speed_z = 0
 			end
 		end
+
+		en.script.state(en, state)
+
 	end
 end

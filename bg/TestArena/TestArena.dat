@@ -1,0 +1,25 @@
+name: TestMap
+
+width: 2500
+height: 1633
+
+border_up: 1350
+border_down: 1550
+
+reflection: true
+reflection_opacity: 0.3
+
+shadow: true
+shadow_opacity: 0.4
+shadow_centerx: 1150
+shadow_direction: 1
+shadow_shear: 35
+shadow_size: 0.4
+
+friction: 13
+gravity: 150
+
+spawn_point: { x: 1300  y: 0  z: 110  rx: 500 rz: 90 ry: 0 facing: 0 }
+
+layer: { file: "bg/TestArena/BG_1.png"  x: 0  y: 0 fsaa: true }
+filter: { file: "bg/TestArena/FG_1.png"  x: 0  y: 0 fsaa: true }

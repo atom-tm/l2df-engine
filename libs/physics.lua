@@ -90,13 +90,14 @@ end
 
 function BordersCheck(en_id)
 	local en = entity_list[en_id]
-
-	if en.y < 0 then en.y = 0 end
-	if en.y > map.border_up then en.y = map.border_up end
-	if en.z < 0 then en.z = 0 en.accel_z = 0 en.taccel_z = 0 end
-	if en.z > map.area then en.z = map.area en.accel_z = 0 en.taccel_z = 0 end
-	if en.x < 0 then en.x = 0 en.accel_x = 0 en.taccel_x = 0 end
-	if en.x > map.width then en.x = map.width en.accel_x = 0 en.taccel_x = 0 end
+	if en ~= nil then
+		if en.y < 0 then en.y = 0 end
+		if en.y > map.border_up then en.y = map.border_up end
+		if en.z < 0 then en.z = 0 en.accel_z = 0 en.taccel_z = 0 end
+		if en.z > map.area then en.z = map.area en.accel_z = 0 en.taccel_z = 0 end
+		if en.x < 0 then en.x = 0 en.accel_x = 0 en.taccel_x = 0 end
+		if en.x > map.width then en.x = map.width en.accel_x = 0 en.taccel_x = 0 end
+	end
 end
 
 function Accelerations(en_id)

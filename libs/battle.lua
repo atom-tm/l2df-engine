@@ -143,5 +143,7 @@ function Spawner()
 				break
 			end
 		end
+
+		object.script.load(object)
 	end
 end

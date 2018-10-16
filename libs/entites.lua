@@ -39,27 +39,47 @@ function OpointProcessing(en_id)
 		local opoint = frame.opoints[i]
 		local id = opoint.id
 
-
-
-		local x = en.x + opoint.x * en.facing
-		local y = en.y + opoint.y
-		local z = en.z + opoint.z
+		local x = en.x + opoint.x * en.facing + math.random(-(opoint.x_random * 0.5), (opoint.x_random * 0.5))
+		local y = en.y + opoint.y + math.random(-(opoint.y_random * 0.5), (opoint.y_random * 0.5))
+		local z = en.z + opoint.z + math.random(-(opoint.z_random * 0.5), (opoint.z_random * 0.5))
 
 		local facing = opoint.facing
 
 		if en.facing == -1 then facing = -facing end
 		if facing == 0 then facing = en.facing end
 
-		local action = opoint.action
+		local action = opoint.action + math.random(0, opoint.action_random)
 
+		if opoint.count%2 == 0 then
 
-		Spawn(id, x, y, z, facing, action)
+			local z_offset = 15
+			for i = 1, opoint.count do
+				if i%2 == 0 then
+					SpawnEntity(id, x, y, z + z_offset, facing, action, en.owner)
+					z_offset = z_offset + 15
+				else
+					SpawnEntity(id, x, y, z - z_offset, facing, action, en.owner)
+				end
+			end
+		else
+			
+			local z_offset = 0
+			
+			for i = 1, opoint.count do
+				if i%2 == 0 then
+					SpawnEntity(id, x, y, z + z_offset, facing, action, en.owner)
+				else
+					SpawnEntity(id, x, y, z - z_offset, facing, action, en.owner)
+					z_offset = z_offset + 15
+				end
+			end
 
+		end
 	end
 end
 
 
-function Spawn(id, x, y, z, facing, action)
+function SpawnEntity(id, x, y, z, facing, action, owner)
 	new_object = CreateEntity(id)
 	if new_object ~= false then
 		en = entity_list[new_object]
@@ -72,9 +92,12 @@ function Spawn(id, x, y, z, facing, action)
 			en.facing = facing
 		end
 		SetFrame(en, action)
+		if owner ~= nil then
+			en.owner = entity_list[owner].owner
+			en.team = entity_list[owner].team
+		end
 		return new_object
 	else
 		return false
 	end
 end
-

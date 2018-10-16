@@ -5,7 +5,7 @@ players = {
 
 players_flags = {
 	true,
-	false
+	true
 } -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
 
 key_pressed = {

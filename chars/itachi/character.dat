@@ -5,10 +5,14 @@ type: character
 
 physic: true
 collision: true
+shadow: true
 
 hp: 100
+strength: 10
 defend: 10
 fall: 70
+
+script_file: "chars/itachi/script.lua"
 
 sprite: {
 	file: "chars/itachi/sprites/main.png"
@@ -48,21 +52,26 @@ dash_height: 45
 dash_width: 70
 dash_widthz: 15
 
-attack_frames: { 30 }
+attack_frames: { 35 }
 run_attack_frame: 42
 jump_attack_frame: 0
 dash_attack_frame: 0
 
 injury_frames: { 50,51,52 }
 
+defend_frame: 55
 
 </head>
 
+<vars>
+	x1: 66
+</vars>
 
 <frame> 1 idle
 pic: 0  next: 2  wait: 9 centerx: 22  centery: 83 hit_Fj: 42
 body: { x: 9 w: 25 y: 8 h: 72 }
 state: 1 {  }
+state: 650 {  }
 </frame>
 <frame> 2 idle
 pic: 1  next: 3  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
@@ -193,42 +202,34 @@ body: { x: 1 w: 28 y: 44 h: 70}
 <frame> 31 dash
 pic: 58  next: 32  wait: 3 dvx: 0  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
-opoint: { id: 1  action: 42  x: 80 y: 0 z: 0 facing: 1 }
+opoint: { id: 1  action: 42  x: 25 y: 0 z: 0 count: 1 facing: 1 x_random: 5 z_random: 5}
 </frame>
 <frame> 32 dash
 pic: 58  next: 33  wait: 12  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 33 dash
-pic: 58  next: 999  wait: 9  centerx: 16  centery: 83 hit_a: 35
+pic: 58  next: 999  wait: 9  centerx: 16  centery: 83 hit_a: 0
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
 
 <frame> 35 dash
-pic: 34  next: 36  wait: 4  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
+pic: 91  next: 36  wait: 7  centerx: 16  centery: 83
+body: { x: 5 w: 34 y: 15 h: 70}
 </frame>
 <frame> 36 dash
-pic: 35  next: 37  wait: 7  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
+pic: 92  next: 37  wait: 4 dvx: 7 centerx: 16  centery: 83
+body: { x: 5 w: 34 y: 15 h: 70}
+itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 15 dvx: 65 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 }
 </frame>
 <frame> 37 dash
-pic: 36  next: 38  wait: 3 dvx: 7  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
-itr: { kind: 1 x: 20 w: 60 y: 50 h: 30 z: 15 dvx: 25 bdefend: 10  }
+pic: 93  next: 38  wait: 9  centerx: 16  centery: 83
+body: { x: 5 w: 34 y: 15 h: 70}
 </frame>
 <frame> 38 dash
-pic: 37  next: 39  wait: 10  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
-</frame>
-<frame> 39 dash
-pic: 38  next: 40  wait: 9  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
-</frame>
-<frame> 40 dash
-pic: 39  next: 999  wait: 13  centerx: 16  centery: 113 hit_a: 42
-body: { x: 1 w: 28 y: 44 h: 70}
+pic: 94  next: 999  wait: 9  centerx: 16  centery: 83 hit_a: 42
+body: { x: 5 w: 34 y: 15 h: 70}
 </frame>
 
 
@@ -241,9 +242,9 @@ pic: 113  next: 44  wait: 4  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 44 run_attack
-pic: 114  next: 45  wait: 3 dvx: 30 centerx: 16  centery: 83
+pic: 114  next: 45  wait: 3 dvx: 45 centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
-itr: { kind: 1 x: 15 w: 45 y: 54 h:50 z: 55 dvx: 150 bdefend: 20 }
+itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 11 dvx: 85 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 }
 </frame>
 <frame> 45 run_attack
 pic: 115  next: 46  wait: 7  centerx: 16  centery: 83
@@ -261,13 +262,23 @@ body: { x: 1 w: 28 y: 44 h: 70}
 
 <frame> 50 injury
 pic: 35  next: 999  wait: 55  centerx: 16  centery: 83
-body: { x: 1 w: 28 y: 44 h: 70}
+body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 <frame> 51 injury
 pic: 36  next: 999  wait: 55  centerx: 16  centery: 83
-body: { x: 1 w: 28 y: 44 h: 70}
+body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 <frame> 52 injury
-pic: 37  next: 1000  wait: 55  centerx: 16  centery: 83
-body: { x: 1 w: 28 y: 44 h: 70}
+pic: 37  next: 999  wait: 55  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+
+<frame> 55 defend
+pic: 28  next: 56  wait: 3  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+<frame> 56 defend
+pic: 29  next: 999  wait: 55  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+state: 7 {  }
 </frame>

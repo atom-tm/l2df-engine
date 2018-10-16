@@ -17,7 +17,6 @@ debug_info = true
 objects = 0
 t1 = ""
 
-
 function love.load()
 	local width, height, flags = love.window.getMode()
 	MainCanvas = love.graphics.newCanvas( width, height )
@@ -32,7 +31,7 @@ function love.load()
 	love.graphics.setBackgroundColor(.49, .67, .46, 1) -- установка фона
     CreateDataList() -- создание листа со всеми персонажами
 
-    for i = 1, 1 do
+    for i = 1, 2 do
     	table.insert(loading_list.characters, 1)
     end
     loading_list.map = 1
@@ -44,10 +43,10 @@ function love.update(dt)
 	delta_time = dt
 	BattleProcessing()
 
-	if love.keyboard.isDown("j") then
+	if love.keyboard.isDown("n") then
 		map.shadow_centerx = map.shadow_centerx + 10
 	end
-	if love.keyboard.isDown("h") then
+	if love.keyboard.isDown("m") then
 		map.shadow_centerx = map.shadow_centerx - 10
 	end
 	if love.keyboard.isDown("u") then
@@ -68,12 +67,13 @@ function love.draw()
 		ObjectsDraw()
 		ForegroundDraw()
 	end)
-	love.graphics.print(tostring(t1), 100, 30)
+	
+	love.graphics.print(tostring(t1), 50, 50)
 	
 	if debug_info then
 		love.graphics.setNewFont(12)
 		love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)
-		love.graphics.print("Objects: "..tostring(objects).." Collisions: "..tostring(#collisions_list), 10, 25)
+		love.graphics.print("Objects: "..tostring(objects).." Sourses: "..tostring(#sourse_list).." Collisions: "..tostring(#collisions_list), 10, 25)
 	end
 
 	local cur_time = love.timer.getTime()
