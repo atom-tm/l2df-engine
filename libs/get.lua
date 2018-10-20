@@ -48,9 +48,13 @@ end
 
 
 
-function PNumber (string, parameter) -- функция для получения числового значения параметра "parameter" из входящей строки "string"
+function PNumber (string, parameter, alternative) -- функция для получения числового значения параметра "parameter" из входящей строки "string"
 -------------------------------------
 	local result = 0
+
+	if alternative ~= nil then
+		result = alternative
+	end
 
 	local match = string.match(string, parameter..": ([-%d%.]+)")
 	if match ~= nil then result = tonumber(match) end

@@ -1,7 +1,7 @@
 local script = {}
 
 function script.load(en)
-	en.x = en.vars.x1
+	
 end
 
 function script.update(en)

@@ -57,14 +57,14 @@ run_attack_frame: 42
 jump_attack_frame: 0
 dash_attack_frame: 0
 
-injury_frames: { 50,51,52 }
+injury_frames: { 50, 51 }
 
 defend_frame: 55
+broken_defend: 52
 
 </head>
 
 <vars>
-	x1: 66
 </vars>
 
 <frame> 1 idle
@@ -221,7 +221,7 @@ body: { x: 5 w: 34 y: 15 h: 70}
 <frame> 36 dash
 pic: 92  next: 37  wait: 4 dvx: 7 centerx: 16  centery: 83
 body: { x: 5 w: 34 y: 15 h: 70}
-itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 15 dvx: 65 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 }
+itr: { kind: 1 x: 15 w: 50 y: 25 h: 35 z: 15 dvx: 65 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 injury: 15 fall: 10 }
 </frame>
 <frame> 37 dash
 pic: 93  next: 38  wait: 9  centerx: 16  centery: 83
@@ -244,7 +244,7 @@ body: { x: 1 w: 28 y: 44 h: 70}
 <frame> 44 run_attack
 pic: 114  next: 45  wait: 3 dvx: 45 centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
-itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 11 dvx: 85 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 }
+itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 11 dvx: 85 bdefend: 10 spark: 10 ospark: 10 dspark: 10 bdspark: 10 fspark: 10 injury: 15 fall: 10 }
 </frame>
 <frame> 45 run_attack
 pic: 115  next: 46  wait: 7  centerx: 16  centery: 83

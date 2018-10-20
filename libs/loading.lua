@@ -274,13 +274,28 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				t2 = en.script_file
 
 				en.max_defend = PNumber(head, "strength")
-				en.defend_up = PNumber(head, "defend")
 				en.max_fall = PNumber(head, "fall")
 				en.max_hp = PNumber(head, "hp")
 
+
+				en.walking_speed_x = PNumber(head, "walking_speed_x")
+				en.walking_speed_z = PNumber(head, "walking_speed_z")	
+				en.running_speed_x = PNumber(head, "running_speed_x")
+				en.running_speed_z = PNumber(head, "running_speed_z")
+				en.jump_height = PNumber(head, "jump_height")
+				en.jump_width = PNumber(head, "jump_width")
+				en.jump_widthz = PNumber(head, "jump_widthz")
+				en.dash_height = PNumber(head, "dash_height")
+				en.dash_width = PNumber(head, "dash_width")
+				en.dash_widthz = PNumber(head, "dash_widthz")
+
 				en.sprites = {} -- массив со спрайтами персонажа
 				
-				en.walking_frames = {}
+
+
+				-- СТАНДАРНЫЕ КАДРЫ --
+
+				en.walking_frames = {} -- ходьба
 				local walking_frames_string = string.match(head, "walking_frames: {([^{}]*)}")
 				if walking_frames_string ~= nil then
 					for i in string.gmatch(walking_frames_string, "(%d+)") do
@@ -288,7 +303,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.running_frames = {}
+				en.running_frames = {} -- бег
 				local running_frames_string = string.match(head, "running_frames: {([^{}]*)}")
 				if running_frames_string ~= nil then
 					for i in string.gmatch(running_frames_string, "(%d+)") do
@@ -296,7 +311,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.attack_frames = {}
+				en.attack_frames = {} -- атака
 				local attack_frames_string = string.match(head, "attack_frames: {([^{}]*)}")
 				if attack_frames_string ~= nil then
 					for i in string.gmatch(attack_frames_string, "(%d+)") do
@@ -304,7 +319,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.injury_frames = {}
+				en.injury_frames = {} -- получение урона
 				local injury_frames_string = string.match(head, "injury_frames: {([^{}]*)}")
 				if injury_frames_string ~= nil then
 					for i in string.gmatch(injury_frames_string, "(%d+)") do
@@ -312,46 +327,37 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.injury_types = {}
+				en.injury_types = {} -- дополнительные получения урона (в зависимости от типа)
 				local injury_types_string = string.match(head, "injury_types: {([^{}]*)}")
 				if injury_types_string ~= nil then
-					for i in string.gmatch(injury_types_string, "(%d+)") do
-						table.insert(en.injury_types, tonumber(i))
+					for id, frame in string.gmatch(injury_types_string, "\"(%d+)\": (%d+)") do
+						en.injury_types[id] = frame
 					end
 				end
 
-				en.idle_frame = PNumber(head, "idle_frame")
-				en.starting_frame = PNumber(head, "starting_frame")
-				en.running_stop = PNumber(head, "running_stop")
-				en.walking_stop = PNumber(head, "walking_stop")
 
-				en.walking_speed_x = PNumber(head, "walking_speed_x")
-				en.walking_speed_z = PNumber(head, "walking_speed_z")	
-				en.running_speed_x = PNumber(head, "running_speed_x")
-				en.running_speed_z = PNumber(head, "running_speed_z")
+				en.starting_frame = PNumber(head, "starting_frame") -- приветствие
+				en.idle_frame = PNumber(head, "idle_frame") -- стойка
 
-				en.air_frame = PNumber(head, "air_frame")
-				en.landing_frame = PNumber(head, "landing_frame")
+				en.running_stop = PNumber(head, "running_stop") -- остановка после бега
+				en.rowing = PNumber(head, "rowing") -- подкат
 
-				en.jump_frame = PNumber(head, "jump_frame")
-				en.jump_height = PNumber(head, "jump_height")
-				en.jump_width = PNumber(head, "jump_width")
-				en.jump_widthz = PNumber(head, "jump_widthz")
-
-				en.dash_frame = PNumber(head, "dash_frame")
-				en.dash_height = PNumber(head, "dash_height")
-				en.dash_width = PNumber(head, "dash_width")
-				en.dash_widthz = PNumber(head, "dash_widthz")
+				en.jump_frame = PNumber(head, "jump_frame") -- прыжок
+				en.dash_frame = PNumber(head, "dash_frame") -- деш
+				en.air_frame = PNumber(head, "air_frame") -- свободное падение
+				en.landing_frame = PNumber(head, "landing_frame") -- приземление
 				
-				en.run_attack_frame = PNumber(head, "run_attack_frame")
-				en.jump_attack_frame = PNumber(head, "jump_attack_frame")
-				en.dash_attack_frame = PNumber(head, "dash_attack_frame")
+				en.run_attack_frame = PNumber(head, "run_attack_frame") -- удар на бегу
+				en.jump_attack_frame = PNumber(head, "jump_attack_frame") -- удар в прыжке
+				en.dash_attack_frame = PNumber(head, "dash_attack_frame") -- удар в деше
 
-				en.defend_frame = PNumber(head, "defend_frame")
+				en.defend_frame = PNumber(head, "defend_frame") -- защита
+				en.broken_defend = PNumber(head, "broken_defend") -- пробитие защиты
+
+				en.injury_backward_frame = PNumber(head, "injury_backward_frame") -- удар сзади
+				en.injury_forward_frame = PNumber(head, "injury_forward_frame") -- удар спереди
 
 
-				en.injury_backward_frame = PNumber(head, "injury_backward_frame")
-				en.injury_forward_frame = PNumber(head, "injury_forward_frame")
 
 
 
@@ -379,28 +385,29 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 					table.insert(en.sprites,sprites) -- добавляем объект в массив
 				end
+
+
 			end
 
 			en.vars = {} -- массив с дополнительными переменными
 			local vars = string.match(dat, "<vars>(.*)</vars>") -- получаем содержимое блока <vars></vars>
-			
 			if not (vars == nil) then -- если блок содержит что-то, пытаемся парсить это на переменные
-				for key, value in string.gmatch(vars, "([%w%d_]+): ([%w_]+)") do
-					if value == "true" then
+				for key, value in string.gmatch(vars, "([%w%d_]+): ([%w_]+)") do -- для каждой текстовой переменной
+					if value == "true" then -- если true, записываем как bool
 						en.vars[key] = true
-					elseif value == "false" then
+					elseif value == "false" then -- если false, записываем как bool
 						en.vars[key] = false
 					else
 						en.vars[key] = tostring(value)
 					end
 				end
-				for key, value in string.gmatch(vars, "([%w%d_]+): ([-%d%.]+)") do
+				for key, value in string.gmatch(vars, "([%w%d_]+): ([-%d%.]+)") do -- для каждой численной переменной
 					en.vars[key] = tonumber(value)
 				end
 			end
 
-			en.frames = {} -- массив с фреймами
 
+			en.frames = {} -- массив с фреймами
 			for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
 				
 				local frame = {} -- создаём пустой фрейм
@@ -438,51 +445,46 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.hit_j = PNumber(f,"hit_j")
 				frame.hit_d = PNumber(f,"hit_d")
 
+
+
 				frame.bodys = {} -- массив с коллайдерами body персонажа
 				local r = {} -- переменная для нахождения радиуса хитбоксов
-				
-
 				for b in string.gmatch(f, "body: {([^{}]*)}") do -- для каждого блока body: {}
-					local collaider = LoadCollider(b,r) -- получение коллайдера
-					-- сюда вставлять дополнительные теги
-					table.insert(frame.bodys, collaider) -- загрузка коллайдера в массив
+					local body = LoadCollider(b,r) -- получение коллайдера
+					-- дополнительные теги
+					body.injury_frame = PNumber(b,"injury_frame")
+					body.untouchable = PBool(b,"untouchable")
+					-- выше вставлять дополнительные теги
+					table.insert(frame.bodys, body) -- загрузка коллайдера в массив
 				end
 				frame.body_radius = FindMaximum(r) -- получение радиуса body коллайдеров
+
 
 
 				frame.itrs = {} -- массив с коллайдерами itr персонажа
 				r = {} -- переменная для нахождения радиуса хитбоксов
 				for i in string.gmatch(f, "itr: {([^{}]*)}") do -- для каждого блока itr: {}
 					local itr = LoadCollider(i,r) -- получение коллайдера
-					-- сюда вставлять дополнительные теги
-					
+					-- дополнительные теги					
 					itr.kind = PNumber(i,"kind")
-					
 					itr.dvx = PNumber(i,"dvx")
 					itr.dvy = PNumber(i,"dvy")
 					itr.dvz = PNumber(i,"dvz")
-
 					itr.injury = PNumber(i,"injury")
 					itr.bdefend = PNumber(i,"bdefend")
 					itr.fall = PNumber(i,"fall")
-
-					itr.arest = PNumber(i,"arest")
-					itr.vrest = PNumber(i,"vrest")
-
-					itr.spark = PNumber(i,"spark")
-					itr.ospark = PNumber(i,"ospark")
-					itr.fspark = PNumber(i,"fspark")
-					itr.dspark = PNumber(i,"dspark")
-					itr.bdspark = PNumber(i,"bdspark")
-
-
+					itr.arest = PNumber(i,"arest",5)
+					itr.vrest = PNumber(i,"vrest",5)
+					itr.spark = PNumber(i,"spark",1)
+					itr.ospark = PNumber(i,"ospark",1)
+					itr.fspark = PNumber(i,"fspark",1)
+					itr.dspark = PNumber(i,"dspark",1)
+					itr.bdspark = PNumber(i,"bdspark",1)
 					itr.friendly_fire = PBool(i,"friendly_fire")
-
+					itr.knocking_down = PBool(i,"knocking_down")
 					itr.damage_type = PNumber(i,"damage_type")
-
-					if itr.arest <= 0 then itr.arest = 5 end
-					if itr.vrest <= 0 then itr.vrest = 5 end
-
+					itr.target_frame = PNumber(i,"target_frame")
+					-- выше вставлять дополнительные теги
 					table.insert(frame.itrs, itr) -- загрузка коллайдера в массив
 				end
 				frame.itr_radius = FindMaximum(r) -- получение радиуса коллайдеров
@@ -630,8 +632,11 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 		created_object.fall = created_object.max_fall
 		created_object.fall_timer = 0
+
 		created_object.defend = created_object.max_defend
 		created_object.defend_timer = 0
+
+		created_object.hp = created_object.max_hp
 
 		created_object.arest = 0
 		created_object.vrest = 0

@@ -283,7 +283,7 @@ function DrawEntity (en_id)
 						love.graphics.setColor(1, 1, 1, 1)
 					end
 
-					love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall, en.x, map.border_up + en.y + en.z + 15)
+					love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall.. "\n" .."hp: "..en.hp, en.x, map.border_up + en.y + en.z + 15)
 				end
 
 
