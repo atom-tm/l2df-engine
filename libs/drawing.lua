@@ -284,6 +284,7 @@ function DrawEntity (en_id)
 					end
 
 					love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall.. "\n" .."hp: "..en.hp, en.x, map.border_up + en.y + en.z + 15)
+					love.graphics.print(#en.damage, en.x - 50, map.border_up + en.y + en.z + 15)
 				end
 
 

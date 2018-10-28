@@ -64,7 +64,7 @@ function CollisionersProcessing()
 							local itr1 = CollaiderCords(entity_frame.itrs[itr1_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
 							for itr2_id = 1, #target_frame.itrs do
 								local itr2 = CollaiderCords(target_frame.itrs[itr2_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
-								if (target_owner ~= entity_owner) or (entity_frame.itrs[itr_id].friendly_fire) then
+								--if (target_owner ~= entity_owner) or (entity_frame.itrs[itr_id].friendly_fire) then
 									if (entity.z + itr1.z * 0.5 > target.z and entity.z - itr1.z * 0.5 < target.z) or (target.z + itr2.z * 0.5 > entity.z and target.z - itr2.z * 0.5 < entity.z) then
 										if (CheckCollision(itr1, itr2)) then
 											local collision = {
@@ -79,7 +79,7 @@ function CollisionersProcessing()
 											table.insert(collisions_list, collision)
 										end
 									end
-								end
+								--end
 							end
 						end
 					end
@@ -244,22 +244,6 @@ function CollisionsProcessing()
 						injury_frame = target.injury_frames[math.random(1, #target.injury_frames)]
 					end -- берём рандомный кадр повреждения из списка
 
-					if math.abs(itr.dvx) >= 5 then
-						if target.facing == attacker.facing then
-							if target.injury_backward_frame ~= 0 then
-								injury_frame = target.injury_backward_frame
-							end
-						else
-							if target.injury_forward_frame ~= 0 then
-								injury_frame = target.injury_forward_frame
-							end
-						end
-					end -- если удар спереди\\сзади и у цели имеются спец. кадры повреждений на этот случай, меняем кадр повреждения
-
-					if itr.damage_type ~= 0 and target.injury_types[itr.damage_type] ~= nil then
-						injury_frame = target.injury_types[itr.damage_type]
-					end -- для специальных типов урона используем свои кадры повреждения
-
 					if itr.target_frame ~= 0 then
 						injury_frame = itr.target_frame
 					end -- если в itr'e задан определённый кадр
@@ -278,10 +262,10 @@ function CollisionsProcessing()
 						if itr.knocking_down then -- проверка на то, что атака может сбить с ног
 							target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
 						else
+							target.taccel_y = target.taccel_y + itr.dvy -- устанавливаем атакуемому dvy
 							spark = itr.fspark -- устанавливаем спарк падения
 						end
 					end
-
 				end
 
 				if target.type == "object" then -- если мы били объект

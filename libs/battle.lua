@@ -1,106 +1,52 @@
-function BattleProcessing()
+function BattleProcessing() -- данная функция отвечает за обработку каждого тика в бою, включая в себя функции по обработке персонажей, гравитации, коллизий и так далее
+-------------------------------------
+
+	objects_for_drawing = {} -- обнуление массива объектов на отрисовку
+	objects = 0 -- отладочная переменная количества объектов
 
 	ControlCheck() -- функция проверки управления для всех игроков
-	objects_for_drawing = {} -- обнуление массива объектов на отрисовку
-
-
-	local remove_list = {} -- список объектов для удаления
-	local creating_list = {} -- список объектов для создания
-
-	objects = 0
 
 	for en_id in pairs(entity_list) do -- для каждого из объектов в игре
 		
-		if entity_list[en_id] ~= "nil" and entity_list[en_id] ~= nil then -- если объект существует
+		if entity_list[en_id] ~= nil then -- если объект существует
 
-			objects = objects + 1
+			objects = objects + 1 -- для вывода реального количества объектов в отладочной информации
 
 			local en = entity_list[en_id] -- получаем объект
-			local frame = GetFrame(en) -- получаем фрейм объекта
 
-			Accelerations(en_id) -- проверка ускорений
 			HitCheck(en_id) -- проверка нажатий клавиш
+			Accelerations(en_id) -- проверка ускорений
 			StatesCheck(en_id) -- проверка стейтов
 
 			Gravity(en_id) -- гравитация
 			Motion(en_id) -- передвижение объекта
 			BordersCheck(en_id) -- проверка на пересечение границ карты
 			
-			CollaidersFind(en_id)
+			CollaidersFind(en_id) -- поиск коллайдеров
 
 			if en.first_tick_flag then
 				OpointProcessing(en_id)
 				en.first_tick_flag = false
-			end
+			end -- обработка opoint блоков
 
-			local draw_object = { id = en_id, z = en.z }
-			table.insert(objects_for_drawing, draw_object)
+			local draw_object = { id = en_id, z = en.z } -- получение приоритета отрисовки
+			table.insert(objects_for_drawing, draw_object) -- отправка объекта в список на отрисовку
 
 
-			if en.arest > 0 then
-				en.arest = en.arest - 1
-			end
 
-			if en.vrest > 0 then
-				en.vrest = en.vrest - 1
-			end
-
-			if en.defend < en.max_defend then
-				if en.defend_timer <= 0 then
-					en.defend_timer = 0
-					en.defend = en.max_defend
-				else
-					en.defend_timer = en.defend_timer - 1
-				end
-			end
-
-			if en.fall < en.max_fall then
-				if en.fall_timer <= 0 then
-					en.fall_timer = 0
-					en.fall = en.max_fall
-				else
-					en.fall_timer = en.fall_timer - 1
-				end
-			end
-
-			if en.wait <= 0 then -- если вайт подошёл к концу, переходим в указанный кадр
-				if en.next_frame == 1000 then
-					en.destroy_flag = true
-				else
-					SetFrame(en, en.next_frame)
-				end
-			else
-				en.wait = en.wait - 1 * delta_time * 100
-			end
+			Time(en_id) -- обработка всего что связано со временем
 
 			if en.destroy_flag == true then
 				RemoveEntity(en_id)
-			end
+			end -- уничтожение объекта
+
 		end
 	end
 
-	CollisionersProcessing()
-	CollisionsProcessing()
+	CollisionersProcessing() -- поиск столкновений
+	CollisionsProcessing() -- обработка столкновений
+	CameraBinding() -- привязка камеры
 
-	CameraBinding()
-
-	-- RemoveProcessing(remove_list) -- функция удаления объектов, помеченых к удалению
-end
-
-
-
-function CreateProcessing ()
-
-
-end
-
-
-
-function RemoveProcessing (list) -- функция предназначена для единовременного удаления из памяти всех объектов, помеченных к удалению, а так же для сборки оставшегося после них мусора
--------------------------------------
-	for object = 1, #list do
-		RemoveEntity(list[object])
-	end
 end
 
 
@@ -146,4 +92,48 @@ function Spawner()
 
 		object.script.load(object)
 	end
+end
+
+
+function Time(en_id) -- функция отвечает за обработку всех таймеров персонажа
+-------------------------------------
+
+	local en = entity_list[en_id]
+
+	if en.arest > 0 then
+		en.arest = en.arest - 1
+	end -- сброс arest'a
+
+	if en.vrest > 0 then
+		en.vrest = en.vrest - 1
+	end -- сброс vrest'a
+
+	if en.defend < en.max_defend then
+		if en.defend_timer <= 0 then
+			en.defend_timer = 0
+			en.defend = en.max_defend
+		else
+			en.defend_timer = en.defend_timer - 1
+		end
+	end -- восстановление брони
+
+	if en.fall < en.max_fall then
+		if en.fall_timer <= 0 then
+			en.fall_timer = 0
+			en.fall = en.max_fall
+		else
+			en.fall_timer = en.fall_timer - 1
+		end
+	end -- восстановление стойкости
+
+	if en.wait <= 0 then
+		if en.next_frame == 1000 then
+			en.destroy_flag = true
+		else
+			SetFrame(en, en.next_frame)
+		end
+	else
+		en.wait = en.wait - 1 * delta_time * 100
+	end -- изменение wait и смена кадров
+	
 end

@@ -88,8 +88,6 @@ function LoadingBeforeBattle() -- функция вызывается перед
 	map = LoadMap(loading_list.map)
 	CameraSet(map.width, map.height)
 
-	MainCanvas = love.graphics.newCanvas(map.width, map.height)
-
 	Spawner() -- функция отвечающая за спавн всех игроков на карте
 
 end
@@ -327,15 +325,6 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.injury_types = {} -- дополнительные получения урона (в зависимости от типа)
-				local injury_types_string = string.match(head, "injury_types: {([^{}]*)}")
-				if injury_types_string ~= nil then
-					for id, frame in string.gmatch(injury_types_string, "\"(%d+)\": (%d+)") do
-						en.injury_types[id] = frame
-					end
-				end
-
-
 				en.starting_frame = PNumber(head, "starting_frame") -- приветствие
 				en.idle_frame = PNumber(head, "idle_frame") -- стойка
 
@@ -352,13 +341,10 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.dash_attack_frame = PNumber(head, "dash_attack_frame") -- удар в деше
 
 				en.defend_frame = PNumber(head, "defend_frame") -- защита
+
 				en.broken_defend = PNumber(head, "broken_defend") -- пробитие защиты
-
-				en.injury_backward_frame = PNumber(head, "injury_backward_frame") -- удар сзади
-				en.injury_forward_frame = PNumber(head, "injury_forward_frame") -- удар спереди
-
-
-
+				en.stun_frame = PNumber(head, "stun_frame") -- стан
+				en.falling_frame = PNumber(head, "falling_frame") -- падение
 
 
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
@@ -406,44 +392,95 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				end
 			end
 
+			en.damage = {} -- массив с кадрами для различных типов урона
+			local damage = string.match(dat, "<damage>(.*)</damage>") -- получаем содержимое блока <damage></damage>
+			if not (damage == nil) then -- если блок содержит что-то, пытаемся парсить это на переменные
+				for dtype in string.gmatch(damage, "<type>([^<>]+)</type>") do
+					local dt = {}
+
+					dt.id = PNumber(dtype, "id")
+
+					dt.injury = {}
+					local dti = string.match(dtype, "injury: {([^{}]*)}")
+					if dti ~= nil then
+						for frame in string.gmatch(dti, "(%d+)") do
+							table.insert(dt.injury, frame)
+						end
+					end
+
+					dt.bdefend = {}
+					local dtbd = string.match(dtype, "bdefend: {([^{}]*)}")
+					if dtbd ~= nil then
+						for frame in string.gmatch(dtbd, "(%d+)") do
+							table.insert(dt.bdefend, frame)
+						end
+					end
+
+					dt.stun = {}
+					local dts = string.match(dtype, "stun: {([^{}]*)}")
+					if dts ~= nil then
+						for frame in string.gmatch(dts, "(%d+)") do
+							table.insert(dt.stun, frame)
+						end
+					end
+
+					dt.fall = {}
+					local dtf = string.match(dtype, "fall: {([^{}]*)}")
+					if dtf ~= nil then
+						for frame in string.gmatch(dtf, "(%d+)") do
+							table.insert(dt.fall, frame)
+						end
+					end
+
+					dt.block = PNumber(dtype, "block")
+					dt.absorption = PNumber(dtype, "absorption")
+
+
+					table.insert(en.damage, dt)
+				end
+			end
+
 
 			en.frames = {} -- массив с фреймами
 			for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
 				
 				local frame = {} -- создаём пустой фрейм
 				local frame_number = tonumber(string.match(f, "(%d+)")) -- получаем номер фрейма 
+				local frame_head =  string.match(f, "([^{}]+)")
+				--love.window.showMessageBox( "..", frame_head, "info", true)
 
-				frame.pic = PNumber(f,"pic")
-				frame.next = PNumber(f,"next")
-				frame.wait = PNumber(f,"wait")
-				frame.centerx = PNumber(f,"centerx")
-				frame.centery = PNumber(f,"centery")
 
-				frame.shadow = not PBool(f,"shadow")
-				frame.zoom = PNumber(f,"zoom")
+				frame.pic = PNumber(frame_head,"pic")
+				frame.next = PNumber(frame_head,"next")
+				frame.wait = PNumber(frame_head,"wait")
+				frame.centerx = PNumber(frame_head,"centerx")
+				frame.centery = PNumber(frame_head,"centery")
 
-				frame.dvx = PNumber(f,"dvx")
-				frame.dsx = PNumber(f,"dsx")
-				frame.dx = PNumber(f,"dx")
+				frame.shadow = not PBool(frame_head,"shadow")
+				frame.zoom = PNumber(frame_head,"zoom")
 
-				frame.dvy = PNumber(f,"dvy")
-				frame.dsy = PNumber(f,"dsy")
-				frame.dy = PNumber(f,"dy")
+				frame.dvx = PNumber(frame_head,"dvx")
+				frame.dsx = PNumber(frame_head,"dsx")
+				frame.dx = PNumber(frame_head,"dx")
 
-				frame.dvz = PNumber(f,"dvz")
-				frame.dsz = PNumber(f,"dsz")
-				frame.dz = PNumber(f,"dz")
+				frame.dvy = PNumber(frame_head,"dvy")
+				frame.dsy = PNumber(frame_head,"dsy")
+				frame.dy = PNumber(frame_head,"dy")
+
+				frame.dvz = PNumber(frame_head,"dvz")
+				frame.dsz = PNumber(frame_head,"dsz")
+				frame.dz = PNumber(frame_head,"dz")
 				
-				frame.hit_Ua = PNumber(f,"hit_Ua")
-				frame.hit_Uj = PNumber(f,"hit_Uj")
-				frame.hit_Da = PNumber(f,"hit_Da")
-				frame.hit_Dj = PNumber(f,"hit_Dj")
-				frame.hit_Fa = PNumber(f,"hit_Fa")
-				frame.hit_Fj = PNumber(f,"hit_Fj")
+				frame.hit_Ua = PNumber(frame_head,"hit_Ua")
+				frame.hit_Uj = PNumber(frame_head,"hit_Uj")
+				frame.hit_Da = PNumber(frame_head,"hit_Da")
+				frame.hit_Dj = PNumber(frame_head,"hit_Dj")
+				frame.hit_Fa = PNumber(frame_head,"hit_Fa")
+				frame.hit_Fj = PNumber(frame_head,"hit_Fj")
 
-				frame.hit_a = PNumber(f,"hit_a")
-				frame.hit_j = PNumber(f,"hit_j")
-				frame.hit_d = PNumber(f,"hit_d")
+				frame.hit_a = PNumber(frame_head,"hit_a")
+				frame.hit_j = PNumber(frame_head,"hit_j")
+				frame.hit_d = PNumber(frame_head,"hit_d")
 
 
 

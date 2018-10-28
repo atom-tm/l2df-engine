@@ -155,6 +155,26 @@ function StatesCheck(en_id)
 			end
 		end
 
+		if state.num == "8" then -- падение
+			local next_frame = en.next_frame
+			if next_frame == 999 or next_frame == 0 then
+				if en.vel_x * en.facing > 0 and en.falling_forward_frame ~= 0 then
+					next_frame = en.falling_forward_frame
+				elseif en.vel_x * en.facing < 0 and en.falling_backward_frame ~= 0 then
+					next_frame = en.falling_backward_frame
+				elseif en.vel_y > 0 and en.falling_up_frame ~= 0 then
+					next_frame = en.falling_up_frame
+				elseif en.vel_y < 0 and en.falling_down_frame ~= 0 then
+					next_frame = en.falling_down_frame
+				else
+					next_frame = en.falling_frame
+				end
+			end
+			if not (en.y > 0 and en.on_platform == false) then
+				SetFrame(en, en.landing_frame)
+			end
+		end
+
 
 		if state.num == "10" then
 			if en.key_pressed["right"] > 0 then
