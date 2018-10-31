@@ -275,7 +275,6 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.max_fall = PNumber(head, "fall")
 				en.max_hp = PNumber(head, "hp")
 
-
 				en.walking_speed_x = PNumber(head, "walking_speed_x")
 				en.walking_speed_z = PNumber(head, "walking_speed_z")	
 				en.running_speed_x = PNumber(head, "running_speed_x")
@@ -287,10 +286,14 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.dash_width = PNumber(head, "dash_width")
 				en.dash_widthz = PNumber(head, "dash_widthz")
 
-				en.sprites = {} -- массив со спрайтами персонажа
+
+				en.damage = {} -- массив с кадрами для различных типов урона
+				en.damage[1] = {} -- стандарт
+
+				en.damage[1].damage_modifier = PNumber(head, "damage_modifier", 1)
+				en.damage[1].defend_modifier = PNumber(head, "defend_modifier", 1)
+				en.damage[1].absorption = PNumber(head, "absorption")
 				
-
-
 				-- СТАНДАРНЫЕ КАДРЫ --
 
 				en.walking_frames = {} -- ходьба
@@ -317,13 +320,10 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					end
 				end
 
-				en.injury_frames = {} -- получение урона
-				local injury_frames_string = string.match(head, "injury_frames: {([^{}]*)}")
-				if injury_frames_string ~= nil then
-					for i in string.gmatch(injury_frames_string, "(%d+)") do
-						table.insert(en.injury_frames, tonumber(i))
-					end
-				end
+				en.damage[1].injury = PFrames(head, "injury_frames")
+				en.damage[1].bdefend = PFrames(head, "bdefend_frames")
+				en.damage[1].stun = PFrames(head, "stun_frames")
+				en.damage[1].fall = PFrames(head, "fall_frames")
 
 				en.starting_frame = PNumber(head, "starting_frame") -- приветствие
 				en.idle_frame = PNumber(head, "idle_frame") -- стойка
@@ -342,11 +342,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 				en.defend_frame = PNumber(head, "defend_frame") -- защита
 
-				en.broken_defend = PNumber(head, "broken_defend") -- пробитие защиты
-				en.stun_frame = PNumber(head, "stun_frame") -- стан
-				en.falling_frame = PNumber(head, "falling_frame") -- падение
-
-
+				en.sprites = {} -- массив со спрайтами персонажа
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
 
 					local path = string.match(s, "file: \"(.*)\"")
@@ -392,51 +388,23 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				end
 			end
 
-			en.damage = {} -- массив с кадрами для различных типов урона
 			local damage = string.match(dat, "<damage>(.*)</damage>") -- получаем содержимое блока <damage></damage>
-			if not (damage == nil) then -- если блок содержит что-то, пытаемся парсить это на переменные
+			if damage ~= nil then -- если блок содержит что-то, пытаемся парсить это на переменные
 				for dtype in string.gmatch(damage, "<type>([^<>]+)</type>") do
-					local dt = {}
+					local dt = {} -- создаём объект "урона"
 
-					dt.id = PNumber(dtype, "id")
+					dt.id = PNumber(dtype, "id") -- id
 
-					dt.injury = {}
-					local dti = string.match(dtype, "injury: {([^{}]*)}")
-					if dti ~= nil then
-						for frame in string.gmatch(dti, "(%d+)") do
-							table.insert(dt.injury, frame)
-						end
-					end
+					dt.injury = PFrames(dtype, "injury")
+					dt.bdefend = PFrames(dtype, "bdefend")
+					dt.stun = PFrames(dtype, "stun")
+					dt.fall = PFrames(dtype, "fall")
 
-					dt.bdefend = {}
-					local dtbd = string.match(dtype, "bdefend: {([^{}]*)}")
-					if dtbd ~= nil then
-						for frame in string.gmatch(dtbd, "(%d+)") do
-							table.insert(dt.bdefend, frame)
-						end
-					end
-
-					dt.stun = {}
-					local dts = string.match(dtype, "stun: {([^{}]*)}")
-					if dts ~= nil then
-						for frame in string.gmatch(dts, "(%d+)") do
-							table.insert(dt.stun, frame)
-						end
-					end
-
-					dt.fall = {}
-					local dtf = string.match(dtype, "fall: {([^{}]*)}")
-					if dtf ~= nil then
-						for frame in string.gmatch(dtf, "(%d+)") do
-							table.insert(dt.fall, frame)
-						end
-					end
-
-					dt.block = PNumber(dtype, "block")
+					dt.damage_modifier = PNumber(dtype, "damage_modifier", 1)
+					dt.defend_modifier = PNumber(dtype, "defend_modifier", 1)
 					dt.absorption = PNumber(dtype, "absorption")
 
-
-					table.insert(en.damage, dt)
+					en.damage[dt.id + 1] = dt
 				end
 			end
 

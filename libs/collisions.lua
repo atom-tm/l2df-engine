@@ -191,11 +191,11 @@ function CollisionsProcessing()
 			local attacker = entity_list[collision.entity_id] -- получаем атакующего
 			local target = entity_list[collision.target_id] -- получаем атакуемого
 			
-			local attacker_frame = attacker.frames[collision.entity_frame]
-			local target_frame = target.frames[collision.target_frame]
+			local attacker_frame = attacker.frames[collision.entity_frame] -- фрейм атакующего
+			local target_frame = target.frames[collision.target_frame] -- фрейм атакуемого
 
-			local itr = attacker_frame.itrs[collision.itr_id] -- получаем itr
-			local body = target_frame.bodys[collision.body_id] -- получаем body
+			local itr = attacker_frame.itrs[collision.itr_id] -- получаем itr атакующего
+			local body = target_frame.bodys[collision.body_id] -- получаем body атакуемого
 
 
 			if itr.kind == 1 then -- если kind: 1 (обычная атака)
@@ -204,6 +204,11 @@ function CollisionsProcessing()
 				local body_real = CollaiderCords(body, target.x, target.y, target.z, target_frame.centerx, target_frame.centery, target.facing) -- получение реальных координат боди
 				local collision_center_x, collision_center_y = CenterCollision(itr_real, body_real) -- вычисление центра столкновения коллайдеров
 				
+				local damage = target.damage[itr.damage_type + 1] -- тип урона
+				if damage == nil then
+					damage = target.damage[1]
+				end -- если цель не имеет определений для данного типа урона, берется стандарт
+
 				local spark = 0 -- основа для спарка
 				local injury_frame = 0 -- основа для фрейма урона
 
@@ -212,14 +217,28 @@ function CollisionsProcessing()
 
 				if target.defend > 0 then -- если цель не пробита
 					
-					target.defend = target.defend - itr.bdefend -- уменьшаем броню цели
+					target.defend = target.defend - math.floor(itr.bdefend * damage.defend_modifier) -- уменьшаем броню цели
 					
 					if target.defend <= 0 then -- если пробили броню
 						spark = itr.bdspark -- устанавливаем спарк пробития брони
-						injury_frame = target.broken_defend
+
+						if #damage.bdefend > 0 then
+							injury_frame = damage.bdefend[1]
+						elseif #target.damage[1].bdefend > 0 then
+							injury_frame = target.damage[1].bdefend[1]
+						end
+
+						--[[if itr.target_frame ~= 0 then
+							injury_frame = itr.target_frame
+						end -- если в itr'e задан определённый кадр
+
+						if body.injury_frame ~= 0 then
+							injury_frame = body.injury_frame
+						end -- если в body задан опреелённый кадр]]
+
 						target.defend_timer = 240 -- ставим таймер восстановления брони
 						target.taccel_x = target.taccel_x + itr.dvx * attacker.facing -- устанавливаем атакуемому dvx
-						target.hp = target.hp - math.floor(itr.injury * 1.1) -- нанесение урона
+						target.hp = target.hp - math.floor(itr.injury * 1.1 * damage.damage_modifier)  -- нанесение урона
 						target.fall = target.fall - itr.fall -- вычисление fall'a
 						target.fall_timer = 120 -- ставим таймер восстановления fall'a
 						if target.fall <= 0 then -- если fall упал ниже нуля
@@ -233,28 +252,30 @@ function CollisionsProcessing()
 						spark = itr.dspark -- устанавливаем спарк удара в броню
 						target.defend_timer = 120 -- ставим таймер восстановления брони
 						target.taccel_x = (target.taccel_x + itr.dvx * attacker.facing) * 0.9 -- устанавливаем атакуемому dvx
-						target.hp = target.hp - math.floor(itr.injury * 0.1) -- нанесение урона
+						target.hp = target.hp - math.floor(itr.injury * 0.1 * damage.damage_modifier) -- нанесение урона
 					end
 
 				else -- если брони у цели не осталось
 					
 					spark = itr.spark -- устанавливаем обычный спарк
 
-					if #target.injury_frames > 0 then
-						injury_frame = target.injury_frames[math.random(1, #target.injury_frames)]
-					end -- берём рандомный кадр повреждения из списка
+					if #damage.injury > 0 then
+						injury_frame = damage.injury[1]
+					elseif #target.damage[1].injury > 0 then
+						injury_frame = target.damage[1].injury[1]
+					end
 
-					if itr.target_frame ~= 0 then
+					--[[if itr.target_frame ~= 0 then
 						injury_frame = itr.target_frame
 					end -- если в itr'e задан определённый кадр
 
 					if body.injury_frame ~= 0 then
 						injury_frame = body.injury_frame
-					end -- если в body задан опреелённый кадр
+					end -- если в body задан опреелённый кадр]]
 
 					target.defend_timer = 120 -- ставим таймер восстановления брони
 					target.taccel_x = target.taccel_x + itr.dvx * attacker.facing -- устанавливаем атакуемому dvx
-					target.hp = target.hp - math.floor(itr.injury * 1.0) -- нанесение урона
+					target.hp = target.hp - math.floor(itr.injury * 1.0 * damage.damage_modifier) -- нанесение урона
 					target.fall = target.fall - itr.fall -- вычисление fall'a
 					target.fall_timer = 120 -- ставим таймер восстановления fall'a
 					
@@ -277,7 +298,6 @@ function CollisionsProcessing()
 				end -- создание спарка
 
 				SetFrame(target, injury_frame) -- перевод объекта в кадры повреждения
-
 			end
 		end
 	end

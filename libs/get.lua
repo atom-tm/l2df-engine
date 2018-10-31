@@ -73,3 +73,15 @@ function PBool (string, parameter) -- функция для получения �
 
 	return result
 end
+
+function PFrames (string, parameter) -- функция для получения списка значений парамеира "parameter" из входящей строки "string"
+-------------------------------------
+	local frame_list = {}
+	local frames = string.match(string, parameter .. ": {([^{}]*)}")
+	if frames ~= nil then
+		for frame in string.gmatch(frames, "(%d+)") do
+			table.insert(frame_list, tonumber(frame))
+		end
+	end
+	return frame_list
+end

@@ -39,7 +39,6 @@ function BattleProcessing() -- данная функция отвечает за
 			if en.destroy_flag == true then
 				RemoveEntity(en_id)
 			end -- уничтожение объекта
-
 		end
 	end
 

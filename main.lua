@@ -16,9 +16,10 @@ require "libs.states"
 debug_info = true
 objects = 0
 t1 = ""
+local width, height, flags
 
 function love.load()
-	local width, height, flags = love.window.getMode()
+	width, height, flags = love.window.getMode()
 	MainCanvas = love.graphics.newCanvas( width, height )
 	camera = CameraCreate() -- создание камеры
 	path = love.filesystem.getSourceBaseDirectory() -- берем путь до папки с игрой
@@ -74,6 +75,7 @@ function love.draw()
 		love.graphics.setNewFont(12)
 		love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)
 		love.graphics.print("Objects: "..tostring(objects).." Sourses: "..tostring(#sourse_list).." Collisions: "..tostring(#collisions_list), 10, 25)
+		love.graphics.print(entity_list[2].frame, 10, height - 25)
 	end
 
 	local cur_time = love.timer.getTime()
