@@ -223,9 +223,9 @@ function CollisionsProcessing()
 						spark = itr.bdspark -- устанавливаем спарк пробития брони
 
 						if #damage.bdefend > 0 then
-							injury_frame = damage.bdefend[1]
+							injury_frame = damage.bdefend[math.random(1, #damage.bdefend)]
 						elseif #target.damage[1].bdefend > 0 then
-							injury_frame = target.damage[1].bdefend[1]
+							injury_frame = target.damage[1].bdefend[math.random(1, #target.damage[1].bdefend)]
 						end
 
 						--[[if itr.target_frame ~= 0 then
@@ -260,9 +260,9 @@ function CollisionsProcessing()
 					spark = itr.spark -- устанавливаем обычный спарк
 
 					if #damage.injury > 0 then
-						injury_frame = damage.injury[1]
+						injury_frame = damage.injury[math.random(1, #damage.injury)]
 					elseif #target.damage[1].injury > 0 then
-						injury_frame = target.damage[1].injury[1]
+						injury_frame = target.damage[1].injury[math.random(1, #target.damage[1].injury)]
 					end
 
 					--[[if itr.target_frame ~= 0 then
@@ -282,10 +282,20 @@ function CollisionsProcessing()
 					if target.fall <= 0 then -- если fall упал ниже нуля
 						if itr.knocking_down then -- проверка на то, что атака может сбить с ног
 							target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
+							if #damage.stun > 0 then
+								injury_frame = damage.stun[math.random(1, #damage.stun)]
+							elseif #target.damage[1].stun > 0 then
+								injury_frame = target.damage[1].stun[math.random(1, #target.damage[1].stun)]
+							end
 						else
 							target.taccel_y = target.taccel_y + itr.dvy -- устанавливаем атакуемому dvy
-							spark = itr.fspark -- устанавливаем спарк падения
+							if #damage.fall > 0 then
+								injury_frame = damage.fall[math.random(1, #damage.fall)]
+							elseif #target.damage[1].fall > 0 then
+								injury_frame = target.damage[1].fall[math.random(1, #target.damage[1].fall)]
+							end
 						end
+						spark = itr.fspark -- устанавливаем спарк падения
 					end
 				end
 

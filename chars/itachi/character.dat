@@ -60,10 +60,10 @@ dash_attack_frame: 0
 defend_frame: 55
 
 
-injury_frames: { 60, 61 }
-fall_frames: { 62 }
-bdefend_frames: { 62 }
-stun_frames: { 62 }
+injury_frames: { 52 }
+fall_frames: { 60 }
+bdefend_frames: { 50 }
+stun_frames: { 65 }
 
 damage_modifier: 1.0
 defend_modifier: 1.0
@@ -85,13 +85,6 @@ absorption: 0
 		damage_modifier: 1000.0
 		defend_modifer: 1.0
 		absorption: 0
-	</type>
-	<type>
-		id: 2
-		injury: { 63 }
-		fall: { 63 }
-		bdefend: { 63 }
-		stun: { 63 }
 	</type>
 </damage>
 
@@ -246,9 +239,9 @@ pic: 91  next: 36  wait: 7  centerx: 16  centery: 83
 body: { x: 5 w: 34 y: 15 h: 70}
 </frame>
 <frame> 36 dash
-pic: 92  next: 37  wait: 4 dvx: 7 dvy: 0 centerx: 16  centery: 83
+pic: 92  next: 37  wait: 4 dvx: 0 dvy: 0 centerx: 16  centery: 83
 body: { x: 5 w: 34 y: 15 h: 70}
-itr: { kind: 1 x: 15 w: 50 y: 25 h: 35 z: 15 dvx: 0 bdefend: 10 spark: 10 injury: 15 fall: 5 damage_type: 1 }
+itr: { kind: 1 x: 15 w: 50 y: 25 h: 35 z: 15 bdefend: 5 injury: 15 fall: 34 }
 </frame>
 <frame> 37 dash
 pic: 93  next: 38  wait: 9  centerx: 16  centery: 83
@@ -269,9 +262,9 @@ pic: 113  next: 44  wait: 4  centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 44 run_attack
-pic: 114  next: 45  wait: 3 dvx: 45 centerx: 16  centery: 83
+pic: 114  next: 45  wait: 3 dvx: 0 centerx: 16  centery: 83
 body: { x: 1 w: 28 y: 44 h: 70 }
-itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 11 dvx: 0 dvy: 0 bdefend: 25 injury: 15 fall: 5 }
+itr: { kind: 1 x: 15 w: 70 y: 25 h: 35 z: 11 bdefend: 15 injury: 15 fall: 13 knocking_down: true }
 </frame>
 <frame> 45 run_attack
 pic: 115  next: 46  wait: 7  centerx: 16  centery: 83
@@ -288,15 +281,15 @@ body: { x: 1 w: 28 y: 44 h: 70}
 
 
 <frame> 50 injury
-pic: 35  next: 999  wait: 55  centerx: 16  centery: 83
+pic: 35  next: 999  wait: 35  centerx: 16  centery: 83
 body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 <frame> 51 injury
-pic: 36  next: 999  wait: 55  centerx: 16  centery: 83
+pic: 36  next: 999  wait: 35  centerx: 16  centery: 83
 body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 <frame> 52 injury
-pic: 37  next: 999  wait: 55  centerx: 16  centery: 83
+pic: 37  next: 999  wait: 35  centerx: 16  centery: 83
 body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 
@@ -314,6 +307,7 @@ state: 7 {  }
 <frame> 60 injury
 pic: 38  next: 999  wait: 55  centerx: 16  centery: 83
 body: { x: 9 w: 25 y: 8 h: 72 }
+state: 8 { }
 </frame>
 <frame> 61 injury
 pic: 39  next: 999  wait: 55  centerx: 16  centery: 83
@@ -325,5 +319,23 @@ body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
 <frame> 63 injury
 pic: 47  next: 999  wait: 55  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+
+
+<frame> 65 injury
+pic: 36  next: 66  wait: 35  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+<frame> 66 injury
+pic: 37  next: 67  wait: 35  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+<frame> 67 injury
+pic: 36  next: 68  wait: 35  centerx: 16  centery: 83
+body: { x: 9 w: 25 y: 8 h: 72 }
+</frame>
+<frame> 68 injury
+pic: 37  next: 999  wait: 35  centerx: 16  centery: 83
 body: { x: 9 w: 25 y: 8 h: 72 }
 </frame>
