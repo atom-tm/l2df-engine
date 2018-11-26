@@ -1,8 +1,40 @@
 function SetFrame(en, frame)
-	
-	local frame_num = frame
 
-	if frame_num == 999 or frame_num == 0 then 
+	if frame ~= nil and en ~= nil then
+		
+		if frame < 0 then
+			en.facing = -en.facing
+			frame = -frame
+		end -- разворот объекта, если фрейм указан со знаком минуса
+
+		if frame == 999 or frame == 0 then
+			if en.y > 0 and en.on_platform == false then -- если объект в воздухе и не на платформе
+				frame = NotZero(en.air_frame, NotZero(en.idle_frame))
+			else
+				frame = NotZero(en.idle_frame)
+			end
+		elseif frame == 1000 then
+			en.destroy_flag = true
+			return -- уничтожение объекта
+		else
+			if en.frames[frame] == nil then
+				if en.y > 0 and en.on_platform == false then -- если объект в воздухе и не на платформе
+					frame = NotZero(en.air_frame, NotZero(en.idle_frame))
+				else
+					frame = NotZero(en.idle_frame)
+				end
+			end
+		end
+
+		local new_frame = GetFrame(en, frame)
+		en.previous_frame = en.frame
+		en.frame = frame
+		en.wait = new_frame.wait
+		en.next_frame = new_frame.next
+		en.first_tick_flag = true
+	end
+
+	--[[if frame_num == 999 or frame_num == 0 then
 		if not (en.y > 0 and en.on_platform == false) then
 			if en.idle_frame ~= 0 then
 				frame_num = en.idle_frame
@@ -19,6 +51,8 @@ function SetFrame(en, frame)
 				frame_num = en.air_frame
 			end
 		end
+	elseif frame_num == 1000 then
+
 	end
 
 	if en.frames[frame_num] ~= nil then
@@ -27,7 +61,7 @@ function SetFrame(en, frame)
 		en.wait = frame.wait
 		en.next_frame = frame.next
 		en.first_tick_flag = true
-	end
+	end]]--
 end
 
 function OpointProcessing(en_id)

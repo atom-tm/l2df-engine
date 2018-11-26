@@ -21,6 +21,7 @@ function BattleProcessing() -- данная функция отвечает за
 			Gravity(en_id) -- гравитация
 			Motion(en_id) -- передвижение объекта
 			BordersCheck(en_id) -- проверка на пересечение границ карты
+
 			
 			CollaidersFind(en_id) -- поиск коллайдеров
 
@@ -126,11 +127,7 @@ function Time(en_id) -- функция отвечает за обработку 
 	end -- восстановление стойкости
 
 	if en.wait <= 0 then
-		if en.next_frame == 1000 then
-			en.destroy_flag = true
-		else
-			SetFrame(en, en.next_frame)
-		end
+		SetFrame(en, en.next_frame)
 	else
 		en.wait = en.wait - 1 * delta_time * 100
 	end -- изменение wait и смена кадров

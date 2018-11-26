@@ -5,7 +5,7 @@ players = {
 
 players_flags = {
 	true,
-	true
+	false
 } -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
 
 key_pressed = {
@@ -46,11 +46,11 @@ control_settings = {
 		up = "o",
 		down = "l",
 		left = "k",
-		right = ";",
+		right = "h",
 		attack = "p",
-		jump = "[",
-		defend = "]",
-		jutsu = "\\"
+		jump = "3",
+		defend = "4",
+		jutsu = "5"
 	}
 } -- тут лежат все настройки управления
 
@@ -172,6 +172,30 @@ function HitCheck(en_id)
 			f_num = frame.hit_j
 		elseif en.key_timer["defend"] > 0 then
 			f_num = frame.hit_d
+		elseif en.key_timer["right"] > 0 and en.facing == 1 and frame.hit_f ~= 0 then
+			f_num = frame.hit_f
+		elseif en.key_timer["left"] > 0 and en.facing == -1 and frame.hit_f ~= 0 then
+			f_num = frame.hit_f
+		elseif en.key_timer["right"] > 0 and en.facing == -1 and frame.hit_b ~= 0 then
+			f_num = frame.hit_b
+		elseif en.key_timer["left"] > 0 and en.facing == 1 and frame.hit_b ~= 0 then
+			f_num = frame.hit_b
+		elseif en.key_timer["up"] > 0 and frame.hit_w ~= 0 then
+			f_num = frame.hit_w
+		elseif en.key_timer["down"] > 0 and frame.hit_s ~= 0 then
+			f_num = frame.hit_s
+		elseif en.double_key_timer["right"] > 0 and en.facing == 1 and frame.hit_df ~= 0 then
+			f_num = frame.hit_df
+		elseif en.double_key_timer["left"] > 0 and en.facing == -1 and frame.hit_df ~= 0 then
+			f_num = frame.hit_df
+		elseif en.double_key_timer["right"] > 0 and en.facing == -1 and frame.hit_db ~= 0 then
+			f_num = frame.hit_db
+		elseif en.double_key_timer["left"] > 0 and en.facing == 1 and frame.hit_db ~= 0 then
+			f_num = frame.hit_db
+		elseif en.double_key_timer["up"] > 0 and frame.hit_dw ~= 0 then
+			f_num = frame.hit_dw
+		elseif en.double_key_timer["down"] > 0 and frame.hit_ds ~= 0 then
+			f_num = frame.hit_ds
 		end
 
 

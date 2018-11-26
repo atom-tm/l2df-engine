@@ -8,6 +8,15 @@ function GetFrame (en, num)
 	return frame
 end
 
+function NotZero (var, alternative)
+	if var ~= nil and var ~= 0 and var ~= "" then
+		return var
+	elseif alternative ~= nil then
+		return alternative
+	else
+		return 1
+	end
+end
 
 
 function FindMaximum (mas)
@@ -16,6 +25,27 @@ function FindMaximum (mas)
 		if mas[i] > max then max = mas[i] end
 	end
 	return max
+end
+
+function add(var1,var2)
+	if var2 ~= nil then
+		return var1 + var2
+	else
+		return var1 + 1
+	end
+end
+function sub(var1,var2)
+	if var2 ~= nil then
+		return var1 - var2
+	else
+		return var1 - 1
+	end
+end
+function inc(var1)
+	return var1 + 1
+end
+function dec(var1)
+	return var1 - 1
 end
 
 

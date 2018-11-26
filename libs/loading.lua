@@ -271,7 +271,6 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.script_file = string.match(head, "script_file: \"([%w%d\\/%.]+)%.lua\"")
 				t2 = en.script_file
 
-				en.max_defend = PNumber(head, "strength")
 				en.max_fall = PNumber(head, "fall")
 				en.max_hp = PNumber(head, "hp")
 
@@ -403,6 +402,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					dt.damage_modifier = PNumber(dtype, "damage_modifier", 1)
 					dt.defend_modifier = PNumber(dtype, "defend_modifier", 1)
 					dt.absorption = PNumber(dtype, "absorption")
+					dt.y_repulsion = PBool(dtype, "y_repulsion")
 
 					en.damage[dt.id + 1] = dt
 				end
@@ -425,7 +425,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.centery = PNumber(frame_head,"centery")
 
 				frame.shadow = not PBool(frame_head,"shadow")
-				frame.zoom = PNumber(frame_head,"zoom")
+				frame.zoom = PNumber(frame_head,"zoom",1)
 
 				frame.dvx = PNumber(frame_head,"dvx")
 				frame.dsx = PNumber(frame_head,"dsx")
@@ -449,6 +449,16 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.hit_a = PNumber(frame_head,"hit_a")
 				frame.hit_j = PNumber(frame_head,"hit_j")
 				frame.hit_d = PNumber(frame_head,"hit_d")
+
+				frame.hit_f = PNumber(frame_head,"hit_f")
+				frame.hit_b = PNumber(frame_head,"hit_b")
+				frame.hit_w = PNumber(frame_head,"hit_w")
+				frame.hit_s = PNumber(frame_head,"hit_s")
+
+				frame.hit_df = PNumber(frame_head,"hit_df")
+				frame.hit_db = PNumber(frame_head,"hit_db")
+				frame.hit_dw = PNumber(frame_head,"hit_dw")
+				frame.hit_ds = PNumber(frame_head,"hit_ds")
 
 
 
@@ -486,9 +496,11 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					itr.dspark = PNumber(i,"dspark",1)
 					itr.bdspark = PNumber(i,"bdspark",1)
 					itr.friendly_fire = PBool(i,"friendly_fire")
-					itr.knocking_down = PBool(i,"knocking_down")
+					itr.not_knocking_down = PBool(i,"not_knocking_down")
 					itr.damage_type = PNumber(i,"damage_type")
 					itr.target_frame = PNumber(i,"target_frame")
+					itr.y_repulsion = PNumber(i,"y_repulsion")
+					itr.x_repulsion = PNumber(i,"x_repulsion")
 					-- выше вставлять дополнительные теги
 					table.insert(frame.itrs, itr) -- загрузка коллайдера в массив
 				end
@@ -623,6 +635,8 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.walking_frame = 1
 		created_object.running_frame = 1
 
+		created_object.bounce = false
+
 		created_object.scale = 1
 		created_object.facing = 1
 
@@ -630,6 +644,7 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 		created_object.frame = 1
 		created_object.next_frame = 1
+		created_object.previous_frame = 1
 		created_object.wait = 0
 
 		created_object.hit_code = 0
@@ -638,7 +653,8 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.fall = created_object.max_fall
 		created_object.fall_timer = 0
 
-		created_object.defend = created_object.max_defend
+		created_object.max_defend = 0
+		created_object.defend = 0
 		created_object.defend_timer = 0
 
 		created_object.hp = created_object.max_hp

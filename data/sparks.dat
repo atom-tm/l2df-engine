@@ -20,49 +20,39 @@ sprite: {
 	border: true
 }
 
+sprite: {
+	file: "sprites/sparks/0.png"
+	w: 47 h: 48
+	row: 7 col: 1
+	border: true
+}
+
 </head>
 
-<frame> 1 test
-pic: 0  next: 2  wait: 1 centerx: 50  centery: 40
+<frame> 1 spark_1
+pic: 20  next: 2  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 2 test
-pic: 1  next: 3  wait: 1 centerx: 50  centery: 40
+<frame> 2 spark_1
+pic: 21  next: 3  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 3 test
-pic: 2  next: 4  wait: 1 centerx: 50  centery: 40
+<frame> 3 spark_1
+pic: 22  next: 4  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 4 test
-pic: 3  next: 5  wait: 1 centerx: 50  centery: 40
+<frame> 4 spark_1
+pic: 23  next: 5  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 5 test
-pic: 4  next: 1000  wait: 1 centerx: 50  centery: 40
+<frame> 5 spark_1
+pic: 24  next: 6  wait: 1 centerx: 37  centery: 37
 </frame>
-
-
-<frame> 10 spark_1
-pic: 20  next: 11  wait: 1 centerx: 37  centery: 37
+<frame> 6 spark_1
+pic: 25  next: 7  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 11 spark_1
-pic: 21  next: 12  wait: 1 centerx: 37  centery: 37
+<frame> 7 spark_1
+pic: 26  next: 8  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 12 spark_1
-pic: 22  next: 13  wait: 1 centerx: 37  centery: 37
+<frame> 8 spark_1
+pic: 27  next: 9  wait: 1 centerx: 37  centery: 37
 </frame>
-<frame> 13 spark_1
-pic: 23  next: 14  wait: 1 centerx: 37  centery: 37
-</frame>
-<frame> 14 spark_1
-pic: 24  next: 15  wait: 1 centerx: 37  centery: 37
-</frame>
-<frame> 15 spark_1
-pic: 25  next: 16  wait: 1 centerx: 37  centery: 37
-</frame>
-<frame> 16 spark_1
-pic: 26  next: 17  wait: 1 centerx: 37  centery: 37
-</frame>
-<frame> 17 spark_1
-pic: 27  next: 18  wait: 1 centerx: 37  centery: 37
-</frame>
-<frame> 18 spark_1
+<frame> 9 spark_1
 pic: 28  next: 1000  wait: 1 centerx: 75  centery: 75
 </frame>

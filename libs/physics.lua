@@ -27,20 +27,20 @@ function Gravity(en_id) -- отвечает за гравитацию, инне�
 		if en.accel_x ~= 0 and en.physic == true then
 			if en.taccel_x < en.accel_x and en.accel_x > 0 then
 				if(en.taccel_x < -1) then
-					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 1.5))
+					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 1.25))
 				else
-					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
+					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.55)
 				end
 			elseif en.taccel_x > en.accel_x and en.accel_x < 0 then
 				if(en.taccel_x > 1) then
 					en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 1.5))
 				else
-					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.5)
+					en.taccel_x = en.taccel_x + delta_time * (en.accel_x) * (friction * 0.55)
 				end
 			end
 			en.accel_x = 0
 		else
-			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 0.7))
+			en.taccel_x = en.taccel_x * (0.99 - (delta_time) * (friction * 0.75))
 		end
 	end
 

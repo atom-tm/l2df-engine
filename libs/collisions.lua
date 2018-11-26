@@ -205,7 +205,8 @@ function CollisionsProcessing()
 				local collision_center_x, collision_center_y = CenterCollision(itr_real, body_real) -- вычисление центра столкновения коллайдеров
 				
 				local damage = target.damage[itr.damage_type + 1] -- тип урона
-				if damage == nil then
+				
+				if damage == nil or damage == 0 then
 					damage = target.damage[1]
 				end -- если цель не имеет определений для данного типа урона, берется стандарт
 
@@ -228,75 +229,125 @@ function CollisionsProcessing()
 							injury_frame = target.damage[1].bdefend[math.random(1, #target.damage[1].bdefend)]
 						end
 
-						--[[if itr.target_frame ~= 0 then
+						if itr.target_frame ~= 0 then
 							injury_frame = itr.target_frame
 						end -- если в itr'e задан определённый кадр
 
 						if body.injury_frame ~= 0 then
 							injury_frame = body.injury_frame
-						end -- если в body задан опреелённый кадр]]
+						end -- если в body задан опреелённый кадр
 
 						target.defend_timer = 240 -- ставим таймер восстановления брони
-						target.taccel_x = target.taccel_x + itr.dvx * attacker.facing -- устанавливаем атакуемому dvx
+						
+						target.taccel_x = target.taccel_x + (itr.dvx * attacker.facing) * 1.0 -- устанавливаем атакуемому dvx
+						if itr.x_repulsion then
+							target.taccel_x = target.taccel_x + attacker.vel_x
+						end -- опция при которой врага отталкивает в зависимости от скорости атакующего
+						if damage.y_repulsion or target.fall - itr.fall < 1 then
+							target.taccel_y = target.taccel_y + itr.dvy * 1.0 -- устанавливаем атакуемому dvy
+							if itr.y_repulsion then
+								target.taccel_y = target.taccel_y + attacker.vel_y
+							end -- опция при которой врага отталкивает в зависимости от скорости атакующего
+						end -- если в типе урона указана данная опция, отталкивание по dvy работает даже без fall: -1
+						
 						target.hp = target.hp - math.floor(itr.injury * 1.1 * damage.damage_modifier)  -- нанесение урона
-						target.fall = target.fall - itr.fall -- вычисление fall'a
-						target.fall_timer = 120 -- ставим таймер восстановления fall'a
-						if target.fall <= 0 then -- если fall упал ниже нуля
-							if itr.knocking_down then -- проверка на то, что атака может сбить с ног
-								target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
-							else
+						
+						if target.fall > 1 then
+							target.fall = target.fall - itr.fall -- вычисление fall'a
+							target.fall_timer = 120 -- ставим таймер восстановления fall'a
+							if target.fall <= 0 then -- если fall упал ниже нуля
+								if itr.not_knocking_down then -- проверка на то, что атака может сбить с ног
+									target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
+									if #damage.stun > 0 then
+										injury_frame = damage.stun[math.random(1, #damage.stun)]
+									elseif #target.damage[1].stun > 0 then
+										injury_frame = target.damage[1].stun[math.random(1, #target.damage[1].stun)]
+									end
+								else
+									if #damage.fall > 0 then
+										injury_frame = damage.fall[math.random(1, #damage.fall)]
+									elseif #target.damage[1].fall > 0 then
+										injury_frame = target.damage[1].fall[math.random(1, #target.damage[1].fall)]
+									end
+								end
 								spark = itr.fspark -- устанавливаем спарк падения
 							end
+						else
+							target.fall_timer = target.fall_timer + 10
+							injury_frame = -1
 						end
+						
 					else -- если не смогли пробить броню
+						
 						spark = itr.dspark -- устанавливаем спарк удара в броню
 						target.defend_timer = 120 -- ставим таймер восстановления брони
-						target.taccel_x = (target.taccel_x + itr.dvx * attacker.facing) * 0.9 -- устанавливаем атакуемому dvx
+						
+						target.taccel_x = target.taccel_x + (itr.dvx * attacker.facing) * 0.9 -- устанавливаем атакуемому dvx
+						if itr.x_repulsion then
+							target.taccel_x = target.taccel_x + attacker.vel_x
+						end -- опция при которой врага отталкивает в зависимости от скорости атакующего
+						
 						target.hp = target.hp - math.floor(itr.injury * 0.1 * damage.damage_modifier) -- нанесение урона
 					end
 
 				else -- если брони у цели не осталось
-					
+
 					spark = itr.spark -- устанавливаем обычный спарк
 
 					if #damage.injury > 0 then
 						injury_frame = damage.injury[math.random(1, #damage.injury)]
 					elseif #target.damage[1].injury > 0 then
 						injury_frame = target.damage[1].injury[math.random(1, #target.damage[1].injury)]
-					end
+					end -- устанавливаем кадр урона
 
-					--[[if itr.target_frame ~= 0 then
+					if itr.target_frame ~= 0 then
 						injury_frame = itr.target_frame
-					end -- если в itr'e задан определённый кадр
+					end -- если в itr'e задан определённый кадр, ставим его
 
 					if body.injury_frame ~= 0 then
 						injury_frame = body.injury_frame
-					end -- если в body задан опреелённый кадр]]
+					end -- если в body задан опреелённый кадр, ставим его
 
-					target.defend_timer = 120 -- ставим таймер восстановления брони
-					target.taccel_x = target.taccel_x + itr.dvx * attacker.facing -- устанавливаем атакуемому dvx
-					target.hp = target.hp - math.floor(itr.injury * 1.0 * damage.damage_modifier) -- нанесение урона
-					target.fall = target.fall - itr.fall -- вычисление fall'a
-					target.fall_timer = 120 -- ставим таймер восстановления fall'a
+					target.defend_timer = 120 -- устанавливаем таймер восстановления брони
 					
-					if target.fall <= 0 then -- если fall упал ниже нуля
-						if itr.knocking_down then -- проверка на то, что атака может сбить с ног
-							target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
-							if #damage.stun > 0 then
-								injury_frame = damage.stun[math.random(1, #damage.stun)]
-							elseif #target.damage[1].stun > 0 then
-								injury_frame = target.damage[1].stun[math.random(1, #target.damage[1].stun)]
+					target.taccel_x = target.taccel_x + (itr.dvx * attacker.facing) * 1.0 -- устанавливаем атакуемому dvx
+					if itr.x_repulsion then
+						target.taccel_x = target.taccel_x + attacker.vel_x
+					end -- опция при которой врага отталкивает в зависимости от скорости атакующего
+					if damage.y_repulsion or target.fall - itr.fall < 1 then
+						target.taccel_y = target.taccel_y + itr.dvy * 1.0 -- устанавливаем атакуемому dvy
+						if itr.y_repulsion then
+							target.taccel_y = target.taccel_y + attacker.vel_y
+						end -- опция при которой врага отталкивает в зависимости от скорости атакующего
+					end -- если в типе урона указана данная опция, отталкивание по dvy работает даже без fall: -1
+
+					target.hp = target.hp - math.floor(itr.injury * 1.0 * damage.damage_modifier) -- нанесение урона
+					
+					if target.fall > 1 then
+						target.fall = target.fall - itr.fall -- вычисление fall'a
+						target.fall_timer = 120 -- ставим таймер восстановления fall'a
+						if target.fall <= 0 then -- если fall упал ниже нуля
+							if itr.not_knocking_down then -- проверка на то, что атака может сбить с ног
+								target.fall = 1 -- если атака не должна сбивать с ног не при каких условиях
+								if #damage.stun > 0 then
+									injury_frame = damage.stun[math.random(1, #damage.stun)]
+								elseif #target.damage[1].stun > 0 then
+									injury_frame = target.damage[1].stun[math.random(1, #target.damage[1].stun)]
+								end -- установка кадра стана
+							else
+								if #damage.fall > 0 then
+									injury_frame = damage.fall[math.random(1, #damage.fall)]
+								elseif #target.damage[1].fall > 0 then
+									injury_frame = target.damage[1].fall[math.random(1, #target.damage[1].fall)]
+								end -- установка кадра падения
 							end
-						else
-							target.taccel_y = target.taccel_y + itr.dvy -- устанавливаем атакуемому dvy
-							if #damage.fall > 0 then
-								injury_frame = damage.fall[math.random(1, #damage.fall)]
-							elseif #target.damage[1].fall > 0 then
-								injury_frame = target.damage[1].fall[math.random(1, #target.damage[1].fall)]
-							end
+							spark = itr.fspark -- устанавливаем спарк падения
 						end
-						spark = itr.fspark -- устанавливаем спарк падения
+					else
+						target.fall_timer = target.fall_timer + 10
+						injury_frame = -1
 					end
+
 				end
 
 				if target.type == "object" then -- если мы били объект
@@ -307,7 +358,9 @@ function CollisionsProcessing()
 					SpawnEntity(loading_list.system.sparks, collision_center_x + (itr.dvx * 0.5 + math.random(0, itr.w * 0.1)) * attacker.facing, collision_center_y + attacker.z + math.random(-itr.h * 0.1, itr.h * 0.1), (attacker.z + target.z) * 0.5 + 5, attacker.facing, spark)
 				end -- создание спарка
 
-				SetFrame(target, injury_frame) -- перевод объекта в кадры повреждения
+				if injury_frame ~= -1 then
+					SetFrame(target, injury_frame) -- перевод объекта в кадры повреждения
+				end
 			end
 		end
 	end

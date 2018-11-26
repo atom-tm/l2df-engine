@@ -1,9 +1,11 @@
 objects_for_drawing = {}
+camera_scale_height = 0
 
 
 function CameraCreate() -- отвечает за изначальное создание камеры
 -------------------------------------
 	local width, height, flags = love.window.getMode( )
+	camera_scale_height = height / 720
 	local camera = gamera.new(0,0,width,height)
 	camera:setWindow(0,0,width,height)
 	return camera
@@ -40,9 +42,9 @@ function CameraBinding () -- функция отвечает за поведен
 		local camera_x, camera_y = camera:getPosition()
 		local camera_scale = camera:getScale()
 
-		local target_x = en.x + (80 * en.facing) + en.vel_x
+		local target_x = en.x + (100 * en.facing) + en.vel_x
 		local target_y = map.border_up + en.z - en.y - frame.centery + (camera_scale * 10) - en.vel_y * 0.5 + en.vel_z
-		local target_scale = en.scale + 0.3 - (math.abs(en.vel_x) + math.abs(en.vel_y) + math.abs(en.vel_z)) * 0.005 + frame.zoom
+		local target_scale = (en.scale + 0.5 - ((math.abs(en.vel_x) + math.abs(en.vel_y) + math.abs(en.vel_z)) * 0.0015) * frame.zoom) * camera_scale_height
 
 
 		if target_scale > 3.5 then target_scale = 3.5
@@ -50,10 +52,10 @@ function CameraBinding () -- функция отвечает за поведен
 
 
 		if camera_x > target_x then
-			local speed = (camera_x - target_x) * delta_time * 5
+			local speed = (camera_x - target_x) * delta_time * 3
 			camera_x = camera_x - speed
 		elseif camera_x < target_x then
-			local speed = (target_x - camera_x) * delta_time * 5
+			local speed = (target_x - camera_x) * delta_time * 3
 			camera_x = camera_x + speed
 		end
 
@@ -66,10 +68,10 @@ function CameraBinding () -- функция отвечает за поведен
 		end
 
 		if camera_scale > target_scale then
-			local speed = (camera_scale - target_scale) * delta_time * 5
+			local speed = (camera_scale - target_scale) * delta_time * 3
 			camera_scale = camera_scale - speed
 		elseif camera_scale < target_scale then
-			local speed = (target_scale - camera_scale) * delta_time * 5
+			local speed = (target_scale - camera_scale) * delta_time * 3
 			camera_scale = camera_scale + speed
 		end
 
@@ -93,7 +95,7 @@ function CameraBinding () -- функция отвечает за поведен
 
 		local target_x = (en1.x + en2.x) * 0.5 + (60 * en1.facing) + (60 * en2.facing)
 		local target_y = ((map.border_up + en1.z - en1.y) + (map.border_up + en2.z - en2.y)) * 0.46
-		local target_scale = (en1.scale + en2.scale) * 0.5 - math.sqrt((en1.x - en2.x)^2 + (en1.y - en2.y)^2 + (en1.z - en2.z)^2) * 0.0005 - ((math.abs(en1.vel_x) + math.abs(en1.vel_y)) + (math.abs(en2.vel_x) + math.abs(en2.vel_y))) * 0.001
+		local target_scale = (en1.scale + en2.scale) * 0.8 - math.sqrt((en1.x - en2.x)^2 + (en1.y - en2.y)^2 + (en1.z - en2.z)^2) * 0.0005 - ((math.abs(en1.vel_x) + math.abs(en1.vel_y)) * frame1.zoom + (math.abs(en2.vel_x) + math.abs(en2.vel_y)) * frame2.zoom) * 0.001
 
 		if target_scale > 3.5 then target_scale = 3.5
 		elseif target_scale < 0.1 then target_scale = 0.1 end
@@ -263,7 +265,8 @@ function DrawEntity (en_id)
 				love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
 				
 				if debug_info then
-					love.graphics.rectangle("fill", en.x, map.border_up + en.y + en.z, 3, 3)
+					love.graphics.rectangle("fill", en.x - 2, map.border_up - en.y + en.z - 2, 4, 4)
+					love.graphics.rectangle("fill", en.x - 2, map.border_up + en.z - 2, 4, 4)
 					for i = 1, #frame.bodys do
 						local c = CollaiderCords(frame.bodys[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
 						love.graphics.setColor(.11, .8, .45, 1)
@@ -283,8 +286,10 @@ function DrawEntity (en_id)
 						love.graphics.setColor(1, 1, 1, 1)
 					end
 
-					love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall.. "\n" .."hp: "..en.hp, en.x, map.border_up + en.y + en.z + 15)
-					love.graphics.print(#en.damage, en.x - 50, map.border_up + en.y + en.z + 15)
+					--love.graphics.print("defend: "..en.defend .. "\n" .."fall: "..en.fall.. "\n" .."hp: "..en.hp, en.x, map.border_up + en.y + en.z + 15)
+					--love.graphics.print(#en.damage, en.x - 50, map.border_up + en.y + en.z + 15)
+					local info_1 = "defend: " .. en.defend .. "\n" .. "fall: " .. en.fall .. "\n" .. "hp: " .. en.hp
+					love.graphics.print(info_1, en.x + 35, map.border_up - en.y - 85 + en.z)
 				end
 
 
