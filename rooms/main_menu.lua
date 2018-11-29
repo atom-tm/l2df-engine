@@ -34,6 +34,9 @@ local main_menu = {}
 	main_menu.mode[4].active = LoadImage("sprites/UI/MainMenu/main_mode3_active.png")
 	main_menu.mode[4].x = 480
 	main_menu.mode[4].y = 630
+	main_menu.mode[4].action = function ()
+		love.event.quit( )
+	end
 
 
 	function main_menu.load()
@@ -43,32 +46,28 @@ local main_menu = {}
 	end
 
 	function main_menu.draw()
-		camera:draw(function(l,t,w,h)
-			love.graphics.draw(main_menu.background_image,0,0,0,1,1)
-			love.graphics.draw(main_menu.logotype_image,400,20,0,1,1)
-			for i = 1, #main_menu.mode do
-				if i == main_menu.selected_mode then
-					if main_menu.mode[i].active ~= nil then
-						love.graphics.draw(main_menu.mode[i].active,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
-					end
-					if main_menu.mode[i].text ~= nil then
-						print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 1)
-					end
-				else
-					if main_menu.mode[i].normal ~= nil then
-						love.graphics.draw(main_menu.mode[i].normal,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
-					end
-					if main_menu.mode[i].text ~= nil then
-						print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 0)
-					end
+		love.graphics.draw(main_menu.background_image,0,0,0,1,1)
+		love.graphics.draw(main_menu.logotype_image,400,20,0,1,1)
+		for i = 1, #main_menu.mode do
+			if i == main_menu.selected_mode then
+				if main_menu.mode[i].active ~= nil then
+					love.graphics.draw(main_menu.mode[i].active,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
+				end
+				if main_menu.mode[i].text ~= nil then
+					print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 1)
+				end
+			else
+				if main_menu.mode[i].normal ~= nil then
+					love.graphics.draw(main_menu.mode[i].normal,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
+				end
+				if main_menu.mode[i].text ~= nil then
+					print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 0)
 				end
 			end
-			love.graphics.print(main_menu.background_image:getWidth(),10,10)
-			love.graphics.print(main_menu.background_image:getHeight(),10,30)
-			love.graphics.print(main_menu.selected_mode,10,50)
-		end)
-
-
+		end
+		love.graphics.print(main_menu.background_image:getWidth(),10,10)
+		love.graphics.print(main_menu.background_image:getHeight(),10,30)
+		love.graphics.print(main_menu.selected_mode,10,50)
 	end
 
 	function main_menu.keypressed ( button, scancode, isrepeat )

@@ -29,7 +29,6 @@ function CreateDataList() -- вызываемая при запуске игры
 
 	local characters = string.match(data, "%[characters%]([^%[%]]+)") -- берём всех из списка [characters]
 	local objects = string.match(data, "%[objects%]([^%[%]]+)") -- берём всех из списка [objects]
-
 	local maps = string.match(data, "%[maps%]([^%[%]]+)") -- получаем содержимое списка [maps]
 
 

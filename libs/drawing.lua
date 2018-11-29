@@ -1,13 +1,13 @@
 objects_for_drawing = {}
 camera_scale_height = 0
 
-
 function CameraCreate() -- отвечает за изначальное создание камеры
 -------------------------------------
-	local width, height, flags = love.window.getMode( )
-	camera_scale_height = height / 720
-	local camera = gamera.new(0,0,width,height)
+	width, height, flags = love.window.getMode( )
+	camera_scale_height =  height / game_height
+	local camera = gamera.new(0,0,game_width,game_height)
 	camera:setWindow(0,0,width,height)
+	camera:setScale(camera_scale_height)
 	return camera
 end
 

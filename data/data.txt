@@ -7,6 +7,5 @@ id: 1	file: chars/itachi/character.dat
 [objects]
 id: 100	file: data/sparks.dat
 
-
 [maps]
 id: 1	file: bg/TestArena/TestArena.dat

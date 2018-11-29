@@ -1,0 +1,7 @@
+[settings]
+music_vol: 55
+sound_vol: 55
+window_size: 3
+fullscreen: false
+language: 2
+controls: {d a j f h s w g ; k \ p lsqbr l o lsqbr }
