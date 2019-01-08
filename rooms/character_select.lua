@@ -1,53 +1,802 @@
-local main_menu = {}
-
-	main_menu.selected_mode = 1
-	main_menu.background_image = LoadImage("sprites/UI/background.png")
-	main_menu.logotype_image = LoadImage("sprites/UI/logotype.png")
+local room = {}
 
 
-	function main_menu.load()
-		wait = 0
+
+	function room:DrawCharacters()
+		
 	end
 
-	function main_menu.update()
-		if (love.keyboard.isDown( control_settings[1].up ) or love.keyboard.isDown( control_settings[2].up )) and wait == 0 then
-			main_menu.change_mode("up")
-			wait = 15
-		end
-		if (love.keyboard.isDown( control_settings[1].down ) or love.keyboard.isDown( control_settings[2].down )) and wait == 0 then
-			main_menu.change_mode("down")
-			wait = 15
-		end
 
-		if wait > 0 then
-			wait = wait - 1
+
+	function room:DrawSelectors(row,col,x_offset,y_offset)
+		for index in pairs(self.selectors) do
+			local selector = self.selectors[index]
+			if selector.active and row == selector.x_pos and col == selector.y_pos then
+				local r, g, b, a = love.graphics.getColor()
+				love.graphics.setColor(selector.color.r,selector.color.g,selector.color.b, 1 - selector.color.a_mod )
+				image.draw(self.selector_image, nil, self.char_icons.real_x_position + x_offset, self.char_icons.real_y_position + y_offset)
+				love.graphics.setColor(r,g,b,a)
+				if not selector.selected then
+					selector.color.a_mod = selector.color.a_mod + selector.color.a_change
+					if selector.color.a_mod > selector.color.a_mod_max or selector.color.a_mod < 0 then
+						selector.color.a_change = -selector.color.a_change
+					end
+				else
+				    selector.color.a_mod = selector.color.a_mod_max
+				end
+			end
 		end
 	end
 
-	function main_menu.draw()
-		camera:draw(function(l,t,w,h)
-			love.graphics.draw(main_menu.background_image,0,0,0,1,1)
-			love.graphics.draw(main_menu.logotype_image,400,40,0,1,1)
 
-			love.graphics.print(main_menu.background_image:getWidth(),10,10)
-			love.graphics.print(main_menu.background_image:getHeight(),10,30)
-			love.graphics.print(main_menu.selected_mode,10,50)
-		end)
 
+	function room:DrawCharactersIcons()
+		local y_offset = 0
+		for col = 1, self.char_icons.cols do 
+			local x_offset = 0
+			local max_heigh = 0
+			for row = 1, self.char_icons.rows do 
+				local index = ((col - 1) * self.char_icons.rows) + row
+				local head = self.char_icons.list[index].head
+				image.draw(head, nil, self.char_icons.real_x_position + x_offset, self.char_icons.real_y_position + y_offset)
+				self:DrawSelectors(row,col,x_offset,y_offset)
+				x_offset = x_offset + head.image:getWidth() + self.char_icons.margin
+				if max_heigh < head.image:getHeight() then
+					max_heigh = head.image:getHeight()
+				end
+			end
+			y_offset = y_offset + max_heigh + self.char_icons.margin
+		end
+	end
+
+
+
+	function room:SelectorSettings()
+		self.selectors = {
+			player_1 = {
+				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
+				active = false, selected = false,
+				x_pos = 1, y_pos = 1,
+			},
+			player_2 = {
+				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
+				active = false, selected = false,
+				x_pos = self.char_icons.rows, y_pos = 1
+			},
+			com = {
+				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
+				active = false, selected = false,
+				x_pos = 1, y_pos = 1
+			}
+		}
+	end
+
+
+
+	function room:CreateCharactersIcons()
+		self.char_icons = {
+			margin = -3, x_pos = 640, y_pos = 640,
+			rows = 4, cols = 1, list = {}
+		}
+		for i = 1, (self.char_icons.rows * self.char_icons.cols) do
+			local character_info = {}
+			if data.characters_list[i] ~= nil then
+				character_info.head = data.characters_list[i].head
+				character_info.character = data.characters_list[i]
+			else
+			    character_info.head = self.small_image
+			    character_info.character = nil
+			end
+			self.char_icons.list[i] = character_info
+		end
+		local row_width = 0
+		local col_height = 0
+		for col = 1, self.char_icons.cols do
+			local image_height = 0
+			local row_max = 0
+			for row = 1, self.char_icons.rows do 
+				local index = ((col - 1) * self.char_icons.rows) + row
+				local head = self.char_icons.list[index].head
+				row_max = row_max + head.image:getWidth() + self.char_icons.margin
+				if head.image:getHeight() > image_height then
+					image_height = head.image:getHeight()
+				end
+			end
+			col_height = col_height + image_height + self.char_icons.margin
+			if row_width < row_max then row_width = row_max end
+		end
+		self.char_icons.real_x_position = self.char_icons.x_pos - (row_width - self.char_icons.margin) * 0.5
+		self.char_icons.real_y_position = self.char_icons.y_pos - (col_height - self.char_icons.margin) * 0.5
+	end
+
+
+
+	function room:Load()
+
+		self.background = image.Load("sprites/UI/CS0.png", nil, "linear")
+		self.foreground = image.Load("sprites/UI/CS1.png", nil, "linear")
+		self.stand = image.Load("sprites/UI/CS2.png", nil, "linear")
+		self.small_image = image.Load("sprites/UI/small.png")
+		self.selector_image = image.Load("sprites/UI/selector.png")
+
+		self:CreateCharactersIcons()
+		self:SelectorSettings()
+
+		self.characters = {}
+
+		self.mode = 0
+		--[[
+			0 -- вход в комнату
+			1 -- Ожидание игроков
+		]]
+
+
+
+		--[[
+		self.x = 1
+
+		self.player = {
+			{
+				activate = false,
+				x = 0,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 175,
+				y_pos = 480,
+				character = nil,
+				facing = 1
+			},
+			{
+				activate = false,
+				x = self.x - 1,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 1150,
+				y_pos = 550,
+				character = nil,
+				facing = -1
+			},
+			{
+				activate = false,
+				x = 0,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 270,
+				y_pos = 550,
+				character = nil,
+				facing = 1
+			},
+			{
+				activate = false,
+				x = self.x - 1,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 990,
+				y_pos = 490,
+				character = nil,
+				facing = -1
+			},
+			{
+				activate = false,
+				x = 0,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 375,
+				y_pos = 480,
+				character = nil,
+				facing = 1
+			},
+			{
+				activate = false,
+				x = self.x - 1,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 910,
+				y_pos = 560,
+				character = nil,
+				facing = -1
+			},
+			{
+				activate = false,
+				x = 0,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 450,
+				y_pos = 550,
+				character = nil,
+				facing = 1
+			},
+			{
+				activate = false,
+				x = self.x - 1,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 780,
+				y_pos = 480,
+				character = nil,
+				facing = -1
+			},
+			{
+				activate = false,
+				x = 0,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 550,
+				y_pos = 470,
+				character = nil,
+				facing = 1
+			},
+			{
+				activate = false,
+				x = self.x - 1,
+				y = 0,
+				id = nil,
+				r = 0.95,
+				g = 0.95,
+				b = 0.95,
+				x_pos = 680,
+				y_pos = 550,
+				character = nil,
+				facing = -1
+			}
+		}
+
+		self.scrolls = {
+			part1 = image.Load("sprites/UI/scroll1.png"),
+			part2 = image.Load("sprites/UI/scroll2.png"),
+			width = 750,
+			width_temp = 10,
+			centerx = 1280 * 0.5,
+			centery = 50,
+			y_temp = -200,
+			anim = 0
+		}
+
+		self.max_players = 10
+		self.available_number_of_bots = 0
+		self.selected_number_of_bots = 0
+		self.selected_bot = 0
+		self.selected_players = 0
+
+		self.selected_map = 1
+
+		self.mode = 0
+
+		self.light = 0
+		self.light_change = 0.01
+		self.max_light = 0.4
+
+		self.small = image.Load("sprites/UI/small.png")
+		self.selector = image.Load("sprites/UI/selector.png")
+		self.bots_selector = image.Load("sprites/UI/bots_selector.png")
+		self.pick_sprite = image.Load("sprites/UI/char_pick.png")
+		local eff_c = {
+			w = 150,
+			h = 150,
+			x = 3,
+			y = 7
+		}
+		self.pick_effect = image.Load("sprites/UI/char_pick2.png",eff_c)]]
+	end
+
+
+
+	function room:Update()
+		if self.mode == 0 then
+			self.mode = 1
+		elseif self.mode == 1 then
+
+		end
+		--[[self.light = self.light + self.light_change
+		if self.light > self.max_light or self.light < 0 then
+			self.light_change = -self.light_change
+		end
+		local activated_players = 0
+		local selected_players = 0
+		for p = 1, #self.player do 
+			self.player[p].id = self.player[p].y * self.x + self.player[p].x + 1
+			if self.player[p].activate then
+				activated_players = activated_players + 1
+			end
+			if self.player[p].character ~= nil then
+				selected_players = selected_players + 1
+			end
+		end
+		if activated_players > 0 and self.mode == 0 then
+			if activated_players == selected_players then
+				self.mode = 1
+				self.timer = 3
+				self.timer_waiter = 60
+			end
+		elseif self.mode == 1 then
+			if self.timer_waiter == 0 then
+				self.timer = self.timer - 1
+				self.timer_waiter = 60
+			else self.timer_waiter = self.timer_waiter - 1 end
+			if self.timer <= 0 then
+				self.mode = 2
+			end
+		elseif self.mode == 2 then
+			if self.scrolls.anim == 0 then
+				self.scrolls.y_temp = self.scrolls.y_temp + 20
+				if self.scrolls.y_temp >= self.scrolls.centery then
+					self.scrolls.anim = 1
+					self.scrolls.y_temp = self.scrolls.centery
+				end
+			elseif self.scrolls.anim == 1 then
+				if self.scrolls.width_temp < self.scrolls.width then
+					self.scrolls.width_temp = self.scrolls.width_temp + 40
+				else
+				    self.scrolls.width_temp = self.scrolls.width
+				    self.scrolls.anim = 2
+					self.available_number_of_bots = self.max_players - selected_players
+					if self.available_number_of_bots > 8 then 
+						self.start_bots_count = 1
+						self.selected_number_of_bots = 1
+					else
+					    self.start_bots_count = 0
+					    self.selected_number_of_bots = 0
+					end
+				    self.mode = 3
+				end
+			end
+		elseif self.mode == 3 then
+		end
+]]
+	end
+
+
+
+	function room:Draw()
+		image.draw(self.background, nil, 0, 0)
+		image.draw(self.foreground, nil, 0, 0)
+		image.draw(self.stand, nil, 0, 0)
+		self:DrawCharactersIcons()
+		self:DrawSelectors()
+		--[[
+		for p = 1, #self.player do 
+			local player = self.player[p]
+			if player.eff_frame ~= nil then
+		    	image.draw(self.pick_effect, player.eff_frame, player.x_temp - 77 * player.facing, player.y_pos - 138, player.facing)
+		    	if player.eff_frame < #self.pick_effect.sprites then
+		    		if player.eff_wait < 0 then
+		    			player.eff_frame = player.eff_frame + 1
+		    			player.eff_wait = 1
+		    		else player.eff_wait = player.eff_wait - 1 end
+		    	else
+		    	    player.eff_frame = nil
+		    	end
+			end
+			if player.anim ~= nil then
+			    if player.anim == 0 then
+			    	player.anim = 1
+			    	player.x_temp = player.x_pos
+			    	player.y_temp = -100
+			    	player.y_speed = 30
+
+			    elseif player.anim == 1 then
+			    	player.y_temp = player.y_temp + player.y_speed
+			    	player.y_speed = player.y_speed * 1.3
+
+			    	image.draw(self.pick_sprite, nil, player.x_temp - 25 * player.facing, player.y_temp - 82, player.facing)
+			    	local r, g, b, a = love.graphics.getColor()
+			    	love.graphics.setColor(1,1,1,0.2)
+			    	image.draw(self.pick_sprite, nil, player.x_temp - 25 * player.facing, player.y_pos * 2 - player.y_temp + 82, -player.facing, -1)
+			    	love.graphics.setColor(r, g, b, a)
+			    	if player.y_temp >= player.y_pos then
+			    		player.anim = 2
+			    		player.frame = 1
+			    		player.wait = data.characters_list[player.id].animation.wait
+			    		player.y_temp = player.y_pos
+			    		player.y_speed = 30
+			    		player.eff_frame = 1
+			    		player.eff_wait = 1
+			    	end
+			    elseif player.anim == 2 then
+			    	local anim = data.characters_list[player.id].animation
+			    	image.draw(anim, player.frame, player.x_temp - anim.centerx * player.facing, player.y_temp - anim.centery, player.facing)
+			    	local r, g, b, a = love.graphics.getColor()
+			    	love.graphics.setColor(1,1,1,0.2)
+			    	image.draw(anim, player.frame, player.x_temp - anim.centerx * player.facing, player.y_temp + anim.centery, -player.facing, -1)
+					love.graphics.setColor(r, g, b, a)
+					if player.name ~= nil then
+						font.print(player.name, player.x_temp - 250, player.y_temp - anim.centery - 30, "center", nil, nil, 500)
+					end
+			    	if player.frame < #anim.sprites then
+			    		if player.wait < 0 then
+			    			player.frame = player.frame + 1
+			    			player.wait = anim.wait
+			    		else player.wait = player.wait - 1 end
+			    	else
+			    		player.frame = 1
+			    	    player.anim = 3
+			    	    player.wait = data.characters_list[player.id].standing.wait
+			    	end
+			    elseif player.anim == 3 then
+			    	local stand = data.characters_list[player.id].standing
+			    	image.draw(stand, player.frame, player.x_temp - stand.centerx * player.facing, player.y_temp - stand.centery, player.facing)
+			    	local r, g, b, a = love.graphics.getColor()
+			    	love.graphics.setColor(1,1,1,0.2)
+			    	image.draw(stand, player.frame, player.x_temp - stand.centerx * player.facing, player.y_temp + stand.centery, -player.facing, -1)
+					love.graphics.setColor(r, g, b, a)
+					if player.name ~= nil then
+						font.print(player.name, player.x_temp - 250, player.y_temp - stand.centery - 30, "center", nil, nil, 500)
+					end
+			    	if player.frame < #stand.sprites then
+			    		if player.wait < 0 then
+			    			player.frame = player.frame + 1
+			    			player.wait = stand.wait
+			    		else player.wait = player.wait - 1 end
+			    	else
+			    	    player.frame = 1
+			    	end
+			    elseif player.anim == 4 then
+			    	player.y_temp = player.y_temp - player.y_speed
+			    	player.y_speed = player.y_speed * 1.2
+			    	image.draw(self.pick_sprite, nil, player.x_temp - 25 * player.facing, player.y_temp - 82, player.facing)
+			    	local r, g, b, a = love.graphics.getColor()
+			    	love.graphics.setColor(1,1,1,0.2)
+			    	image.draw(self.pick_sprite, nil, player.x_temp - 25 * player.facing, player.y_pos * 2 - player.y_temp + 82, -player.facing, -1)
+			    	love.graphics.setColor(r, g, b, a)
+			    	if player.y_temp <= 0 then
+			    		player.anim = nil
+			    	end
+			    end
+			end
+		end
+
+
+
+
+
+
+
+		for i = 0, self.y - 1 do
+			for j = 0, self.x - 1 do 
+				local position = i*self.x+j+1
+				if data.characters_list[position] ~= nil then
+					image.draw(data.characters_list[position].head, nil, j * (data.characters_list[position].head.image:getWidth()) + self.x_pos, i * data.characters_list[position].head.image:getHeight() + self.y_pos)
+				else
+				    image.draw(self.small, nil, j * (self.small.image:getWidth()) + self.x_pos, i * self.small.image:getHeight() + self.y_pos)
+				end
+				
+				for p = 1, #self.player do 
+					if self.player[p].x == j and self.player[p].y == i and self.player[p].activate then
+						local r, g, b, a = love.graphics.getColor()
+						if self.player[p].character ~= nil then
+							love.graphics.setColor(self.player[p].r, self.player[p].g, self.player[p].b, 1)
+						else
+							love.graphics.setColor(self.player[p].r, self.player[p].g, self.player[p].b , 0.5 + self.light)
+						end
+						image.draw(self.selector, nil, j * (self.selector.image:getWidth()) + self.x_pos, i * self.selector.image:getHeight() + self.y_pos)
+						love.graphics.setColor(r, g, b, a)
+					end
+				end
+			end
+		end
+
+		if self.mode == 0 then
+			font.print(locale.characters_pick.info1, 0, 100, "center", font.list.character_select_menu, 0, 1280, 1, 1, 1, 0.5 + self.light)
+		elseif self.mode == 1 then
+			font.print(self.timer, 0, 100, "center", font.list.character_select_menu_time, 0, 1280)
+		elseif self.mode == 2 then
+			image.draw(self.scrolls.part2, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5, self.scrolls.y_temp, 1, {width = self.scrolls.width_temp / self.scrolls.width, height = 1})
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5 - 10, self.scrolls.y_temp, 1)
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx + self.scrolls.width_temp * 0.5 + 10, self.scrolls.y_temp, -1)
+		elseif self.mode == 3 then
+			image.draw(self.scrolls.part2, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5, self.scrolls.y_temp, 1, {width = self.scrolls.width_temp / self.scrolls.width, height = 1})
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5 - 10, self.scrolls.y_temp, 1)
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx + self.scrolls.width_temp * 0.5 + 10, self.scrolls.y_temp, -1)
+			font.print(locale.characters_pick.bots, 0, 140, "center", font.list.character_select_menu_bots, 0, 1280, 0, 0, 0, 1)
+			for i = self.start_bots_count, self.available_number_of_bots do
+				font.print(i, 1280 * 0.5 - 50 * (4 + self.start_bots_count) + 50 * i, 195,nil, font.list.character_select_menu,0,nil,0,0,0,1)
+				if i == self.selected_number_of_bots then
+					image.draw(self.bots_selector, 0, 1280 * 0.5 - 50 * (4 + self.start_bots_count) + 50 * i - 7, 192)
+				end
+			end
+		elseif self.mode == 4 then
+			image.draw(self.scrolls.part2, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5, self.scrolls.y_temp, 1, {width = self.scrolls.width_temp / self.scrolls.width, height = 1})
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5 - 10, self.scrolls.y_temp, 1)
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx + self.scrolls.width_temp * 0.5 + 10, self.scrolls.y_temp, -1)
+			font.print(locale.characters_pick.info2..self.selected_number_of_bots, 0, 150, "center", font.list.character_select_menu, 0, 1280, 0, 0, 0, 0.5 + self.light)
+		elseif self.mode == 5 then
+			image.draw(self.scrolls.part2, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5, self.scrolls.y_temp, 1, {width = self.scrolls.width_temp / self.scrolls.width, height = 1})
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx - self.scrolls.width_temp * 0.5 - 10, self.scrolls.y_temp, 1)
+			image.draw(self.scrolls.part1, 0, self.scrolls.centerx + self.scrolls.width_temp * 0.5 + 10, self.scrolls.y_temp, -1)
+		end]]
+	end
+
+
+
+	function room:Keypressed(key)
+
+		for i = 1, #settings.controls do 
+
+			if key == settings.controls[i].attack then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active then
+						selector.selected = true
+					else
+					    selector.active = true
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			if key == settings.controls[i].jump then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active then
+						if selector.selected then
+							selector.selected = false
+						else
+							selector.active = false
+						end
+					else
+						local exit = true
+						for index in pairs(self.selectors) do
+							if self.selectors[index].active then exit = false end
+						end
+						if exit then rooms:Set("main_menu") end
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			if key == settings.controls[i].left then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active and not selector.selected then
+						selector.x_pos = selector.x_pos - 1
+						if selector.x_pos < 1 then
+							selector.x_pos = self.char_icons.rows
+						end
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			if key == settings.controls[i].right then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active and not selector.selected then
+						selector.x_pos = selector.x_pos + 1
+						if selector.x_pos > self.char_icons.rows then
+							selector.x_pos = 1
+						end
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			if key == settings.controls[i].up then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active and not selector.selected then
+						selector.y_pos = selector.y_pos - 1
+						if selector.y_pos < 1 then
+							selector.y_pos = self.char_icons.cols
+						end
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			if key == settings.controls[i].down then
+				if self.mode == 1 then
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					if selector.active and not selector.selected then
+						selector.y_pos = selector.y_pos + 1
+						if selector.y_pos > self.char_icons.cols then
+							selector.y_pos = 1
+						end
+					end
+				elseif self.mode == 2 then
+
+				end
+			end
+
+			--[[if key == settings.controls[i].attack then
+				if self.mode == 0 or self.mode == 1 then
+					if self.player[i].activate then 
+						if self.player[i].character == nil then
+							if data.characters_list[self.player[i].id] ~= nil then
+								self.player[i].character = data.characters_list[self.player[i].id]
+								self.player[i].name = settings.names[i]
+								self.player[i].anim = 0
+								self.selected_players = self.selected_players + 1
+							end
+						end
+					else
+					    self.player[i].activate = true
+					    self.mode = 0
+					end
+				elseif self.mode == 3 then
+					self.mode = 4
+					if self.selected_number_of_bots > 0 then
+						self.player[self.selected_number_of_bots + self.selected_players].activate = true
+					else
+						self.mode = 5
+					end
+				elseif self.mode == 4 then
+					if self.player[self.selected_number_of_bots + self.selected_players].activate then 
+						if self.player[self.selected_number_of_bots + self.selected_players].character == nil then
+							if data.characters_list[self.player[self.selected_number_of_bots + self.selected_players].id] ~= nil then
+								self.player[self.selected_number_of_bots + self.selected_players].character = data.characters_list[self.player[self.selected_number_of_bots + self.selected_players].id]
+								self.player[self.selected_number_of_bots + self.selected_players].name = "Com"
+								self.player[self.selected_number_of_bots + self.selected_players].anim = 0
+								self.selected_number_of_bots = self.selected_number_of_bots - 1
+								if self.selected_number_of_bots > 0 then
+									self.player[self.selected_number_of_bots + self.selected_players].activate = true
+								else
+									self.mode = 5
+								end
+							end
+						end
+					else
+						if self.selected_number_of_bots > 0 then
+							self.player[self.selected_number_of_bots + self.selected_players].activate = true
+						else
+							self.mode = 5
+						end
+					end
+				end
+			end
+
+			if key == settings.controls[i].jump then
+				--[[if self.mode == 0 then
+					local exit = 0
+					if self.player[i].activate then 
+						if self.player[i].character == nil then
+							self.player[i].activate = false
+						else
+						    self.player[i].character = nil
+								self.player[i].anim = 4
+						end
+					else
+					    for i = 1, #self.player do 
+					    	if self.player[i].activate == false then
+					    		exit = exit + 1
+					    	end
+					    end
+					end
+					if exit >= #self.player then
+						rooms:Set("main_menu")
+					end
+				elseif self.mode == 1 then
+					self.timer = self.timer - 1
+				end
+			end
+
+			if key == settings.controls[i].left then
+				--[[if self.mode == 0 then
+					if self.player[i].activate and self.player[i].character == nil then 
+						self.player[i].x = self.player[i].x - 1
+						if self.player[i].x < 0 then
+							self.player[i].x = self.x - 1
+						end
+					end
+				elseif self.mode == 3 then
+					self.selected_number_of_bots = self.selected_number_of_bots - 1
+					if self.selected_number_of_bots < self.start_bots_count then
+						self.selected_number_of_bots = self.available_number_of_bots
+					end
+				elseif self.mode == 4 then
+					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
+						self.player[self.selected_number_of_bots + self.selected_players].x = self.player[self.selected_number_of_bots + self.selected_players].x - 1
+						if self.player[self.selected_number_of_bots + self.selected_players].x < 0 then
+							self.player[self.selected_number_of_bots + self.selected_players].x = self.x - 1
+						end
+					end
+				end
+			end
+
+			if key == settings.controls[i].right then
+				--[[if self.mode == 0 then
+					if self.player[i].activate and self.player[i].character == nil then 
+						self.player[i].x = self.player[i].x + 1
+						if self.player[i].x > self.x - 1 then
+							self.player[i].x = 0
+						end
+					end
+				elseif self.mode == 3 then
+					self.selected_number_of_bots = self.selected_number_of_bots + 1
+					if self.selected_number_of_bots > self.available_number_of_bots then
+						self.selected_number_of_bots = self.start_bots_count
+					end
+				elseif self.mode == 4 then
+					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
+						self.player[self.selected_number_of_bots + self.selected_players].x = self.player[self.selected_number_of_bots + self.selected_players].x + 1
+						if self.player[self.selected_number_of_bots + self.selected_players].x > self.x - 1 then
+							self.player[self.selected_number_of_bots + self.selected_players].x = 0
+						end
+					end
+				end
+			end
+			
+
+			if key == settings.controls[i].down then
+				--[[if self.mode == 0 then
+					if self.player[i].activate and self.player[i].character == nil then 
+						self.player[i].y = self.player[i].y + 1
+						if self.player[i].y > self.y - 1 then
+							self.player[i].y = 0
+						end
+					end
+				elseif self.mode == 4 then
+					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
+						self.player[self.selected_number_of_bots + self.selected_players].y = self.player[self.selected_number_of_bots + self.selected_players].y + 1
+						if self.player[self.selected_number_of_bots + self.selected_players].y > self.y - 1 then
+							self.player[self.selected_number_of_bots + self.selected_players].y = 0
+						end
+					end
+				end
+			end
+
+			if key == settings.controls[i].up then
+				--[[if self.mode == 0 then
+					if self.player[i].activate and self.player[i].character == nil then 
+						self.player[i].y = self.player[i].y - 1
+						if self.player[i].y < 0 then
+							self.player[i].y = self.y - 1
+						end
+					end
+				elseif self.mode == 4 then
+					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
+						self.player[self.selected_number_of_bots + self.selected_players].y = self.player[self.selected_number_of_bots + self.selected_players].y - 1
+						if self.player[self.selected_number_of_bots + self.selected_players].y < 0 then
+							self.player[self.selected_number_of_bots + self.selected_players].y = self.y - 1
+						end
+					end
+				end
+			end]]
+		end
 
 	end
 
-	function main_menu.change_mode(swipe_type)
-		local mode = main_menu.selected_mode
-		if swipe_type == "up" then
-			if mode > 1 then mode = mode - 1
-			else mode = #main_menu.mode end
-		end
-		if swipe_type == "down" then
-			if mode < #main_menu.mode then mode = mode + 1
-			else mode = 1 end
-		end
-		main_menu.selected_mode = mode
-	end
-
-return main_menu
+return room

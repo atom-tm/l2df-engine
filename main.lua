@@ -1,44 +1,33 @@
-love.graphics.setDefaultFilter("nearest", "nearest") -- отключение сглаживания
-math.randomseed(love.timer.getTime()) -- для того чтобы рандом работал лучше
+love.graphics.setDefaultFilter("nearest", "nearest")
+math.randomseed(love.timer.getTime())
+require "libs.globals"
 
-gamera = require "libs.gamera"
-require "libs.entites"
-require "libs.drawing"
-require "libs.physics"
-require "libs.collisions"
-require "libs.get"
-require "libs.controls"
-require "libs.battle"
-require "libs.loading"
-require "libs.states"
-require "libs.rooms"
-require "libs.settings"
+--require "libs.entites"
+--require "libs.drawing"
+--require "libs.physics"
+--require "libs.collisions"
 
-time = {}
-time[2] = 0
-time [50] = 0
+--require "libs.controls"
+--require "libs.battle"
+--require "libs.loading"
+--require "libs.states"
+
 
 function love.load()
-	camera = CameraCreate() -- создание камеры
 	-- FPS Локер --
 	min_dt = 1/60 -- требуемое фпс
     next_time = love.timer.getTime()
     ---------------
-    read_settings()
-    CreateDataList() -- создание листа со всеми персонажами
-    roomsLoad() -- подгрузка комнат и установка меню активной комнатой
+    settings:Read("data/settings.txt")
+    func.SetWindowSize()
+    loc:Set(loc.id)
+    data:Load("data/data.txt")
+    rooms:Set("main_menu")
 end
 
 function love.update(dt)
+	rooms.current:Update()
 	next_time = next_time + min_dt
-	delta_time = dt
-	room.update()
-	for key in pairs(time) do
-		time[key] = time[key] - 1
-		if time[key] < 0 then
-			time[key] = key
-		end
-	end
 end 
 
 
@@ -46,8 +35,9 @@ end
 function love.draw()
 
 	camera:draw(function(l,t,w,h)
-		room.draw()
+		rooms.current:Draw()
 	end)
+
 	local cur_time = love.timer.getTime()
 	if next_time <= cur_time then
 		next_time = cur_time
@@ -60,13 +50,13 @@ end
 
 
 function love.keypressed( button, scancode, isrepeat )
-	room.keypressed(button, scancode, isrepeat)
+	rooms.current:Keypressed(button)
 end
 function love.joystickpressed( joystick, button )
-	room.keypressed("Joy"..button)
+	rooms.current:Keypressed("Joy"..button)
 end
 function love.joystickhat( joystick, hat, direction )
 	if direction ~= "c" then
-		room.keypressed("Joy"..hat..direction)
+		rooms.current:Keypressed("Joy"..hat..button)
 	end
 end

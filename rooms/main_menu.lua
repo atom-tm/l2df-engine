@@ -1,96 +1,85 @@
-local main_menu = {}
+local room = {}
 
-	main_menu.selected_mode = 1
-	main_menu.background_image = LoadImage("sprites/UI/background.png")
-	main_menu.logotype_image = LoadImage("sprites/UI/logotype.png")
-	main_menu.mode = {}
+	room.selected_mode = 1
 
-	main_menu.mode[1] = {}
-	main_menu.mode[1].normal = LoadImage("sprites/UI/MainMenu/main_mode1_normal.png")
-	main_menu.mode[1].active = LoadImage("sprites/UI/MainMenu/main_mode1_active.png")
-	main_menu.mode[1].x = 480
-	main_menu.mode[1].y = 420
-	main_menu.mode[1].action = function ()
-		setRoom(2)
-	end
+	function room:Load()
+		self.opacity = 0.1
+		self.opacity_change = 0.001
 
-	main_menu.mode[2] = {}
-	main_menu.mode[2].normal = LoadImage("sprites/UI/MainMenu/main_mode2_normal.png")
-	main_menu.mode[2].active = LoadImage("sprites/UI/MainMenu/main_mode2_active.png")
-	main_menu.mode[2].x = 480
-	main_menu.mode[2].y = 490
+		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
+		self.logotype_image = image.Load("sprites/UI/logotype.png", nil, "linear")
+		self.scenes = {
+			image.Load("sprites/UI/MainMenu/1.png"),
+			image.Load("sprites/UI/MainMenu/2.png"),
+		}
+		self.scene = math.random(1, #self.scenes)
 
-	main_menu.mode[3] = {}
-	main_menu.mode[3].normal = LoadImage("sprites/UI/MainMenu/main_mode4_normal.png")
-	main_menu.mode[3].active = LoadImage("sprites/UI/MainMenu/main_mode4_active.png")
-	main_menu.mode[3].x = 480
-	main_menu.mode[3].y = 560
-	main_menu.mode[3].action = function ()
-		setRoom(3)
-	end
-
-	main_menu.mode[4] = {}
-	main_menu.mode[4].normal = LoadImage("sprites/UI/MainMenu/main_mode3_normal.png")
-	main_menu.mode[4].active = LoadImage("sprites/UI/MainMenu/main_mode3_active.png")
-	main_menu.mode[4].x = 480
-	main_menu.mode[4].y = 630
-	main_menu.mode[4].action = function ()
-		love.event.quit( )
-	end
-
-
-	function main_menu.load()
-	end
-
-	function main_menu.update()
-	end
-
-	function main_menu.draw()
-		love.graphics.draw(main_menu.background_image,0,0,0,1,1)
-		love.graphics.draw(main_menu.logotype_image,400,20,0,1,1)
-		for i = 1, #main_menu.mode do
-			if i == main_menu.selected_mode then
-				if main_menu.mode[i].active ~= nil then
-					love.graphics.draw(main_menu.mode[i].active,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
+		self.modes = {
+			{
+				text = locale.main_menu.versus,
+				action = function ()
+					rooms:Set("character_select")
 				end
-				if main_menu.mode[i].text ~= nil then
-					print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 1)
+			},
+			{
+				text = locale.main_menu.story,
+				action = function ()
+					
 				end
-			else
-				if main_menu.mode[i].normal ~= nil then
-					love.graphics.draw(main_menu.mode[i].normal,main_menu.mode[i].x,main_menu.mode[i].y,0,1,1)
+			},
+			{
+				text = loc.text.main_menu.settings,
+				action = function ()
+					rooms:Set("settings")
 				end
-				if main_menu.mode[i].text ~= nil then
-					print(main_menu.mode[i].text, main_menu.mode[i].x, main_menu.mode[i].y, 0)
+			},
+			{
+				text = locale.main_menu.exit,
+				action = function ()
+					love.event.quit( )
 				end
+			},
+		}
+
+	end
+
+	function room:Update()
+		self.opacity = self.opacity + self.opacity_change
+		if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
+	end
+
+	function room:Draw()
+		image.draw(self.background_image,0,0,0)
+		image.draw(self.logotype_image,0,420,25)
+		image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
+
+		for i = 1, #self.modes do
+			if i == self.selected_mode then
+				love.graphics.setColor(0, 0, 0, .2 + self.opacity)
+				love.graphics.rectangle("fill", settings.gameWidth / 2 - 150, 370 + 65 * i, 300, 65)
+				love.graphics.setColor(1, 1, 1, 1)
+			end
+			font.print(self.modes[i].text, settings.gameWidth / 2 - 250, 370 + 65 * i, "center", font.list.menu_element, nil, 500)
+		end
+	end
+
+	function room:Keypressed(key)
+		if key == settings.controls[1].up or key == settings.controls[2].up then 
+			self.selected_mode = self.selected_mode - 1
+			if self.selected_mode < 1 then
+				self.selected_mode = #self.modes
 			end
 		end
-		love.graphics.print(main_menu.background_image:getWidth(),10,10)
-		love.graphics.print(main_menu.background_image:getHeight(),10,30)
-		love.graphics.print(main_menu.selected_mode,10,50)
-	end
-
-	function main_menu.keypressed ( button, scancode, isrepeat )
-		if button == control_settings[1].up or button == control_settings[2].up then
-			local mode = main_menu.selected_mode
-			if mode > 1 then mode = mode - 1
-			else mode = #main_menu.mode end
-			main_menu.selected_mode = mode
-		end
-		if button == control_settings[1].down or button == control_settings[2].down then
-			local mode = main_menu.selected_mode
-			if mode < #main_menu.mode then mode = mode + 1
-			else mode = 1 end
-			main_menu.selected_mode = mode
-		end
-		if button == control_settings[1].attack or button == control_settings[2].attack then
-			if main_menu.mode[main_menu.selected_mode].action ~= nil then
-				main_menu.mode[main_menu.selected_mode].action()
+		if key == settings.controls[1].down or key == settings.controls[2].down then 
+			self.selected_mode = self.selected_mode + 1
+			if self.selected_mode > #self.modes then
+				self.selected_mode = 1
 			end
 		end
-		if button == "f1" then
-			setRoom(3)
+		if key == settings.controls[1].attack or key == settings.controls[2].attack then 
+			self.modes[self.selected_mode].action()
 		end
+		if key == "f1" then rooms:Set("settings") end
 	end
 
-return main_menu
+return room

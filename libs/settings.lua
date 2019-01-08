@@ -1,76 +1,116 @@
-path = love.filesystem.getSourceBaseDirectory() -- берем путь до папки с игрой
-love.filesystem.mount(path, "")
+local settings = {}
+	
+	settings.gamePath = love.filesystem.getSourceBaseDirectory() -- берем путь до папки с игрой
+	love.filesystem.mount(settings.gamePath, "") -- "Монтируем" нашу игру по указанному пути (для использования внешних файлов)
 
-love.graphics.setBackgroundColor(.49, .67, .46, 1) -- установка фона
+	local window = {}
+		window.fullscreen = nil
+		window.music_vol = nil
+		window.sound_vol = nil
+		window.selectedSize = nil
+		window.width = nil
+		window.height = nil
+	settings.window = window
 
-window = {}
-window.fullscreen = false
-window.music_vol = 100
-window.sound_vol = 100
+	settings.gameWidth = 1280
+	settings.gameHeight = 720
 
-game_width = 1280
-game_height = 720
+	settings.names = {}
 
-selected_window_size = 1
-window_sizes = {
-	{ width = 1920, height = 1080 },
-	{ width = 1600, height = 900 },
-	{ width = 1280, height = 720 },
-	{ width = 1024, height = 576 },
-	{ width = 854, height = 480 }
-}
+	settings.windowSizes = {
+		{ width = 1920, height = 1080 },
+		{ width = 1600, height = 900 },
+		{ width = 1280, height = 720 },
+		{ width = 1024, height = 576 },
+		{ width = 854, height = 480 }
+	}
 
-localization_list = {
-	"data.english",
-	"data.russian"
-}
-localization_number = 1
-localization = require(localization_list[localization_number])
+	settings.localizationsList = {
+		"english",
+		"russian"
+	}
+
+	settings.controls = {
+		{ up = "w", down = "s", left = "a", right = "d", attack = "f", jump = "g", defend = "h", special1 = "j" },
+		{ up = "o", down = "l", left = "k", right = ";", attack = "p", jump = "[", defend = "]", special1 = "\\" }
+	}
+
+	settings.file = nil
+
+	function settings:Read (settings_file)
+		local settings_data = love.filesystem.read(settings_file)
+		if settings_data ~= nil then
+			
+			self.window.music_vol = get.PNumber(settings_data, "music_volume", 50)
+			self.window.sound_vol = get.PNumber(settings_data, "sound_volume", 70)
+			self.window.fullscreen = get.PBool(settings_data, "fullscreen")
+			self.window.selectedSize = get.PNumber(settings_data, "window_size", 3)
+			self.names[1] = get.PString(settings_data, "player1_name", "")
+			self.names[2] = get.PString(settings_data, "player2_name", "")
+			loc.id = get.PNumber(settings_data, "localization", 1)
+			
+			local controls_string = string.match(settings_data, "controls_player_1: {([^{}]+)}")
+			if controls_string ~= nil then
+				local controls_massive = {}
+				for key, key_code in string.gmatch(controls_string, "([%w]+): ([^%s]+)") do
+					if key_code == "lsqbr" then key_code = "["
+					elseif key_code == "rsqbr" then key_code = "]" end
+					settings.controls[1][key] = key_code
+				end
+			end
+			local controls_string = string.match(settings_data, "controls_player_2: {([^{}]+)}")
+			if controls_string ~= nil then
+				local controls_massive = {}
+				for key, key_code in string.gmatch(controls_string, "([%w]+): ([^%s]+)") do
+					if key_code == "lsqbr" then key_code = "["
+					elseif key_code == "rsqbr" then key_code = "]" end
+					settings.controls[2][key] = key_code
+				end
+			end
+
+			self.file = settings_file
+		end
+	end
+
+	function settings:Save()
+		local settings_file = io.open("../"..self.file,"w+")
+		if settings_file ~= nil then
+	
+			local controls_player_1 = " "
+			for key,key_code in pairs(self.controls[1]) do
+				controls_player_1 = controls_player_1..key..": "..key_code.." "
+			end
+			local controls_player_2 = " "
+			for key,key_code in pairs(self.controls[2]) do
+				controls_player_2 = controls_player_2..key..": "..key_code.." "
+			end
+
+			local save_data = "[settings]".."\n"..
+			"music_volume: "..self.window.music_vol.."\n"..
+			"sound_volume: "..self.window.sound_vol.."\n"..
+			"fullscreen: "..tostring(self.window.fullscreen).."\n"..
+			"window_size: "..self.window.selectedSize.."\n"..
+			"localization: "..loc.id.."\n"..
+			"controls_player_1: {"..controls_player_1.."}\n"..
+			"controls_player_2: {"..controls_player_2.."}\n"..
+			"player1_name: "..self.names[1].."\n"..
+			"player2_name: "..self.names[2]
+			
+			settings_file:write(save_data)
+			settings_file:close()
+		end
+	end
+
+return settings
 
 
-fonts = {}
+
+
+--[[fonts = {}
 fonts.default = love.graphics.newFont("sprites/UI/menu.otf",16)
 fonts.menu_head = love.graphics.newFont("sprites/UI/menu.otf",42)
 fonts.menu_comment = love.graphics.newFont("sprites/UI/menu.otf",24)
 fonts.menu = love.graphics.newFont("sprites/UI/menu.otf",32)
-
-function read_settings ()
-	local data = love.filesystem.read("data/settings.txt") -- получаем содержимое файла data.txt
-	if data ~= nil then
-		local settings = string.match(data, "%[settings%]([^%[%]]+)") -- берём всех из списка [settings]
-		if settings ~= nil then
-			window.music_vol = PNumber(settings, "music_vol", 100)
-			window.sound_vol = PNumber(settings, "sound_vol", 100)
-			selected_window_size = PNumber(settings, "window_size", 1)
-			window.fullscreen = PBool(settings, "fullscreen")
-			localization_number = PNumber(settings, "language", 1)
-			localization = require(localization_list[localization_number])
-			local controls_string = string.match(settings, "controls: {([^{}]+)}")
-			if controls_string ~= nil then
-				local controls_mass = {}
-				for code in string.gmatch(controls_string, "([^%s]+)") do
-					if code == "lsqbr" then
-						code = "["
-					elseif code == "rsqbr" then
-						code = "]"
-					end
-					table.insert(controls_mass,code)
-				end
-				if #controls_mass ~= 0 then
-					local i = 1
-					for key1 in ipairs(control_settings) do
-						for key2 in pairs(control_settings[key1]) do
-							control_settings[key1][key2] = controls_mass[i]
-							i = i + 1
-						end
-					end
-				end
-			end
-		end
-	end
-	setWindowSize()
-	setFullscreen()
-end
 
 function save_settings()
 	local data_file = "data/settings.txt"
@@ -109,4 +149,4 @@ end
 function setFullscreen ()
 	love.window.setFullscreen( window.fullscreen )
 	camera = CameraCreate()
-end
+end]]

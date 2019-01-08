@@ -1,7 +1,7 @@
 <head>
 
-name: Itachi
-head: "chars/itachi/sprites/small.png"
+name: Kisame
+head: "chars/kisame/sprites/small.png"
 type: character
 
 physic: true
@@ -9,17 +9,17 @@ collision: true
 shadow: true
 
 start_animation: {
-	file: "chars/itachi/sprites/start_animation.png"
-	w: 90 h: 90
-	row: 6 col: 1
-	centerx: 47 centery: 85
-	wait: 4
+	file: "chars/kisame/sprites/start_animation.png"
+	w: 120 h: 110
+	row: 5 col: 1
+	centerx: 45 centery: 108
+	wait: 3
 }
 start_standing: {
-	file: "chars/itachi/sprites/start_standing.png"
-	w: 90 h: 90
-	row: 6 col: 1
-	centerx: 47 centery: 85
+	file: "chars/kisame/sprites/start_standing.png"
+	w: 120 h: 110
+	row: 4 col: 1
+	centerx: 45 centery: 108
 	wait: 5
 }
 

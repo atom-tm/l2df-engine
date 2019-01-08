@@ -1,8 +1,8 @@
 [characters]
-id: 4	file: chars/char1.dat
-id: 2	file: chars/test.dat
-id: 3	file: chars/sasuke.dat
 id: 1	file: chars/itachi/character.dat
+id: 3	file: chars/kisame/character.dat
+id: 2	file: chars/kakashi/character.dat
+id: 4	file: chars/asuma/character.dat
 
 [objects]
 id: 100	file: data/sparks.dat

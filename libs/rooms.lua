@@ -1,14 +1,26 @@
-room = {}
-room.id = 0
+rooms = {}
+	rooms.list = {
+		main_menu = require("rooms.main_menu"),
+		settings = require("rooms.settings"),
+		controls = require("rooms.controls"),
+		character_select = require("rooms.character_select")
+	}
+	function rooms:Set(id, table_values)
+		if self.name ~= nil then
+			self.last = self.name
+		else
+		    self.last = "none"
+		end
+		self.name = id
+		self.current = rooms.list[id]
+		self.current:Load(table_values)
+	end
+	function rooms:Reload(table_values)
+		self.current:Load(table_values)
+	end
+return rooms
 
-room.load = nil
-room.update = nil
-room.draw = nil
-room.keypressed = nil
-
-rooms_list = {}
-
-function roomsLoad()
+--[[function roomsLoad()
 	rooms_list[1] = require("rooms.main_menu")
 	rooms_list[2] = require("rooms.character_select")
 	rooms_list[3] = require("rooms.settings")
@@ -27,21 +39,4 @@ function setRoom(id)
 	if rooms_list[id].keypressed ~= nil then room.keypressed = rooms_list[id].keypressed
 	else room.keypressed = function() end end
 	room.load()
-end
-
-function print(input_string, x, y, align, font, stroke, width, r, g, b, a)
-	if align == nil then align = "left" end
-	if font == nil then font = fonts.default end
-	if stroke ~= true then stroke = false end
-	if width == nil then width = 300 end
-	if r == nil then r = 1 end
-	if g == nil then g = 1 end
-	if b == nil then b = 1 end
-	if a == nil then a = 1 end
-	local ro,go,bo,ao = love.graphics.getColor()
-	love.graphics.setFont(font)
-	love.graphics.setColor(r, g, b, a)
-	love.graphics.printf(input_string,x,y,width,align)
-	love.graphics.setFont(fonts.default)
-	love.graphics.setColor(ro, go, bo, ao)
-end
+end]]
