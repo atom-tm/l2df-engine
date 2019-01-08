@@ -15,6 +15,13 @@ local room = {}
 				local r, g, b, a = love.graphics.getColor()
 				love.graphics.setColor(selector.color.r,selector.color.g,selector.color.b, 1 - selector.color.a_mod )
 				image.draw(self.selector_image, nil, self.char_icons.real_x_position + x_offset, self.char_icons.real_y_position + y_offset)
+				if  not selector.selected then
+					if selector.align == "top" then
+						font.print(selector.text, self.char_icons.real_x_position + x_offset, self.char_icons.real_y_position + y_offset + 10, "center", font.list.character_select_menu_bots, false, self.selector_image.image:getWidth())
+					elseif selector.align == "bot" then
+						font.print(selector.text, self.char_icons.real_x_position + x_offset, self.char_icons.real_y_position + y_offset + self.selector_image.image:getHeight() - 35, "center", font.list.character_select_menu_bots, false, self.selector_image.image:getWidth())
+					end
+				end
 				love.graphics.setColor(r,g,b,a)
 				if not selector.selected then
 					selector.color.a_mod = selector.color.a_mod + selector.color.a_change
@@ -54,16 +61,19 @@ local room = {}
 	function room:SelectorSettings()
 		self.selectors = {
 			player_1 = {
-				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
+				text = "P1", align = "top",
+				color = { r = 1, g = 0.7, b = 0.7, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1,
 			},
 			player_2 = {
-				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
+				text = "P2", align = "bot",
+				color = { r = 0.7, g = 0.7, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = self.char_icons.rows, y_pos = 1
 			},
 			com = {
+				text = "Com", align = "top",
 				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1
@@ -380,6 +390,8 @@ local room = {}
 		image.draw(self.stand, nil, 0, 0)
 		self:DrawCharactersIcons()
 		self:DrawSelectors()
+		font.print(self.mode, 10, 10)
+
 		--[[
 		for p = 1, #self.player do 
 			local player = self.player[p]

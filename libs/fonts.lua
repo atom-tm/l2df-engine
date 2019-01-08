@@ -16,11 +16,11 @@ local fonts = {}
 		font = get.NotZero(font, fonts.list.default)
 		stroke = get.NotZero(stroke, false)
 		width = get.NotZero(width, 300)
-		if r == nil then r = 1 end
-		if g == nil then g = 1 end
-		if b == nil then b = 1 end
-		if a == nil then a = 1 end
 		local ro,go,bo,ao = love.graphics.getColor()
+		if r == nil then r = ro end
+		if g == nil then g = go end
+		if b == nil then b = bo end
+		if a == nil then a = ao end
 		love.graphics.setFont(font)
 		love.graphics.setColor(r, g, b, a)
 		love.graphics.printf(string,x,y,width,align)
