@@ -23,7 +23,7 @@ local fonts = {}
 		if a == nil then a = ao end
 		love.graphics.setFont(font)
 		love.graphics.setColor(r, g, b, a)
-		love.graphics.printf(string,x,y,width,align)
+		love.graphics.printf(tostring(string),x,y,width,align)
 		love.graphics.setFont(fonts.list.default)
 		love.graphics.setColor(ro, go, bo, ao)
 	end

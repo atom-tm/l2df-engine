@@ -139,6 +139,18 @@ local room = {}
 			0 -- вход в комнату
 			1 -- Ожидание игроков
 		]]
+		self.players_timer = 0
+
+		self.max_players = 10
+		self.min_players = 2
+		self.selected_players = 0
+
+		self.max_bots = 0
+		self.min_bots = 0
+		self.selected_bots = 0
+
+		self.current_bot = 0
+
 
 
 
@@ -322,7 +334,33 @@ local room = {}
 		if self.mode == 0 then
 			self.mode = 1
 		elseif self.mode == 1 then
-
+			local active_selectors = 0
+			local selected_selectors = 0
+			for key in pairs(self.selectors) do
+				if self.selectors[key].active then
+					active_selectors = active_selectors + 1
+					if self.selectors[key].selected then
+						selected_selectors = selected_selectors + 1
+					end
+				end
+			end
+			if active_selectors > 0 and active_selectors == selected_selectors then
+				if self.players_timer <= 0 then
+					self.selected_players = selected_selectors
+					self.players_timer = 0
+					self.mode = 2
+				else
+				    self.players_timer = self.players_timer - 1
+				end
+			end
+		elseif self.mode == 2 then
+			for key in pairs(self.selectors) do
+				self.selectors[key].active = false
+			end
+			self.max_bots = self.max_players - self.selected_players
+			self.min_bots = self.min_players - self.selected_players
+			self.selected_bots = self.min_bots
+			self.mode = 3
 		end
 		--[[self.light = self.light + self.light_change
 		if self.light > self.max_light or self.light < 0 then
@@ -391,6 +429,22 @@ local room = {}
 		self:DrawCharactersIcons()
 		self:DrawSelectors()
 		font.print(self.mode, 10, 10)
+		font.print(self.selectors.player_1.active, 10, 30)
+		font.print(self.selectors.player_1.selected, 10, 50)
+		font.print(self.selectors.player_2.active, 80, 30)
+		font.print(self.selectors.player_2.selected, 80, 50)
+		font.print(math.ceil(self.players_timer / 50), 10, 70)
+		font.print(self.min_bots, 10, 90)
+		font.print(self.selected_bots, 40, 90)
+		font.print(self.max_bots, 70, 90)
+		for key in pairs(self.characters) do
+			if self.characters[key] ~= nil then
+				font.print(self.characters[key].name, 10, 110 + 20 * key)
+			end
+		end
+		
+
+		
 
 		--[[
 		for p = 1, #self.player do 
@@ -558,11 +612,27 @@ local room = {}
 					elseif i == 2 then selector = self.selectors.player_2 end
 					if selector.active then
 						selector.selected = true
+						self.characters[i] = self.char_icons.list[selector.x_pos].character
+						if self.players_timer == 0 then
+							self.players_timer = 200
+						else
+						    self.players_timer = self.players_timer - 50
+						end
 					else
 					    selector.active = true
+						self.players_timer = 0
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 3 then
+					self.selectors.com.active = true
+					self.current_bot = 1
+					self.mode = 4
+				elseif self.mode == 4 then
+					self.characters[self.selected_players + self.current_bot] = self.char_icons.list[self.selectors.com.x_pos].character
+					self.current_bot = self.current_bot + 1
+					if self.current_bot > self.selected_bots then
+						self.selectors.com.active = false
+						self.mode = 5
+					end
 				end
 			end
 
@@ -574,6 +644,7 @@ local room = {}
 					if selector.active then
 						if selector.selected then
 							selector.selected = false
+							self.characters[i] = nil
 						else
 							selector.active = false
 						end
@@ -584,8 +655,17 @@ local room = {}
 						end
 						if exit then rooms:Set("main_menu") end
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 3 then
+					self.max_bots = 0
+					self.min_bots = 0
+					self.selected_bots = 0
+					self.mode = 1
+					local selector = nil
+					if i == 1 then selector = self.selectors.player_1
+					elseif i == 2 then selector = self.selectors.player_2 end
+					selector.selected = false
+					self.characters[i] = nil
+					selector.active = true
 				end
 			end
 
@@ -600,8 +680,19 @@ local room = {}
 							selector.x_pos = self.char_icons.rows
 						end
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 3 then
+					self.selected_bots = self.selected_bots - 1
+					if self.selected_bots < self.min_bots then
+						self.selected_bots = self.max_bots
+					end
+				elseif self.mode == 4 then
+					selector = self.selectors.com
+					if selector.active and not selector.selected then
+						selector.x_pos = selector.x_pos - 1
+						if selector.x_pos < 1 then
+							selector.x_pos = self.char_icons.rows
+						end
+					end
 				end
 			end
 
@@ -616,8 +707,19 @@ local room = {}
 							selector.x_pos = 1
 						end
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 3 then
+					self.selected_bots = self.selected_bots + 1
+					if self.selected_bots > self.max_bots then
+						self.selected_bots = self.min_bots
+					end
+				elseif self.mode == 4 then
+					selector = self.selectors.com
+					if selector.active and not selector.selected then
+						selector.x_pos = selector.x_pos + 1
+						if selector.x_pos > self.char_icons.rows then
+							selector.x_pos = 1
+						end
+					end
 				end
 			end
 
@@ -632,8 +734,14 @@ local room = {}
 							selector.y_pos = self.char_icons.cols
 						end
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 4 then
+					selector = self.selectors.com
+					if selector.active and not selector.selected then
+						selector.y_pos = selector.y_pos - 1
+						if selector.y_pos < 1 then
+							selector.y_pos = self.char_icons.cols
+						end
+					end
 				end
 			end
 
@@ -648,8 +756,14 @@ local room = {}
 							selector.y_pos = 1
 						end
 					end
-				elseif self.mode == 2 then
-
+				elseif self.mode == 4 then
+					selector = self.selectors.com
+					if selector.active and not selector.selected then
+						selector.y_pos = selector.y_pos + 1
+						if selector.y_pos > self.char_icons.cols then
+							selector.y_pos = 1
+						end
+					end
 				end
 			end
 
