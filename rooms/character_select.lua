@@ -151,6 +151,11 @@ local room = {}
 
 		self.current_bot = 0
 
+		self.loading_list = {
+			characters = {},
+			maps = {}
+		}
+
 
 
 
@@ -352,6 +357,8 @@ local room = {}
 				else
 				    self.players_timer = self.players_timer - 1
 				end
+			else
+				self.players_timer = 300
 			end
 		elseif self.mode == 2 then
 			for key in pairs(self.selectors) do
@@ -613,14 +620,9 @@ local room = {}
 					if selector.active then
 						selector.selected = true
 						self.characters[i] = self.char_icons.list[selector.x_pos].character
-						if self.players_timer == 0 then
-							self.players_timer = 200
-						else
-						    self.players_timer = self.players_timer - 50
-						end
+						self.players_timer = self.players_timer - 25
 					else
 					    selector.active = true
-						self.players_timer = 0
 					end
 				elseif self.mode == 3 then
 					self.selectors.com.active = true
@@ -633,6 +635,8 @@ local room = {}
 						self.selectors.com.active = false
 						self.mode = 5
 					end
+				elseif self.mode == 5 then
+					
 				end
 			end
 
