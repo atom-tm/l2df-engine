@@ -3,7 +3,85 @@ local room = {}
 
 
 	function room:DrawCharacters()
-		
+		local pos_x = 100
+		local width = 1100
+
+		local pos_y = 500
+		local height = 100
+
+		local pos = 1
+
+		local distanse = 100
+
+		for key = 1, self.max_players + self.current_bot do
+			if self.characters[key] ~= nil then
+				local character = self.characters[key]
+				
+				local anim = nil
+				if character.anim == "anim" then
+					anim = character.info.animation
+				elseif character.anim == "stand" then
+					anim = character.info.standing
+				end
+
+				local y = nil
+				local x = nil
+				local facing = nil
+				if pos%2 == 1 then
+					y = pos_y
+					x = pos_x + (math.ceil(pos / 2) * distanse)
+					facing = 1
+				else
+					y = pos_y
+				    x = pos_x + width - (math.ceil(pos / 2) * distanse)
+				    facing = -1
+				end
+
+				image.draw(anim, character.frame, x - anim.centerx * facing , y - anim.centery, facing)
+				pos = pos + 1
+			end
+		end
+	end
+
+	function room:CharacterAnimations()
+		for key = 1, self.max_players + self.current_bot do
+			if self.characters[key] ~= nil then
+				local character = self.characters[key]
+				if character.wait == nil or character.frame == nil or character.anim == nil then
+					character.x_offset = math.random(-5,5)
+					character.y_offset = math.random(-15,15)
+					character.frame = 1
+					character.wait = 0
+					character.anim = "start"
+				else
+
+					if character.anim == "start" then
+
+					elseif character.anim == "anim" then
+						if character.wait > character.info.animation.wait then
+							character.wait = 0
+							character.frame = character.frame + 1
+							if character.frame > character.info.animation.frames then
+								character.frame = 1
+								character.anim = "stand"
+							end
+						else
+					    	character.wait = character.wait + 1
+					    end
+					elseif character.anim == "stand" then
+						if character.wait > character.info.standing.wait then
+							character.wait = 0
+							character.frame = character.frame + 1
+							if character.frame > character.info.standing.frames then
+								character.frame = 1
+							end
+						else
+					    	character.wait = character.wait + 1
+					    end
+					end
+				end
+			end
+		end
 	end
 
 
@@ -160,140 +238,6 @@ local room = {}
 
 
 		--[[
-		self.x = 1
-
-		self.player = {
-			{
-				activate = false,
-				x = 0,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 175,
-				y_pos = 480,
-				character = nil,
-				facing = 1
-			},
-			{
-				activate = false,
-				x = self.x - 1,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 1150,
-				y_pos = 550,
-				character = nil,
-				facing = -1
-			},
-			{
-				activate = false,
-				x = 0,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 270,
-				y_pos = 550,
-				character = nil,
-				facing = 1
-			},
-			{
-				activate = false,
-				x = self.x - 1,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 990,
-				y_pos = 490,
-				character = nil,
-				facing = -1
-			},
-			{
-				activate = false,
-				x = 0,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 375,
-				y_pos = 480,
-				character = nil,
-				facing = 1
-			},
-			{
-				activate = false,
-				x = self.x - 1,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 910,
-				y_pos = 560,
-				character = nil,
-				facing = -1
-			},
-			{
-				activate = false,
-				x = 0,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 450,
-				y_pos = 550,
-				character = nil,
-				facing = 1
-			},
-			{
-				activate = false,
-				x = self.x - 1,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 780,
-				y_pos = 480,
-				character = nil,
-				facing = -1
-			},
-			{
-				activate = false,
-				x = 0,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 550,
-				y_pos = 470,
-				character = nil,
-				facing = 1
-			},
-			{
-				activate = false,
-				x = self.x - 1,
-				y = 0,
-				id = nil,
-				r = 0.95,
-				g = 0.95,
-				b = 0.95,
-				x_pos = 680,
-				y_pos = 550,
-				character = nil,
-				facing = -1
-			}
-		}
 
 		self.scrolls = {
 			part1 = image.Load("sprites/UI/scroll1.png"),
@@ -306,22 +250,10 @@ local room = {}
 			anim = 0
 		}
 
-		self.max_players = 10
-		self.available_number_of_bots = 0
-		self.selected_number_of_bots = 0
-		self.selected_bot = 0
-		self.selected_players = 0
-
+		
 		self.selected_map = 1
 
-		self.mode = 0
 
-		self.light = 0
-		self.light_change = 0.01
-		self.max_light = 0.4
-
-		self.small = image.Load("sprites/UI/small.png")
-		self.selector = image.Load("sprites/UI/selector.png")
 		self.bots_selector = image.Load("sprites/UI/bots_selector.png")
 		self.pick_sprite = image.Load("sprites/UI/char_pick.png")
 		local eff_c = {
@@ -369,6 +301,7 @@ local room = {}
 			self.selected_bots = self.min_bots
 			self.mode = 3
 		end
+		self:CharacterAnimations()
 		--[[self.light = self.light + self.light_change
 		if self.light > self.max_light or self.light < 0 then
 			self.light_change = -self.light_change
@@ -431,6 +364,7 @@ local room = {}
 
 	function room:Draw()
 		image.draw(self.background, nil, 0, 0)
+		self:DrawCharacters()
 		image.draw(self.foreground, nil, 0, 0)
 		image.draw(self.stand, nil, 0, 0)
 		self:DrawCharactersIcons()
@@ -446,7 +380,7 @@ local room = {}
 		font.print(self.max_bots, 70, 90)
 		for key in pairs(self.characters) do
 			if self.characters[key] ~= nil then
-				font.print(self.characters[key].name, 10, 110 + 20 * key)
+				font.print(self.characters[key].info.name, 10, 110 + 20 * key)
 			end
 		end
 		
@@ -619,17 +553,41 @@ local room = {}
 					elseif i == 2 then selector = self.selectors.player_2 end
 					if selector.active then
 						selector.selected = true
-						self.characters[i] = self.char_icons.list[selector.x_pos].character
-						self.players_timer = self.players_timer - 25
+						if self.characters[i] == nil then
+							local character = {
+								x_offset = nil,
+								y_offset = nil,
+								frame = nil,
+								wait = nil,
+								anim = nil,
+								info = self.char_icons.list[selector.x_pos].character
+							}
+							self.characters[i] = character
+						else
+							self.players_timer = self.players_timer - 25
+						end
 					else
 					    selector.active = true
 					end
 				elseif self.mode == 3 then
-					self.selectors.com.active = true
-					self.current_bot = 1
-					self.mode = 4
+					if self.selected_bots > 0 then
+						self.selectors.com.active = true
+						self.current_bot = 1
+						self.mode = 4
+					else
+					    self.mode = 5
+					end
 				elseif self.mode == 4 then
-					self.characters[self.selected_players + self.current_bot] = self.char_icons.list[self.selectors.com.x_pos].character
+					local selector = self.selectors.com
+					local character = {
+						x_offset = nil,
+						y_offset = nil,
+						frame = nil,
+						wait = nil,
+						anim = nil,
+						info = self.char_icons.list[selector.x_pos].character
+					}
+					self.characters[self.max_players + self.current_bot] = character
 					self.current_bot = self.current_bot + 1
 					if self.current_bot > self.selected_bots then
 						self.selectors.com.active = false
@@ -670,6 +628,13 @@ local room = {}
 					selector.selected = false
 					self.characters[i] = nil
 					selector.active = true
+				elseif self.mode == 4 then
+					self.current_bot = self.current_bot - 1
+					if self.current_bot < 1 then
+						self.mode = 2
+					else
+						self.characters[self.max_players + self.current_bot] = nil
+					end
 				end
 			end
 
@@ -770,163 +735,6 @@ local room = {}
 					end
 				end
 			end
-
-			--[[if key == settings.controls[i].attack then
-				if self.mode == 0 or self.mode == 1 then
-					if self.player[i].activate then 
-						if self.player[i].character == nil then
-							if data.characters_list[self.player[i].id] ~= nil then
-								self.player[i].character = data.characters_list[self.player[i].id]
-								self.player[i].name = settings.names[i]
-								self.player[i].anim = 0
-								self.selected_players = self.selected_players + 1
-							end
-						end
-					else
-					    self.player[i].activate = true
-					    self.mode = 0
-					end
-				elseif self.mode == 3 then
-					self.mode = 4
-					if self.selected_number_of_bots > 0 then
-						self.player[self.selected_number_of_bots + self.selected_players].activate = true
-					else
-						self.mode = 5
-					end
-				elseif self.mode == 4 then
-					if self.player[self.selected_number_of_bots + self.selected_players].activate then 
-						if self.player[self.selected_number_of_bots + self.selected_players].character == nil then
-							if data.characters_list[self.player[self.selected_number_of_bots + self.selected_players].id] ~= nil then
-								self.player[self.selected_number_of_bots + self.selected_players].character = data.characters_list[self.player[self.selected_number_of_bots + self.selected_players].id]
-								self.player[self.selected_number_of_bots + self.selected_players].name = "Com"
-								self.player[self.selected_number_of_bots + self.selected_players].anim = 0
-								self.selected_number_of_bots = self.selected_number_of_bots - 1
-								if self.selected_number_of_bots > 0 then
-									self.player[self.selected_number_of_bots + self.selected_players].activate = true
-								else
-									self.mode = 5
-								end
-							end
-						end
-					else
-						if self.selected_number_of_bots > 0 then
-							self.player[self.selected_number_of_bots + self.selected_players].activate = true
-						else
-							self.mode = 5
-						end
-					end
-				end
-			end
-
-			if key == settings.controls[i].jump then
-				--[[if self.mode == 0 then
-					local exit = 0
-					if self.player[i].activate then 
-						if self.player[i].character == nil then
-							self.player[i].activate = false
-						else
-						    self.player[i].character = nil
-								self.player[i].anim = 4
-						end
-					else
-					    for i = 1, #self.player do 
-					    	if self.player[i].activate == false then
-					    		exit = exit + 1
-					    	end
-					    end
-					end
-					if exit >= #self.player then
-						rooms:Set("main_menu")
-					end
-				elseif self.mode == 1 then
-					self.timer = self.timer - 1
-				end
-			end
-
-			if key == settings.controls[i].left then
-				--[[if self.mode == 0 then
-					if self.player[i].activate and self.player[i].character == nil then 
-						self.player[i].x = self.player[i].x - 1
-						if self.player[i].x < 0 then
-							self.player[i].x = self.x - 1
-						end
-					end
-				elseif self.mode == 3 then
-					self.selected_number_of_bots = self.selected_number_of_bots - 1
-					if self.selected_number_of_bots < self.start_bots_count then
-						self.selected_number_of_bots = self.available_number_of_bots
-					end
-				elseif self.mode == 4 then
-					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
-						self.player[self.selected_number_of_bots + self.selected_players].x = self.player[self.selected_number_of_bots + self.selected_players].x - 1
-						if self.player[self.selected_number_of_bots + self.selected_players].x < 0 then
-							self.player[self.selected_number_of_bots + self.selected_players].x = self.x - 1
-						end
-					end
-				end
-			end
-
-			if key == settings.controls[i].right then
-				--[[if self.mode == 0 then
-					if self.player[i].activate and self.player[i].character == nil then 
-						self.player[i].x = self.player[i].x + 1
-						if self.player[i].x > self.x - 1 then
-							self.player[i].x = 0
-						end
-					end
-				elseif self.mode == 3 then
-					self.selected_number_of_bots = self.selected_number_of_bots + 1
-					if self.selected_number_of_bots > self.available_number_of_bots then
-						self.selected_number_of_bots = self.start_bots_count
-					end
-				elseif self.mode == 4 then
-					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
-						self.player[self.selected_number_of_bots + self.selected_players].x = self.player[self.selected_number_of_bots + self.selected_players].x + 1
-						if self.player[self.selected_number_of_bots + self.selected_players].x > self.x - 1 then
-							self.player[self.selected_number_of_bots + self.selected_players].x = 0
-						end
-					end
-				end
-			end
-			
-
-			if key == settings.controls[i].down then
-				--[[if self.mode == 0 then
-					if self.player[i].activate and self.player[i].character == nil then 
-						self.player[i].y = self.player[i].y + 1
-						if self.player[i].y > self.y - 1 then
-							self.player[i].y = 0
-						end
-					end
-				elseif self.mode == 4 then
-					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
-						self.player[self.selected_number_of_bots + self.selected_players].y = self.player[self.selected_number_of_bots + self.selected_players].y + 1
-						if self.player[self.selected_number_of_bots + self.selected_players].y > self.y - 1 then
-							self.player[self.selected_number_of_bots + self.selected_players].y = 0
-						end
-					end
-				end
-			end
-
-			if key == settings.controls[i].up then
-				--[[if self.mode == 0 then
-					if self.player[i].activate and self.player[i].character == nil then 
-						self.player[i].y = self.player[i].y - 1
-						if self.player[i].y < 0 then
-							self.player[i].y = self.y - 1
-						end
-					end
-				elseif self.mode == 4 then
-					if self.player[self.selected_number_of_bots + self.selected_players].activate and self.player[self.selected_number_of_bots + self.selected_players].character == nil then 
-						self.player[self.selected_number_of_bots + self.selected_players].y = self.player[self.selected_number_of_bots + self.selected_players].y - 1
-						if self.player[self.selected_number_of_bots + self.selected_players].y < 0 then
-							self.player[self.selected_number_of_bots + self.selected_players].y = self.y - 1
-						end
-					end
-				end
-			end]]
 		end
-
 	end
-
 return room

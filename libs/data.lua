@@ -36,10 +36,12 @@ data = {}
 					}
 
 					character_info.animation.wait = get.PNumber(start_animation,"wait",5)
+					character_info.animation.frames = get.PNumber(start_animation,"frames", start_animation_cinfo.x * start_animation_cinfo.y)
 					character_info.animation.centerx = get.PNumber(start_animation,"centerx",0)
 					character_info.animation.centery = get.PNumber(start_animation,"centery",0)
 
 					character_info.standing.wait = get.PNumber(start_standing,"wait",5)
+					character_info.standing.frames = get.PNumber(start_standing,"frames", start_standing_cinfo.x * start_standing_cinfo.y)
 					character_info.standing.centerx = get.PNumber(start_standing,"centerx",0)
 					character_info.standing.centery = get.PNumber(start_standing,"centery",0)
 
