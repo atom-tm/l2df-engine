@@ -1,84 +1,165 @@
 local room = {}
 
+	function room:AddCharacter(Cinfo, Cselector)
+		for i = 1, self.max_players do
+			if self.characters[i] == nil then
+				local character = {
+					frame = 1,
+					wait = 0,
+					anim = 0,
+					info = Cinfo,
+					name = Cselector.text,
+					id = Cselector.id,
+					sprite = nil,
+					h = -500,
+					s = 5,
+				}
+
+				if i%2 == 1 then
+					character.x = self.characters_positions.x + ((self.characters_positions.w / (self.max_players + 2)) * math.floor(i/2)) + math.random(-self.characters_positions.r, self.characters_positions.r)
+					character.facing = 1
+				else
+					character.x = self.characters_positions.w - ((self.characters_positions.w / (self.max_players + 2)) * math.floor(i/2)) + math.random(-self.characters_positions.r, self.characters_positions.r)
+					character.facing = -1
+				end
+
+				if math.floor(i/2)%2 == 1 then
+					character.y = self.characters_positions.y + self.characters_positions.h/2 + math.random(-self.characters_positions.r, self.characters_positions.r)
+				else
+				    character.y = self.characters_positions.y - self.characters_positions.h/2 + math.random(-self.characters_positions.r, self.characters_positions.r)
+				end
+
+				self.characters[i] = character
+				return true
+			end
+		end
+		return false
+	end
+
+	function room:DeleteCharacter(selector)
+		for i = self.max_players, 1, -1 do
+			if self.characters[i] ~= nil and self.characters[i].id == selector.id then
+				self.characters[self.max_players + i] = self.characters[i]
+				self.characters[self.max_players + i].anim = 3
+				self.characters[i] = nil
+				return true
+			end
+		end
+		return false
+	end
+
+	function room:DrawEffects()
+		for i = 1, self.max_players * 2 do
+			if self.effects[i] ~= nil then
+				local effect = self.effects[i]
+				image.draw(effect.sprite, effect.frame, effect.x - effect.centerx, effect.y - effect.centery)
+			end
+		end
+	end
+
+	function room:EffectsAnimations()
+		for i = 1, self.max_players * 2 do
+			if self.effects[i] ~= nil then
+				local effect = self.effects[i]
+				if effect.wait > effect.wait_max then
+					effect.frame = effect.frame + 1
+					effect.wait = 0
+					if effect.frame > effect.frame_max then
+						self.effects[i] = nil
+					end
+				else
+					effect.wait = effect.wait + 1
+				end
+			end
+		end
+	end
+
+	function room:AddEffect(x,y)
+		for i = 1, self.max_players * 2 do
+			if self.effects[i] == nil then
+				local effect = {
+					frame = 1,
+					frame_max = 21,
+					wait = 0,
+					wait_max = 0,
+					sprite = self.pick_effect,
+					x = x,
+					y = y,
+					centerx = 77,
+					centery = 137
+				}
+				self.effects[i] = effect
+				return true
+			end
+		end
+		return false
+	end
+
 
 
 	function room:DrawCharacters()
-		local pos_x = 100
-		local width = 1100
-
-		local pos_y = 500
-		local height = 100
-
-		local pos = 1
-
-		local distanse = 100
-
-		for key = 1, self.max_players + self.current_bot do
-			if self.characters[key] ~= nil then
-				local character = self.characters[key]
-				
-				local anim = nil
-				if character.anim == "anim" then
-					anim = character.info.animation
-				elseif character.anim == "stand" then
-					anim = character.info.standing
-				end
-
-				local y = nil
-				local x = nil
-				local facing = nil
-				if pos%2 == 1 then
-					y = pos_y
-					x = pos_x + (math.ceil(pos / 2) * distanse)
-					facing = 1
-				else
-					y = pos_y
-				    x = pos_x + width - (math.ceil(pos / 2) * distanse)
-				    facing = -1
-				end
-
-				image.draw(anim, character.frame, x - anim.centerx * facing , y - anim.centery, facing)
-				pos = pos + 1
+		for i = 1, self.max_players * 2 do
+			if self.characters[i] ~= nil then
+				local character = self.characters[i]
+				local centerx = character.sprite.centerx
+				local centery = character.sprite.centery
+				if centerx == nil then centerx = 25 end
+				if centery == nil then centery = 78 end
+				image.draw(character.sprite, character.frame, character.x - centerx * character.facing, character.h - centery, character.facing)
+				image.draw(character.sprite, character.frame, character.x - centerx * character.facing, character.y + (character.y - character.h) + centery, character.facing, {width = 1, height = -1},nil,nil,nil,0.2)
+				font.print(character.name, character.x - 150, character.h - centery - 25, "center", nil, nil, 300, 1, 1, 1, 1)
 			end
 		end
 	end
 
 	function room:CharacterAnimations()
-		for key = 1, self.max_players + self.current_bot do
-			if self.characters[key] ~= nil then
-				local character = self.characters[key]
-				if character.wait == nil or character.frame == nil or character.anim == nil then
-					character.x_offset = math.random(-5,5)
-					character.y_offset = math.random(-15,15)
-					character.frame = 1
-					character.wait = 0
-					character.anim = "start"
-				else
-
-					if character.anim == "start" then
-
-					elseif character.anim == "anim" then
-						if character.wait > character.info.animation.wait then
-							character.wait = 0
-							character.frame = character.frame + 1
-							if character.frame > character.info.animation.frames then
-								character.frame = 1
-								character.anim = "stand"
-							end
-						else
-					    	character.wait = character.wait + 1
-					    end
-					elseif character.anim == "stand" then
-						if character.wait > character.info.standing.wait then
-							character.wait = 0
-							character.frame = character.frame + 1
-							if character.frame > character.info.standing.frames then
-								character.frame = 1
-							end
-						else
-					    	character.wait = character.wait + 1
-					    end
+		for i = 1, self.max_players * 2 do
+			if self.characters[i] ~= nil then
+				local character = self.characters[i]
+				if character.anim == 0 then
+					character.sprite = self.pick_sprite
+					character.h = character.h + character.s
+					character.s = character.s * 1.2
+					character.frame = 0
+					if character.h >= character.y then
+						character.h = character.y
+						character.anim = 1
+						character.frame = 1
+						character.wait = 0
+						character.sprite = character.info.animation
+						self:AddEffect(character.x,character.y)
 					end
+				elseif character.anim == 1 then
+					if character.wait > character.info.animation.wait then
+						character.wait = 0
+						character.frame = character.frame + 1
+						if character.frame > character.info.animation.frames then
+							character.frame = 1
+							character.wait = 0
+							character.anim = 2
+							character.sprite = character.info.standing
+						end
+					else
+						character.wait = character.wait + 1
+					end
+				elseif character.anim == 2 then
+					if character.wait > character.info.standing.wait then
+						character.wait = 0
+						character.frame = character.frame + 1
+						if character.frame > character.info.standing.frames then
+							character.frame = 1
+							character.wait = 0
+						end
+					else
+						character.wait = character.wait + 1
+					end
+				elseif character.anim == 3 then
+				    character.sprite = self.pick_sprite
+				    character.h = character.h - character.s
+					character.frame = 0
+				    if character.h < -500 then
+				    	self.characters[i] = nil
+				    end
 				end
 			end
 		end
@@ -139,19 +220,19 @@ local room = {}
 	function room:SelectorSettings()
 		self.selectors = {
 			player_1 = {
-				text = "P1", align = "top",
+				id = 1, text = "P1", align = "top",
 				color = { r = 1, g = 0.7, b = 0.7, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1,
 			},
 			player_2 = {
-				text = "P2", align = "bot",
+				id = 2, text = "P2", align = "bot",
 				color = { r = 0.7, g = 0.7, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = self.char_icons.rows, y_pos = 1
 			},
 			com = {
-				text = "Com", align = "top",
+				id = 3, text = "Com", align = "top",
 				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1
@@ -206,6 +287,14 @@ local room = {}
 		self.stand = image.Load("sprites/UI/CS2.png", nil, "linear")
 		self.small_image = image.Load("sprites/UI/small.png")
 		self.selector_image = image.Load("sprites/UI/selector.png")
+		self.pick_sprite = image.Load("sprites/UI/char_pick.png")
+		local eff_c = {
+			w = 150,
+			h = 150,
+			x = 3,
+			y = 7
+		}
+		self.pick_effect = image.Load("sprites/UI/char_pick2.png",eff_c)
 
 		self:CreateCharactersIcons()
 		self:SelectorSettings()
@@ -233,6 +322,16 @@ local room = {}
 			characters = {},
 			maps = {}
 		}
+
+		self.characters_positions = {
+			x = 150,
+			w = 1250,
+			y = 520,
+			h = 70,
+			r = 25
+		}
+
+		self.effects = {}
 
 
 
@@ -302,6 +401,7 @@ local room = {}
 			self.mode = 3
 		end
 		self:CharacterAnimations()
+		self:EffectsAnimations()
 		--[[self.light = self.light + self.light_change
 		if self.light > self.max_light or self.light < 0 then
 			self.light_change = -self.light_change
@@ -365,6 +465,7 @@ local room = {}
 	function room:Draw()
 		image.draw(self.background, nil, 0, 0)
 		self:DrawCharacters()
+		self:DrawEffects()
 		image.draw(self.foreground, nil, 0, 0)
 		image.draw(self.stand, nil, 0, 0)
 		self:DrawCharactersIcons()
@@ -378,11 +479,14 @@ local room = {}
 		font.print(self.min_bots, 10, 90)
 		font.print(self.selected_bots, 40, 90)
 		font.print(self.max_bots, 70, 90)
-		for key in pairs(self.characters) do
-			if self.characters[key] ~= nil then
-				font.print(self.characters[key].info.name, 10, 110 + 20 * key)
+		local z = 0
+		for i = 1, 10 do
+			if self.characters[i] ~= nil then
+				font.print(self.characters[i].info.name, 10, 110 + 20 * i)
+				z = z + 1
 			end
 		end
+		font.print(z, 10, 110)
 		
 
 		
@@ -552,17 +656,8 @@ local room = {}
 					if i == 1 then selector = self.selectors.player_1
 					elseif i == 2 then selector = self.selectors.player_2 end
 					if selector.active then
-						selector.selected = true
-						if self.characters[i] == nil then
-							local character = {
-								x_offset = nil,
-								y_offset = nil,
-								frame = nil,
-								wait = nil,
-								anim = nil,
-								info = self.char_icons.list[selector.x_pos].character
-							}
-							self.characters[i] = character
+						if selector.selected == false and self:AddCharacter(self.char_icons.list[selector.x_pos].character,selector) then
+							selector.selected = true
 						else
 							self.players_timer = self.players_timer - 25
 						end
@@ -579,19 +674,12 @@ local room = {}
 					end
 				elseif self.mode == 4 then
 					local selector = self.selectors.com
-					local character = {
-						x_offset = nil,
-						y_offset = nil,
-						frame = nil,
-						wait = nil,
-						anim = nil,
-						info = self.char_icons.list[selector.x_pos].character
-					}
-					self.characters[self.max_players + self.current_bot] = character
-					self.current_bot = self.current_bot + 1
-					if self.current_bot > self.selected_bots then
-						self.selectors.com.active = false
-						self.mode = 5
+					if self:AddCharacter(self.char_icons.list[selector.x_pos].character,selector) then
+						self.current_bot = self.current_bot + 1
+						if self.current_bot > self.selected_bots then
+							self.selectors.com.active = false
+							self.mode = 5
+						end
 					end
 				elseif self.mode == 5 then
 					
@@ -605,8 +693,9 @@ local room = {}
 					elseif i == 2 then selector = self.selectors.player_2 end
 					if selector.active then
 						if selector.selected then
-							selector.selected = false
-							self.characters[i] = nil
+							if self:DeleteCharacter(selector) then
+								selector.selected = false
+							end
 						else
 							selector.active = false
 						end
@@ -623,17 +712,17 @@ local room = {}
 					self.selected_bots = 0
 					self.mode = 1
 					local selector = nil
+					self.selectors.player_1.active = true
+					self.selectors.player_2.active = true
 					if i == 1 then selector = self.selectors.player_1
 					elseif i == 2 then selector = self.selectors.player_2 end
 					selector.selected = false
 					self.characters[i] = nil
-					selector.active = true
 				elseif self.mode == 4 then
-					self.current_bot = self.current_bot - 1
-					if self.current_bot < 1 then
-						self.mode = 2
+					if self:DeleteCharacter(selector) then
+						self.current_bot = self.current_bot - 1
 					else
-						self.characters[self.max_players + self.current_bot] = nil
+					    self.mode = 2
 					end
 				end
 			end
@@ -733,6 +822,8 @@ local room = {}
 							selector.y_pos = 1
 						end
 					end
+				elseif self.mode == 5 then
+					rooms:Set("loading")
 				end
 			end
 		end

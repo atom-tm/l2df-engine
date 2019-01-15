@@ -25,7 +25,7 @@ local images = {}
 		return image
 	end
 
-	function images.draw(image, sprite, x, y, facing, size)
+	function images.draw(image, sprite, x, y, facing, size, r,g,b,a)
 		if size == nil then size = 1 end
 		if facing == 0 or facing == nil then facing = 1 end
 		local width = 1
@@ -37,11 +37,18 @@ local images = {}
 		    width = size.width
 		    height = size.height
 		end
+		local ro,go,bo,ao = love.graphics.getColor()
+		if r == nil then r = ro end
+		if g == nil then g = go end
+		if b == nil then b = bo end
+		if a == nil then a = ao end
+		love.graphics.setColor(r, g, b, a)
 		if sprite == 0 or sprite == nil then
 			love.graphics.draw(image.image,x,y,0,width * facing,height)
 		else
 			love.graphics.draw(image.image,image.sprites[sprite],x,y,0,width * facing,height)
 		end
+		love.graphics.setColor(ro, go, bo, ao)
 	end
 
 return images

@@ -3,7 +3,8 @@ rooms = {}
 		main_menu = require("rooms.main_menu"),
 		settings = require("rooms.settings"),
 		controls = require("rooms.controls"),
-		character_select = require("rooms.character_select")
+		character_select = require("rooms.character_select"),
+		loading = require("rooms.loading")
 	}
 	function rooms:Set(id, table_values)
 		if self.name ~= nil then
