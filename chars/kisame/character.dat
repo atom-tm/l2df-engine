@@ -24,13 +24,13 @@ start_standing: {
 }
 
 sprite: {
-	file: "chars/itachi/sprites/main.png"
+	file: "chars/kisame/sprites/main.png"
 	w: 85 h: 85
 	row: 7 col: 18
 	border: true
 }
 sprite: {
-	file: "chars/itachi/sprites/attack_up.png"
+	file: "chars/kisame/sprites/attack_up.png"
 	w: 105 h: 105
 	row: 7 col: 1
 	border: true
@@ -48,7 +48,7 @@ walking_speed_z: 8
 running_speed_x: 84
 running_speed_z: 7
 
-jump_height: 75
+jump_height: 88
 jump_width: 40
 jump_widthz: 15
 

@@ -9,14 +9,14 @@ collision: true
 shadow: true
 
 start_animation: {
-	file: "chars/kakashi/sprites/start_animation.png"
+	file: "chars/asuma/sprites/start_animation.png"
 	w: 90 h: 90
 	row: 8 col: 1
 	centerx: 45 centery: 88
 	wait: 5
 }
 start_standing: {
-	file: "chars/kakashi/sprites/start_standing.png"
+	file: "chars/asuma/sprites/start_standing.png"
 	w: 90 h: 90
 	row: 5 col: 1
 	centerx: 45 centery: 87
@@ -24,13 +24,13 @@ start_standing: {
 }
 
 sprite: {
-	file: "chars/itachi/sprites/main.png"
+	file: "chars/asuma/sprites/main.png"
 	w: 85 h: 85
 	row: 7 col: 18
 	border: true
 }
 sprite: {
-	file: "chars/itachi/sprites/attack_up.png"
+	file: "chars/asuma/sprites/attack_up.png"
 	w: 105 h: 105
 	row: 7 col: 1
 	border: true

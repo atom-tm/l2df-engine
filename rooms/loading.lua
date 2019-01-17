@@ -1,85 +1,87 @@
 local room = {}
 
-	room.selected_mode = 1
+	function room:LoadingSpriteAnimation()
+		local load = self.loading_sprite
+		if load.wait > load.max_wait then
+			load.wait = 0
+			load.frame = load.frame + 1
+			if load.frame > #load.image.sprites then
+				load.frame = 1
+			end
+		else
+		    load.wait = load.wait + 1
+		end
+	end
 
-	function room:Load()
-		self.opacity = 0.1
-		self.opacity_change = 0.001
+	function room:Load(loadingList)
+		self.loading_list = loadingList
+		self.mode = 0
 
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
-		self.logotype_image = image.Load("sprites/UI/logotype.png", nil, "linear")
-		self.scenes = {
-			image.Load("sprites/UI/MainMenu/1.png"),
-			image.Load("sprites/UI/MainMenu/2.png"),
+		local loading_sprite = {
+			w = 140,
+			h = 140,
+			x = 4,
+			y = 3
 		}
-		self.scene = math.random(1, #self.scenes)
-
-		self.modes = {
-			{
-				text = locale.main_menu.versus,
-				action = function ()
-					rooms:Set("character_select")
-				end
-			},
-			{
-				text = locale.main_menu.story,
-				action = function ()
-					
-				end
-			},
-			{
-				text = loc.text.main_menu.settings,
-				action = function ()
-					rooms:Set("settings")
-				end
-			},
-			{
-				text = locale.main_menu.exit,
-				action = function ()
-					love.event.quit( )
-				end
-			},
+		self.loading_sprite = {
+			image = image.Load("sprites/UI/loading.png",loading_sprite),
+			frame = 1,
+			wait = 0,
+			max_wait = 1
 		}
-
 	end
 
 	function room:Update()
-		self.opacity = self.opacity + self.opacity_change
-		if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
+		self:LoadingSpriteAnimation()
+		if self.mode == 0 then -- Очистка памяти
+			resourses.Clear()
+			self.mode = 1 -- Занесение в список загрузки изначальных персонажей
+		elseif self.mode == 1 then
+			for i = 1, #self.loading_list.entities do
+				resourses.AddToLoading(self.loading_list.entities[i], "entity")
+			end
+			self.mode = 2
+		elseif self.mode == 2 then
+			if resourses.EntityLoading() then
+				self.mode = 3
+			end
+		end
 	end
 
 	function room:Draw()
 		image.draw(self.background_image,0,0,0)
-		image.draw(self.logotype_image,0,420,25)
-		image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
+		image.draw(self.loading_sprite.image,self.loading_sprite.frame,1120,570)
 
-		for i = 1, #self.modes do
-			if i == self.selected_mode then
-				love.graphics.setColor(0, 0, 0, .2 + self.opacity)
-				love.graphics.rectangle("fill", settings.gameWidth / 2 - 150, 370 + 65 * i, 300, 65)
-				love.graphics.setColor(1, 1, 1, 1)
+		font.print(self.mode, 10, 10)
+		font.print(#self.loading_list.entities, 10, 30)
+		font.print(#resourses.loading_list.entities, 10, 50)
+		local i = 1
+		for key in pairs(resourses.entities) do
+			font.print(key, 10, 50 + i * 20)
+			font.print(resourses.entities[key].head.name, 50, 50 + i * 20)
+			font.print(resourses.entities[key].head.jump_height, 150, 50 + i * 20)
+			font.print(resourses.entities[key].sprites.count, 250, 50 + i * 20)
+			font.print(#resourses.entities[key].sprites, 300, 50 + i * 20)
+			if resourses.entities[key].frames[5] ~= nil then
+				font.print(resourses.entities[key].frames[5].centerx, 380, 50 + i * 20)
 			end
-			font.print(self.modes[i].text, settings.gameWidth / 2 - 250, 370 + 65 * i, "center", font.list.menu_element, nil, 500)
+			local f = 0
+			for key in pairs(resourses.entities[key].frames) do
+				f = f+1
+			end
+			font.print(f, 350, 50 + i * 20)
+			i = i + 1
 		end
+		local j = 0
+		for key in pairs(image.list) do
+			j = j + 1
+		end
+		font.print(j, 10, 150)
 	end
 
 	function room:Keypressed(key)
-		if key == settings.controls[1].up or key == settings.controls[2].up then 
-			self.selected_mode = self.selected_mode - 1
-			if self.selected_mode < 1 then
-				self.selected_mode = #self.modes
-			end
-		end
-		if key == settings.controls[1].down or key == settings.controls[2].down then 
-			self.selected_mode = self.selected_mode + 1
-			if self.selected_mode > #self.modes then
-				self.selected_mode = 1
-			end
-		end
-		if key == settings.controls[1].attack or key == settings.controls[2].attack then 
-			self.modes[self.selected_mode].action()
-		end
-		if key == "f1" then rooms:Set("settings") end
+
 	end
 
 return room

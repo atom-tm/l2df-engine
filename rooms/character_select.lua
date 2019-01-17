@@ -95,6 +95,20 @@ local room = {}
 		return false
 	end
 
+	function room:CreateLoadingList()
+		local loading_List = {
+			entities = {},
+			maps = {},
+			music = {}
+		}
+		for i = 1, self.max_players do
+			if self.characters[i] ~= nil then
+				table.insert(loading_List.entities,self.characters[i].info.id)
+			end
+		end
+		return loading_List
+	end
+
 
 
 	function room:DrawCharacters()
@@ -823,7 +837,7 @@ local room = {}
 						end
 					end
 				elseif self.mode == 5 then
-					rooms:Set("loading")
+					rooms:Set("loading",self:CreateLoadingList())
 				end
 			end
 		end

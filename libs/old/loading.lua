@@ -53,7 +53,7 @@ end
 
 
 
-function LoadImage(path) -- функция проверяет наличие указанного изображения в списке загруженных. если изображение уже загружено в память, оно не будет загружено заново, а функция вернёт ссылку на загруженную картинку.
+--[[function LoadImage(path) -- функция проверяет наличие указанного изображения в списке загруженных. если изображение уже загружено в память, оно не будет загружено заново, а функция вернёт ссылку на загруженную картинку.
 -------------------------------------
 	local returned_image -- сюда положим возвращаемую картику
 
@@ -93,7 +93,7 @@ function SpriteCutting(w,h,x,y,image,border) -- нарезка спрайт ли
 	end -- процесс нарезки
 
 	return pics -- возвращаем "сетку", которая будет накладываться на лист со спрайтами
-end
+end]]
 
 
 
@@ -218,22 +218,17 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 			if not (head == nil) then -- если head не пустой, парсим его
 
-				en.name = string.match(head, "name: ([%w_% ]+)")
-				en.type = PString(head, "type")
-
-				en.physic = PBool(head, "physic")
-				en.collision = PBool(head, "collision")
-
-				en.shadow = PBool(head, "shadow")
+				--en.name = string.match(head, "name: ([%w_% ]+)")
+				--en.type = PString(head, "type")
+				--en.physic = PBool(head, "physic")
+				--en.collision = PBool(head, "collision")
+				--en.shadow = PBool(head, "shadow")
 
 
 				en.script_file = string.match(head, "script_file: \"([%w%d\\/%.]+)%.lua\"")
 				t2 = en.script_file
 
-				en.max_fall = PNumber(head, "fall")
-				en.max_hp = PNumber(head, "hp")
-
-				en.walking_speed_x = PNumber(head, "walking_speed_x")
+				--[[en.walking_speed_x = PNumber(head, "walking_speed_x")
 				en.walking_speed_z = PNumber(head, "walking_speed_z")	
 				en.running_speed_x = PNumber(head, "running_speed_x")
 				en.running_speed_z = PNumber(head, "running_speed_z")
@@ -242,7 +237,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.jump_widthz = PNumber(head, "jump_widthz")
 				en.dash_height = PNumber(head, "dash_height")
 				en.dash_width = PNumber(head, "dash_width")
-				en.dash_widthz = PNumber(head, "dash_widthz")
+				en.dash_widthz = PNumber(head, "dash_widthz")]]
 
 
 				en.damage = {} -- массив с кадрами для различных типов урона
@@ -254,7 +249,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				
 				-- СТАНДАРНЫЕ КАДРЫ --
 
-				en.walking_frames = {} -- ходьба
+				--[[en.walking_frames = {} -- ходьба
 				local walking_frames_string = string.match(head, "walking_frames: {([^{}]*)}")
 				if walking_frames_string ~= nil then
 					for i in string.gmatch(walking_frames_string, "(%d+)") do
@@ -276,14 +271,15 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					for i in string.gmatch(attack_frames_string, "(%d+)") do
 						table.insert(en.attack_frames, tonumber(i))
 					end
-				end
+				end]]
+
 
 				en.damage[1].injury = PFrames(head, "injury_frames")
 				en.damage[1].bdefend = PFrames(head, "bdefend_frames")
 				en.damage[1].stun = PFrames(head, "stun_frames")
 				en.damage[1].fall = PFrames(head, "fall_frames")
 
-				en.starting_frame = PNumber(head, "starting_frame") -- приветствие
+				--[[en.starting_frame = PNumber(head, "starting_frame") -- приветствие
 				en.idle_frame = PNumber(head, "idle_frame") -- стойка
 
 				en.running_stop = PNumber(head, "running_stop") -- остановка после бега
@@ -298,9 +294,9 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				en.jump_attack_frame = PNumber(head, "jump_attack_frame") -- удар в прыжке
 				en.dash_attack_frame = PNumber(head, "dash_attack_frame") -- удар в деше
 
-				en.defend_frame = PNumber(head, "defend_frame") -- защита
+				en.defend_frame = PNumber(head, "defend_frame") -- защита]]
 
-				en.sprites = {} -- массив со спрайтами персонажа
+				--[[en.sprites = {} -- массив со спрайтами персонажа
 				for s in string.gmatch(head, "sprite: {([^{}]*)}") do -- для каждого блока спрайтов
 
 					local path = string.match(s, "file: \"(.*)\"")
@@ -324,7 +320,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					} -- объект спрайт-сетки
 
 					table.insert(en.sprites,sprites) -- добавляем объект в массив
-				end
+				end]]
 
 
 			end
@@ -371,13 +367,13 @@ function LoadEntity(id) -- функция загружает, путём пар�
 			en.frames = {} -- массив с фреймами
 			for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
 				
-				local frame = {} -- создаём пустой фрейм
-				local frame_number = tonumber(string.match(f, "(%d+)")) -- получаем номер фрейма 
-				local frame_head =  string.match(f, "([^{}]+)")
+				--local frame = {} -- создаём пустой фрейм
+				--local frame_number = tonumber(string.match(f, "(%d+)")) -- получаем номер фрейма 
+				--local frame_head =  string.match(f, "([^{}]+)")
 				--love.window.showMessageBox( "..", frame_head, "info", true)
 
 
-				frame.pic = PNumber(frame_head,"pic")
+				--[[frame.pic = PNumber(frame_head,"pic")
 				frame.next = PNumber(frame_head,"next")
 				frame.wait = PNumber(frame_head,"wait")
 				frame.centerx = PNumber(frame_head,"centerx")
@@ -417,7 +413,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.hit_df = PNumber(frame_head,"hit_df")
 				frame.hit_db = PNumber(frame_head,"hit_db")
 				frame.hit_dw = PNumber(frame_head,"hit_dw")
-				frame.hit_ds = PNumber(frame_head,"hit_ds")
+				frame.hit_ds = PNumber(frame_head,"hit_ds")]]
 
 
 

@@ -7,6 +7,7 @@ func 		= require "libs.functions"
 image 		= require "libs.images"
 font 		= require "libs.fonts"
 loc 		= require "libs.localization"
+resourses	= require "libs.resourses"
 
 camera = nil
 locale = nil

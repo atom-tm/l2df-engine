@@ -24,13 +24,13 @@ start_standing: {
 }
 
 sprite: {
-	file: "chars/itachi/sprites/main.png"
+	file: "chars/kakashi/sprites/main.png"
 	w: 85 h: 85
 	row: 7 col: 18
 	border: true
 }
 sprite: {
-	file: "chars/itachi/sprites/attack_up.png"
+	file: "chars/kakashi/sprites/attack_up.png"
 	w: 105 h: 105
 	row: 7 col: 1
 	border: true
