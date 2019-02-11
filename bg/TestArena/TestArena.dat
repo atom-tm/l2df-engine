@@ -17,10 +17,12 @@ shadow_direction: 1
 shadow_shear: 35
 shadow_size: 0.4
 
-friction: 13
-gravity: 190
+friction: 0.7
+gravity: 0.9
+
+start_anim: true
 
 spawn_point: { x: 1300  y: 0  z: 110  rx: 500 rz: 90 ry: 0 facing: 0 }
 
-layer: { file: "bg/TestArena/BG_1.png"  x: 0  y: 0 fsaa: true }
+layer: { file: "bg/TestArena/BG_1.png"  x: 0  y: 0 fsaa: false }
 filter: { file: "bg/TestArena/FG_1.png"  x: 0  y: 0 fsaa: true }

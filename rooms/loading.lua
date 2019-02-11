@@ -39,23 +39,36 @@ local room = {}
 			self.mode = 1 -- Занесение в список загрузки изначальных персонажей
 		elseif self.mode == 1 then
 			for i = 1, #self.loading_list.entities do
-				resourses.AddToLoading(self.loading_list.entities[i], "entity")
+				resourses.AddToLoading(self.loading_list.entities[i].id, "entity")
+			end
+			for key, id in pairs(data.system) do
+				resourses.AddToLoading(id, "entity")
+			end
+			for i = 1, #self.loading_list.maps do
+				resourses.AddToLoading(self.loading_list.maps[i], "map")
 			end
 			self.mode = 2
 		elseif self.mode == 2 then
 			if resourses.EntityLoading() then
 				self.mode = 3
 			end
+		elseif self.mode == 3 then
+			if resourses.MapLoading() then
+				self.mode = 4
+			end
+		elseif self.mode == 4 then
+			rooms:Set("battle", self.loading_list)
 		end
 	end
 
 	function room:Draw()
 		image.draw(self.background_image,0,0,0)
 		image.draw(self.loading_sprite.image,self.loading_sprite.frame,1120,570)
-
+		--[[
 		font.print(self.mode, 10, 10)
 		font.print(#self.loading_list.entities, 10, 30)
 		font.print(#resourses.loading_list.entities, 10, 50)
+		font.print(#resourses.loading_list.maps, 50, 50)
 		local i = 1
 		for key in pairs(resourses.entities) do
 			font.print(key, 10, 50 + i * 20)
@@ -65,6 +78,11 @@ local room = {}
 			font.print(#resourses.entities[key].sprites, 300, 50 + i * 20)
 			if resourses.entities[key].frames[5] ~= nil then
 				font.print(resourses.entities[key].frames[5].centerx, 380, 50 + i * 20)
+				font.print(#resourses.entities[key].frames[5].states, 410, 50 + i * 20)
+				font.print(#resourses.entities[key].frames[5].bodys, 430, 50 + i * 20)
+				font.print(#resourses.entities[key].frames[5].itrs, 450, 50 + i * 20)
+				font.print(resourses.entities[key].frames[5].bodys.radius, 480, 50 + i * 20)
+				font.print(resourses.entities[key].frames[5].itrs.radius, 520, 50 + i * 20)
 			end
 			local f = 0
 			for key in pairs(resourses.entities[key].frames) do
@@ -78,6 +96,12 @@ local room = {}
 			j = j + 1
 		end
 		font.print(j, 10, 150)
+
+		for key in pairs(resourses.maps) do
+			font.print(key, 10, 400 + i * 20)
+			font.print(resourses.maps[key].head.name, 50, 400 + i * 20)
+			font.print(resourses.maps[key].head.width, 150, 400 + i * 20)
+		end]]
 	end
 
 	function room:Keypressed(key)

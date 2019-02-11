@@ -8,6 +8,7 @@ image 		= require "libs.images"
 font 		= require "libs.fonts"
 loc 		= require "libs.localization"
 resourses	= require "libs.resourses"
+battle		= require "libs.battle"
 
 camera = nil
 locale = nil

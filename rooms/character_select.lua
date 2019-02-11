@@ -2,7 +2,7 @@ local room = {}
 
 	function room:AddCharacter(Cinfo, Cselector)
 		for i = 1, self.max_players do
-			if self.characters[i] == nil then
+			if self.characters[i] == nil and Cinfo ~= nil then
 				local character = {
 					frame = 1,
 					wait = 0,
@@ -10,6 +10,7 @@ local room = {}
 					info = Cinfo,
 					name = Cselector.text,
 					id = Cselector.id,
+					controller = Cselector.controller,
 					sprite = nil,
 					h = -500,
 					s = 5,
@@ -41,6 +42,7 @@ local room = {}
 			if self.characters[i] ~= nil and self.characters[i].id == selector.id then
 				self.characters[self.max_players + i] = self.characters[i]
 				self.characters[self.max_players + i].anim = 3
+				self.characters[self.max_players + i].s = self.characters[self.max_players + i].s * 0.5
 				self.characters[i] = nil
 				return true
 			end
@@ -103,9 +105,14 @@ local room = {}
 		}
 		for i = 1, self.max_players do
 			if self.characters[i] ~= nil then
-				table.insert(loading_List.entities,self.characters[i].info.id)
+				local character = {
+					id = self.characters[i].info.id,
+					controller = self.characters[i].controller
+				}
+				table.insert(loading_List.entities,character)
 			end
 		end
+		table.insert(loading_List.maps,1)
 		return loading_List
 	end
 
@@ -234,19 +241,19 @@ local room = {}
 	function room:SelectorSettings()
 		self.selectors = {
 			player_1 = {
-				id = 1, text = "P1", align = "top",
+				id = 1, text = "P1", align = "top", controller = 1,
 				color = { r = 1, g = 0.7, b = 0.7, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1,
 			},
 			player_2 = {
-				id = 2, text = "P2", align = "bot",
+				id = 2, text = "P2", align = "bot", controller = 2,
 				color = { r = 0.7, g = 0.7, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = self.char_icons.rows, y_pos = 1
 			},
 			com = {
-				id = 3, text = "Com", align = "top",
+				id = 0, text = "Com", align = "top", controller = 0,
 				color = { r = 1, g = 1, b = 1, a_mod = 0, a_change = 0.01, a_mod_max = 0.3 },
 				active = false, selected = false,
 				x_pos = 1, y_pos = 1
@@ -724,16 +731,16 @@ local room = {}
 					self.max_bots = 0
 					self.min_bots = 0
 					self.selected_bots = 0
-					self.mode = 1
-					local selector = nil
 					self.selectors.player_1.active = true
 					self.selectors.player_2.active = true
+					local selector = nil
 					if i == 1 then selector = self.selectors.player_1
 					elseif i == 2 then selector = self.selectors.player_2 end
 					selector.selected = false
-					self.characters[i] = nil
+					self:DeleteCharacter(selector)
+					self.mode = 1
 				elseif self.mode == 4 then
-					if self:DeleteCharacter(selector) then
+					if self.current_bot > 1 and self:DeleteCharacter(selector) then
 						self.current_bot = self.current_bot - 1
 					else
 					    self.mode = 2

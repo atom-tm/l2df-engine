@@ -111,6 +111,18 @@ fall_frames: { 206 }
 pic: 0  next: 2  wait: 9 centerx: 22  centery: 83 hit_Fj: 42
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 2 idle
 pic: 1  next: 3  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
@@ -121,6 +133,18 @@ body: { x: 10 y: 9 w: 23 h: 70 }
 pic: 2  next: 4  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 4 idle
 pic: 3  next: 5  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
@@ -129,8 +153,18 @@ body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 5 idle
 pic: 4  next: 6  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
-state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 6 idle
 pic: 5  next: 7  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
@@ -175,26 +209,101 @@ state: 2 {  }
 <frame> 20 running
 pic: 14  next: 0  wait: 8  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 21 running
 pic: 15  next: 0  wait: 7  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 22 running
 pic: 16  next: 0  wait: 6  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 23 running
 pic: 17  next: 0  wait: 8  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 24 running
 pic: 18  next: 0  wait: 7  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 25 running
 pic: 19  next: 0  wait: 6  centerx: 26  centery: 83  hit_d: 90
 state: 3 {  }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+body: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+itr: { x: 10 y: 9 w: 23 h: 70 }
+opoint: { id: 2 action: 3 }
+opoint: { id: 2 action: 3 }
+opoint: { id: 2 action: 3 }
 </frame>
 
 

@@ -1,4 +1,67 @@
-players = {
+
+
+
+
+if object.hit_code == "374" and frame.hit_Ua ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Ua)
+		elseif object.hit_code == "378" and frame.hit_Uj ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Uj)
+		elseif object.hit_code == "364" and frame.hit_Da ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Da)
+		elseif object.hit_code == "368" and frame.hit_Dj ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Dj)
+		elseif (object.hit_code == "314" or object.hit_code == "324") and frame.hit_Fa ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Fa)
+		elseif (object.hit_code == "318" or object.hit_code == "328") and frame.hit_Fj ~= 0 then
+			battle.entities.setFrame(object, frame.hit_Fj)
+		else
+
+			if control.timer(object, "attack") and frame.hit_a ~= 0 then
+				battle.entities.setFrame(object, frame.hit_a)
+			elseif control.timer(object, "jump") and frame.hit_j ~= 0 then
+				battle.entities.setFrame(object, frame.hit_j)
+			elseif control.timer(object, "defend") and frame.hit_d ~= 0 then
+				battle.entities.setFrame(object, frame.hit_d)
+			elseif control.timer(object, "special1") and frame.hit_sp ~= 0 then
+				battle.entities.setFrame(object, frame.hit_sp)
+			elseif control.timer(object, "up") and frame.hit_w ~= 0 then
+				battle.entities.setFrame(object, frame.hit_w)
+			elseif control.timer(object, "down") and frame.hit_s ~= 0 then
+				battle.entities.setFrame(object, frame.hit_s)
+			elseif ((control.timer(object, "left") and object.facing == 1) or (control.timer(object, "right") and object.facing == -1)) and frame.hit_b ~= 0 then
+				battle.entities.setFrame(object, frame.hit_b)
+			elseif ((control.timer(object, "left") and object.facing == -1) or (control.timer(object, "right") and object.facing == 1)) and frame.hit_f ~= 0 then
+				battle.entities.setFrame(object, frame.hit_f)
+
+			elseif control.double_timer(object, "attack") and frame.hit_aa ~= 0 then
+				battle.entities.setFrame(object, frame.hit_aa)
+			elseif control.double_timer(object, "jump") and frame.hit_jj ~= 0 then
+				battle.entities.setFrame(object, frame.hit_jj)
+			elseif control.double_timer(object, "defend") and frame.hit_dd ~= 0 then
+				battle.entities.setFrame(object, frame.hit_dd)
+			elseif control.double_timer(object, "special1") and frame.hit_spsp ~= 0 then
+				battle.entities.setFrame(object, frame.hit_spsp)
+			elseif control.double_timer(object, "up") and frame.hit_ww ~= 0 then
+				battle.entities.setFrame(object, frame.hit_ww)
+			elseif control.double_timer(object, "down") and frame.hit_ss ~= 0 then
+				battle.entities.setFrame(object, frame.hit_ss)
+			elseif ((control.double_timer(object, "left") and object.facing == 1) or (control.double_timer(object, "right") and object.facing == -1)) and frame.hit_bb ~= 0 then
+				battle.entities.setFrame(object, frame.hit_bb)
+			elseif ((control.double_timer(object, "left") and object.facing == -1) or (control.double_timer(object, "right") and object.facing == 1)) and frame.hit_ff ~= 0 then
+				battle.entities.setFrame(object, frame.hit_ff)
+			end
+
+		end
+
+
+
+
+
+
+
+
+
+--[[players = {
 	nil,
 	nil
 } -- массив в котором будут храниться ссылки на привязанных к игрокам персонажей
@@ -6,7 +69,7 @@ players = {
 players_flags = {
 	true,
 	false
-} -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
+} -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны]]
 
 key_pressed = {
 	{
@@ -31,7 +94,7 @@ key_pressed = {
 	}
 } -- если была нажата какая-то из кнопок управления
 
-control_settings = {
+--[[control_settings = {
 	{
 		up = "w",
 		down = "s",
@@ -52,13 +115,13 @@ control_settings = {
 		defend = "4",
 		jutsu = "5"
 	}
-} -- тут лежат все настройки управления
+} -- тут лежат все настройки управления]]
 
-key_timer = 13
-key_double_timer_reverse = -15
-key_double_timer = 26
+--key_timer = 13
+--key_double_timer_reverse = -15
+--key_double_timer = 26
 
-function ControlCheck()
+--[[function ControlCheck()
 	for player, en_id in pairs(players) do
 		if en_id ~= nil then
 			local en = entity_list[en_id]
@@ -103,7 +166,7 @@ function ControlCheck()
 			end
 		end
 	end
-end
+end]]
 
 
 function HitCheck(en_id)

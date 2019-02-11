@@ -1,0 +1,17 @@
+idle: 1
+walking: { 10, 11, 12, 13, 14, 15 }
+running: { 20, 21, 22, 23, 24, 25 }
+jump: 30
+air: 35
+
+grounded: 50
+stop_running: 60
+
+defend: 70
+
+lying: 280
+
+attack: 300
+attack_air: 450
+
+special: 500

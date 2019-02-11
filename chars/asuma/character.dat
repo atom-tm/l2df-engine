@@ -11,16 +11,16 @@ shadow: true
 start_animation: {
 	file: "chars/asuma/sprites/start_animation.png"
 	w: 90 h: 90
-	row: 8 col: 1
-	centerx: 45 centery: 88
-	wait: 5
+	row: 13 col: 1
+	centerx: 35 centery: 87
+	wait: 4
 }
 start_standing: {
 	file: "chars/asuma/sprites/start_standing.png"
 	w: 90 h: 90
-	row: 5 col: 1
-	centerx: 45 centery: 87
-	wait: 4
+	row: 6 col: 1
+	centerx: 35 centery: 87
+	wait: 5
 }
 
 sprite: {
@@ -108,37 +108,37 @@ fall_frames: { 206 }
 
 
 <frame> 1 idle
-pic: 0  next: 2  wait: 9 centerx: 22  centery: 83 hit_Fj: 42
+pic: 0  next: 2  wait: 9 centerx: 22 dsx: 10 centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 2 idle
-pic: 1  next: 3  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 1  next: 3  wait: 9  centerx: 22 dsx: 10 centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 3 idle
-pic: 2  next: 4  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 2  next: 4  wait: 9  centerx: 22 dsx: 35  centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 4 idle
-pic: 3  next: 5  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 3  next: 5  wait: 9  centerx: 22 dsx: 35  centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 5 idle
-pic: 4  next: 6  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 4  next: 6  wait: 9  centerx: 22 dsx: 10  centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 6 idle
-pic: 5  next: 7  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 5  next: 7  wait: 9  centerx: 22 dsx: 10  centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
 <frame> 7 idle
-pic: 6  next: 999  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+pic: 6  next: 999  wait: 9  centerx: 22 dsx: 10  centery: 83 hit_Fj: 120 hit_aa: 125
 state: 1 {  }
 body: { x: 10 y: 9 w: 23 h: 70 }
 </frame>
@@ -200,10 +200,10 @@ state: 3 {  }
 
 
 <frame> 30 stop_running
-pic: 21  next: 31  wait: 11 centerx: 30  centery: 82 hit_j: 95
+pic: 21  next: 31  wait: 55 centerx: 30  centery: 82 hit_j: 95
 </frame>
 <frame> 31 stop_running
-pic: 51  next: 999  wait: 4 centerx: 16  centery: 82 hit_j: 95
+pic: 51  next: 999  wait: 55 centerx: 16  centery: 82 hit_j: 95
 </frame>
 
 

@@ -1,0 +1,20 @@
+0: [
+	injury_forward: 201
+	injury_backward: 200
+	bdefend_forward: 202
+	bdefend_backward: 203
+	falling_backward: 220
+	falling_forward: 220
+
+	injury_spark: 70
+	object_injury_spark: 70
+
+	defend_spark: 50
+	bdefend_spark: 60
+
+	block_spark: 10
+	bblock_spark: 30
+
+	fall_spark: 60
+	object_fall_spark: 60
+]

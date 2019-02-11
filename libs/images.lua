@@ -19,13 +19,14 @@ local images = {}
 					table.insert(image.sprites, quad)
 				end
 			end
+			image.w = cutting_info.w
 		end
 		if filter ~= nil then image.image:setFilter(filter, filter) end
 		table.insert(images.list, image)
 		return image
 	end
 
-	function images.draw(image, sprite, x, y, facing, size, r,g,b,a)
+	function images.draw(image, sprite, x, y, facing, size, r,g,b,a, other)
 		if size == nil then size = 1 end
 		if facing == 0 or facing == nil then facing = 1 end
 		local width = 1
@@ -37,6 +38,15 @@ local images = {}
 		    width = size.width
 		    height = size.height
 		end
+		if other == nil then
+			other = {
+				r = 0,
+				ox = 0,
+				oy = 0,
+				kx = 0,
+				ky = 0
+			}
+		end
 		local ro,go,bo,ao = love.graphics.getColor()
 		if r == nil then r = ro end
 		if g == nil then g = go end
@@ -46,7 +56,7 @@ local images = {}
 		if sprite == 0 or sprite == nil then
 			love.graphics.draw(image.image,x,y,0,width * facing,height)
 		else
-			love.graphics.draw(image.image,image.sprites[sprite],x,y,0,width * facing,height)
+			love.graphics.draw(image.image,image.sprites[sprite],x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
 		end
 		love.graphics.setColor(ro, go, bo, ao)
 	end

@@ -11,5 +11,16 @@ local functions = {}
 		camera:setWindow(0,0,width, height)
 		settings.window.cameraScale = height / settings.gameHeight
 		camera:setScale(settings.window.cameraScale)
+		settings.window.realHeight = height
+		settings.window.realWidth = width
+	end
+
+	function functions.CopyTable(table)
+		local result = {}
+		for key, val in pairs(table) do
+			if type(val) == "table" then result[key] = functions.CopyTable(val)
+			else result[key] = val end
+		end
+		return result
 	end
 return functions

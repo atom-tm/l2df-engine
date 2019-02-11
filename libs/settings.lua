@@ -10,12 +10,17 @@ local settings = {}
 		window.selectedSize = nil
 		window.width = nil
 		window.height = nil
+		window.cameraScale = nil
+		window.realWidth = nil
+		window.realHeight = nil
 	settings.window = window
 
 	settings.gameWidth = 1280
 	settings.gameHeight = 720
 
 	settings.names = {}
+
+	settings.debug_mode = true
 
 	settings.windowSizes = {
 		{ width = 1920, height = 1080 },

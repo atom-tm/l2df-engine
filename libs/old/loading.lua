@@ -190,6 +190,25 @@ function LoadMap(map_id) -- функция загружает, путём пар
 end
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function LoadEntity(id) -- функция загружает, путём парсинга кода, объект в массив "sourse_list", откуда в будущем будут создаваться копии исходного объекта для их спавна в бою
 -------------------------------------
 	
@@ -214,9 +233,9 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 		if not (dat == nil) then -- если датка не пустая, пытаемся её парсить
 
-			local head = string.match(dat, "<head>(.*)</head>") -- подгружаем содержимое <head></head>
+			--local head = string.match(dat, "<head>(.*)</head>") -- подгружаем содержимое <head></head>
 
-			if not (head == nil) then -- если head не пустой, парсим его
+			--if not (head == nil) then -- если head не пустой, парсим его
 
 				--en.name = string.match(head, "name: ([%w_% ]+)")
 				--en.type = PString(head, "type")
@@ -364,8 +383,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 			end
 
 
-			en.frames = {} -- массив с фреймами
-			for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
+			--en.frames = {} -- массив с фреймами
+			--for f in string.gmatch(dat, "<frame>([^<>]*)</frame>") do -- для каждого блока <frame></frame>
 				
 				--local frame = {} -- создаём пустой фрейм
 				--local frame_number = tonumber(string.match(f, "(%d+)")) -- получаем номер фрейма 
@@ -417,7 +436,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 
 
-				frame.bodys = {} -- массив с коллайдерами body персонажа
+				--[[frame.bodys = {} -- массив с коллайдерами body персонажа
 				local r = {} -- переменная для нахождения радиуса хитбоксов
 				for b in string.gmatch(f, "body: {([^{}]*)}") do -- для каждого блока body: {}
 					local body = LoadCollider(b,r) -- получение коллайдера
@@ -427,11 +446,11 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					-- выше вставлять дополнительные теги
 					table.insert(frame.bodys, body) -- загрузка коллайдера в массив
 				end
-				frame.body_radius = FindMaximum(r) -- получение радиуса body коллайдеров
+				frame.body_radius = FindMaximum(r) -- получение радиуса body коллайдеров]]
 
 
 
-				frame.itrs = {} -- массив с коллайдерами itr персонажа
+				--[[frame.itrs = {} -- массив с коллайдерами itr персонажа
 				r = {} -- переменная для нахождения радиуса хитбоксов
 				for i in string.gmatch(f, "itr: {([^{}]*)}") do -- для каждого блока itr: {}
 					local itr = LoadCollider(i,r) -- получение коллайдера
@@ -459,7 +478,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					-- выше вставлять дополнительные теги
 					table.insert(frame.itrs, itr) -- загрузка коллайдера в массив
 				end
-				frame.itr_radius = FindMaximum(r) -- получение радиуса коллайдеров
+				frame.itr_radius = FindMaximum(r) -- получение радиуса коллайдеров]]
 
 
 				frame.platforms = {} -- массив с коллайдерами platform персонажа
@@ -471,7 +490,11 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				end
 				frame.platform_radius = FindMaximum(r) -- получение радиуса коллайдеров
 
-				frame.opoints = {} -- массив с опоинтами персонажа
+
+
+
+
+				--[[frame.opoints = {} -- массив с опоинтами персонажа
 				for o in string.gmatch(f, "opoint: {([^{}]*)}") do -- для каждого блока platform: {}
 					local opoint = {}
 
@@ -494,9 +517,9 @@ function LoadEntity(id) -- функция загружает, путём пар�
 					table.insert(frame.opoints, opoint) -- загрузка коллайдера в массив
 					table.insert(opoint_objects, opoint.id)				
 
-				end
+				end]]
 
-				frame.states = {} -- массив со всех сте
+				--[[frame.states = {} -- массив со всех сте
 				for state_number, s in string.gmatch(f, "state: (%d+) {([^{}]*)}") do
 					local state = {}
 					state.num = state_number
@@ -513,26 +536,29 @@ function LoadEntity(id) -- функция загружает, путём пар�
 						state[key] = tonumber(val)
 					end
 					table.insert(frame.states, state)
-				end
+				end]]
 
 
-				en.frames[frame_number] = frame -- добавление фрейма в массив фреймов
-			end
-		end
+				--en.frames[frame_number] = frame -- добавление фрейма в массив фреймов
+			--end
+		--end
 
-		local sourse = {
+		--[[local sourse = {
 			id = id,
 			en = en
 		} -- создаём ресурс
 		table.insert(sourse_list,sourse) -- добавляем в список ресурсов, чтобы избежать повторных загрузок этого-же объекта и разгрузить процессор
 		for i = 1, #opoint_objects do
 			LoadEntity(opoint_objects[i])
-		end
-	end
-end
+		end]]
+	--end
+--end
 
 
-function LoadCollider(c,r)
+
+
+
+--[[function LoadCollider(c,r)
 	local collaider = {}
 		collaider.x = PNumber(c,"x")
 		collaider.y = PNumber(c,"y")
@@ -548,10 +574,42 @@ function LoadCollider(c,r)
 		table.insert(r, math.abs(collaider.y))
 		table.insert(r, math.abs(collaider.y + collaider.h))
 	return collaider
-end
+end]]
 
 
-function CreateEntity(id) -- функция создания экземпляра объекта из списка "sourse_list" и помещение его в память объектов сцены (массив "entity_list")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--[[function CreateEntity(id) -- функция создания экземпляра объекта из списка "sourse_list" и помещение его в память объектов сцены (массив "entity_list")
 -------------------------------------
 
 	local created_object = nil -- создаём заготовку для объекта
@@ -670,10 +728,10 @@ function CreateEntity(id) -- функция создания экземпляр�
 	else
 		return false
 	end
-end
+end]]
 
 
-function CopyTable (table)
+--[[function CopyTable (table)
 	local result = {}
 	for key, val in pairs(table) do
 		if type(val) == "table" then
@@ -683,7 +741,7 @@ function CopyTable (table)
 		end
 	end
 	return result
-end
+end]]
 
 
 function RemoveEntity(en_id)

@@ -1,0 +1,52 @@
+<head>
+name: doton_wall
+type: object
+
+sprite: {
+	file: "sprites/objects/doton_wall.png"
+	w: 90 h: 155 row: 10 col: 1
+}
+
+gravity: false
+collision: true
+shadow: true
+
+bdefend: 1000
+</head>
+
+
+
+<frame> 1 doton_wall
+pic: 1  next: 2  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+</frame>
+<frame> 2 doton_wall
+pic: 2  next: 3  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+</frame>
+<frame> 3 doton_wall
+pic: 3  next: 4  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+</frame>
+<frame> 4 doton_wall
+pic: 4  next: 5  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+</frame>
+<frame> 5 doton_wall
+pic: 5  next: 6  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+</frame>
+<frame> 6 doton_wall
+pic: 6  next: 7  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+body: {  x: 14  y: 101  w: 60  h: 44  z: -15  l: 30 static: true }
+</frame>
+<frame> 7 doton_wall
+pic: 7  next: 8  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+body: { x: 14  y: 80  w: 60  h: 65  z: -15  l: 30 static: true }
+</frame>
+<frame> 8 doton_wall
+pic: 8  next: 9  wait: 0 dvx: 0 dvy: 0 centerx: 40  centery: 130
+itr: { kind: 0  dtype: 0  x: 10  y: 60  w: 70  h: 90  z: -30  l: 60 static: true  reflection: true  dvx: 11 dvy: 14 fall: 100  bdefend: 100  arest: 1  vrest: 25  }
+body: { x: 14  y: 60  w: 60  h: 90  z: -15  l: 30 static: true }
+</frame>
+<frame> 9 doton_wall
+pic: 9  next: 9  wait: 2 dvx: 0 dvy: 0 centerx: 40  centery: 138
+itr: { kind: 0  dtype: 0  x: 45  y: 35  w: 35  h: 110  z: -25  l: 50 static: true  dvx: 15 dvy: 7 fall: 1  bdefend: 10 not_knocking_down: true arest: 1 vrest: 15 }
+itr: { kind: 14  dtype: 0   x: 15  y: 35  w: 60  h: 110  z: -30  l: 60 }
+body: { x: 14  y: 40  w: 55  h: 110  z: -15  l: 30 static: true }
+</frame>

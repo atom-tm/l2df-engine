@@ -12,7 +12,6 @@ require "libs.globals"
 --require "libs.loading"
 --require "libs.states"
 
-
 function love.load()
 	-- FPS Локер --
 	min_dt = 1/60 -- требуемое фпс
@@ -22,21 +21,40 @@ function love.load()
     func.SetWindowSize()
     loc:Set(loc.id)
     data:Load("data/data.txt")
+    data:Frames("data/frames.dat")
+    data:DTypes("data/damage_types.dat")
+    data:System("data/system.dat")
+    data:States("states")
+    data:Kinds("kinds")
     rooms:Set("main_menu")
 end
 
 function love.update(dt)
-	rooms.current:Update()
+	if rooms.current.Update ~= nil then
+		rooms.current:Update()
+	end
 	next_time = next_time + min_dt
 end 
 
 
 
 function love.draw()
-
-	camera:draw(function(l,t,w,h)
-		rooms.current:Draw()
-	end)
+	if rooms.current.CustomDraw then
+		if rooms.current.Draw ~= nil then
+			rooms.current:Draw()
+		end
+	else
+		camera:draw(function(l,t,w,h)
+			if rooms.current.Draw ~= nil then
+				rooms.current:Draw()
+			end
+		end)
+	end
+	if settings.debug_mode then
+		if rooms.current.Debug ~= nil then
+			rooms.current:Debug()
+		end
+	end
 
 	local cur_time = love.timer.getTime()
 	if next_time <= cur_time then
@@ -50,7 +68,14 @@ end
 
 
 function love.keypressed( button, scancode, isrepeat )
-	rooms.current:Keypressed(button)
+	if button == "f11" then
+		settings.window.fullscreen = not settings.window.fullscreen
+		func.SetWindowSize()
+	elseif button == "f12" then
+		settings.debug_mode = not settings.debug_mode
+	else
+		rooms.current:Keypressed(button)
+	end
 end
 function love.joystickpressed( joystick, button )
 	rooms.current:Keypressed("Joy"..button)

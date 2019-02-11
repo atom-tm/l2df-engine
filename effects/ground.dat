@@ -1,0 +1,28 @@
+<head>
+name: Ground_01
+type: effect
+
+sprite: {
+	file: "sprites/effects/ground/01.png"
+	w: 115 h: 30 row: 4 col: 1
+}
+
+physic: false
+collision: false
+shadow: false
+</head>
+
+
+
+<frame> 1 fly
+pic: 1  next: 2  wait: 2  centerx: 55  centery: 29
+</frame>
+<frame> 2 fly
+pic: 2  next: 3  wait: 2  centerx: 55  centery: 29
+</frame>
+<frame> 3 fly
+pic: 3  next: 4  wait: 2  centerx: 55  centery: 29
+</frame>
+<frame> 4 fly
+pic: 4  next: 4  wait: 1  centerx: 55  centery: 29
+</frame>

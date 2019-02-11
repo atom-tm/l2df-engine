@@ -3,6 +3,92 @@ data = {}
 	data.characters_list = {}
 	data.maps_list = {}
 	data.maps = {}
+	data.frames = {}
+	data.dtypes = {}
+	data.states = {}
+	data.states_update = {}
+	data.system = {}
+	data.kinds = {}
+
+
+	function data:States(states_dir)
+		self.states = {}
+		local states_list = love.filesystem.getDirectoryItems(states_dir)
+		for i = 1, #states_list do
+			local state_number = string.gsub(states_list[i], ".lua", "");
+			if state_number ~= nil and tonumber(state_number) then
+				self.states[state_number] = require(states_dir.."."..state_number)
+				if self.states[state_number].Update ~= nil then
+					data.states_update[state_number] = data.states[state_number]
+				end
+			end
+		end
+	end
+
+
+	function data:Kinds(kinds_dir)
+		self.kinds = {}
+		local itrs_list = love.filesystem.getDirectoryItems(kinds_dir)
+		for i = 1, #itrs_list do
+			local kind_number = string.gsub(itrs_list[i], ".lua", "");
+			if kind_number ~= nil and tonumber(kind_number) then
+				self.kinds[tonumber(kind_number)] = require(kinds_dir.."."..kind_number)
+			end
+		end
+	end
+
+
+	function data:System(system_file_path)
+		data.system = {}
+		local system_file = love.filesystem.read(system_file_path)
+		if system_file ~= nil then
+			for key, id in string.gmatch(system_file, "([%w%d_]+): ([%d]+)") do
+				data.system[key] = tonumber(id)
+			end
+		end
+	end
+
+
+	function data:Frames(frames_file_path)
+		local frames_file = love.filesystem.read(frames_file_path)
+		if frames_file ~= nil then
+			for key, frame_number in string.gmatch(frames_file, "([%w%d_]+): ([%d]+)") do
+				data.frames[key] = tonumber(frame_number)
+			end
+			for key, frames_array in string.gmatch(frames_file, "([%w%d_]+): ({[%d, ]+})") do
+				local array = {}
+				for frame_number in string.gmatch(frames_array, "([%d]+)") do
+					table.insert(array, tonumber(frame_number))
+				end
+				data.frames[key] = array
+			end
+		end
+	end
+
+
+	function data:DTypes(dtypes_file_path)
+		data.dtypes = {}
+		local dtypes_file = love.filesystem.read(dtypes_file_path)
+		if dtypes_file ~= nil then
+			for dtype_number, dtype_info in string.gmatch(dtypes_file, "([%d]+): %[([^%[%]]+)%]") do
+				local damage_type = {}
+				for key, info in string.gmatch(dtype_info, "([%w%d_]+): ([-%d%.]+)") do
+					damage_type[key] = tonumber(info)
+				end
+				for key, info in string.gmatch(dtype_info, "([%w%d_]+): ({[%d, ]+})") do
+					local array = {}
+					for frame in string.gmatch(info, "([%d]+)") do
+						table.insert(array, tonumber(frame))
+					end
+					damage_type[key] = array
+				end
+				data.dtypes[dtype_number] = damage_type
+			end
+		end
+	end
+
+
+
 
 	function data:Load (data_file_path)
 		local data_file = love.filesystem.read(data_file_path)
@@ -11,7 +97,7 @@ data = {}
 			local characters = string.match(data_file, "%[characters%]([^%[%]]+)")
 			for id, file in string.gmatch(characters, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.entities[tonumber(id)] == nil then
-					self.entities[id] = file
+					self.entities[tonumber(id)] = file
 					local character_file = love.filesystem.read(file)
 					local start_animation = string.match(character_file,"start_animation: {([^{}]*)}")
 					local start_animation_cinfo = {
@@ -28,7 +114,7 @@ data = {}
 						h = get.PNumber(start_standing,"h")
 					}
 					local character_info = {
-						id = id,
+						id = tonumber(id),
 						name = get.PString(character_file,"name"),
 						head = image.Load(string.match(character_file,"head: \"([^\"\"]+)\"")),
 						animation = image.Load(string.match(start_animation, "file: \"(.*)\""), start_animation_cinfo),
@@ -51,16 +137,16 @@ data = {}
 			local objects = string.match(data_file, "%[objects%]([^%[%]]+)")
 			for id, file in string.gmatch(objects, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.entities[tonumber(id)] == nil then
-					self.entities[id] = file
+					self.entities[tonumber(id)] = file
 				end
 			end
 			local maps = string.match(data_file, "%[maps%]([^%[%]]+)")
 			for id, file in string.gmatch(maps, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.maps[tonumber(id)] == nil then
-					self.maps[id] = file
+					self.maps[tonumber(id)] = file
 					local map_file = love.filesystem.read(file)
 					local map_info = {
-						id = id,
+						id = tonumber(id),
 						name = get.PString(map_file,"name"),
 						preview = image.Load(string.match(map_file,"preview: \"([^\"\"]+)\""))
 					}
@@ -69,4 +155,6 @@ data = {}
 			end
 		end
 	end
+
+
 return data

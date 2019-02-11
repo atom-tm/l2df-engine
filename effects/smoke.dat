@@ -1,0 +1,34 @@
+<head>
+name: Smoke_1
+type: effect
+
+sprite: {
+	file: "sprites/effects/smokes/01.png"
+	w: 150 h: 150 row: 5 col: 1
+}
+
+physic: false
+collision: false
+shadow: false
+</head>
+
+
+
+<frame> 1 fly
+pic: 1  next: 2  wait: 2  centerx: 55  centery: 130
+</frame>
+<frame> 2 fly
+pic: 2  next: 3  wait: 2  centerx: 55  centery: 130
+</frame>
+<frame> 3 fly
+pic: 3  next: 4  wait: 2  centerx: 55  centery: 130
+</frame>
+<frame> 4 fly
+pic: 4  next: 5  wait: 2  centerx: 55  centery: 130
+</frame>
+<frame> 5 fly
+pic: 5  next: 6  wait: 2  centerx: 55  centery: 130
+</frame>
+<frame> 6 fly
+pic: 0  next: 6  wait: 1  centerx: 55  centery: 130
+</frame>

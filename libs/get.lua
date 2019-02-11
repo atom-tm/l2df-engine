@@ -1,14 +1,5 @@
 local get = {}
 
-	function get.Frame (en, num) -- получение фрейма
-	-------------------------------------
-		if num ~= nil then
-			return en.frames[num]
-		else
-			return en.frames[en.frame]
-		end
-	end
-
 	function get.NotZero (var, alternative) -- провека переменной на ноль или пустоту
 	-------------------------------------
 		if var ~= nil and var ~= 0 and var ~= "" then
@@ -18,6 +9,12 @@ local get = {}
 		else return 1 end
 	end
 
+	function get.notNil (n,a) -- провека переменной на ноль или пустоту
+	-------------------------------------
+		if n ~= nil then return n
+		else return a end
+	end
+
 	function get.Maximum (mas) -- получение максимального значения массива чисел
 	-------------------------------------
 		max = 0
@@ -25,6 +22,24 @@ local get = {}
 			if mas[i] > max then max = mas[i] end
 		end
 		return max
+	end
+
+	function get.Biggest(x,y) -- получение большего из двух значений
+	-------------------------------------
+		if x > y then
+			return x
+		else
+		    return y
+		end
+	end
+
+	function get.Least(x,y) -- получение меньшего из двух значений
+	-------------------------------------
+		if x < y then
+			return x
+		else
+		    return y
+		end
 	end
 
 	function get.Distance (x1,y1,x2,y2) -- получение дистанции между двумя игроками
@@ -66,6 +81,18 @@ local get = {}
 		if frames ~= nil then
 			for frame in string.gmatch(frames, "(%d+)") do
 				table.insert(frame_list, tonumber(frame))
+			end
+		end
+		return frame_list
+	end
+
+	function get.PFramesString (string, parameter) -- функция для получения списка значений парамеира из входящей строки
+	-------------------------------------
+		local frame_list = {}
+		local frames = string.match(string, parameter .. ": {([^{}]*)}")
+		if frames ~= nil then
+			for frame in string.gmatch(frames, "(%d+)") do
+				table.insert(frame_list, frame)
 			end
 		end
 		return frame_list

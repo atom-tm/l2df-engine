@@ -4,7 +4,8 @@ rooms = {}
 		settings = require("rooms.settings"),
 		controls = require("rooms.controls"),
 		character_select = require("rooms.character_select"),
-		loading = require("rooms.loading")
+		loading = require("rooms.loading"),
+		battle = require("rooms.battle"),
 	}
 	function rooms:Set(id, table_values)
 		if self.name ~= nil then

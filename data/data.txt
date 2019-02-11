@@ -1,11 +1,17 @@
 [characters]
-id: 1	file: chars/itachi/character.dat
-id: 3	file: chars/kisame/character.dat
 id: 2	file: chars/kakashi/character.dat
-id: 4	file: chars/asuma/character.dat
 
 [objects]
-id: 100	file: data/sparks.dat
+id: 100	file: objects/shuriken.dat
+
+id: 110	file: objects/doton_wall.dat
+
+
+
+id: 200	file: effects/smoke.dat
+id: 210	file: effects/ground.dat
+
+id: 1000 file: effects/sparks.dat
 
 [maps]
 id: 1	file: bg/TestArena/TestArena.dat
