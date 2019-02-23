@@ -25,7 +25,7 @@ gravity: 0.9
 spawn_point: { x: 1300  y: 0  z: 110  rx: 500 rz: 90 ry: 0 facing: 0 }
 
 layer: { file: "bg/KonohaBridge/1.png"  x: 0  y: 0 fsaa: false }
-layer: { file: "bg/KonohaBridge/3.png"  x: 0  y: 0 fsaa: true }
+layer--: { file: "bg/KonohaBridge/3.png"  x: 0  y: 0 fsaa: false }
 filter: { file: "bg/KonohaBridge/2.png"  x: 0  y: 0 fsaa: false }
-filter: { file: "bg/KonohaBridge/4.png"  x: 0  y: 0 fsaa: true }
-filter: { file: "bg/KonohaBridge/10.png"  x: 0  y: 0 fsaa: true }
+filter--: { file: "bg/KonohaBridge/4.png"  x: 0  y: 0 fsaa: false }
+filter--: { file: "bg/KonohaBridge/10.png"  x: 0  y: 0 fsaa: false }

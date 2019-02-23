@@ -30,6 +30,8 @@ function battle:createStartingObjects(list)
 end
 
 function battle:Load(spawnList)
+	self.hp_bar = image.Load("sprites/UI/hp_bar.png", nil, "linear")
+	self.hp_bar_back = image.Load("sprites/UI/hp_bar_back.png", nil, "linear")
 	for i in pairs(self.entities.list) do
 		for j in pairs(self.entities.list[i]) do
 			self.entities.list[i][j] = nil
@@ -48,6 +50,8 @@ end
 
 
 function battle:Update()
+	self.graphic:cameraUpdate()
+	self.collision.checkCollisions()
 	for i in pairs(self.entities.list) do
 		local object = self.entities.list[i]
 		object:countersProcessing()
@@ -65,8 +69,6 @@ function battle:Update()
 			object:addToDrawing()
 		end
 	end
-	self.collision.checkCollisions()
-	self.graphic:cameraUpdate()
 end
 
 
@@ -85,6 +87,21 @@ function battle:DrawInterface()
 		font.print(#self.collision.list.itr, 10, 10)
 		font.print(#self.collision.list.body, 10, 30)
 		font.print(self.entities.list[1].vel_y, 10, 50)
+		font.print(self.graphic.camera_settings.scale, 10, 70)
+
+		if self.control.players[1] ~= nil then
+			image.draw(self.hp_bar_back,nil,0,0)
+			image.draw(self.hp_bar,nil,0,0)
+			--image.draw(self.control.players[1].face,nil,0,0)
+		end
+
+		if self.control.players[2] ~= nil and self.control.players[1] == nil then
+			image.draw(self.hp_bar_back,nil,0,0)
+			image.draw(self.hp_bar,nil,0,0)
+		elseif self.control.players[2] ~= nil and self.control.players[1] ~= nil then
+			image.draw(self.hp_bar_back,nil,settings.gameWidth,0,-1)
+			image.draw(self.hp_bar,nil,settings.gameWidth,0,-1)
+		end
 	end)
 end
 

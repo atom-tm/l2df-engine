@@ -1,6 +1,8 @@
 [characters]
 id: 2	file: chars/kakashi/character.dat
 id: 3	file: chars/itachi/character.dat
+id: 4	file: chars/pain/character.dat
+id: 5	file: chars/guy/character.dat
 
 [objects]
 id: 100	file: objects/shuriken.dat

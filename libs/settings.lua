@@ -18,16 +18,18 @@ local settings = {}
 	settings.gameWidth = 1280
 	settings.gameHeight = 720
 
+	settings.quality = 1
+
 	settings.names = {}
 
 	settings.debug_mode = true
 
 	settings.windowSizes = {
-		{ width = 1920, height = 1080 },
-		{ width = 1600, height = 900 },
-		{ width = 1280, height = 720 },
+		{ width = 854, height = 480 },
 		{ width = 1024, height = 576 },
-		{ width = 854, height = 480 }
+		{ width = 1280, height = 720 },
+		{ width = 1600, height = 900 },
+		{ width = 1920, height = 1080 },
 	}
 
 	settings.localizationsList = {

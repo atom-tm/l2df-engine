@@ -9,7 +9,7 @@ local graphic = {}
 		x_offset = 50,
 		x_speed = 0.15,
 		y = 0,
-		y_offset = 50,
+		y_offset = 75,
 		y_speed = 0.1,
 		scale = 0,
 		scale_mod = 1,
@@ -25,7 +25,7 @@ local graphic = {}
 		self.camera:setWindow(0,0,w,h)
 		self.camera_settings.x = battle.map.head.width * 0.5
 		self.camera_settings.y = battle.map.head.height * 0.5
-		self.camera_settings.scale = 0
+		self.camera_settings.scale = self.camera_settings.scale_mod
 		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale)
 		self.camera:setPosition(self.camera_settings.x, self.camera_settings.y)
 		self.last_fullscreen_mode = settings.window.fullscreen
@@ -34,10 +34,13 @@ local graphic = {}
 
 
 	function graphic:cameraUpdate()
+
 		local left = battle.map.head.width
 		local right = 0
 		local top = battle.map.head.height
 		local bottom = 0
+		local direction = 0
+
 		if graphic.camera_owner == nil then
 			for i in pairs(battle.control.players) do
 				local object = battle.control.players[i]
@@ -45,17 +48,39 @@ local graphic = {}
 				if object.x < left then left = object.x end
 				if battle.map.head.border_up + object.z - object.y > bottom then bottom = battle.map.head.border_up + object.z - object.y end
 				if battle.map.head.border_up + object.z - object.y < top then top = battle.map.head.border_up + object.z - object.y end
+				direction = direction + object.facing
 			end
 		else
 			left = object.x
 			right = object.x
 			top = battle.map.head.border_up + object.z - object.y
 			bottom = battle.map.head.border_up + object.z - object.y
+			direction = object.facing
 		end
 
-		self.camera_settings.x = (right + left) * 0.5
-		self.camera_settings.y = (top + bottom) * 0.5
-		graphic.camera:setPosition(self.camera_settings.x, self.camera_settings.y)
+		local x_offset = 0
+		if direction > 0 then
+			x_offset = self.camera_settings.x_offset
+		elseif direction < 0 then
+			x_offset = -self.camera_settings.x_offset
+		end
+		local camera_x = (right + left) * 0.5 + x_offset
+		local camera_y = (top + bottom) * 0.5 - self.camera_settings.y_offset
+ 
+		self.camera_settings.scale = settings.gameWidth / (right - left + 100) * 0.15
+		self.camera_settings.scale = 1 - math.sqrt((right - left)^2 + (top - bottom)^2) * 0.001
+
+
+		if self.camera_settings.scale < 0 then self.camera_settings.scale = 0
+		elseif self.camera_settings.scale > 1 then self.camera_settings.scale = 1 end
+
+		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale)
+
+		self.camera_settings.x = self.camera_settings.x - (self.camera_settings.x - camera_x) * 0.3
+		self.camera_settings.y = self.camera_settings.y - (self.camera_settings.y - camera_y) * 0.3
+		self.camera:setPosition(self.camera_settings.x, self.camera_settings.y)
+
+
 		if self.last_fullscreen_mode ~= settings.window.fullscreen then self:cameraCreate() end
 
 

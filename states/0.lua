@@ -9,7 +9,7 @@ function state:Processing(object,s)
 	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("defend") end
 	if object:timer("special1") then object:setFrame("special") end
 	
-	if (object:double_timer("left") or object:double_timer("right")) and object.wait == 0 then
+	if object:double_timer("left") or object:double_timer("right") then
 		if object:double_timer("left") then object.facing = -1 end
 		if object:double_timer("right") then object.facing = 1 end
 		object:setFrame("running", object.running_frame)

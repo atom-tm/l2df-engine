@@ -141,11 +141,12 @@ itr: { kind: 7 dtype: 0  x: 133  y: 57  w: 105  h: 91  z: -20  l: 40 }
 body: { x: 133  y: 57  w: 105  h: 91  z: -20  l: 40 }
 </frame>
 <frame> 19 goukakyuu
-pic: 19  next: 20  wait: 0 dvx: 11 dvy: 0 centerx: 192 centery: 100
+pic: 19  next: 20  wait: 1 dvx: 11 dvy: 0 centerx: 192 centery: 100
 opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 0 dtype: 100  x: 132  y: 57  w: 111  h: 92  z: -20  l: 40  bdefend: 3 fall: 5 not_knocking_down: true  arest: 1 vrest: 3 static: true }
 itr: { kind: 7 dtype: 0  x: 132  y: 57  w: 111  h: 92  z: -20  l: 40 }
 body: { x: 132  y: 57  w: 111  h: 92  z: -20  l: 40 }
+state: 50 { timer: 10  frame: 80 }
 </frame>
 
 <frame> 20 goukakyuu
@@ -155,7 +156,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 21 goukakyuu
 pic: 21  next: 22  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 22 goukakyuu
@@ -165,7 +165,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 23 goukakyuu
 pic: 23  next: 24  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 24 goukakyuu
@@ -175,7 +174,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 25 goukakyuu
 pic: 25  next: 26  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 26 goukakyuu
@@ -185,7 +183,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 27 goukakyuu
 pic: 27  next: 28  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 28 goukakyuu
@@ -195,7 +192,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 29 goukakyuu
 pic: 29  next: 30  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 30 goukakyuu
@@ -205,7 +201,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 31 goukakyuu
 pic: 31  next: 32  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 32 goukakyuu
@@ -215,7 +210,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 33 goukakyuu
 pic: 33  next: 34  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 34 goukakyuu
@@ -225,7 +219,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 35 goukakyuu
 pic: 35  next: 36  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 36 goukakyuu
@@ -235,7 +228,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 37 goukakyuu
 pic: 37  next: 38  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 38 goukakyuu
@@ -245,7 +237,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 39 goukakyuu
 pic: 39  next: 40  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 40 goukakyuu
@@ -255,7 +246,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 41 goukakyuu
 pic: 41  next: 42  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 42 goukakyuu
@@ -265,7 +255,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 43 goukakyuu
 pic: 43  next: 44  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 44 goukakyuu
@@ -275,7 +264,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 45 goukakyuu
 pic: 45  next: 46  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 46 goukakyuu
@@ -285,7 +273,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 47 goukakyuu
 pic: 47  next: 48  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 48 goukakyuu
@@ -295,7 +282,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 49 goukakyuu
 pic: 49  next: 50  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 50 goukakyuu
@@ -305,7 +291,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 51 goukakyuu
 pic: 51  next: 52  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 52 goukakyuu
@@ -315,7 +300,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 53 goukakyuu
 pic: 53  next: 54  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 54 goukakyuu
@@ -325,7 +309,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 55 goukakyuu
 pic: 55  next: 56  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 56 goukakyuu
@@ -335,7 +318,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 57 goukakyuu
 pic: 57  next: 58  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 58 goukakyuu
@@ -345,7 +327,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 59 goukakyuu
 pic: 59  next: 60  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 60 goukakyuu
@@ -355,7 +336,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 61 goukakyuu
 pic: 61  next: 62  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 62 goukakyuu
@@ -365,7 +345,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 63 goukakyuu
 pic: 63  next: 64  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 64 goukakyuu
@@ -375,7 +354,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 65 goukakyuu
 pic: 65  next: 66  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 66 goukakyuu
@@ -385,7 +363,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 67 goukakyuu
 pic: 67  next: 68  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 68 goukakyuu
@@ -395,7 +372,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 69 goukakyuu
 pic: 69  next: 70  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 70 goukakyuu
@@ -405,7 +381,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 71 goukakyuu
 pic: 71  next: 72  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 72 goukakyuu
@@ -415,12 +390,10 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 73 goukakyuu
 pic: 73  next: 74  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 74 goukakyuu
 pic: 74  next: 75  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 75 goukakyuu
@@ -430,7 +403,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 76 goukakyuu
 pic: 76  next: 77  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 77 goukakyuu
@@ -440,7 +412,6 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 78 goukakyuu
 pic: 78  next: 79  wait: 0 dvx: 11 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 200 y: 150 z: 0 rx: 25 rz: 31 }
 itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 </frame>
 <frame> 79 goukakyuu

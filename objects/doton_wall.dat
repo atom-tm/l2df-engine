@@ -50,12 +50,12 @@ body: { x: 14  y: 40  w: 55  h: 110  z: -15  l: 30 static: true damaged_frame: 1
 
 <frame> 10 doton_wall
 pic: 7  next: 0  wait: 2 dvx: 0 dvy: 0 centerx: 40  centery: 130
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 5 rdvy: 5 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 5 rdvy: 5 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 7 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
-opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 7 rdvy: 7 dvz: -3 rdvz: 5 count: 2 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 5 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 5 rdvy: 5 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 5 rdvy: 5 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 6 rdvy: 7 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
+opoint: { id: 1001 action: 1 raction: 8  x: 45 y: 90 rx: 20 ry: 40 z: 0 dvx: -1 rdvx: 7 dvy: 7 rdvy: 7 dvz: -3 rdvz: 5 count: 1 rcount: 3 facing: 1 }
 state: 1000 {}
 </frame>

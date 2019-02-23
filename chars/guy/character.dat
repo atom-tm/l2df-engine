@@ -16,12 +16,8 @@ start_standing: {
 }
 
 sprite: {
-	file: "chars/kakashi/sprites/main.png"
+	file: "chars/guy/sprites/main.png"
 	w: 85 h: 85 row: 7 col: 18
-}
-sprite: {
-	file: "chars/kakashi/sprites/attacks_1.png"
-	w: 115 h: 115 row: 7 col: 2
 }
 
 gravity: true
@@ -40,22 +36,22 @@ fall: 60
 
 
 <frame> 1 idle
-pic: 1  next: 2  wait: 5  centerx: 27 centery: 83
+pic: 1  next: 2  wait: 6  centerx: 27 centery: 83
 body: { x: 12  y: 16  w: 28  h: 64 }
 state: 0 {}
 </frame>
 <frame> 2 idle
-pic: 2  next: 3  wait: 5  centerx: 27  centery: 83
+pic: 2  next: 3  wait: 6  centerx: 27  centery: 83
 body: { x: 12  y: 16  w: 28  h: 64 }
 state: 0 {}
 </frame>
 <frame> 3 idle
-pic: 3  next: 4  wait: 5  centerx: 27  centery: 83
+pic: 3  next: 4  wait: 7  centerx: 27  centery: 83
 body: { x: 12  y: 16  w: 28  h: 64 }
 state: 0 {}
 </frame>
 <frame> 4 idle
-pic: 4  next: 0  wait: 5  centerx: 27  centery: 83
+pic: 2  next: 0  wait: 6  centerx: 27  centery: 83
 body: { x: 12  y: 16  w: 28  h: 64 }
 state: 0 {}
 </frame>
@@ -256,16 +252,8 @@ body: { x: 2  y: 55  w: 80  h: 27  z: -5  l: 10 }
 
 
 <frame> 290 raising
-pic: 50  next: 291  wait: 4 centerx: 30  centery: 78
+pic: 50  next: 0  wait: 5 centerx: 30  centery: 78
 body: { x: 2  y: 55  w: 70  h: 26  z: -5  l: 10 }
-</frame>
-<frame> 291 raising
-pic: 51  next: 292  wait: 4 centerx: 5  centery: 79
-body: { x: 2  y: 32  w: 36  h: 47  z: -5  l: 10 }
-</frame>
-<frame> 292 raising
-pic: 27  next: 0  wait: 6 centerx: 26  centery: 83
-body: { x: 12  y: 21  w: 34  h: 60  z: -5  l: 10 }
 </frame>
 
 

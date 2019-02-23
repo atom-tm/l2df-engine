@@ -156,7 +156,7 @@ state: 1000 { }
 <frame> 53 fire
 pic: 1  next: 1  wait: 0  centerx: 83  centery: 95
 state: 611 { start: 0 finish: 1 timer: 25 }
-state: 50 { timer: 300 frame: 51 }
+state: 50 { timer: 30000 frame: 51 }
 </frame>
 
 

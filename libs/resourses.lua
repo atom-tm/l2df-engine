@@ -130,6 +130,7 @@ local resourses = {}
 		if data ~= nil then
 			
 			head.name 						= string.match(data, "name: ([%w_% ]+)")
+			--head.face						= image.Load(string.match(data, "face: \"([^\"]+)\""))
 			head.type 						= get.PString(data, "type")
 
 			head.gravity 					= get.PBool(data, "gravity")
