@@ -9,6 +9,7 @@ id: 100	file: objects/shuriken.dat
 
 id: 110	file: objects/doton_wall.dat
 id: 111	file: objects/goukakyuu.dat
+id: 112	file: chars/pain/shinra_tensei.dat
 
 
 

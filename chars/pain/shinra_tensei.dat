@@ -1,0 +1,33 @@
+<head>
+name: Shinra_tensei
+type: effect
+
+sprite: {
+	file: "sprites/effects/shinra_defend.png"
+	w: 230 h: 190 row: 5 col: 1
+}
+
+physic: false
+collision: false
+shadow: false
+</head>
+
+
+
+<frame> 1 fly
+pic: 1  next: 2  wait: 0  centerx: 115  centery: 125
+</frame>
+<frame> 2 fly
+pic: 2  next: 3  wait: 0  centerx: 115  centery: 135
+</frame>
+<frame> 3 fly
+pic: 3  next: 4  wait: 0  centerx: 115  centery: 145
+</frame>
+<frame> 4 fly
+pic: 4  next: 5  wait: 0  centerx: 115  centery: 155
+</frame>
+<frame> 5 fly
+pic: 5  next: 0  wait: 2  centerx: 115  centery: 165
+state: 610 { start: 1  finish: 0 }
+state: 1000 {}
+</frame>

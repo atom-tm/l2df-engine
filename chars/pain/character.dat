@@ -19,6 +19,14 @@ sprite: {
 	file: "chars/pain/sprites/main.png"
 	w: 85 h: 85 row: 7 col: 18
 }
+sprite: {
+	file: "chars/pain/sprites/attacks_1.png"
+	w: 85 h: 85 row: 7 col: 9
+}
+sprite: {
+	file: "chars/pain/sprites/attacks_2.png"
+	w: 100 h: 90 row: 7 col: 3
+}
 
 gravity: true
 collision: true
@@ -203,6 +211,7 @@ pic: 30  next: 72  wait: 7 centerx: 26  centery: 83 hit_Fa: 500
 body: { x: 7  y: 16  w: 26  h: 64 }
 state: 5 { block: 20 }
 state: 10 {}
+state: 15 { dd: 520 }
 </frame>
 <frame> 72 defend
 pic: 29  next: 2  wait: 1 centerx: 25  centery: 83 hit_Fa: 500
@@ -268,129 +277,53 @@ body: { x: 12  y: 21  w: 34  h: 60  z: -5  l: 10 }
 
 
 <frame> 300 attack_1
-pic: 85  next: 301  wait: 4 centerx: 25  centery: 83
-state: 10 {}
+pic: 127  next: 301  wait: 5 centerx: 25  centery: 83
 body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 301 attack_1
-pic: 86  next: 302  wait: 1 dsx: 2 centerx: 25  centery: 83
-body: { x: 9  y: 12  w: 34  h: 67  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0   x: 38  y: 26  w: 35  h: 22  z: -5  l: 10  fall: 5  bdefend: 10  not_knocking_down: true   dvx: 6 }
+pic: 128  next: 302  wait: 1  dvx: 1  centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
+itr: {
+	kind: 0  dtype: 0
+	x: 27  y: 20  w: 46  h: 32  z: -5  l: 10  dvx: 5
+	fall: 50  bdefend: 25  not_knocking_down: true
+}
 </frame>
 <frame> 302 attack_1
-pic: 87  next: 303  wait: 4 centerx: 25  centery: 83
-body: { x: 9  y: 17  w: 35  h: 61  z: 0  l: 0 }
+pic: 129  next: 303  wait: 8 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 303 attack_1
-pic: 87  next: 0  wait: 6 centerx: 25  centery: 83
-body: { x: 9  y: 17  w: 35  h: 61  z: 0  l: 0 }
+pic: 129  next: 304  wait: 4 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
 state: 15 { a: 310 }
 </frame>
-
+<frame> 304 attack_1
+pic: 127  next: 0  wait: 4 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
+</frame>
 
 <frame> 310 attack_2
-pic: 88  next: 311  wait: 4 centerx: 28  centery: 83
-state: 10 {}
-body: { x: 9  y: 11  w: 31  h: 64  z: 0  l: 0 }
+pic: 130  next: 311  wait: 5 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 311 attack_2
-pic: 89  next: 312  wait: 1 dsx: 2 centerx: 28  centery: 83
-body: { x: 8  y: 26  w: 45  h: 55  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0   x: 27  y: 26  w: 50  h: 30  z: -5  l: 10   fall: 10  bdefend: 15  not_knocking_down: true   dvx: 6 }
+pic: 131  next: 312  wait: 1 dsx: 2 centerx: 25  centery: 83
+body: { x: 13  y: 27  w: 45  h: 51 }
+itr: {
+	kind: 0  dtype: 0
+	x: 26  y: 25  w: 50  h: 32  z: -5  l: 10  dvx: 5
+	fall: 50  bdefend: 25  not_knocking_down: true
+}
 </frame>
 <frame> 312 attack_2
-pic: 90  next: 313  wait: 7 centerx: 27  centery: 83
-body: { x: 8  y: 26  w: 45  h: 55  z: -5  l: 10 }
+pic: 132  next: 313  wait: 9 centerx: 25  centery: 83
+body: { x: 13  y: 27  w: 45  h: 51 }
 </frame>
 <frame> 313 attack_2
-pic: 91  next: 0  wait: 4 centerx: 32  centery: 83
-body: { x: 8  y: 10  w: 37  h: 72  z: -5  l: 10 }
-state: 15 { a: 350 j: 320 }
+pic: 133  next: 0  wait: 4 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
-
-
-<frame> 320 attack_3
-pic: 92  next: 321  wait: 8 centerx: 25  centery: 83
-body: { x: 3  y: 6  w: 36  h: 74  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0   x: 18  y: 24  w: 32  h: 44  z: -5  l: 10   fall: 20  bdefend: 25   dvx: 7 dvy: 12  }
-</frame>
-<frame> 321 attack_3
-pic: 92  next: 0  wait: 4 centerx: 25  centery: 83
-body: { x: 3  y: 6  w: 36  h: 74  z: -5  l: 10 }
-state: 15 { j: 330 }
-</frame>
-
-
-<frame> 330 attack_4
-pic: 95 next: 331 wait: 2 centerx: 32 centery: 83
-body: { x: 2  y: 22  w: 48  h: 60  z: -5  l: 10 }
-</frame>
-<frame> 331 attack_4
-pic: 96 next: 332 wait: 3 centerx: 43 centery: 83
-body: { x: 4  y: 33  w: 56  h: 47  z: -5  l: 10 }
-</frame>
-<frame> 332 attack_4
-pic: 97 next: 333 wait: 1 dsx: 2 centerx: 32 centery: 83
-body: { x: 6  y: 27  w: 52  h: 53  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0  x: 35  y: 7  w: 48  h: 67  z: -5  l: 10  fall: 30  bdefend: 25   dvx: 10 dvy: 15  }
-</frame>
-<frame> 333 attack_4
-pic: 98 next: 334 wait: 11 centerx: 33 centery: 83
-body: { x: 6  y: 27  w: 58  h: 53  z: -5  l: 10 }
-</frame>
-<frame> 334 attack_4
-pic: 96 next: 335 wait: 3 centerx: 43 centery: 83
-body: { x: 4  y: 33  w: 56  h: 47  z: -5  l: 10 }
-</frame>
-<frame> 335 attack_4
-pic: 95 next: 0 wait: 4 centerx: 32 centery: 83
-body: { x: 2  y: 22  w: 48  h: 60  z: -5  l: 10 }
-</frame>
-
-
-
-<frame> 340 attack_5
-pic: 99 next: 341 wait: 4 centerx: 43 centery: 83
-body: { x: 4  y: 33  w: 54  h: 46  z: -5  l: 10 }
-</frame>
-<frame> 341 attack_5
-pic: 100 next: 342 wait: 1 dsx: 3 centerx: 26 centery: 83
-body: { x: 4  y: 33  w: 62  h: 46  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0  x: 24  y: 30  w: 59  h: 43  z: -5  l: 10  fall: 20  bdefend: 25   dvx: 13 dvy: 8  }
-</frame>
-<frame> 342 attack_5
-pic: 101 next: 343 wait: 9 centerx: 28 centery: 83
-body: { x: 4  y: 33  w: 62  h: 46  z: -5  l: 10 }
-</frame>
-<frame> 343 attack_5
-pic: 102 next: 0 wait: 3 centerx: 32 centery: 83
-body: { x: 4  y: 21  w: 46  h: 60  z: -5  l: 10 }
-</frame>
-
-
-<frame> 350 attack_6
-pic: 103  next: 351  wait: 5 centerx: 15 centery: 83
-body: { x: 3  y: 4  w: 22  h: 78  z: -5  l: 10 }
-</frame>
-<frame> 351 attack_6
-pic: 104  next: 352  wait: 1 centerx: 16 centery: 83
-body: { x: 2  y: 4  w: 22  h: 78  z: -5  l: 10 }
-</frame>
-<frame> 352 attack_6
-pic: 105  next: 353  wait: 3 centerx: 15 centery: 83
-body: { x: 3  y: 4  w: 22  h: 78  z: -5  l: 10 }
-itr: { kind: 0 dtype: 0 x: 15  y: 0  w: 90  h: 85  z: -35  l: 70 dvx: 55 fall: 5 bdefend: 100 not_knocking_down: true   arest: 1 vrest: 7 }
-</frame>
-<frame> 353 attack_6
-pic: 105  next: 354  wait: 4 centerx: 15 centery: 83
-body: { x: 3  y: 4  w: 22  h: 78  z: -5  l: 10 }
-</frame>
-<frame> 354 attack_6
-pic: 105  next: 0  wait: 3 centerx: 15 centery: 83
-body: { x: 3  y: 4  w: 22  h: 78  z: -5  l: 10 }
-</frame>
-
-
 
 
 
@@ -467,24 +400,25 @@ body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
 </frame>
 
 
-<frame> 520 doton_wall
-pic: 64  next: 521  wait: 5 centerx: 20  centery: 82
-body: { x: 11  y: 15  w: 33  h: 64  z: -5  l: 10 }
+<frame> 520 shinra_defend
+pic: 103  next: 521  wait: 4 centerx: 15  centery: 83
+body: { x: 2  y: 7  w: 23  h: 72  z: -5  l: 10 }
 </frame>
-<frame> 521 doton_wall
-pic: 65  next: 522  wait: 5 centerx: 20  centery: 82
-body: { x: 11  y: 15  w: 33  h: 64  z: -5  l: 10 }
+<frame> 521 shinra_defend
+pic: 104  next: 522  wait: 2 centerx: 16  centery: 83
+body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
+opoint: { id: 112  action: 1 facing: 0 x: 16 y: 83 }
 </frame>
-<frame> 522 doton_wall
-pic: 66  next: 523  wait: 6 centerx: 20  centery: 82
-body: { x: 18  y: 33  w: 38  h: 48  z: -5  l: 10 }
+<frame> 522 shinra_defend
+pic: 105  next: 523  wait: 2 centerx: 15  centery: 83
+body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
+itr: { kind: 0  dtype: 100  x: -70  y: -35  w: 190  h: 120  z: -10  l: 20  dvx: 45 dvy: 7  reflection: true   fall: 60  bdefend: 80  not_knocking_down: true  static: true }
 </frame>
-<frame> 523 doton_wall
-pic: 67  next: 524  wait: 35 centerx: 20  centery: 82
-body: { x: 23  y: 38  w: 39  h: 43  z: -5  l: 10 }
-opoint: { id: 110 action: 1 x: 130 y: 82 z: 3 facing: -1 }
+<frame> 523 shinra_defend
+pic: 105  next: 524  wait: 9 centerx: 15  centery: 83
+body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
 </frame>
-<frame> 524 doton_wall
-pic: 27  next: 0  wait: 5 centerx: 20  centery: 83
-body: { x: 14  y: 17  w: 33  h: 64  z: -5  l: 10 }
+<frame> 524 shinra_defend
+pic: 103  next: 0  wait: 4 centerx: 15  centery: 83
+body: { x: 2  y: 7  w: 23  h: 72  z: -5  l: 10 }
 </frame>
