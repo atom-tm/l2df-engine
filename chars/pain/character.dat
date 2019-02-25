@@ -277,7 +277,7 @@ body: { x: 12  y: 21  w: 34  h: 60  z: -5  l: 10 }
 
 
 <frame> 300 attack_1
-pic: 127  next: 301  wait: 5 centerx: 25  centery: 83
+pic: 127  next: 301  wait: 6 centerx: 25  centery: 83
 body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 301 attack_1
@@ -286,11 +286,11 @@ body: { x: 10  y: 14  w: 33  h: 65 }
 itr: {
 	kind: 0  dtype: 0
 	x: 27  y: 20  w: 46  h: 32  z: -5  l: 10  dvx: 5
-	fall: 50  bdefend: 25  not_knocking_down: true
+	fall: 20  bdefend: 15  not_knocking_down: true
 }
 </frame>
 <frame> 302 attack_1
-pic: 129  next: 303  wait: 8 centerx: 25  centery: 83
+pic: 129  next: 303  wait: 9 centerx: 25  centery: 83
 body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 303 attack_1
@@ -304,7 +304,7 @@ body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 
 <frame> 310 attack_2
-pic: 130  next: 311  wait: 5 centerx: 25  centery: 83
+pic: 130  next: 311  wait: 6 centerx: 25  centery: 83
 body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 311 attack_2
@@ -313,16 +313,52 @@ body: { x: 13  y: 27  w: 45  h: 51 }
 itr: {
 	kind: 0  dtype: 0
 	x: 26  y: 25  w: 50  h: 32  z: -5  l: 10  dvx: 5
-	fall: 50  bdefend: 25  not_knocking_down: true
+	fall: 20  bdefend: 20  not_knocking_down: true
 }
 </frame>
 <frame> 312 attack_2
-pic: 132  next: 313  wait: 9 centerx: 25  centery: 83
+pic: 132  next: 313  wait: 11 centerx: 25  centery: 83
 body: { x: 13  y: 27  w: 45  h: 51 }
 </frame>
 <frame> 313 attack_2
 pic: 133  next: 0  wait: 4 centerx: 25  centery: 83
 body: { x: 10  y: 14  w: 33  h: 65 }
+state: 15 { a: 320 }
+</frame>
+
+
+<frame> 320 attack_3
+pic: 133  next: 321  wait: 1 centerx: 25  centery: 83
+body: { x: 10  y: 14  w: 33  h: 65 }
+</frame>
+<frame> 321 attack_3
+pic: 134  next: 322  wait: 5 centerx: 30  centery: 83
+body: { x: 2  y: 11  w: 34  h: 70 }
+</frame>
+<frame> 322 attack_3
+pic: 135  next: 323  wait: 3 centerx: 52  centery: 83
+body: { x: 4  y: 35  w: 51  h: 45 }
+</frame>
+<frame> 323 attack_3
+pic: 136  next: 324  wait: 1 dx: 2 centerx: 41  centery: 83
+body: { x: 5  y: 26  w: 55  h: 50 }
+itr: {
+	kind: 0  dtype: 0
+	 x: 24  y: 9  w: 56  h: 61  z: -5  l: 10  dvx: 9  dvy: 11
+	fall: 35  bdefend: 25  not_knocking_down: false
+}
+</frame>
+<frame> 324 attack_3
+pic: 137  next: 325  wait: 13 centerx: 42  centery: 83
+body: { x: 5  y: 26  w: 55  h: 50 }
+</frame>
+<frame> 325 attack_3
+pic: 138  next: 326  wait: 3 centerx: 52  centery: 83
+body: { x: 4  y: 35  w: 51  h: 45 }
+</frame>
+<frame> 326 attack_3
+pic: 139  next: 0  wait: 3 centerx: 41  centery: 83
+body: { x: 3  y: 23  w: 45  h: 59 }
 </frame>
 
 
