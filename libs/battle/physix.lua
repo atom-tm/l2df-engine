@@ -24,9 +24,6 @@ local physix = {}
 
 
 	function physix:applyMotions()
-		
-		self.landing = false
-		self.slammed = false
 
 		self.x = self.x + self.vel_x
 		self.y = self.y + self.vel_y
@@ -43,17 +40,11 @@ local physix = {}
 				self.destroy = true
 			end
 		end
-		
 
 		self.grounded = false		
 		if self.y <= 0 then
 			self.y = 0
 			self.grounded = true
-			if self.vel_y < -20 then
-				self.slammed = true
-			elseif self.vel_y < -10 then
-				self.landing = true
-			end
 		elseif self.y >= battle.map.head.height then
 			self.y = battle.map.head.height
 		end
@@ -73,6 +64,9 @@ local physix = {}
 	end
 
 	function physix:applyGravity()
+		self.old_vel_x = self.vel_x
+		self.old_vel_y = self.vel_y
+		self.old_vel_z = self.vel_z
 		if not self.noGravity then
 			if self.head.gravity then
 				if self.grounded then

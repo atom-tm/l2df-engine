@@ -494,6 +494,8 @@ local resourses = {}
 			opoint.action 					= get.PNumber(opoint_data, "action")
 			opoint.action_random 			= get.PNumber(opoint_data, "raction")
 			
+			opoint.amount 					= get.PNumber(opoint_data, "amount",1)
+			opoint.amount_random 			= get.PNumber(opoint_data, "ramount")
 			opoint.count 					= get.PNumber(opoint_data, "count",1)
 			opoint.count_random				= get.PNumber(opoint_data, "rcount")
 
