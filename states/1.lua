@@ -1,13 +1,13 @@
 local state = { variables = {} } -- | 1 | -- Ходьба
--- Поведение объекта при ходьбе
+-- Персонаж передвигается, последовательно изменяя спрайт ходьбы, согласно установленному счетчику.
 -- Удержание клавиш направления выбирает направление ходьбы
 ---------------------------------------------------------------------
 function state:Processing(object,s)
 
-	if object:timer("attack") then object:setFrame("attack") end
-	if object:timer("jump") then object:setFrame("jump") end
-	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("defend") end
-	if object:timer("special1") then object:setFrame("special") end
+	if object:timer("attack") then object:setFrame("battle_stance") end
+	if object:timer("jump") then object:setFrame("jump_preparing") end
+	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("defend_stance") end
+	--if object:timer("special1") then object:setFrame("special") end
 
 	if object:double_timer("left") or object:double_timer("right") then
 		if object:double_timer("left") then object.facing = -1 end

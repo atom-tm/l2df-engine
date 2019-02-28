@@ -174,7 +174,7 @@ pic: 22  next: 39  wait: 2  centerx: 27  centery: 82
 body: { x: 21  y: 32  w: 36  h: 46 }
 </frame>
 <frame> 39 jump_shunshin
-pic: 28  next: 35  wait: 5 dsy: 2.5 dy: 25 centerx: 24  centery: 80 hit_a: 450
+pic: 28  next: 35  wait: 5 dsy: 2.5 dy: 45 centerx: 24  centery: 80 hit_a: 450
 </frame>
 
 

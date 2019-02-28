@@ -15,7 +15,7 @@ function state:Processing(object,s)
 	else
 		if s.grounded ~= nil then object:setFrame(s.grounded)
 		else object:setFrame("grounded") end
-		if object.old_vel_y < -30 then
+		if object.old_vel_y < -25 then
 			local effect = battle.entities.spawnObject(battle.map.head.effects, object.x, object.y, object.z + 1, object.facing, 0, object.owner)
 			if effect ~= nil then
 				effect:setFrame(effect.head.frames["slammed"])

@@ -26,45 +26,27 @@ shadow: false
 
 <frames_list>
 	landing: 120
-	falling: 15
+	falling: 10
 	slammed: 20
 </frames_list>
 
-
-<frame> 10 landing
+<frame> 10 falling
 pic: 0  next: 0  wait: 1  centerx: 1  centery: 1
-opoint: { id: 900 action: 100 x: 1 y: 1 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 5 }
+opoint: { id: 900 action: 100 x: 1 y: 1 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 3  ramount: 5 }
 state: 1000 {}
 </frame>
 
-<frame> 15 landing
-pic: 0  next: 0  wait: 1  centerx: 1  centery: 1
-opoint: { id: 900 action: 100 x: 1 y: 1 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 5 }
-state: 1000 {}
-</frame>
-
-<frame> 20 landing
-pic: 0  next: 0  wait: 1  centerx: 1  centery: 1
-opoint: { id: 900 action: 100 x: 1 y: 1 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 5 }
-state: 1000 {}
-</frame>
-
-<frame> 35 falling
-pic: 0  next: 0  wait: 1  centerx: 125  centery: 25
-opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 45 rz: 9  dvx: -2 rdvx: 4 amount: 5 }
-</frame>
-
-<frame> 40 slammed
-pic: 22  next: 41  wait: 3  centerx: 125  centery: 25
-opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 45 rz: 9  dvx: -2 rdvx: 4 amount: 5 }
+<frame> 20 slammed
+pic: 16  next: 21  wait: 3  centerx: 125  centery: 25
+opoint: { id: 900 action: 100 x: 125 y: 25 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 3  ramount: 5 }
 state: 610 { start: 0 finish: 1 }
 </frame>
-<frame> 41 slammed
-pic: 22  next: 42  wait: 350  centerx: 125  centery: 25
+<frame> 21 slammed
+pic: 16  next: 22  wait: 350  centerx: 125  centery: 25
 state: 612 { wait: 750 }
 </frame>
-<frame> 42 slammed
-pic: 22  next: 0  wait: 85  centerx: 125  centery: 25
+<frame> 22 slammed
+pic: 16  next: 0  wait: 85  centerx: 125  centery: 25
 state: 1000 {}
 state: 610 { start: 1 finish: 0 }
 </frame>
