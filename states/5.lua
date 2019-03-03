@@ -1,26 +1,14 @@
-local state = { variables = {} } -- | 5 | -- Блок
--- Описание действия стейта и его переменных.
---
----------------------------------------------------------------------
-function state:Update(object)
-	if state.variables.block_status then
-		state.variables.block_status = false
-	else
-		object.block = 0
-	end
-end
+local state = { variables = {} } -- | 5 | -- Стойка в воздухе
+--Персонаж находится в воздухе в состоянии свободного падения. При достижении земли, переходит в кадры "приземления", обнуляя скорость по оси Y.
+-- A	Атака в воздухе
+-- S↓*	Рывок вниз
 ---------------------------------------------------------------------
 function state:Processing(object,s)
-	if object:pressed("defend") then
-		if object.block <= 0 then
-			object.block = s.block
-		end
-		state.variables.block_status = true
-		object.block_timer = 40
-		if object.wait == 0 then
-			object.wait = object.wait + 1
-		end
+	if object.grounded then
+		object:setFrame("landing")
+	else
+		if object:timer("attack") then object:setFrame("air_attack")
+		elseif object:timer("special1") and object:pressed("down") then object:setFrame("shunshin_down") end
 	end
 end
----------------------------------------------------------------------
 return state

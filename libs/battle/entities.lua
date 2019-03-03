@@ -9,6 +9,8 @@ local entities = {}
 			created_object.destroy = false
 			created_object.first_tick = true
 
+			created_object.gravity = false
+
 			created_object.r = 1
 			created_object.g = 1
 			created_object.b = 1
@@ -36,6 +38,7 @@ local entities = {}
 
 			created_object.special_grounded = 0
 
+			created_object.previous_frame = nil
 			created_object.frame = nil
 			created_object.next_frame = 1
 
@@ -154,8 +157,8 @@ local entities = {}
 	function entities:setFrame(f,i)
 		if type(f) == "number" then
 			if f == 0 and self.head.nextZero then
-				if self.y > 0 then self:setFrame("air")
-				else self:setFrame("idle") end
+				if self.y > 0 then self:setFrame("air_standing")
+				else self:setFrame("standing") end
 				return true
 			elseif f < 0 then
 				self.facing = -self.facing
@@ -163,7 +166,7 @@ local entities = {}
 			end
 			if self.frames[f] ~= nil then
 				if self.frame ~= nil then
-					self.previous_frame = self.frame.number
+					self.previous_frame = self.frame
 				end
 				self.frame = self.frames[f]
 				self.wait = self.frame.wait
@@ -187,6 +190,10 @@ local entities = {}
 	end
 
 	function entities:countersProcessing()
+		self.gravity = self.head.gravity
+		self.x_friction = self.head.gravity
+		self.z_friction = self.head.gravity
+
 		if self.bdefend_timer > 0 then self.bdefend_timer = self.bdefend_timer - 1
 		else self.bdefend = self.head.bdefend end
 		

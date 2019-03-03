@@ -21,7 +21,7 @@ function battle:createStartingObjects(list)
 		local x = spawn_point.x + math.random(-spawn_point.rx, spawn_point.rx)
 		local y = spawn_point.y + math.random(-spawn_point.ry, spawn_point.ry)
 		local z = spawn_point.z + math.random(-spawn_point.rz, spawn_point.rz)
-		local object = self.entities.spawnObject(id,x,y,z,nil,"idle",nil)
+		local object = self.entities.spawnObject(id,x,y,z,nil,"standing",nil)
 		if object ~= nil then
 			object.controller = list[key].controller
 			object:setController()
@@ -87,6 +87,7 @@ function battle:DrawInterface()
 		font.print(#self.collision.list.itr, 10, 10)
 		font.print(#self.collision.list.body, 10, 30)
 		font.print(self.entities.list[1].vel_y, 10, 50)
+		font.print(self.entities.list[1].vel_x, 10, 90)
 		font.print(self.graphic.camera_settings.scale, 10, 70)
 
 		if self.control.players[1] ~= nil then

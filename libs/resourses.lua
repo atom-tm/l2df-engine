@@ -536,7 +536,7 @@ local resourses = {}
 		for state_number, state_data in string.gmatch(data, "state: (%d+) {([^{}]*)}") do
 			local state = {}
 			state.number = state_number
-			for key, val in string.gmatch(state_data, "([%w_]+): ([%w_]+)") do
+			for key, val in string.gmatch(state_data, "([%w_]+): \"*([%w_]+)\"*") do
 				if val == "true" then state[key] = true
 				elseif val == "false" then state[key] = false
 				else state[key] = tostring(val) end

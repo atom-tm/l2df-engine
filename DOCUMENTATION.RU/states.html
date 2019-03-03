@@ -28,8 +28,8 @@
 		<tr><td class="state-num"><b>S</b></td><td style="text-align: left;">Нажатие клавиши "Спейшл"</td></tr>
 		<tr><td class="state-num"><b>↑</b></td><td style="text-align: left;">Нажатие клавиши "Вверх"</td></tr>
 		<tr><td class="state-num"><b>↓</b></td><td style="text-align: left;">Нажатие клавиши "Вниз"</td></tr>
-		<tr><td class="state-num"><b>←</b></td><td style="text-align: left;">Нажатие клавиши "Влево"</td></tr>
-		<tr><td class="state-num"><b>→</b></td><td style="text-align: left;">Нажатие клавиши "Вправо"</td></tr>
+		<tr><td class="state-num"><b>←</b></td><td style="text-align: left;">Нажатие клавиши "Назад"</td></tr>
+		<tr><td class="state-num"><b>→</b></td><td style="text-align: left;">Нажатие клавиши "Вперед"</td></tr>
 		<tr><td class="state-num"><b>⇄</b></td><td style="text-align: left;">Нажатие клавиш "Влево" или "Вправо"</td></tr>
 		<tr><td class="state-num"><b>✶</b></td><td style="text-align: left;">Нажатие клавиш "Влево", "Вправо", "Вверх" или "Вниз"</td></tr>
 		</table>
@@ -41,8 +41,8 @@
 		<tr><td class="state-num"><b>S+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Спейшл"</td></tr>
 		<tr><td class="state-num"><b>↑+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Вверх"</td></tr>
 		<tr><td class="state-num"><b>↓+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Вниз"</td></tr>
-		<tr><td class="state-num"><b>←+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Влево"</td></tr>
-		<tr><td class="state-num"><b>→+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Вправо"</td></tr>
+		<tr><td class="state-num"><b>←+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Назад"</td></tr>
+		<tr><td class="state-num"><b>→+</b></td><td style="text-align: left;">Двойное нажатие клавиши "Вперед"</td></tr>
 		<tr><td class="state-num"><b>⇄+</b></td><td style="text-align: left;">Двойное нажатие клавиш "Влево" или "Вправо"</td></tr>
 		<tr><td class="state-num"><b>✶+</b></td><td style="text-align: left;">Двойное нажатие клавиш "Влево", "Вправо", "Вверх" или "Вниз"</td></tr>
 		</table>
@@ -54,8 +54,8 @@
 		<tr><td class="state-num"><b>S*</b></td><td style="text-align: left;">Удержание клавиши "Спейшл"</td></tr>
 		<tr><td class="state-num"><b>↑*</b></td><td style="text-align: left;">Удержание клавиши "Вверх"</td></tr>
 		<tr><td class="state-num"><b>↓*</b></td><td style="text-align: left;">Удержание клавиши "Вниз"</td></tr>
-		<tr><td class="state-num"><b>←*</b></td><td style="text-align: left;">Удержание клавиши "Влево"</td></tr>
-		<tr><td class="state-num"><b>→*</b></td><td style="text-align: left;">Удержание клавиши "Вправо"</td></tr>
+		<tr><td class="state-num"><b>←*</b></td><td style="text-align: left;">Удержание клавиши "Назад"</td></tr>
+		<tr><td class="state-num"><b>→*</b></td><td style="text-align: left;">Удержание клавиши "Вперед"</td></tr>
 		<tr><td class="state-num"><b>⇄*</b></td><td style="text-align: left;">Удержание клавиш "Влево" или "Вправо"</td></tr>
 		<tr><td class="state-num"><b>✶*</b></td><td style="text-align: left;">Удержание клавиш "Влево", "Вправо", "Вверх" или "Вниз"</td></tr>
 		</table>
@@ -111,7 +111,7 @@
 					</tr>
 					<tr>
 						<td><b>✶*</b></td>
-						<td>Ходьба</td>
+						<td>Выбор направления ходьбы</td>
 					</tr>
 					<tr>
 						<td><b>⇄+</b></td>
@@ -133,38 +133,101 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="state-num">3</td>
+			<td class="state-num">2</td>
 			<td class="state-desc">
-				<b>Ходьба</b><br>
-				Персонаж передвигается, последовательно изменяя спрайт ходьбы, согласно установленному счетчику. 
+				<b>Бег</b><br>
+				Персонаж передвигается бегом, последовательно изменяя спрайт бега, согласно установленному счетчику. При окончании удержания клавиш "продолжения бега" персонаж переходит в кадры "остановки бега".
 				<table class="state-control">
 					<tr>
 						<td class="state-control-desc">Клавиша</td>
 						<td class="state-control-desc">Переход</td>
 					</tr>
 					<tr>
-						<td><b>✶*</b></td>
-						<td>Ходьба</td>
-					</tr>
-					<tr>
-						<td><b>⇄+</b></td>
-						<td>Бег</td>
+						<td><b>⇄*</b></td>
+						<td>Продолжение бега</td>
 					</tr>
 					<tr>
 						<td><b>A</b></td>
-						<td>Боевая стойка</td>
+						<td>Сильная атака</td>
 					</tr>
 					<tr>
 						<td><b>J</b></td>
-						<td>Подготовка к прыжку</td>
+						<td>Прыжок вперед</td>
 					</tr>
 					<tr>
 						<td><b>D</b></td>
-						<td>Защитная стойка</td>
+						<td>Рывок вперед</td>
+					</tr>
+				</table>
+				Если скорость бега превышает 25, при начале бега появляется визуальный эффект "speedup".
+			</td>
+		</tr>
+		<tr>
+			<td class="state-num">3</td>
+			<td class="state-desc">
+				<b>Подготовка к прыжку</b><br>
+				Персонаж приседает и готовится к прыжку.
+				<table class="state-control">
+					<tr>
+						<td class="state-control-desc">Клавиша</td>
+						<td class="state-control-desc">Переход</td>
+					</tr>
+					<tr>
+						<td><b>→*</b></td>
+						<td>Прыжок вперед</td>
+					</tr>
+					<tr>
+						<td><b>←*</b></td>
+						<td>Прыжок назад</td>
+					</tr>
+					<tr>
+						<td><b>S</b></td>
+						<td>Рывок вверх</td>
+					</tr>
+					<tr>
+						<td><b>S→*</b></td>
+						<td>Рывок вверх и вперед</td>
+					</tr>
+					<tr>
+						<td><b>S←*</b></td>
+						<td>Рывок вверх и назад</td>
+					</tr>
+				</table>
+				Если клавиши не нажимаются и не удерживаются, просиходит обычный "прыжок" вверх.
+			</td>
+		</tr>
+		<tr>
+			<td class="state-num">4</td>
+			<td class="state-desc">
+				<b>Прыжок вверх</b><br>
+				Персонаж приобретает положительную скорость, которая указывается в стейте переменными dvx,dvy,dvz и движется вверх, постепенно скорость уменьшается. При достижении нулевой скорости, персонаж переходит в кадры "стойки в воздухе" и начинает падение.<br>
+				Если стартовая скорость выше определенного значения, вызывается эффект "jerk_up".
+			</td>
+		</tr>
+		<tr>
+			<td class="state-num">5</td>
+			<td class="state-desc">
+				<b>Стойка в воздухе</b><br>
+				Персонаж находится в воздухе в состоянии свободного падения. При достижении земли, переходит в кадры "приземления", обнуляя скорость по оси Y.
+				<table class="state-control">
+					<tr>
+						<td class="state-control-desc">Клавиша</td>
+						<td class="state-control-desc">Переход</td>
+					</tr>
+					<tr>
+						<td><b>A</b></td>
+						<td>Атака в воздухе</td>
+					</tr>
+					<tr>
+						<td><b>S↓*</b></td>
+						<td>Рывок вниз</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
+
+
+
 		<tr>
 		<tr>
 			<td class="state-num">0</td>

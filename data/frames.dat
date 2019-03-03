@@ -1,17 +1,19 @@
-idle: 1
+standing: 1
 walking: { 10, 11, 12, 13, 14, 15 }
 running: { 20, 21, 22, 23, 24, 25 }
-jump: 30
-air: 35
-
-grounded: 50
-stop_running: 60
-
-defend: 70
-
-lying: 280
-
-attack: 300
-attack_air: 450
-
-special: 500
+stop_running: 30
+jump_preparing: 35
+jump_up: 40
+jump_forward: 45
+jump_back: 50
+shunshin_up: 55
+shunshin_up_forward: 60
+shunshin_up_back: 65
+shunshin_down: 70
+landing: 30
+air_standing: 80
+shunshin_forward: 85
+shunshin_back: 90
+service: 100
+defend: 130
+battle_stance: 140

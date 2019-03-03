@@ -112,7 +112,7 @@ local room = {}
 				table.insert(loading_List.entities,character)
 			end
 		end
-		table.insert(loading_List.maps,2)
+		table.insert(loading_List.maps,3)
 		return loading_List
 	end
 

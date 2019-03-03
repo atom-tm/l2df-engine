@@ -22,5 +22,6 @@ function state:Processing(object,s)
 		if object:pressed("right") then object.facing = 1 end
 		object:setFrame("walking", object.walking_frame)
 	end
+	-- FUNSERVISE
 end
 return state

@@ -19,7 +19,8 @@ id: 220	file: effects/fire.dat
 id: 221	file: effects/explosions01.dat
 
 
-id: 900  file: bg/Bridge/effects.dat
+id: 900  file: bg/Arena/effects.dat
+id: 901  file: bg/Bridge/effects.dat
 
 id: 1000 file: effects/sparks.dat
 id: 1001 file: effects/particles01.dat
@@ -27,4 +28,4 @@ id: 1001 file: effects/particles01.dat
 [maps]
 id: 1  file: bg/TestArena/TestArena.dat
 id: 2  file: bg/Bridge/map.dat
-id: 3  file: bg/Chunin_Arena/map.dat
+id: 3  file: bg/Arena/map.dat

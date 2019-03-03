@@ -67,24 +67,26 @@ local physix = {}
 		self.old_vel_x = self.vel_x
 		self.old_vel_y = self.vel_y
 		self.old_vel_z = self.vel_z
-		if not self.noGravity then
-			if self.head.gravity then
-				if self.grounded then
+		
+		if self.gravity then
+			if self.grounded then
+				if self.x_friction then
 					self.vel_x = self.vel_x * battle.map.head.friction
-					self.vel_z = self.vel_z * battle.map.head.friction
-					self.vel_y = 0
-				else
-					self.vel_x = self.vel_x * 0.99
-					self.vel_z = self.vel_z * 0.99
-					self.vel_y = self.vel_y - battle.map.head.gravity
 				end
+				if self.z_friction then
+					self.vel_z = self.vel_z * battle.map.head.friction
+				end
+				self.vel_y = 0
 			else
-				self.vel_x = self.vel_x * 0.99
-				self.vel_y = self.vel_y * 0.99
-				self.vel_z = self.vel_z * 0.99
+				if self.x_friction then
+					self.vel_x = self.vel_x * 0.99
+				end
+				if self.z_friction then
+					self.vel_z = self.vel_z * 0.99
+				end
+				self.vel_y = self.vel_y - battle.map.head.gravity
 			end
-		else
-			self.noGravity = false
 		end
+
 	end
 return physix

@@ -35,11 +35,11 @@
 			room.pause_mode = -1
 		end
 		if key == "f3" then
-			battle.entities.spawnObject(2,500,0,150,nil,"idle",nil)
+			battle.entities.spawnObject(2,500,0,150,nil,"standing",nil)
 		end
 		if key == "f4" then
 			for i = 1, 10 do
-				battle.entities.spawnObject(2,500,0,150,nil,"idle",nil)
+				battle.entities.spawnObject(2,500,0,150,nil,"standing",nil)
 			end
 		end
 		battle.control.keyPressed(key)

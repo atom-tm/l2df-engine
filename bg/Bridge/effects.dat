@@ -28,6 +28,8 @@ shadow: false
 	landing: 120
 	falling: 10
 	slammed: 20
+	speedup: 140
+	jerk_up: 120
 </frames_list>
 
 <frame> 10 falling
