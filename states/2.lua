@@ -48,8 +48,7 @@ function state:Processing(object,s)
 
 	if object:timer("attack") then object:setFrame("strong_attack") end
 	if object:timer("jump") then object:setFrame("jump_forward") end
-	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("shunshin_forward") end
-	--if object:timer("special1") then object:setFrame("dash") end
+	if object:pressed("special1") and object.block_timer == 0 then object:setFrame("shunshin_forward") end
 
 
 	if object:pressed("left") or object:pressed("right") then

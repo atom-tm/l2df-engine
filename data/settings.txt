@@ -2,7 +2,7 @@
 music_volume: 70
 sound_volume: 40
 fullscreen: false
-window_size: 5
+window_size: 3
 localization: 1
 controls_player_1: { right: d left: a defend: h attack: f special1: j down: s up: w jump: g }
 controls_player_2: { right: ; left: k defend: ] attack: p special1: \ down: l up: o jump: [ }

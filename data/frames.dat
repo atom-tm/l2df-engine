@@ -10,10 +10,11 @@ shunshin_up: 55
 shunshin_up_forward: 60
 shunshin_up_back: 65
 shunshin_down: 70
-landing: 30
-air_standing: 80
+air_standing: 75
+landing: 80
 shunshin_forward: 85
 shunshin_back: 90
+shunshin_stop: 95
 service: 100
 defend: 130
 battle_stance: 140

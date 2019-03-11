@@ -26,7 +26,7 @@ local graphic = {}
 		self.camera_settings.x = battle.map.head.width * 0.5
 		self.camera_settings.y = battle.map.head.height * 0.5
 		self.camera_settings.scale = self.camera_settings.scale_mod
-		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale)
+		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
 		self.camera:setPosition(self.camera_settings.x, self.camera_settings.y)
 		self.last_fullscreen_mode = settings.window.fullscreen
 	end
@@ -74,7 +74,7 @@ local graphic = {}
 		if self.camera_settings.scale < 0 then self.camera_settings.scale = 0
 		elseif self.camera_settings.scale > 1 then self.camera_settings.scale = 1 end
 
-		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale)
+		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
 
 		self.camera_settings.x = self.camera_settings.x - (self.camera_settings.x - camera_x) * 0.3
 		self.camera_settings.y = self.camera_settings.y - (self.camera_settings.y - camera_y) * 0.3

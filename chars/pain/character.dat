@@ -6,454 +6,235 @@ type: character
 
 start_animation: {
 	file: "chars/pain/sprites/start_animation.png"
-	w: 90 h: 90 row: 8 col: 1
+	w: 90 h: 90 row: 4 col: 1
 	centerx: 45 centery: 88 wait: 5
 }
 start_standing: {
 	file: "chars/pain/sprites/start_standing.png"
 	w: 90 h: 90 row: 4 col: 1
-	centerx: 45 centery: 87 wait: 4
+	centerx: 45 centery: 88 wait: 6
 }
 
 sprite: {
 	file: "chars/pain/sprites/main.png"
-	w: 85 h: 85 row: 7 col: 18
-}
-sprite: {
-	file: "chars/pain/sprites/attacks_1.png"
-	w: 85 h: 85 row: 7 col: 9
-}
-sprite: {
-	file: "chars/pain/sprites/attacks_2.png"
-	w: 100 h: 90 row: 7 col: 3
+	w: 100 h: 100 row: 10 col: 10
 }
 
 gravity: true
 collision: true
-
-states: { 5, 8 }
-
 bdefend: 10
 fall: 60
+
+states: {  }
 </head>
 
 <frames_list>
-	dfd: 520
-	udfu: 530
+
 </frames_list>
 
 
 <frame> 1 idle
-pic: 1  next: 2  wait: 5  centerx: 15 centery: 83
-body: {  x: 1  y: 3  w: 25  h: 77  z: -5  l: 10  }
+pic: 1  next: 2  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 2 idle
-pic: 2  next: 3  wait: 5  centerx: 15 centery: 83
-body: {  x: 1  y: 3  w: 25  h: 77  z: -5  l: 10  }
+pic: 2  next: 3  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 3 idle
-pic: 3  next: 4  wait: 5  centerx: 15 centery: 83
-body: {  x: 1  y: 3  w: 25  h: 77  z: -5  l: 10  }
+pic: 3  next: 4  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 4 idle
-pic: 4  next: 0  wait: 5  centerx: 15 centery: 83
-body: {  x: 1  y: 3  w: 25  h: 77  z: -5  l: 10  }
+pic: 4  next: 5  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 5 idle
+pic: 5  next: 6  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 6 idle
+pic: 6  next: 7  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 7 idle
+pic: 7  next: 8  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 8 idle
+pic: 8  next: 0  wait: 5  centerx: 43 centery: 98
+body: { x: 27  y: 20  w: 26  h: 77  z: -5  l: 10 }
 state: 0 {}
 </frame>
 
 
 <frame> 10 walking
-pic: 15  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 11  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 11 walking
-pic: 16  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 12  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 12 walking
-pic: 17  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 13  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 13 walking
-pic: 18  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 14  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 14 walking
-pic: 19  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 15  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 15 walking
-pic: 20  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 16  next: 0  wait: 7 centerx: 43 centery: 98
+body: { x: 28  y: 21  w: 29  h: 76  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 
 <frame> 20 running
-pic: 15  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 21  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 44  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
 </frame>
 <frame> 21 running
-pic: 16  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 22  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 42  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
 </frame>
 <frame> 22 running
-pic: 17  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 23  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 44  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
 </frame>
 <frame> 23 running
-pic: 18  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 24  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 44  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
 </frame>
 <frame> 24 running
-pic: 19  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 25  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 42  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
 </frame>
 <frame> 25 running
-pic: 20  next: 0  wait: 5 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 2 { speed_x: 17  speed_z: 3 }
+pic: 26  next: 0  wait: 5 centerx: 43 centery: 99
+body: { x: 18  y: 44  w: 55  h: 53  z: -5  l: 10 }
+state: 2 { speed_x: 22  speed_z: 2 }
+</frame>
+
+<frame> 30 stop_running
+pic: 31  next: 0  wait: 7  centerx: 46 centery: 98
+body: { x: 35  y: 34  w: 28  h: 62  z: -5  l: 10 }
+state: 100 { effect: "speedup" x: 10 z: -3  dvx: 10  facing: -1  dvx_inheritance: true  vel_x: 15 }
+</frame>
+
+<frame> 35 jump_preparing
+pic: 36  next: 0  wait: 5 centerx: 46 centery: 98
+body: { x: 28  y: 49  w: 38  h: 48  z: -5  l: 10 }
+state: 3 { }
+</frame>
+
+<frame> 40 jump_up
+pic: 41  next: 0  wait: 1  centerx: 41 centery: 98
+body: { x: 27  y: 27  w: 33  h: 69  z: -5  l: 10 }
+state: 4 { dvx: 0  dvy: 18  dvz: 2 }
+</frame>
+
+<frame> 45 jump_forward
+pic: 46  next: 0  wait: 1  centerx: 45 centery: 98
+body: { x: 23  y: 44  w: 56  h: 50  z: -5  l: 10 }
+state: 4 { dvx: 18  dvy: 13  dvz: 1 }
+</frame>
+
+<frame> 50 jump_back
+pic: 51  next: 0  wait: 1  centerx: 44 centery: 98
+body: { x: 32  y: 27  w: 25  h: 68  z: -5  l: 10 }
+state: 4 { dvx: -11  dvy: 15  dvz: 1 }
+</frame>
+
+<frame> 55 shunshin_up
+pic: 56  next: 56  wait: 4 dy: 45 centerx: 48 centery: 98
+state: 4 { dvy: 18 }
+</frame>
+<frame> 56 shunshin_up
+pic: 57  next: 57  wait: 4  centerx: 48 centery: 98
+body: { x: 31  y: 26  w: 38  h: 64  z: -5  l: 10 }
+state: 4 { }
+</frame>
+<frame> 57 shunshin_up
+pic: 58  next: 0  wait: 1  centerx: 42 centery: 98
+body: { x: 31  y: 26  w: 38  h: 64  z: -5  l: 10 }
+state: 4 { }
+</frame>
+
+<frame> 60 shunshin_up_forward
+pic: 61  next: 61  wait: 4 dx: 20 dy: 17 centerx: 45 centery: 98
+state: 4 { dvx: 15  dvy: 10 }
+</frame>
+<frame> 61 shunshin_up_forward
+pic: 62  next: 0  wait: 1  centerx: 45 centery: 98
+body: { x: 21  y: 38  w: 57  h: 57  z: -5  l: 10 }
+state: 4 { }
+</frame>
+
+<frame> 65 shunshin_up_back
+pic: 66  next: 66  wait: 4 dx: -15 dy: 23 centerx: 46 centery: 98
+state: 4 { dvx: -10  dvy: 13 }
+</frame>
+<frame> 66 shunshin_up_back
+pic: 67  next: 0  wait: 1  centerx: 50 centery: 98
+body: { x: 36  y: 27  w: 26  h: 68  z: -5  l: 10 }
+state: 4 { }
+</frame>
+
+<frame> 75 air_standing
+pic: 76  next: 0  wait: 1  centerx: 57 centery: 98
+body: { x: 37  y: 38  w: 34  h: 59  z: -5  l: 10 }
+state: 5 { }
+</frame>
+
+<frame> 80 landing
+pic: 81  next: 81  wait: 5  centerx: 45 centery: 98
+body: { x: 27  y: 53  w: 30  h: 44  z: -5  l: 10 }
+state: 6 { }
+</frame>
+<frame> 81 landing
+pic: 82  next: 0  wait: 3  centerx: 43 centery: 98
+body: { x: 33  y: 37  w: 28  h: 58  z: -5  l: 10 }
+state: 6 { }
 </frame>
 
 
-
-
-<frame> 30 jump
-pic: 27  next: 34  wait: 3  centerx: 26  centery: 83
-body: {  x: 14  y: 22  w: 33  h: 54  z: -5  l: 10  }
+<frame> 85 shunshin_forward
+pic: 86  next: 86  wait: 6  centerx: 47 centery: 98
+state: 7 { dvx: 65 dvz: 3 }
 </frame>
-<frame> 34 jump
-pic: 22  next: 31  wait: 4  centerx: 27  centery: 82
-body: { x: 21  y: 32  w: 36  h: 46 }
-state: 16 { s: 38  f: 32  b: 36 }
+<frame> 86 shunshin_stop
+pic: 87  next: 0  wait: 14  centerx: 47 centery: 98
+body: { x: 26  y: 47  w: 42  h: 50  z: -5  l: 10 }
 </frame>
 
-<frame> 31 jump_up
-pic: 23  next: 33  wait: 1  dvy: 15  centerx: 24  centery: 83
-body: { x: 51  y: 12  w: -46  h: 65 }
-</frame>
-<frame> 32 jump_foward
-pic: 23  next: 33  wait: 1  dvy: 11  dvx: 17 centerx: 24  centery: 83
-body: { x: 51  y: 12  w: -46  h: 65 }
+<frame> 90 shunshin_back
+pic: 91  next: 0  wait: 6  centerx: 42 centery: 98
+state: 7 { dvx: -40 dvz: 3 }
 </frame>
 
-<frame> 33 jump
-pic: 23  next: 0  wait: 1  centerx: 24  centery: 83
-body: { x: 51  y: 12  w: -46  h: 65 }
-state: 4 { down: 35 }
-state: 15 { a: 450 }
-</frame>
-
-<frame> 35 air
-pic: 24  next: 0  wait: 2 centerx: 35  centery: 83
-body: { x: 21  y: 12  w: 32  h: 63  z: -5  l: 10 }
-state: 4 {  }
-</frame>
-
-
-<frame> 36 jump_back
-pic: 25  next: 37  wait: 1  dvy: 12  dvx: -11 centerx: 17  centery: 83
-body: { x: 4  y: 7  w: 27  h: 71 }
-</frame>
-<frame> 37 jump_back
-pic: 25  next: 0  wait: 2  dvy: 0  dvx: 0 centerx: 17  centery: 83
-body: { x: 4  y: 7  w: 27  h: 71 }
-state: 4 {  }
-</frame>
-
-<frame> 38 jump_shunshin
-pic: 22  next: 39  wait: 2  centerx: 27  centery: 82
-body: { x: 21  y: 32  w: 36  h: 46 }
-</frame>
-<frame> 39 jump_shunshin
-pic: 28  next: 35  wait: 5 dsy: 2.5 dy: 25 centerx: 24  centery: 80 hit_a: 450
-</frame>
-
-
-<frame> 50 grounded
-pic: 26  next: 51  wait: 3 centerx: 30  centery: 82
-body: { x: 23  y: 38  w: 36  h: 41 }
-</frame>
-<frame> 51 grounded
-pic: 22  next: 52  wait: 3 centerx: 27  centery: 82  hit_j: 34
-body: { x: 27  y: 31  w: 27  h: 49 }
-</frame>
-<frame> 52 grounded
-pic: 27  next: 0  wait: 5 centerx: 26 centery: 83
-body: { x: 16  y: 20  w: 32  h: 60 }
-</frame>
-
-<frame> 60 stop_running
-pic: 27  next: 0  wait: 7 centerx: 26  centery: 82
-body: { x: 16  y: 20  w: 32  h: 60 }
-</frame>
-
-
-<frame> 70 defend
-pic: 29  next: 71  wait: 1 centerx: 25  centery: 83 hit_Fa: 500
-body: { x: 12  y: 16  w: 28  h: 64 }
-</frame>
-<frame> 71 defend
-pic: 30  next: 72  wait: 7 centerx: 26  centery: 83 hit_Fa: 500
-body: { x: 7  y: 16  w: 26  h: 64 }
-state: 5 { block: 20 }
-state: 10 {}
-state: 15 { dd: 520 }
-</frame>
-<frame> 72 defend
-pic: 29  next: 2  wait: 1 centerx: 25  centery: 83 hit_Fa: 500
-body: { x: 12  y: 16  w: 28  h: 64 }
-</frame>
-
-
-<frame> 200 injury_forward
-pic: 37  next: 0  wait: 15 centerx: 29  centery: 83
-body: { x: 6  y: 12  w: 34  h: 68  z: -5  l: 10 }
-</frame>
-<frame> 201 injury_backward
-pic: 36  next: 0  wait: 15 centerx: 42  centery: 83
-body: { x: 17  y: 7  w: 32  h: 72  z: -5  l: 10 }
-</frame>
-
-<frame> 202 bdefend_forward
-pic: 38  next: 201  wait: 15 centerx: 15  centery: 83
-body: { x: 3  y: 7  w: 25  h: 74  z: -5  l: 10 }
-</frame>
-<frame> 203 bdefend_backward
-pic: 40  next: 200  wait: 15 centerx: 18  centery: 83
-body: { x: 7  y: 23  w: 26  h: 56  z: -5  l: 10 }
-</frame>
-
-
-<frame> 220 falling
-pic: 43  next: 0  wait: 1 centerx: 32  centery: 65
-body: {  x: 1  y: 28  w: 62  h: 46  z: -5  l: 10  }
-state: 7 { up: 220  down: 221  grounded: 222 }
-</frame>
-<frame> 221 falling
-pic: 46  next: 0  wait: 1 centerx: 32  centery: 79
-body: {  x: 6  y: 41  w: 63  h: 38  z: -5  l: 10  }
-state: 7 { up: 220  down: 221  grounded: 222 }
-</frame>
-<frame> 222 falling
-pic: 44  next: 223  wait: 3 centerx: 43  centery: 79
-body: { x: 2  y: 55  w: 80  h: 27  z: -5  l: 10 }
-</frame>
-
-<frame> 223 lying
-pic: 45  next: 290  wait: 45 centerx: 43  centery: 78
-body: { x: 2  y: 55  w: 80  h: 27  z: -5  l: 10 }
-</frame>
-
-
-
-<frame> 290 raising
-pic: 50  next: 291  wait: 4 centerx: 30  centery: 78
-body: { x: 2  y: 55  w: 70  h: 26  z: -5  l: 10 }
-</frame>
-<frame> 291 raising
-pic: 51  next: 292  wait: 4 centerx: 5  centery: 79
-body: { x: 2  y: 32  w: 36  h: 47  z: -5  l: 10 }
-</frame>
-<frame> 292 raising
-pic: 27  next: 0  wait: 6 centerx: 26  centery: 83
-body: { x: 12  y: 21  w: 34  h: 60  z: -5  l: 10 }
-</frame>
-
-
-
-
-<frame> 300 attack_1
-pic: 127  next: 301  wait: 4 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-</frame>
-<frame> 301 attack_1
-pic: 128  next: 302  wait: 1  dvx: 1  centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-itr: {
-	kind: 0  dtype: 0
-	x: 27  y: 20  w: 46  h: 32  z: -5  l: 10  dvx: 5
-	fall: 20  bdefend: 15  not_knocking_down: true
-}
-</frame>
-<frame> 302 attack_1
-pic: 129  next: 303  wait: 8 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-</frame>
-<frame> 303 attack_1
-pic: 129  next: 304  wait: 3 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-state: 15 { a: 310 }
-</frame>
-<frame> 304 attack_1
-pic: 127  next: 0  wait: 3 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-</frame>
-
-<frame> 310 attack_2
-pic: 130  next: 311  wait: 4 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-</frame>
-<frame> 311 attack_2
-pic: 131  next: 312  wait: 1 dsx: 2 centerx: 25  centery: 83
-body: { x: 13  y: 27  w: 45  h: 51 }
-itr: {
-	kind: 0  dtype: 0
-	x: 26  y: 25  w: 50  h: 32  z: -5  l: 10  dvx: 5
-	fall: 20  bdefend: 20  not_knocking_down: true
-}
-</frame>
-<frame> 312 attack_2
-pic: 132  next: 313  wait: 10 centerx: 25  centery: 83
-body: { x: 13  y: 27  w: 45  h: 51 }
-</frame>
-<frame> 313 attack_2
-pic: 133  next: 0  wait: 3 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-state: 15 { a: 320 }
-</frame>
-
-
-<frame> 320 attack_3
-pic: 133  next: 321  wait: 1 centerx: 25  centery: 83
-body: { x: 10  y: 14  w: 33  h: 65 }
-</frame>
-<frame> 321 attack_3
-pic: 134  next: 322  wait: 4 centerx: 30  centery: 83
-body: { x: 2  y: 11  w: 34  h: 70 }
-</frame>
-<frame> 322 attack_3
-pic: 135  next: 323  wait: 2 centerx: 52  centery: 83
-body: { x: 4  y: 35  w: 51  h: 45 }
-</frame>
-<frame> 323 attack_3
-pic: 136  next: 324  wait: 1 dx: 2 centerx: 41  centery: 83
-body: { x: 5  y: 26  w: 55  h: 50 }
-itr: {
-	kind: 0  dtype: 0
-	 x: 24  y: 9  w: 56  h: 61  z: -5  l: 10  dvx: 10  dvy: 15
-	fall: 35  bdefend: 25  not_knocking_down: false
-}
-</frame>
-<frame> 324 attack_3
-pic: 137  next: 325  wait: 14 centerx: 42  centery: 83
-body: { x: 5  y: 26  w: 55  h: 50 }
-</frame>
-<frame> 325 attack_3
-pic: 138  next: 326  wait: 3 centerx: 52  centery: 83
-body: { x: 4  y: 35  w: 51  h: 45 }
-</frame>
-<frame> 326 attack_3
-pic: 139  next: 0  wait: 2 centerx: 41  centery: 83
-body: { x: 3  y: 23  w: 45  h: 59 }
-</frame>
-
-
-
-
-
-
-
-
-<frame> 450 attack_air
-pic: 99  next: 451  wait: 5 centerx: 31  centery: 83
-body: { x: 12  y: 10  w: 38  h: 56  z: -5  l: 10 }
-</frame>
-<frame> 451 attack_air
-pic: 100  next: 452  wait: 1 centerx: 31  centery: 83
-body: { x: 16  y: 11  w: 31  h: 67  z: -5  l: 10 }
-</frame>
-<frame> 452 attack_air
-pic: 101  next: 453  wait: 1 dsx: 1 centerx: 20  centery: 83
-body: { x: 9  y: 9  w: 23  h: 69  z: -5  l: 10 }
-itr: { kind: 0  dtype: 0       x: 11  y: 12  w: 70  h: 71  z: -5  l: 10    dvx: 15 dvy: 11  x_repulsion: true   fall: 50  bdefend: 25  not_knocking_down: false  }
-</frame>
-<frame> 453 attack_air
-pic: 102  next: 454  wait: 1 centerx: 28  centery: 83
-body: { x: 17  y: 10  w: 29  h: 66  z: -5  l: 10 }
-</frame>
-<frame> 454 attack_air
-pic: 99  next: 0  wait: 7 centerx: 31  centery: 83
-body: { x: 12  y: 10  w: 38  h: 56  z: -5  l: 10 }
-</frame>
-
-<frame> 500 seals
-pic: 57  next: 501  wait: 3 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-</frame>
-<frame> 501 seals
-pic: 61  next: 509  wait: 12 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-state: 500 { up: 502 down: 504 forward: 506 }
-</frame>
-
-<frame> 502 seals
-pic: 57  next: 503  wait: 3 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-</frame>
-<frame> 503 seals
-pic: 58  next: 509  wait: 8 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-state: 500 { up: 502 down: 504 forward: 506 }
-</frame>
-
-<frame> 504 seals
-pic: 57  next: 505  wait: 3 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-</frame>
-<frame> 505 seals
-pic: 59  next: 509  wait: 8 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-state: 500 { up: 502 down: 504 forward: 506 }
-</frame>
-
-<frame> 506 seals
-pic: 57  next: 507  wait: 3 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-</frame>
-<frame> 507 seals
-pic: 60  next: 509  wait: 8 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-state: 500 { up: 502 down: 504 forward: 506 }
-</frame>
-
-<frame> 509 seals
-pic: 57  next: 0  wait: 3 centerx: 18  centery: 83
-body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
-</frame>
-
-
-<frame> 520 shinra_defend
-pic: 103  next: 521  wait: 4 centerx: 15  centery: 83
-body: { x: 2  y: 7  w: 23  h: 72  z: -5  l: 10 }
-</frame>
-<frame> 521 shinra_defend
-pic: 104  next: 522  wait: 2 centerx: 16  centery: 83
-body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
-opoint: { id: 112  action: 1 facing: 0 x: 16 y: 83 }
-</frame>
-<frame> 522 shinra_defend
-pic: 105  next: 523  wait: 2 centerx: 15  centery: 83
-body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
-itr: { kind: 0  dtype: 100  x: -70  y: -35  w: 190  h: 120  z: -10  l: 20  dvx: 45 dvy: 7  reflection: true   fall: 60  bdefend: 80  not_knocking_down: true  static: true }
-</frame>
-<frame> 523 shinra_defend
-pic: 105  next: 524  wait: 9 centerx: 15  centery: 83
-body: { x: 3  y: 7  w: 25  h: 72  z: -5  l: 10 }
-</frame>
-<frame> 524 shinra_defend
-pic: 103  next: 0  wait: 4 centerx: 15  centery: 83
-body: { x: 2  y: 7  w: 23  h: 72  z: -5  l: 10 }
+<frame> 95 shunshin_stop
+pic: 96  next: 0  wait: 10 centerx: 47 centery: 98
+body: { x: 34  y: 22  w: 27  h: 74  z: -5  l: 10 }
 </frame>

@@ -1,7 +1,8 @@
 [characters]
-id: 2	file: chars/kakashi/character.dat
-id: 3	file: chars/itachi/character.dat
-id: 4	file: chars/pain/character.dat
+id: 1	file: chars/itachi/character.dat
+id: 2	file: chars/kisame/character.dat
+id: 3	file: chars/pain/character.dat
+id: 4	file: chars/kakashi/character.dat
 id: 5	file: chars/guy/character.dat
 
 [objects]
@@ -21,6 +22,7 @@ id: 221	file: effects/explosions01.dat
 
 id: 900  file: bg/Arena/effects.dat
 id: 901  file: bg/Bridge/effects.dat
+id: 902  file: bg/Hall/effects.dat
 
 id: 1000 file: effects/sparks.dat
 id: 1001 file: effects/particles01.dat
@@ -29,3 +31,4 @@ id: 1001 file: effects/particles01.dat
 id: 1  file: bg/TestArena/TestArena.dat
 id: 2  file: bg/Bridge/map.dat
 id: 3  file: bg/Arena/map.dat
+id: 4  file: bg/Hall/map.dat

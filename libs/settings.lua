@@ -28,6 +28,7 @@ local settings = {}
 		{ width = 854, height = 480 },
 		{ width = 1024, height = 576 },
 		{ width = 1280, height = 720 },
+		{ width = 1366, height = 768 },
 		{ width = 1600, height = 900 },
 		{ width = 1920, height = 1080 },
 	}
@@ -50,6 +51,7 @@ local settings = {}
 			
 			self.window.music_vol = get.PNumber(settings_data, "music_volume", 50)
 			self.window.sound_vol = get.PNumber(settings_data, "sound_volume", 70)
+			self.window.quality = get.PNumber(settings_data, "quality", 2)
 			self.window.fullscreen = get.PBool(settings_data, "fullscreen")
 			self.window.selectedSize = get.PNumber(settings_data, "window_size", 3)
 			self.names[1] = get.PString(settings_data, "player1_name", "")

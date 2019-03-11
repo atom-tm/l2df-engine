@@ -296,8 +296,8 @@ local resourses = {}
 					return true
 				else
 					local data = object.frames[object.current_frame]
-					local frame = resourses.LoadFrame(data)
 					local frame_number = tonumber(string.match(data, "(%d+)"))
+					local frame = resourses.LoadFrame(data,frame_number)
 					resourses.entities[object.id].frames[frame_number] = frame
 					object.current_frame = object.current_frame + 1
 				end
@@ -311,11 +311,12 @@ local resourses = {}
 
 
 
-	function resourses.LoadFrame(data) -- Загрузка фрейма объекта
+	function resourses.LoadFrame(data,frame_number) -- Загрузка фрейма объекта
 	----------------------------------------------------------------------------
 		local frame = {}
 		local header = string.match(data, "([^{}]+)")
 
+		frame.number 					= frame_number
 		frame.pic 						= get.PNumber(header,"pic")
 		frame.next 						= get.PNumber(header,"next")
 		frame.wait 						= get.PNumber(header,"wait")
@@ -611,6 +612,7 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 			head.name 						= get.PString(data, "name")
 			head.width 						= get.PNumber(data, "width")
 			head.height 					= get.PNumber(data, "height")
+			head.zoom						= get.PNumber(data, "zoom")
 			head.friction 					= get.PNumber(data, "friction")
 			head.gravity 					= get.PNumber(data, "gravity")
 

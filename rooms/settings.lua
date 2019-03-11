@@ -6,6 +6,7 @@ local room = {}
 		self.opacity_change = 0.0015
 		self.selected_size = settings.window.selectedSize
 		self.list = {}
+		self.saved_timer = 0
 
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
 
@@ -133,9 +134,19 @@ local room = {}
 		end
 		self.list[setting.id] = setting
 
-
 		local setting = {
 			id = 7,
+			option = locale.settings.save
+		}
+		function setting:action_click ()
+			room.saved_timer = 30
+			settings:Save()
+		end
+		self.list[setting.id] = setting
+
+
+		local setting = {
+			id = 8,
 			option = locale.settings.back
 		}
 		function setting:action_click()
@@ -152,6 +163,13 @@ local room = {}
 		end
 		if settings.window.fullscreen then room.list[5].hidden = true
 		else room.list[5].hidden = false end
+		if self.saved_timer > 0 then
+			self.saved_timer = self.saved_timer - 1
+			self.list[7].option = locale.settings.saved
+		else
+			self.list[7].option = locale.settings.save
+		end
+
 	end
 
 	function room:Draw()
@@ -234,7 +252,6 @@ local room = {}
 		if key == "escape" or key == settings.controls[1].jump or key == settings.controls[2].jump then
 			rooms:Set("main_menu")
 		end
-    	settings:Save()
 	end
 
 return room

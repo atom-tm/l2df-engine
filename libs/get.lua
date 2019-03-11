@@ -1,5 +1,12 @@
 local get = {}
 
+	function get.stateExist(frame, number)
+		for i = 1, #frame.states do
+			if frame.states[i].number == tostring(number) then return true end
+		end
+		return false
+	end
+
 	function get.NotZero (var, alternative) -- провека переменной на ноль или пустоту
 	-------------------------------------
 		if var ~= nil and var ~= 0 and var ~= "" then

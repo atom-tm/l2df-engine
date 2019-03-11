@@ -16,8 +16,7 @@ function state:Processing(object,s)
 		else
 			object:setFrame("shunshin_up")
 		end
-	end
-	if object.wait == 0 then
+	elseif object.wait == 0 then
 		if (object:pressed("left") and object.facing == -1) or (object:pressed("right") and object.facing == 1) then
 			object:setFrame("jump_forward")
 		elseif (object:pressed("left") and object.facing == 1) or (object:pressed("right") and object.facing == -1) then

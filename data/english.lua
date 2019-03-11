@@ -16,7 +16,9 @@ localization = {
 		controls = "Controls (F1)",
 		back = "Back",
 		on = "On",
-		off = "Off"
+		off = "Off",
+		save = "Save",
+		saved = "Settings saved!"
 	},
 	controls = {
 		controls = "Controls",

@@ -266,7 +266,7 @@ local room = {}
 	function room:CreateCharactersIcons()
 		self.char_icons = {
 			margin = -3, x_pos = 640, y_pos = 640,
-			rows = 4, cols = 1, list = {}
+			rows = 5, cols = 1, list = {}
 		}
 		for i = 1, (self.char_icons.rows * self.char_icons.cols) do
 			local character_info = {}

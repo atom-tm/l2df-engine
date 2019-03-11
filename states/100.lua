@@ -3,6 +3,8 @@ local state = { variables = {} } -- | 100 | -- Визуальные эффект
 -- s.effect - тип создаваемого эффекта
 -- s.vel_x - (+) условие, если скорость больше указанного значения
 -- s.vel_x - (-) условие, если скорость меньше указанного значения
+-- s.vel_y - (+) условие, если скорость больше указанного значения
+-- s.vel_y - (-) условие, если скорость меньше указанного значения
 ---------------------------------------------------------------------
 function state:Processing(object,s)
 	if s.effect ~= nil and object.first_tick then
@@ -13,6 +15,13 @@ function state:Processing(object,s)
 				if (object.vel_x * object.facing) < s.vel_x then checker = false end
 			elseif s.vel_x < 0 then
 				if (object.vel_x * object.facing) > (s.vel_x * -1) then checker = false end
+			end
+		end
+		if s.vel_y ~= nil and type(s.vel_y) == "number" and checker then
+			if s.vel_y > 0 then
+				if (object.vel_y) < s.vel_y then checker = false end
+			elseif s.vel_y < 0 then
+				if (object.vel_y) > (s.vel_y * -1) then checker = false end
 			end
 		end
 

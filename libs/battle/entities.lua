@@ -214,7 +214,8 @@ local entities = {}
 	end
 
 	function entities.waitCounter(object)
-		if object.wait < 0 then object:setFrame(object.next_frame) else
+		if object.wait < 0 then
+		 	object:setFrame(object.next_frame) else
 			if object.shaking > 0 then object.shaking = object.shaking - 1
 			else object.wait = object.wait - 1 end
 		end

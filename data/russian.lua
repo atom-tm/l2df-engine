@@ -16,7 +16,9 @@ localization = {
 		controls = "Настройка управления (F1)",
 		back = "Назад",
 		on = "Вкл",
-		off = "Выкл"
+		off = "Выкл",
+		save = "Сохранить",
+		saved = "Настройки сохранены!"
 	},
 	controls = {
 		controls = "Управление",
