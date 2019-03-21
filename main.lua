@@ -2,22 +2,12 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 math.randomseed(love.timer.getTime())
 require "libs.globals"
 
---require "libs.entites"
---require "libs.drawing"
---require "libs.physics"
---require "libs.collisions"
-
---require "libs.controls"
---require "libs.battle"
---require "libs.loading"
---require "libs.states"
-
 function love.load()
 	-- FPS Локер --
 	min_dt = 1/60 -- требуемое фпс
     next_time = love.timer.getTime()
     ---------------
-    settings:Read("data/settings.txt")
+    settings:Read("data/settings.txt") -- чтение настроек из файла с настройками игры
     func.SetWindowSize()
     loc:Set(loc.id)
     data:Load("data/data.txt")
@@ -74,7 +64,7 @@ function love.keypressed( button, scancode, isrepeat )
 	elseif button == "f12" then
 		settings.debug_mode = not settings.debug_mode
 	else
-		rooms.current:Keypressed(button)
+		rooms.current:Keypressed(scancode)
 	end
 end
 function love.joystickpressed( joystick, button )

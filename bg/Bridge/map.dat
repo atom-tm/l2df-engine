@@ -1,5 +1,6 @@
 name: Bridge
-preview: "bg/TestArena/preview.png"
+preview_0: "bg/Bridge/preview_0.png"
+preview_1: "bg/Bridge/preview_1.png"
 effects: 901
 
 width: 5000

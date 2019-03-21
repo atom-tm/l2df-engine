@@ -139,7 +139,13 @@ local entities = {}
 						object.owner = get.notNil(owner, i)
 						object.dynamic_id = i
 						object:setFrame(action)
-						entities.list[i] = object
+						if object.head.type == "effect" then
+							if settings.quality then
+								entities.list[i] = object
+							end
+						else
+							entities.list[i] = object
+						end
 						return object
 					end
 				end

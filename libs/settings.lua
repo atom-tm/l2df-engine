@@ -18,7 +18,7 @@ local settings = {}
 	settings.gameWidth = 1280
 	settings.gameHeight = 720
 
-	settings.quality = 1
+	settings.quality = true
 
 	settings.names = {}
 
@@ -45,13 +45,13 @@ local settings = {}
 
 	settings.file = nil
 
-	function settings:Read (settings_file)
+	function settings:Read(settings_file)
 		local settings_data = love.filesystem.read(settings_file)
 		if settings_data ~= nil then
-			
+
 			self.window.music_vol = get.PNumber(settings_data, "music_volume", 50)
 			self.window.sound_vol = get.PNumber(settings_data, "sound_volume", 70)
-			self.window.quality = get.PNumber(settings_data, "quality", 2)
+			self.quality = get.PBool(settings_data, "quality")
 			self.window.fullscreen = get.PBool(settings_data, "fullscreen")
 			self.window.selectedSize = get.PNumber(settings_data, "window_size", 3)
 			self.names[1] = get.PString(settings_data, "player1_name", "")
@@ -67,6 +67,7 @@ local settings = {}
 					settings.controls[1][key] = key_code
 				end
 			end
+
 			local controls_string = string.match(settings_data, "controls_player_2: {([^{}]+)}")
 			if controls_string ~= nil then
 				local controls_massive = {}
@@ -76,15 +77,16 @@ local settings = {}
 					settings.controls[2][key] = key_code
 				end
 			end
-
-			self.file = settings_file
 		end
+		self.file = settings_file
 	end
+
+
 
 	function settings:Save()
 		local settings_file = io.open("../"..self.file,"w+")
 		if settings_file ~= nil then
-	
+
 			local controls_player_1 = " "
 			for key,key_code in pairs(self.controls[1]) do
 				controls_player_1 = controls_player_1..key..": "..key_code.." "
@@ -100,12 +102,14 @@ local settings = {}
 			"fullscreen: "..tostring(self.window.fullscreen).."\n"..
 			"window_size: "..self.window.selectedSize.."\n"..
 			"localization: "..loc.id.."\n"..
+			"quality: "..tostring(self.quality).."\n"..
 			"controls_player_1: {"..controls_player_1.."}\n"..
 			"controls_player_2: {"..controls_player_2.."}\n"..
 			"player1_name: "..self.names[1].."\n"..
 			"player2_name: "..self.names[2]
 			
 			settings_file:write(save_data)
+			settings_file:flush()
 			settings_file:close()
 		end
 	end

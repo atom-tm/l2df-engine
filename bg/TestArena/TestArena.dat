@@ -1,5 +1,6 @@
 name: TestMap
-preview: "bg/TestArena/preview.png"
+preview_0: "bg/TestArena/preview_0.png"
+preview_1: "bg/TestArena/preview_1.png"
 
 width: 2500
 height: 1633

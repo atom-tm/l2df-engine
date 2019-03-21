@@ -4,10 +4,11 @@ local fonts = {}
 		default = love.graphics.newFont("sprites/UI/fonts/Default.ttf",14),
 		character_select_menu = love.graphics.newFont("sprites/UI/fonts/Default.ttf",20),
 		character_select_menu_bots = love.graphics.newFont("sprites/UI/fonts/Default.ttf",18),
-		character_select_menu_time = love.graphics.newFont("sprites/UI/fonts/Default.ttf",36),
+		character_select_menu_time = love.graphics.newFont("sprites/UI/fonts/Default.ttf",72),
+		character_select_mode_select = love.graphics.newFont("sprites/UI/fonts/Default.ttf",26),
 		setting_header = love.graphics.newFont("sprites/UI/fonts/Settings.otf",42),
 		setting_comment = love.graphics.newFont("sprites/UI/fonts/Settings.otf",24),
-		setting_element = love.graphics.newFont("sprites/UI/fonts/Settings.otf",32),
+		setting_element = love.graphics.newFont("sprites/UI/fonts/Settings.otf",34),
 		menu_element = love.graphics.newFont("sprites/UI/fonts/Settings.otf",48),
 	}
 

@@ -10,6 +10,7 @@ local room = {}
 		self.scenes = {
 			image.Load("sprites/UI/MainMenu/1.png"),
 			image.Load("sprites/UI/MainMenu/2.png"),
+			image.Load("sprites/UI/MainMenu/3.png"),
 		}
 		self.scene = math.random(1, #self.scenes)
 

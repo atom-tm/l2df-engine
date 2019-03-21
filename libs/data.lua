@@ -148,7 +148,8 @@ data = {}
 					local map_info = {
 						id = tonumber(id),
 						name = get.PString(map_file,"name"),
-						preview = image.Load(string.match(map_file,"preview: \"([^\"\"]+)\""))
+						preview_0 = image.Load(string.match(map_file,"preview_0: \"([^\"\"]+)\"")),
+						preview_1 = image.Load(string.match(map_file,"preview_1: \"([^\"\"]+)\""))
 					}
 					table.insert(self.maps_list,map_info)
 				end

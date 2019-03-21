@@ -8,7 +8,7 @@ local images = {}
 			end
 		end
 		local image = {
-			image = love.graphics.newImage(file_path),
+			image = love.graphics.newImage(file_path, {linear = true, mipmaps = true} ),
 			sprites = {},
 			path = file_path
 		}
@@ -20,6 +20,9 @@ local images = {}
 				end
 			end
 			image.w = cutting_info.w
+			image.h = cutting_info.h
+		else
+			image.w, image.h = image.image:getDimensions()
 		end
 		if filter ~= nil then image.image:setFilter(filter, filter) end
 		table.insert(images.list, image)

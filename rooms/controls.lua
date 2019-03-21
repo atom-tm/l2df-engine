@@ -126,10 +126,10 @@ local room = {}
 				self.p2_opt = self.p2_opt + 1
 			end
 			if self.p1_opt > 8 or self.p2_opt > 8 then
-				settings:Save()
 				rooms:Reload()
 			end
 		else
+			
 			if key == settings.controls[1].jump or key == settings.controls[2].jump or key == "escape" then
 				rooms:Set("settings")
 			end

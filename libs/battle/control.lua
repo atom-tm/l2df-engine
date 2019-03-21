@@ -80,7 +80,7 @@ local control = {}
 		for i = 1, #settings.controls do
 			for key in pairs(settings.controls[i]) do
 				if control.players[i] ~= nil then
-					if love.keyboard.isDown(settings.controls[i][key]) then
+					if love.keyboard.isScancodeDown(settings.controls[i][key]) then
 						control.players[i].key_pressed[key] = 1
 					else
 						control.players[i].key_pressed[key] = 0

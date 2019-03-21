@@ -18,7 +18,10 @@ localization = {
 		on = "On",
 		off = "Off",
 		save = "Save",
-		saved = "Settings saved!"
+		saved = "Settings saved!",
+		graphic = "Quality",
+		low = "simplified",
+		normal = "normal"
 	},
 	controls = {
 		controls = "Controls",
@@ -35,9 +38,20 @@ localization = {
 		p2 = "Player 2 (F2)"
 	},
 	characters_pick = {
-		info1 = "Press \"Attack\" to join\nSelect a character using the move keys\nPress \"Attack\" again to confirm your choice.\nPress \"Jump\" to deselect or return to the main menu.",
+		info1 = "Players, press the \"Attack\" button to join!\nSelect a character using the keys \"Left\"\\\"Right\"\nPress the \"Attack\" again to confirm the selection.\nPress \"Jump\" to cancel the selection or return to the main menu.",
 		info2 = "Select computer players\nRemained: ",
-		bots = "Select the number of computer players"
+		bots = "Select the number of computer players",
+		mode1 = "Start battle",
+		mode2 = "Selected map: ",
+		mode3 = "Exit to main menu",
+		mode4 = "Reset all",
+		mode5 = "Reset random"
 	},
+	maps = {
+		[1] = "Test Arena",
+		[2] = "Bridge",
+		[3] = "Chunin Arena",
+		[4] = "Hall"
+	}
 }
 return localization

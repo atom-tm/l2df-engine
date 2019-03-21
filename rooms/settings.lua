@@ -7,13 +7,9 @@ local room = {}
 		self.selected_size = settings.window.selectedSize
 		self.list = {}
 		self.saved_timer = 0
-
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
 
-
-
 		local setting = {
-			id = 1,
 			option = locale.settings.language,
 			status = locale.language
 		}
@@ -29,175 +25,191 @@ local room = {}
 			loc:Set(local_id)
 			rooms:Reload()
 		end
-		self.list[setting.id] = setting
-
+		table.insert(self.list, setting)
 
 
 		local setting = {
-			id = 2,
 			option = locale.settings.music,
 			status = ""
 		}
+		function setting:update()	
+			self.status = ""	
+			for i = 1, settings.window.music_vol * 0.2 do
+				self.status = self.status .. "I"
+			end
+		end
 		function setting:action_left()
 			if settings.window.music_vol > 0 then settings.window.music_vol = settings.window.music_vol - 5 end
-			self.status = ""
-			for i = 1, settings.window.music_vol * 0.2 do self.status = self.status .. "I" end
 		end
 		function setting:action_right()
 			if settings.window.music_vol < 100 then settings.window.music_vol = settings.window.music_vol + 5 end
-			self.status = ""
-			for i = 1, settings.window.music_vol * 0.2 do self.status = self.status .. "I" end
 		end
-		for i = 1, settings.window.music_vol * 0.2 do
-			setting.status = setting.status .. "I"
-		end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 
 
 		local setting = {
-			id = 3,
 			option = locale.settings.effects,
 			status = ""
 		}
+		function setting:update()	
+			self.status = ""	
+			for i = 1, settings.window.sound_vol * 0.2 do
+				self.status = self.status .. "I"
+			end
+		end
 		function setting:action_left()
 			if settings.window.sound_vol > 0 then settings.window.sound_vol = settings.window.sound_vol - 5 end
-			self.status = ""
-			for i = 1, settings.window.sound_vol * 0.2 do self.status = self.status .. "I" end
 		end
 		function setting:action_right()
 			if settings.window.sound_vol < 100 then settings.window.sound_vol = settings.window.sound_vol + 5 end
-			self.status = ""
-			for i = 1, settings.window.sound_vol * 0.2 do self.status = self.status .. "I" end
 		end
-		for i = 1, settings.window.sound_vol * 0.2 do
-			setting.status = setting.status .. "I"
-		end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 
 		local setting = {
-			id = 4,
-			option = locale.settings.fullscreen
+			option = locale.settings.graphic,
+			status = ""
 		}
+		function setting:update()
+			if settings.quality then
+				self.status = locale.settings.normal
+			else
+				self.status = locale.settings.low
+			end
+		end
+		function setting:action_left()
+			settings.quality = not settings.quality
+		end
+		function setting:action_right()
+			settings.quality = not settings.quality
+		end
+		table.insert(self.list, setting)
+
+
+
+
+		local setting = {
+			option = locale.settings.fullscreen,
+			status = ""
+		}
+		function setting:update()
+			if settings.window.fullscreen == true then setting.status = locale.settings.on
+			else setting.status = locale.settings.off end
+		end
 		function setting:action_left()
 			settings.window.fullscreen = not settings.window.fullscreen
 			func.SetWindowSize()
-			if settings.window.fullscreen == true then
-				self.status = locale.settings.on
-			else
-				self.status = locale.settings.off
-			end
 		end
 		function setting:action_right()
 			settings.window.fullscreen = not settings.window.fullscreen
 			func.SetWindowSize()
-			if settings.window.fullscreen == true then
-				self.status = locale.settings.on
-			else
-				self.status = locale.settings.off
-			end
 		end
-		if settings.window.fullscreen == true then setting.status = locale.settings.on
-		else setting.status = locale.settings.off end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 
 		local setting = {
-			id = 5,
 			option = locale.settings.window_size,
-			status = settings.windowSizes[settings.window.selectedSize].width.." x "..settings.windowSizes[settings.window.selectedSize].height
+			status = ""
 		}
+		function setting:update()
+			self.status = settings.windowSizes[room.selected_size].width .." x ".. settings.windowSizes[room.selected_size].height
+			if settings.window.fullscreen then
+				self.hidden = true
+			else
+				self.hidden = false
+			end
+		end
 		function setting:action_left()
 			room.selected_size = room.selected_size - 1
 			if room.selected_size < 1 then room.selected_size = #settings.windowSizes end
-			self.status = settings.windowSizes[room.selected_size].width.." x "..settings.windowSizes[room.selected_size].height
 		end
 		function setting:action_right()
 			room.selected_size = room.selected_size + 1
 			if room.selected_size > #settings.windowSizes then room.selected_size = 1 end
-			self.status = settings.windowSizes[room.selected_size].width.." x "..settings.windowSizes[room.selected_size].height
 		end
 		function setting:action_click()
 			settings.window.selectedSize = room.selected_size
 			func.SetWindowSize()
 		end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 
 		local setting = {
-			id = 6,
-			option = locale.settings.controls
+			option = locale.settings.controls,
+			status = ""
 		}
 		function setting:action_click ()
 			rooms:Set("controls")
 		end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 		local setting = {
-			id = 7,
 			option = locale.settings.save
 		}
+		function setting:update()
+			if room.saved_timer > 0 then
+				room.saved_timer = room.saved_timer - 1
+				self.option = locale.settings.saved
+			else
+				self.option = locale.settings.save
+			end
+		end
 		function setting:action_click ()
 			room.saved_timer = 30
 			settings:Save()
 		end
-		self.list[setting.id] = setting
-
+		table.insert(self.list, setting)
 
 		local setting = {
-			id = 8,
 			option = locale.settings.back
 		}
 		function setting:action_click()
 			rooms:Set("main_menu")
 		end
-		self.list[setting.id] = setting
+		table.insert(self.list, setting)
 
 	end
 
 	function room:Update()
+		for i = 1, #self.list do
+			if self.list[i].update ~= nil then
+				self.list[i]:update()
+			end
+		end
 		self.opacity = self.opacity + self.opacity_change
 		if self.opacity < 0.05 or self.opacity > 0.15 then
 			self.opacity_change = -self.opacity_change
 		end
-		if settings.window.fullscreen then room.list[5].hidden = true
-		else room.list[5].hidden = false end
-		if self.saved_timer > 0 then
-			self.saved_timer = self.saved_timer - 1
-			self.list[7].option = locale.settings.saved
-		else
-			self.list[7].option = locale.settings.save
-		end
-
 	end
 
 	function room:Draw()
 		image.draw(self.background_image,0,0,0)
-		font.print(locale.settings.settings, 250, 50, nil, font.list.setting_header, 0, 300, 0, 0, 0, 1)
-		local y_offset = 70
-		local y_pos = 150
-			
+		font.print(locale.settings.settings, 250, 20, nil, font.list.setting_header, 0, 300, 0, 0, 0, 1)
+		
+		local width = 750
+		local height = 50
+		local x_pos = 250
+		local y_pos = 60
+		local margin = 10
+
 		for i = 1, #self.list do
+			local y = y_pos + (height + margin) * i
 			if self.selected == i then
 				love.graphics.setColor(0,0,0, self.opacity)
-				love.graphics.rectangle("fill", 260, y_pos - 15, 740, 70)
-				love.graphics.setColor(1,1,1, 1)
+				love.graphics.rectangle("fill", x_pos, y - height * 0.05, width, height)
+				love.graphics.setColor(1,1,1,1)
 			end
 			local text_opacity = 1
 			if self.list[i].hidden == true then
 				text_opacity = 0.5
 			end
-
 			if self.list[i].option ~= nil then
-				font.print(self.list[i].option, 300, y_pos, nil, font.list.setting_element, 0, 500, 0, 0, 0, text_opacity)
+				font.print(self.list[i].option, x_pos + 50, y, nil, font.list.setting_element, 0, width, 0, 0, 0, text_opacity)
 			end
-
 			if self.list[i].status ~= nil then
-				font.print(self.list[i].status, 800, y_pos, nil, font.list.setting_element, true, 300, 0, 0, 0, text_opacity)
+				font.print(self.list[i].status, x_pos + 450, y, nil, font.list.setting_element, true, width, 0, 0, 0, text_opacity)
 			end
-
-			y_pos = y_pos + y_offset
 			love.graphics.setColor(1,1,1,1)
 		end
 	end
@@ -248,7 +260,6 @@ local room = {}
 		end
 
 		if key == "f1" then rooms:Set("controls") end
-		
 		if key == "escape" or key == settings.controls[1].jump or key == settings.controls[2].jump then
 			rooms:Set("main_menu")
 		end
