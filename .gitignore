@@ -1,2 +1,4 @@
 bg/Arena
 bg/Hall
+dev/
+*.sublime-*
