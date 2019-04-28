@@ -1,16 +1,101 @@
 local settings = {}
+
+	-- Выделение памяти под настройки игры и установка значений по умолчанию
+	function settings:settingsInitialize()
+		
+		settings.gamePath = love.filesystem.getSourceBaseDirectory()
+		love.filesystem.mount(settings.gamePath, "")
+
+		self.file = "data/settings.txt" 			-- Путь файла настроек игры
+		self.data = "data/data.txt"					-- Путь до data.txt (список объектов и карт движка)
+		self.frames = "data/frames.dat" 			-- Путь до frames.dat (список кадров по умолчанию)
+		self.combos = "data/combos.dat"				-- Путь до combos.dat (список переходов по комбинациям клавиш)
+		self.dtypes = "data/dtypes.dat"				-- Путь до dtypes.dat (список поведения при разных типах урона)
+
+		self.statesFolder 		= "/data/states/"	-- Папка с файлами стейтов
+		self.kindsFolder 		= "/data/kinds/"	-- Папка с файлами типов взаимодействий
+		self.localesFolder		= "/data/locales/"	-- Папка с файлами локализаций
+		self.UIFolder			= "/sprites/UI/"	-- Папка с элементами оформления
+
+		self.resolutions = {						-- Доступные разрешения холста игры
+			{ width = 854, height = 480 },				-- 854х480
+			{ width = 1024, height = 576 },				-- 1024х576
+			{ width = 1280, height = 720 },				-- 1280х720
+			{ width = 1366, height = 768 },				-- 1366х768
+			{ width = 1600, height = 900 },				-- 1600х900
+			{ width = 1920, height = 1080 },			-- 1920х1080
+		}
+
+		self.resolution 		= 3					-- Текущее разрешение холста
+		self.gameWidth 			= 1280 				-- Ширина холста игры
+		self.gameHeight			= 720 				-- Высота холста игры
+
+		self.windowWidth		= 1280 				-- Ширина окна игры
+		self.windowHeight		= 720 				-- Высота окна игры
+
+		self.musicVolume 		= 50				-- Громкость музыки
+		self.soundVolume 		= 100				-- Громкость звука
+
+		self.graphic = {							-- Настройки графической составляющей игры
+			fullscreen 			= false,				-- Полный экран
+			fpsLimit 			= 60,					-- Ограничение FPS
+			shadows 			= true, 				-- Детализированные тени
+			reflections			= true,					-- Отражения
+			smoothing			= true, 				-- Фильтрация текстур
+			effects				= true,					-- Количество эффектов и частиц
+		}
+
+		self.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
+
+		self.localization 		= 1 				-- Выбранный файл локализации
+		self.debug 				= true 				-- Показ отладочной информации
+
+		self.controls = {							-- Настройки управления
+			{
+				name = "Player 1",
+				up = "w", down = "s", left = "a", right = "d",
+			  	attack = "f", jump = "g", defend = "h",
+			  	special1 = "j"
+			},
+			{
+				name = "Player 2",
+				up = "o", down = "l", left = "k", right = ";",
+			  	attack = "p", jump = "[", defend = "]",
+			  	special1 = "\\"
+			}
+		}
+	end
+
+	-- Функция считывания настроек из файла settings.file
+	function settings:load()
+		local settings_data = love.filesystem.read(self.file)
+		if settings_data then
+
+		else
+			self:save()
+		end
+	end
+
+	-- Функция сохранения настроек в файл settings.file
+	function settings:save()
+		local settings_file = io.open(self.file, "w")
+		settings_file:write(save_data)
+		settings_file:flush()
+		settings_file:close()
+	end
+
 	
-	settings.gamePath = love.filesystem.getSourceBaseDirectory() -- берем путь до папки с игрой
-	love.filesystem.mount(settings.gamePath, "") -- "Монтируем" нашу игру по указанному пути (для использования внешних файлов)
+	
+
 
 	local window = {}
-		window.fullscreen = nil
-		window.music_vol = nil
-		window.sound_vol = nil
-		window.selectedSize = nil
-		window.width = nil
-		window.height = nil
-		window.cameraScale = nil
+		window.fullscreen = false
+		window.music_vol = 100
+		window.sound_vol = 100
+		window.selectedSize = 1
+		window.width = 1280
+		window.height = 720
+		window.cameraScale = 0
 		window.realWidth = nil
 		window.realHeight = nil
 	settings.window = window
