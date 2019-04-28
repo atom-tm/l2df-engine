@@ -7,6 +7,8 @@ function love.load()
 	min_dt = 1/settings.fpsLimit -- требуемое фпс
 	next_time = love.timer.getTime()
 	---------------
+	settings:settingsInitialize()
+	settings:load()
 	settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
 	func.SetWindowSize()
 	loc:Set(loc.id)

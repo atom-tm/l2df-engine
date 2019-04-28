@@ -1,56 +1,61 @@
 local settings = {}
 
+	local filesystem = love.filesystem
+
 	-- Выделение памяти под настройки игры и установка значений по умолчанию
 	function settings:settingsInitialize()
 		
-		settings.gamePath = love.filesystem.getSourceBaseDirectory()
-		love.filesystem.mount(settings.gamePath, "")
+		self.gamePath = filesystem.getSourceBaseDirectory()
+		filesystem.mount(self.gamePath, "")
 
-		self.file = "data/settings.txt" 			-- Путь файла настроек игры
-		self.data = "data/data.txt"					-- Путь до data.txt (список объектов и карт движка)
-		self.frames = "data/frames.dat" 			-- Путь до frames.dat (список кадров по умолчанию)
-		self.combos = "data/combos.dat"				-- Путь до combos.dat (список переходов по комбинациям клавиш)
-		self.dtypes = "data/dtypes.dat"				-- Путь до dtypes.dat (список поведения при разных типах урона)
+		self.global = {}								-- Таблица с настройками, доступными для изменения пользователем
 
-		self.statesFolder 		= "/data/states/"	-- Папка с файлами стейтов
-		self.kindsFolder 		= "/data/kinds/"	-- Папка с файлами типов взаимодействий
-		self.localesFolder		= "/data/locales/"	-- Папка с файлами локализаций
-		self.UIFolder			= "/sprites/UI/"	-- Папка с элементами оформления
+		self.file = "data/settings.conf" 				-- Путь файла настроек игры
+		self.global.data = "data/data.txt"				-- Путь до data.txt (список объектов и карт движка)
+		self.global.frames = "data/frames.dat" 			-- Путь до frames.dat (список кадров по умолчанию)
+		self.global.combos = "data/combos.dat"			-- Путь до combos.dat (список переходов по комбинациям клавиш)
+		self.global.dtypes = "data/dtypes.dat"			-- Путь до dtypes.dat (список поведения при разных типах урона)
 
-		self.resolutions = {						-- Доступные разрешения холста игры
-			{ width = 854, height = 480 },				-- 854х480
-			{ width = 1024, height = 576 },				-- 1024х576
-			{ width = 1280, height = 720 },				-- 1280х720
-			{ width = 1366, height = 768 },				-- 1366х768
-			{ width = 1600, height = 900 },				-- 1600х900
-			{ width = 1920, height = 1080 },			-- 1920х1080
+		self.global.statesFolder 	= "/data/states/"	-- Папка с файлами стейтов
+		self.global.kindsFolder 	= "/data/kinds/"	-- Папка с файлами типов взаимодействий
+		self.global.localesFolder	= "/data/locales/"	-- Папка с файлами локализаций
+		self.global.UIFolder		= "/sprites/UI/"	-- Папка с элементами оформления
+
+		self.resolutions = {							-- Доступные разрешения холста игры
+			{ width = 854, height = 480 },					-- 854х480
+			{ width = 1024, height = 576 },					-- 1024х576
+			{ width = 1280, height = 720 },					-- 1280х720
+			{ width = 1366, height = 768 },					-- 1366х768
+			{ width = 1600, height = 900 },					-- 1600х900
+			{ width = 1920, height = 1080 },				-- 1920х1080
 		}
 
-		self.resolution 		= 3					-- Текущее разрешение холста
-		self.gameWidth 			= 1280 				-- Ширина холста игры
-		self.gameHeight			= 720 				-- Высота холста игры
+		self.global.resolution 		= 3					-- Текущее разрешение холста
+		self.global.gameWidth 		= 1280 				-- Ширина холста игры
+		self.global.gameHeight		= 720 				-- Высота холста игры
 
-		self.windowWidth		= 1280 				-- Ширина окна игры
-		self.windowHeight		= 720 				-- Высота окна игры
+		self.global.windowWidth		= 1280 				-- Ширина окна игры
+		self.global.windowHeight	= 720 				-- Высота окна игры
 
-		self.musicVolume 		= 50				-- Громкость музыки
-		self.soundVolume 		= 100				-- Громкость звука
+		self.global.musicVolume 	= 50				-- Громкость музыки
+		self.global.soundVolume 	= 100				-- Громкость звука
 
-		self.graphic = {							-- Настройки графической составляющей игры
+		self.global.graphic = {							-- Настройки графической составляющей игры
 			fullscreen 			= false,				-- Полный экран
 			fpsLimit 			= 60,					-- Ограничение FPS
 			shadows 			= true, 				-- Детализированные тени
 			reflections			= true,					-- Отражения
 			smoothing			= true, 				-- Фильтрация текстур
 			effects				= true,					-- Количество эффектов и частиц
+			details 			= true,					-- Показ необязательных элементов
 		}
 
-		self.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
+		self.global.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
 
-		self.localization 		= 1 				-- Выбранный файл локализации
-		self.debug 				= true 				-- Показ отладочной информации
+		self.global.localization 	= 1 				-- Выбранный файл локализации
+		self.global.debug 			= true 				-- Показ отладочной информации
 
-		self.controls = {							-- Настройки управления
+		self.global.controls = {						-- Настройки управления
 			{
 				name = "Player 1",
 				up = "w", down = "s", left = "a", right = "d",
@@ -68,9 +73,9 @@ local settings = {}
 
 	-- Функция считывания настроек из файла settings.file
 	function settings:load()
-		local settings_data = love.filesystem.read(self.file)
+		local settings_data = filesystem.read(self.file)
 		if settings_data then
-
+			self.global = self.readArray(settings_data)
 		else
 			self:save()
 		end
@@ -78,10 +83,46 @@ local settings = {}
 
 	-- Функция сохранения настроек в файл settings.file
 	function settings:save()
-		local settings_file = io.open(self.file, "w")
-		settings_file:write(save_data)
+		local save_string = settings.writeArray(self.global)
+		local settings_file = io.open(filesystem.getSource() .. "/" .. self.file,"w")
+		settings_file:write(save_string)
 		settings_file:flush()
 		settings_file:close()
+	end
+
+	-- Функция обрабатывает массив и преобразует его в строку
+	-- @param array, table, Массив настроек
+	-- @param name, string, Необязательный параметр имени родителя
+	-- @return string
+	function settings.writeArray(array, name)
+		local result = ""
+		for key, val in pairs(array) do
+			if type(val) == "table" then
+				if name then
+					result = result .. settings.writeArray(val, name .. "." .. key)
+				else
+					result = result .. settings.writeArray(val, key)
+				end
+			else
+				local _s
+				if name then
+					_s = name .. "." .. key .. " = \"" .. tostring(val) .. "\""
+				else
+					_s = key .. " = \"" .. tostring(val) .. "\""
+				end
+				result = result .. _s .. "\n"
+			end
+		end
+		return result
+	end
+
+
+	function settings.readArray(string)
+		local result = {}
+		for key, val in string.gmatch(string,"([^= ]+) = \"([^\"]+)\"") do
+			result[key] = val
+		end
+		return result
 	end
 
 	
@@ -130,7 +171,7 @@ local settings = {}
 		{ up = "o", down = "l", left = "k", right = ";", attack = "p", jump = "[", defend = "]", special1 = "\\" }
 	}
 
-	settings.file = nil
+	--settings.file = nil
 
 	function settings:Read(settings_file)
 		local settings_data = love.filesystem.read(settings_file)
