@@ -12,7 +12,7 @@ local images = {}
 			sprites = {},
 			path = file_path
 		}
-		image.image:setWrap( "clampzero", "clampzero" )
+		image.image:setWrap("clampzero", "clampzero")
 		if cutting_info ~= nil then
 			if cutting_info.x == nil then cutting_info.x = 1 end
 			if cutting_info.y == nil then cutting_info.y = 1 end
@@ -29,8 +29,9 @@ local images = {}
 		else
 			image.w, image.h = image.image:getDimensions()
 		end
-		if filter ~= nil then image.image:setFilter(filter, filter) end
-		image.image:setFilter("nearest", "nearest")
+		if filter ~= nil then
+			image.image:setFilter(filter, filter)
+		end
 		table.insert(images.list, image)
 		image.setQuad = images.setQuad
 		return image

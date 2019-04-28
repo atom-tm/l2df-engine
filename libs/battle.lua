@@ -24,10 +24,12 @@ battle.tick = {
 }
 battle.objects = 0
 
+
 function battle:setMap(map)
 	self.map = map
 	self.graphic:cameraCreate()
 end
+
 
 function battle:createStartingObjects(list)
 	for key in pairs(list) do
@@ -57,38 +59,40 @@ function battle:createStartingObjects(list)
 	battle:mapOpointsProcessing()
 end
 
+
 function battle:mapOpointsProcessing()
-		for i = 1, #self.map.opoints do
-			local opoint = self.map.opoints[i]
-			if resourses.entities[opoint.id] ~= nil then
-				local amount = opoint.amount
+	for i = 1, #self.map.opoints do
+		local opoint = self.map.opoints[i]
+		if resourses.entities[opoint.id] ~= nil then
+			local amount = opoint.amount
+			if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
+				amount = amount + math.random(0,opoint.amount_random)
+			end
+			for a = 1, amount do
+				local x = opoint.x + math.random(-opoint.x_random, opoint.x_random)
+				local y = opoint.y + math.random(-opoint.y_random, opoint.y_random)
+				local z = opoint.z + math.random(-opoint.z_random, opoint.z_random)
+				local count = opoint.count
 				if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
-					amount = amount + math.random(0,opoint.amount_random)
+					count = count + math.random(0,opoint.count_random)
 				end
-				for a = 1, amount do
-					local x = opoint.x + math.random(-opoint.x_random, opoint.x_random)
-					local y = opoint.y + math.random(-opoint.y_random, opoint.y_random)
-					local z = opoint.z + math.random(-opoint.z_random, opoint.z_random)
-					local count = opoint.count
-					if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
-						count = count + math.random(0,opoint.count_random)
-					end
-					local facing = opoint.facing
-					if facing == 3 then facing = math.random(-1,1) end
-					if facing == 0 then facing = 1 end
-					for c = 1, count do
-						local action = opoint.action + math.random(0,opoint.action_random)
-						local object = battle.entities.spawnObject(opoint.id, x, y, z, facing, action, nil)
-						if object ~= nil then
-							object:setMotion_X((opoint.dvx + math.random(0,opoint.dvx_random * 100) * 0.01) * object.facing)
-							object:setMotion_Y((opoint.dvy + math.random(0,opoint.dvy_random * 100) * 0.01))
-							object:setMotion_Z((opoint.dvz + math.random(0,opoint.dvz_random * 100) * 0.01))
-						end
+				local facing = opoint.facing
+				if facing == 3 then facing = math.random(-1,1) end
+				if facing == 0 then facing = 1 end
+				for c = 1, count do
+					local action = opoint.action + math.random(0,opoint.action_random)
+					local object = battle.entities.spawnObject(opoint.id, x, y, z, facing, action, nil)
+					if object ~= nil then
+						object:setMotion_X((opoint.dvx + math.random(0,opoint.dvx_random * 100) * 0.01) * object.facing)
+						object:setMotion_Y((opoint.dvy + math.random(0,opoint.dvy_random * 100) * 0.01))
+						object:setMotion_Z((opoint.dvz + math.random(0,opoint.dvz_random * 100) * 0.01))
 					end
 				end
 			end
 		end
 	end
+end
+
 
 function battle:time()
 	for tick in pairs(self.tick) do
@@ -139,8 +143,6 @@ function battle:Load(spawnList)
 	sounds.setMusic("music/battle.mp3")
 	self:createStartingObjects(spawnList.entities)
 end
-
-
 
 
 function battle:Update()
@@ -248,7 +250,6 @@ function battle:createOptimizedLists()
 end
 
 
-
 function battle:DrawGame()
 	self.graphic:layersDraw()
 end
@@ -264,7 +265,6 @@ end
 function battle:DrawInterface()
 	camera:draw(function(l,t,w,h)
 		if self.control.players[1] ~= nil and self.control.players[2] == nil then
-			
 			image.draw(self.res.hp_bar_background,nil,0,0)
 			image.draw(self.control.players[1].head.face,nil,0,0)
 
@@ -279,7 +279,7 @@ function battle:DrawInterface()
 			image.draw(self.res.bars,"sp_back",81,45)
 			self.res.bars:setQuad("sp", self.res.bars.sp.x, self.res.bars.sp.y, self.control.players[1].sp_width, self.res.bars.sp.h)
 			image.draw(self.res.bars,"sp",81,45)
-			
+
 			if settings.debug_mode then
 				font.print(self.control.players[1].hp .. "/" .. self.control.players[1].head.hp, 102, 8, "left", font.list.stats)
 				font.print(self.control.players[1].mp .. "/" .. self.control.players[1].head.mp, 95, 30, "left", font.list.stats)

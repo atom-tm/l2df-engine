@@ -10,6 +10,7 @@ local resourses = {}
 		sounds = {}
 	}
 
+
 	function resourses.Clear()
 		resourses.loading_list = {
 			entities = {},
@@ -22,6 +23,7 @@ local resourses = {}
 		resourses.pointer = 0
 		collectgarbage()
 	end
+
 
 	function resourses.AddToLoading(Id, Etype)
 		local massive = nil
@@ -42,26 +44,16 @@ local resourses = {}
 				return true
 			end
 		end
+
 		local object = {
 			id = Id,
 			data = love.filesystem.read(data_sourse[Id]),
 			stage = 1
 		}
-
 		table.insert(massive, object)
 
 		return true
-
 	end
-
-
-
-
-
-
-
-
-
 
 
 	function resourses.EntityLoading() -- Поэтапная загрузка объекта
@@ -112,14 +104,6 @@ local resourses = {}
 
 		return false
 	end
-
-
-
-
-
-
-
-
 
 
 	function resourses.EntityLoadingHeader(object) -- Загрузка шапки объекта
@@ -218,18 +202,20 @@ local resourses = {}
 	end
 
 
-
-
 	function resourses.EntityLoadingOther(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
 		local head = resourses.entities[object.id].head
 		
-		if head.frames["walking"] ~= nil and type(head.frames["walking"]) == "table" then head.walking_frames = #head.frames["walking"]
-		elseif data.frames["walking"] ~= nil and type(data.frames["walking"]) == "table" then head.walking_frames = #data.frames["walking"]
+		if head.frames["walking"] ~= nil and type(head.frames["walking"]) == "table" then
+			head.walking_frames = #head.frames["walking"]
+		elseif data.frames["walking"] ~= nil and type(data.frames["walking"]) == "table" then
+			head.walking_frames = #data.frames["walking"]
 		else head.walking_frames = 0 end	
 
-		if head.frames["running"] ~= nil and type(head.frames["running"]) == "table" then head.running_frames = #head.frames["running"]
-		elseif data.frames["running"] ~= nil and type(data.frames["running"]) == "table" then head.running_frames = #data.frames["running"]
+		if head.frames["running"] ~= nil and type(head.frames["running"]) == "table" then
+			head.running_frames = #head.frames["running"]
+		elseif data.frames["running"] ~= nil and type(data.frames["running"]) == "table" then
+			head.running_frames = #data.frames["running"]
 		else head.running_frames = 0 end
 
 		resourses.entities[object.id].variables.states = {}
@@ -243,7 +229,6 @@ local resourses = {}
 
 		return true
 	end
-
 
 
 	function resourses.EntityLoadingSprites(object) -- Поочередная загрузка спрайтов объекта
@@ -295,9 +280,6 @@ local resourses = {}
 	end
 
 
-
-
-
 	function resourses.EntityLoadFrames(object) -- Поочередная загрузка фреймов объекта
 	----------------------------------------------------------------------------
 		if object.frames == nil or object.current_frame == nil then
@@ -322,10 +304,6 @@ local resourses = {}
 			return false
 		end
 	end
-
-
-
-
 
 
 	function resourses.LoadFrame(data,frame_number) -- Загрузка фрейма объекта
@@ -403,10 +381,6 @@ local resourses = {}
 	end
 
 
-
-
-
-
 	function resourses.LoadBodys(data_sourse) -- Загрузка коллайдеров тела объекта
 	----------------------------------------------------------------------------
 		local bodys = {}
@@ -449,10 +423,6 @@ local resourses = {}
 	end
 
 
-
-
-
-
 	function resourses.LoadItrs(data_sourse) -- Загрузка коллайдеров атаки объекта
 	----------------------------------------------------------------------------
 		local itrs = {}
@@ -492,11 +462,6 @@ local resourses = {}
 		itrs.radius_z = get.Maximum(itrs_radiuses_z)
 		return itrs
 	end
-
-
-
-
-
 
 
 	function resourses.LoadOpoints(data) -- Загрузка блока вызова объекта
@@ -541,11 +506,6 @@ local resourses = {}
 	end
 
 
-
-
-
-
-
 	function resourses.LoadStates(data) -- Загрузка стейтов объекта
 	----------------------------------------------------------------------------
 		local states = {}
@@ -566,13 +526,7 @@ local resourses = {}
 	end
 
 
-
-
-
-
-
-
-function resourses.MapLoading() -- Поэтапная загрузка карты
+	function resourses.MapLoading() -- Поэтапная загрузка карты
 	----------------------------------------------------------------------------
 		if resourses.pointer == nil or resourses.pointer == 0 then
 			resourses.pointer = 1
@@ -612,11 +566,7 @@ function resourses.MapLoading() -- Поэтапная загрузка карт�
 	end
 
 
-
-
-
-
-function resourses.MapLoadingHeader(object) -- Загрузка шапки карты
+	function resourses.MapLoadingHeader(object) -- Загрузка шапки карты
 	----------------------------------------------------------------------------
 		local map = resourses.maps[object.id]
 		local head = map.head
@@ -694,8 +644,6 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 	end
 
 
-
-
 	function resourses.MapLoadLayers(object) -- Поочередная загрузка слоёв карты
 	----------------------------------------------------------------------------
 		if object.layers == nil or object.current_layer == nil then
@@ -738,10 +686,6 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 	end
 
 
-
-
-
-
 	function resourses.MapLoadFilters(object) -- Поочередная загрузка слоёв карты
 	----------------------------------------------------------------------------
 		if object.filters == nil or object.current_filter == nil then
@@ -781,10 +725,6 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 			return false
 		end
 	end
-
-
-
-
 
 
 return resourses

@@ -16,7 +16,7 @@ data = {}
 		self.states = {}
 		local states_list = love.filesystem.getDirectoryItems(states_dir)
 		for i = 1, #states_list do
-			local state_number = string.gsub(states_list[i], ".lua", "");
+			local state_number = string.gsub(states_list[i], ".lua", "")
 			if state_number ~= nil and tonumber(state_number) then
 				self.states[state_number] = require(states_dir .. "." .. state_number)
 				if self.states[state_number].Update ~= nil then
@@ -31,7 +31,7 @@ data = {}
 		self.kinds = {}
 		local itrs_list = love.filesystem.getDirectoryItems(kinds_dir)
 		for i = 1, #itrs_list do
-			local kind_number = string.gsub(itrs_list[i], ".lua", "");
+			local kind_number = string.gsub(itrs_list[i], ".lua", "")
 			if kind_number ~= nil and tonumber(kind_number) then
 				self.kinds[tonumber(kind_number)] = require(kinds_dir .. "." .. kind_number)
 			end
