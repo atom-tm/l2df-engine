@@ -5,18 +5,18 @@ require "libs.globals"
 function love.load()
 	-- FPS Локер --
 	min_dt = 1/settings.fpsLimit -- требуемое фпс
-    next_time = love.timer.getTime()
-    ---------------
-    settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
-    func.SetWindowSize()
-    loc:Set(loc.id)
-    data:Load("data/data.txt")
-    data:Frames("data/frames.dat")
-    data:DTypes("data/damage_types.dat")
-    data:System("data/system.dat")
-    data:States("states")
-    data:Kinds("kinds")
-    rooms:Set("main_menu")
+	next_time = love.timer.getTime()
+	---------------
+	settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
+	func.SetWindowSize()
+	loc:Set(loc.id)
+	data:Load("data/data.txt")
+	data:Frames("data/frames.dat")
+	data:DTypes("data/damage_types.dat")
+	data:System("data/system.dat")
+	data:States("states")
+	data:Kinds("kinds")
+	rooms:Set("main_menu")
 end
 
 function love.update(dt)

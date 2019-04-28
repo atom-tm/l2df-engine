@@ -1,4 +1,5 @@
 local functions = {}
+
 	function functions.SetWindowSize()
 		local width = settings.windowSizes[settings.window.selectedSize].width
 		local height = settings.windowSizes[settings.window.selectedSize].height
@@ -24,7 +25,6 @@ local functions = {}
 		return result
 	end
 
-
 	function functions:getDamageInfo(val)
 		if self[val] then
 			if type(self[val]) == "number" then
@@ -35,7 +35,5 @@ local functions = {}
 		end
 		return 0
 	end
-
-
 
 return functions
