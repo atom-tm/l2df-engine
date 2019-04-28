@@ -1,20 +1,27 @@
 local get = {}
 	
+	-- Get sign of value
+	-- @param x, number Specified value
+	-- @return number
 	function get.sign(x)
-	    if x < 0 then
-	        return -1
-	    elseif x > 0 then
-	        return 1
-	    else
-	        return 0
-	    end
+		if x < 0 then return -1 end
+		if x > 0 then return 1 end
+		return 0
 	end
 
-	function get.round( int, nums )
-		local i = math.pow(10, nums)
-		return math.floor(int * i) / i
+	-- Get rounded value with precision
+	-- @param value, number     Specified value
+	-- @param precision, number Needed precision
+	-- @return number
+	function get.round(value, precision)
+		local i = math.pow(10, precision)
+		return math.floor(value * i) / i
 	end
 
+	-- Returns true if frame with specified number exists
+	-- @param frame, number  Value to check
+	-- @param number, number Default value. 1 if not setted
+	-- @return boolean
 	function get.stateExist(frame, number)
 		for i = 1, #frame.states do
 			if frame.states[i].number == tostring(number) then return true end
@@ -22,85 +29,101 @@ local get = {}
 		return false
 	end
 
-	function get.NotZero (var, alternative) -- провека переменной на ноль или пустоту
-	-------------------------------------
-		if var ~= nil and var ~= 0 and var ~= "" then
-			return var
-		elseif alternative ~= nil then
-			return alternative
-		else return 1 end
+	-- Coalesce function for 'non-empty' value
+	-- @param var, mixed     Value to check
+	-- @param default, mixed Default value. 1 if not setted
+	-- @return mixed
+	function get.NotZero(var, default)
+		return (var ~= nil and var ~= 0 and var ~= "") and var or default or 1
 	end
 
-	function get.notNil (n,a) -- провека переменной на ноль или пустоту
-	-------------------------------------
-		if n ~= nil then return n
-		else return a end
+	-- Coalesce function for 'non-nil' value
+	-- @param value, mixed Value to check
+	-- @param default, mixed Default value. nil if not setted
+	-- @return mixed
+	function get.notNil(var, default)
+		return var or default
 	end
 
-	function get.Maximum (mas) -- получение максимального значения массива чисел
-	-------------------------------------
+	-- Get maximum of array
+	-- @param arr, array Array to process
+	-- @return int
+	function get.Maximum(arr)
 		max = 0
-		for i = 1, #mas do 
-			if mas[i] > max then max = mas[i] end
+		for i = 1, #arr do 
+			if arr[i] > max then max = arr[i] end
 		end
 		return max
 	end
 
-	function get.Biggest(x,y) -- получение большего из двух значений
-	-------------------------------------
+	-- Get maximum of two values
+	-- @param x First value
+	-- @param y Second value
+	-- @return mixed
+	function get.Biggest(x, y)
 		if x > y then
 			return x
-		else
-		    return y
 		end
+		return y
 	end
 
-	function get.Least(x,y) -- получение меньшего из двух значений
-	-------------------------------------
+	-- Get minimum of two values
+	-- @param x First value
+	-- @param y Second value
+	-- @return mixed
+	function get.Least(x, y)
 		if x < y then
 			return x
-		else
-		    return y
 		end
+		return y
 	end
 
-	function get.Distance (x1,y1,x2,y2) -- получение дистанции между двумя игроками
-	-------------------------------------
-		return math.sqrt(math.abs((x1 - x2)^2) + math.abs((y1 - y2)^2))
+	-- Get distance between two points
+	-- @param x1 First point x
+	-- @param y1 First point y
+	-- @param x2 Second point x
+	-- @param y2 Second point y
+	-- @return number
+	function get.Distance(x1, y1, x2, y2)
+		return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
 	end
 
-	function get.PString (string, parameter) -- функция для получения строкового значения параметра "parameter" из входящей строки "string"
-	-------------------------------------
-		local result = ""
-		local match = string.match(string, parameter..": ([%w_]+)")
-		if match then result = tostring(match) end
-		return result
+	-- Get string value from string by parameter
+	-- @param string    Given string
+	-- @param parameter Parameter name
+	-- @return string
+	function get.PString(string, parameter)
+		local match = string.match(string, parameter .. ": ([%w_]+)")
+		return match and tostring(match) or ""
 	end
 
-	function get.PNumber (string, parameter, alternative) -- функция для получения числового значения параметра из входящей строки
-	-------------------------------------
-		local result = 0
-		if alternative then
-			result = alternative
-		end
-		local match = string.match(string, parameter..": ([-%d%.]+)")
-		if match then result = tonumber(match) end
-		return result
+	-- Get number value from string by parameter or default
+	-- @param string    Given string
+	-- @param parameter Parameter name
+	-- @param default   Default value. 0 if not setted
+	-- @return number
+	function get.PNumber(string, parameter, default)
+		local match = string.match(string, parameter .. ": ([-%d%.]+)")
+		return match and tonumber(match) or default or 0
 	end
 
-	function get.PBool (string, parameter) -- функция для получения булевого значения параметра из входящей строки
-	-------------------------------------
-		local result = false
-		local match = string.match(string, parameter..": (%w+)")
-		if match == "true" then result = true else result = false end
-		return result
+	-- Get boolean value from string by parameter or false by default
+	-- @param string    Given string
+	-- @param parameter Parameter name
+	-- @return boolean
+	function get.PBool(string, parameter)
+		local match = string.match(string, parameter .. ": (%w+)")
+		return match == "true"
 	end
 
-	function get.PFrames (string, parameter) -- функция для получения списка значений парамеира из входящей строки
-	-------------------------------------
+	-- Get frames list (integer) from string by parameter. Empty by default
+	-- @param string    Given string
+	-- @param parameter Parameter name
+	-- @return table
+	function get.PFrames(string, parameter)
 		local frame_list = {}
 		local frames = string.match(string, parameter .. ": {([^{}]*)}")
-		if frames then
+		if frames ~= nil then
 			for frame in string.gmatch(frames, "(%d+)") do
 				table.insert(frame_list, tonumber(frame))
 			end
@@ -108,8 +131,11 @@ local get = {}
 		return frame_list
 	end
 
-	function get.PFramesString (string, parameter) -- функция для получения списка значений парамеира из входящей строки
-	-------------------------------------
+	-- Get frames list (string) from string by parameter. Empty by default
+	-- @param string    Given string
+	-- @param parameter Parameter name
+	-- @return table
+	function get.PFramesString(string, parameter)
 		local frame_list = {}
 		local frames = string.match(string, parameter .. ": {([^{}]*)}")
 		if frames ~= nil then
