@@ -92,7 +92,7 @@ local get = {}
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return string
-	function get.PString(string, parameter)
+	function get.PString(str, parameter)
 		local match = string.match(str, parameter .. ": ([%w_]+)")
 		return match and tostring(match) or ""
 	end
@@ -102,8 +102,8 @@ local get = {}
 	-- @param parameter, string  Parameter name
 	-- @param default, number    Default value. 0 if not setted
 	-- @return number
-	function get.PNumber(string, parameter, default)
-		local match = string.match(string, parameter .. ": ([-%d%.]+)")
+	function get.PNumber(str, parameter, default)
+		local match = string.match(str, parameter .. ": ([-%d%.]+)")
 		return match and tonumber(match) or default or 0
 	end
 
@@ -111,8 +111,8 @@ local get = {}
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return boolean
-	function get.PBool(string, parameter)
-		local match = string.match(string, parameter .. ": (%w+)")
+	function get.PBool(str, parameter)
+		local match = string.match(str, parameter .. ": (%w+)")
 		return match == "true"
 	end
 
@@ -120,9 +120,9 @@ local get = {}
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return table
-	function get.PFrames(string, parameter)
+	function get.PFrames(str, parameter)
 		local frame_list = {}
-		local frames = string.match(string, parameter .. ": {([^{}]*)}")
+		local frames = string.match(str, parameter .. ": {([^{}]*)}")
 		if frames ~= nil then
 			for frame in string.gmatch(frames, "(%d+)") do
 				table.insert(frame_list, tonumber(frame))
@@ -135,9 +135,9 @@ local get = {}
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return table
-	function get.PFramesString(string, parameter)
+	function get.PFramesString(str, parameter)
 		local frame_list = {}
-		local frames = string.match(string, parameter .. ": {([^{}]*)}")
+		local frames = string.match(str, parameter .. ": {([^{}]*)}")
 		if frames ~= nil then
 			for frame in string.gmatch(frames, "(%d+)") do
 				table.insert(frame_list, frame)
