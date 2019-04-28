@@ -1,6 +1,6 @@
 local functions = {}
 
-	-- Update window size by settings
+	--- Update window size by settings
 	function functions.SetWindowSize()
 		local width = settings.windowSizes[settings.window.selectedSize].width
 		local height = settings.windowSizes[settings.window.selectedSize].height
@@ -21,7 +21,7 @@ local functions = {}
 		settings.window.realWidth = width
 	end
 
-	-- Deep-copy of table
+	--- Deep-copy of table
 	-- @param table, table  Given string
 	function functions.CopyTable(table)
 		local result = {}
@@ -35,7 +35,7 @@ local functions = {}
 		return result
 	end
 
-	-- Update Get damage information by key
+	--- Update Get damage information by key
 	-- @param val, string|number  Specified key
 	function functions:getDamageInfo(val)
 		if self[val] then

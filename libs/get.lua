@@ -1,6 +1,6 @@
 local get = {}
 
-	-- Get sign of value
+	--- Get sign of value
 	-- @param x, number  Specified value
 	-- @return number
 	function get.sign(x)
@@ -9,7 +9,7 @@ local get = {}
 		return 0
 	end
 
-	-- Get rounded value with precision
+	--- Get rounded value with precision
 	-- @param value, number      Specified value
 	-- @param precision, number  Needed precision
 	-- @return number
@@ -18,7 +18,7 @@ local get = {}
 		return math.floor(value * i) / i
 	end
 
-	-- Returns true if frame with specified number exists
+	--- Returns true if frame with specified number exists
 	-- @param frame, number   Value to check
 	-- @param number, number  Default value. 1 if not setted
 	-- @return boolean
@@ -29,7 +29,7 @@ local get = {}
 		return false
 	end
 
-	-- Coalesce function for 'non-empty' value
+	--- Coalesce function for 'non-empty' value
 	-- @param var, mixed      Value to check
 	-- @param default, mixed  Default value. 1 if not setted
 	-- @return mixed
@@ -37,7 +37,7 @@ local get = {}
 		return (var ~= nil and var ~= 0 and var ~= "") and var or default or 1
 	end
 
-	-- Coalesce function for 'non-nil' value
+	--- Coalesce function for 'non-nil' value
 	-- @param value, mixed    Value to check
 	-- @param default, mixed  Default value. nil if not setted
 	-- @return mixed
@@ -45,7 +45,7 @@ local get = {}
 		return var or default
 	end
 
-	-- Get maximum of array
+	--- Get maximum of array
 	-- @param arr, array  Array to process
 	-- @return int
 	function get.Maximum(arr)
@@ -56,7 +56,7 @@ local get = {}
 		return max
 	end
 
-	-- Get maximum of two values
+	--- Get maximum of two values
 	-- @param x, mixed  First value
 	-- @param y, mixed  Second value
 	-- @return mixed
@@ -67,7 +67,7 @@ local get = {}
 		return y
 	end
 
-	-- Get minimum of two values
+	--- Get minimum of two values
 	-- @param x, mixed  First value
 	-- @param y, mixed  Second value
 	-- @return mixed
@@ -78,7 +78,7 @@ local get = {}
 		return y
 	end
 
-	-- Get distance between two points
+	--- Get distance between two points
 	-- @param x1, number  First point x
 	-- @param y1, number  First point y
 	-- @param x2, number  Second point x
@@ -88,7 +88,7 @@ local get = {}
 		return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
 	end
 
-	-- Get string value from string by parameter
+	--- Get string value from string by parameter
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return string
@@ -97,7 +97,7 @@ local get = {}
 		return match and tostring(match) or ""
 	end
 
-	-- Get number value from string by parameter or default
+	--- Get number value from string by parameter or default
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @param default, number    Default value. 0 if not setted
@@ -107,7 +107,7 @@ local get = {}
 		return match and tonumber(match) or default or 0
 	end
 
-	-- Get boolean value from string by parameter or false by default
+	--- Get boolean value from string by parameter or false by default
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return boolean
@@ -116,7 +116,7 @@ local get = {}
 		return match == "true"
 	end
 
-	-- Get frames list (integer) from string by parameter. Empty by default
+	--- Get frames list (integer) from string by parameter. Empty by default
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return table
@@ -131,7 +131,7 @@ local get = {}
 		return frame_list
 	end
 
-	-- Get frames list (string) from string by parameter. Empty by default
+	--- Get frames list (string) from string by parameter. Empty by default
 	-- @param str, string        Given string
 	-- @param parameter, string  Parameter name
 	-- @return table
