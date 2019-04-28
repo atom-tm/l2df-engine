@@ -1,33 +1,20 @@
 0: [
-	injury_forward: 201
-	injury_backward: 200
-	bdefend_forward: 202
-	bdefend_backward: 203
-	falling_backward: 220
-	falling_forward: 220
+	injury: { 150, 151 }
+	injury_backstab: 152
+	injury_spark: { 50, 90, 95, 100 }
+	object_injury_spark: 50
 
-	injury_spark: 70
-	object_injury_spark: 70
-
-	defend_spark: 50
+	bdefend: 152
+	bdefend_backstab: 153
+	defend_spark: { 50, 100 }
 	bdefend_spark: 60
-
 	block_spark: 10
 	bblock_spark: 30
 
-	fall_spark: 60
-	object_fall_spark: 60
-]
+	falling: 0
+	falling_backstab: 0
+	fall_spark: 70
+	object_fall_spark: 70
 
-100: [
-	injury_forward: 201
-	injury_backward: 200
-	bdefend_forward: 202
-	bdefend_backward: 203
-	falling_backward: 220
-	falling_forward: 220
-	
-	block_spark: 10
-	bblock_spark: 30
-	bdefend_spark: 60
+	defend_efficiency: 0.1
 ]

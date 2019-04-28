@@ -10,6 +10,8 @@ local fonts = {}
 		setting_comment = love.graphics.newFont("sprites/UI/fonts/Settings.otf",24),
 		setting_element = love.graphics.newFont("sprites/UI/fonts/Settings.otf",34),
 		menu_element = love.graphics.newFont("sprites/UI/fonts/Settings.otf",48),
+		timer = love.graphics.newFont("sprites/UI/fonts/Time.ttf",36),
+		stats = love.graphics.newFont("sprites/UI/fonts/Default.ttf",10),
 	}
 
 	function fonts.print(string, x, y, align, font, stroke, width, r, g, b, a)

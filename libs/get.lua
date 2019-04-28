@@ -1,4 +1,19 @@
 local get = {}
+	
+	function get.sign(x)
+	    if x < 0 then
+	        return -1
+	    elseif x > 0 then
+	        return 1
+	    else
+	        return 0
+	    end
+	end
+
+	function get.round( int, nums )
+		local i = math.pow(10, nums)
+		return math.floor(int * i) / i
+	end
 
 	function get.stateExist(frame, number)
 		for i = 1, #frame.states do
@@ -58,18 +73,18 @@ local get = {}
 	-------------------------------------
 		local result = ""
 		local match = string.match(string, parameter..": ([%w_]+)")
-		if match ~= nil then result = tostring(match) end
+		if match then result = tostring(match) end
 		return result
 	end
 
 	function get.PNumber (string, parameter, alternative) -- функция для получения числового значения параметра из входящей строки
 	-------------------------------------
 		local result = 0
-		if alternative ~= nil then
+		if alternative then
 			result = alternative
 		end
 		local match = string.match(string, parameter..": ([-%d%.]+)")
-		if match ~= nil then result = tonumber(match) end
+		if match then result = tonumber(match) end
 		return result
 	end
 
@@ -85,7 +100,7 @@ local get = {}
 	-------------------------------------
 		local frame_list = {}
 		local frames = string.match(string, parameter .. ": {([^{}]*)}")
-		if frames ~= nil then
+		if frames then
 			for frame in string.gmatch(frames, "(%d+)") do
 				table.insert(frame_list, tonumber(frame))
 			end

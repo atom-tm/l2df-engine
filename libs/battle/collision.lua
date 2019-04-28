@@ -1,43 +1,22 @@
 local collision = {}
 
-	collision.list = { body = {}, itr = {} }
-
-	function collision.DrawBack( object )
-		local frame = get.Frame(object)
-		for i = 1, #frame.bodys do
-			local body = frame.bodys[i]
-			local x = object.x - (frame.centerx * object.facing) + (body.x * object.facing)
-			local y = battle.map.head.border_up - object.y + object.z - frame.centery + body.y
-			local w = body.w * object.facing
-			local h = body.h
-			love.graphics.rectangle( "fill", x, y, 1, h )
-			love.graphics.rectangle( "fill", x + w, y, 1, h )
-		end
-		for i = 1, #frame.itrs do
-			local body = frame.itrs[i]
-			local x = object.x - (frame.centerx * object.facing) + (body.x * object.facing)
-			local y = battle.map.head.border_up - object.y + object.z - frame.centery + body.y
-			local w = body.w * object.facing
-			local h = body.h
-			love.graphics.rectangle( "fill", x, y, 1, h )
-			love.graphics.rectangle( "fill", x + w, y, 1, h )
-		end
-	end
+	collision.list = { 
+		general = { bodys = {}, itrs = {} },
+		processed = { bodys = {}, itrs = {} }
+	}
 
 	function collision:findCollaiders()
-		if self.head.collision then
-			self.attackers = {}
-			self.attacked = {}
-			if #self.frame.itrs > 0 then table.insert(collision.list.itr, self) end
-			if #self.frame.bodys > 0 then table.insert(collision.list.body, self) end
-		end
+		self.attackers = {} self.attacked = {}
+		if #self.frame.itrs > 0 then table.insert(collision.list.general.itrs, self) end
+		if #self.frame.bodys > 0 then table.insert(collision.list.general.bodys, self) end
 	end
 
-	function collision.checkCollisions()
-		for id1 = 1, #collision.list.itr do
-			for id2 = 1, #collision.list.body do
-				local object = collision.list.itr[id1]
-				local target = collision.list.body[id2]
+	function collision.check()
+		collision.list.processed = { itrs = {}, bodys = {} }
+		for id1 = 1, #collision.list.general.itrs do
+			for id2 = 1, #collision.list.general.bodys do
+				local object = collision.list.general.itrs[id1]
+				local target = collision.list.general.bodys[id2]
 				if object.dynamic_id ~= target.dynamic_id then
 					if
 					math.abs(object.x - target.x) < object.frame.itrs.radius_x + target.frame.bodys.radius_x and
@@ -48,8 +27,13 @@ local collision = {}
 							local itr = object.frame.itrs[i]
 							for b = 1, #target.frame.bodys do
 								local body = target.frame.bodys[b]
-								if collision.compareCollaiders(object, itr, target, body) then
-									collision.itrToBodyProcessing(object, itr, target, body)
+								if itr.frequency == body.frequency then
+									if (data.kinds[itr.kind].bodyCondition == nil) or (data.kinds[itr.kind]:bodyCondition(object, target, itr, body) == true) then
+										if collision.compareCollaiders(object, itr, target, body) then
+											local processed = { attacker = object, damaged = target, itr = itr, body = body }
+											table.insert(collision.list.processed.bodys, processed)
+										end
+									end
 								end
 							end
 						end
@@ -57,7 +41,16 @@ local collision = {}
 				end
 			end
 		end
-		collision.list = { body = {}, itr = {} }
+		collision.list.general = { bodys = {}, itrs = {} }
+	end
+
+	function collision.processing()
+		for i = 1, #collision.list.processed.bodys do
+			local proc = collision.list.processed.bodys[i]
+			if data.kinds[proc.itr.kind] and data.kinds[proc.itr.kind].bodyProcessing then
+				data.kinds[proc.itr.kind]:bodyProcessing(proc.attacker, proc.damaged, proc.itr, proc.body)
+			end
+		end
 	end
 
 	function collision.compareCollaiders(object1, collaider1, object2, collaider2)
@@ -115,27 +108,5 @@ local collision = {}
  		return collision_center_x, collision_center_y
 	end
 
-
-	function collision.itrToBodyProcessing(attacker, itr, damaged, body)
-		local kind = itr.kind
-		if data.kinds[kind] ~= nil then
-			data.kinds[kind]:Start(attacker, itr, damaged, body)
-		end
-	end
-
-
-	function collision:getDTVal(dtype, val)
-		local result = nil
-		if self.head.dtypes[tostring(dtype)] ~= nil then
-			if self.head.dtypes[tostring(dtype)][val] ~= nil then
-				if type(self.head.dtypes[tostring(dtype)][val]) == "number" then
-					return self.head.dtypes[tostring(dtype)][val]
-				elseif type(self.head.dtypes[tostring(dtype)][val]) == "table" then
-					return self.head.dtypes[tostring(dtype)][val][math.random(1,#self.head.dtypes[tostring(dtype)][val])]
-				end
-			end
-		end
-		return nil
-	end
 
 return collision

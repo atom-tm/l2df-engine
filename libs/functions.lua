@@ -23,4 +23,19 @@ local functions = {}
 		end
 		return result
 	end
+
+
+	function functions:getDamageInfo(val)
+		if self[val] then
+			if type(self[val]) == "number" then
+				return self[val]
+			elseif type(self[val]) == "table" then
+				return self[val][math.random(1,#self[val])]
+			end
+		end
+		return 0
+	end
+
+
+
 return functions

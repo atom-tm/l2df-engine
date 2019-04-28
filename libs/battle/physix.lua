@@ -42,7 +42,7 @@ local physix = {}
 		end
 
 		self.grounded = false		
-		if self.y <= 0 then
+		if self.y <= 0 and self.vel_y <= 0 then
 			self.y = 0
 			self.grounded = true
 		elseif self.y >= battle.map.head.height then

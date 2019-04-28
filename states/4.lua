@@ -51,6 +51,9 @@ function state:Processing(object,s)
 		if object.wait == 0 and object.frame.next == 0 then
 			object:setFrame(object.frame.number)
 		end
+		if object:timer("attack") then
+			if s.attack then object:setFrame(s.attack) end
+		end
 	else
 		object:setFrame("air_standing")
 	end

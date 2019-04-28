@@ -9,6 +9,7 @@ font 		= require "libs.fonts"
 loc 		= require "libs.localization"
 resourses	= require "libs.resourses"
 battle		= require "libs.battle"
+sounds 		= require "libs.sounds"
 
 camera = nil
 locale = nil

@@ -18,123 +18,163 @@ shadow: false
 
 <frame> 1 fire
 pic: 1  next: 2  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 2 fire
 pic: 2  next: 3  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 3 fire
 pic: 3  next: 4  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 4 fire
 pic: 4  next: 5  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 5 fire
 pic: 5  next: 6  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 6 fire
 pic: 6  next: 7  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 7 fire
 pic: 7  next: 8  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 8 fire
 pic: 8  next: 9  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 9 fire
 pic: 9  next: 10  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 10 fire
 pic: 10  next: 11  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 11 fire
 pic: 11  next: 12  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 12 fire
 pic: 12  next: 13  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 13 fire
 pic: 13  next: 14  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 14 fire
 pic: 14  next: 15  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 15 fire
 pic: 15  next: 16  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 16 fire
 pic: 16  next: 17  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 17 fire
 pic: 17  next: 18  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 18 fire
 pic: 18  next: 19  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 19 fire
 pic: 19  next: 20  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 20 fire
 pic: 20  next: 21  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 21 fire
 pic: 21  next: 22  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 22 fire
 pic: 22  next: 23  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 23 fire
 pic: 23  next: 24  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 24 fire
 pic: 24  next: 25  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 25 fire
 pic: 25  next: 26  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 26 fire
 pic: 26  next: 27  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 27 fire
 pic: 27  next: 28  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 28 fire
 pic: 28  next: 29  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 29 fire
 pic: 29  next: 30  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 30 fire
 pic: 30  next: 31  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 31 fire
 pic: 31  next: 32  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 32 fire
 pic: 32  next: 33  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 33 fire
 pic: 33  next: 34  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 34 fire
 pic: 34  next: 35  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 35 fire
 pic: 35  next: 36  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 36 fire
 pic: 36  next: 37  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 37 fire
 pic: 37  next: 38  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 38 fire
 pic: 38  next: 39  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 39 fire
 pic: 39  next: 40  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 <frame> 40 fire
 pic: 40  next: 1  wait: 1  centerx: 83  centery: 95
+state: 112 {}
 </frame>
 
 
@@ -142,11 +182,13 @@ pic: 40  next: 1  wait: 1  centerx: 83  centery: 95
 pic: 1  next: 1  wait: 0  centerx: 83  centery: 95
 state: 611 { start: 0 finish: 1 timer: 25 }
 state: 50 { timer: 35 frame: 60 }
+state: 112 {}
 </frame>
 <frame> 51 fire
 pic: 1  next: 0  wait: 0  centerx: 83  centery: 95
 state: 611 { start: 1 finish: 0 timer: 30 }
 state: 50 { timer: 30 frame: 52 }
+state: 112 {}
 state: 51 { }
 </frame>
 <frame> 52 fire
@@ -157,6 +199,7 @@ state: 1000 { }
 pic: 1  next: 1  wait: 0  centerx: 83  centery: 95
 state: 611 { start: 0 finish: 1 timer: 25 }
 state: 50 { timer: 30000 frame: 51 }
+state: 112 {}
 </frame>
 
 
@@ -164,6 +207,7 @@ state: 50 { timer: 30000 frame: 51 }
 <frame> 60 fire
 pic: 1  next: 51  wait: 0  centerx: 83  centery: 95
 state: 600 { retry: 80 frame: 50 }
+state: 112 {}
 </frame>
 
 
@@ -177,5 +221,6 @@ state: 50 { timer: 35 frame: 51 }
 <frame> 51 fire
 pic: 1  next: 0  wait: 0  centerx: 83  centery: 95
 state: 50 { timer: 30 frame: 52 }
+state: 112 {}
 state: 51 { }
 </frame>

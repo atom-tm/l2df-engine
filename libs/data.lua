@@ -69,7 +69,7 @@ data = {}
 	function data:DTypes(dtypes_file_path)
 		data.dtypes = {}
 		local dtypes_file = love.filesystem.read(dtypes_file_path)
-		if dtypes_file ~= nil then
+		if dtypes_file then
 			for dtype_number, dtype_info in string.gmatch(dtypes_file, "([%d]+): %[([^%[%]]+)%]") do
 				local damage_type = {}
 				for key, info in string.gmatch(dtype_info, "([%w%d_]+): ([-%d%.]+)") do
@@ -82,6 +82,7 @@ data = {}
 					end
 					damage_type[key] = array
 				end
+				damage_type.Get = func.getDamageInfo
 				data.dtypes[dtype_number] = damage_type
 			end
 		end

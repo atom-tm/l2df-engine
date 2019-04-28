@@ -41,6 +41,8 @@ local room = {}
 			},
 		}
 
+		sounds.setMusic("music/main.mp3")
+
 	end
 
 	function room:Update()

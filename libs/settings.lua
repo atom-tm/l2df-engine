@@ -17,8 +17,10 @@ local settings = {}
 
 	settings.gameWidth = 1280
 	settings.gameHeight = 720
+	settings.fpsLimit = 60
 
 	settings.quality = true
+	settings.difficulty = 7
 
 	settings.names = {}
 
@@ -84,7 +86,6 @@ local settings = {}
 
 
 	function settings:Save()
-		local settings_file = io.open("../"..self.file,"w+")
 		if settings_file ~= nil then
 
 			local controls_player_1 = " "
@@ -107,10 +108,11 @@ local settings = {}
 			"controls_player_2: {"..controls_player_2.."}\n"..
 			"player1_name: "..self.names[1].."\n"..
 			"player2_name: "..self.names[2]
-			
-			settings_file:write(save_data)
-			settings_file:flush()
-			settings_file:close()
+
+			local file = io.open(self.file, "w")
+			file:write(save_data)
+			file:flush()
+			file:close()
 		end
 	end
 

@@ -4,10 +4,10 @@ require "libs.globals"
 
 function love.load()
 	-- FPS Локер --
-	min_dt = 1/60 -- требуемое фпс
+	min_dt = 1/settings.fpsLimit -- требуемое фпс
     next_time = love.timer.getTime()
     ---------------
-    settings:Read("data/settings.txt") -- чтение настроек из файла с настройками игры
+    settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
     func.SetWindowSize()
     loc:Set(loc.id)
     data:Load("data/data.txt")

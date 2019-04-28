@@ -16,5 +16,7 @@ shunshin_forward: 85
 shunshin_back: 90
 shunshin_stop: 95
 service: 100
-defend: 130
+defend_stance: 130
 battle_stance: 140
+strong_attack: 345
+lying: 290

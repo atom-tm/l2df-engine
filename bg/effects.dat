@@ -1,0 +1,226 @@
+<head>
+name: Arena_effects
+type: effect
+
+sprite: {
+	file: "bg/dust_01.png"
+	w: 64 h: 52 row: 5 col: 3
+}
+sprite: {
+	file: "bg/ground_01.png"
+	w: 250 h: 50 row: 1 col: 1
+}
+sprite: {
+	file: "bg/dust_02.png"
+	w: 150 h: 150 row: 3 col: 7
+}
+sprite: {
+	file: "bg/dust_03.png"
+	w: 150 h: 150 row: 3 col: 7
+}
+
+gravity: true
+collision: false
+shadow: false
+</head>
+
+<frames_list>
+	fricted: 100
+	landing: 120
+	falling: 10
+	slammed: 20
+	speedup: 140
+	jerk_up: 120
+</frames_list>
+
+<frame> 10 falling
+pic: 0  next: 0  wait: 1  centerx: 1  centery: 1
+opoint: { id: 900 action: 100 x: 1 y: 1 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 3  ramount: 5 }
+state: 1000 {}
+</frame>
+
+<frame> 20 slammed
+pic: 16  next: 21  wait: 3  centerx: 125  centery: 25
+opoint: { id: 900 action: 100 x: 125 y: 25 z: 1 rx: 55 rz: 10  dvx: -3  rdvx: 6  amount: 3  ramount: 5 }
+state: 610 { start: 0 finish: 1 }
+</frame>
+<frame> 21 slammed
+pic: 16  next: 22  wait: 350  centerx: 125  centery: 25
+state: 612 { wait: 750 }
+</frame>
+<frame> 22 slammed
+pic: 16  next: 0  wait: 85  centerx: 125  centery: 25
+state: 1000 {}
+state: 610 { start: 1 finish: 0 }
+</frame>
+
+<frame> 100 dust
+pic: 1  next: 101  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 101 dust
+pic: 2  next: 102  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 102 dust
+pic: 3  next: 103  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 103 dust
+pic: 4  next: 104  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 104 dust
+pic: 5  next: 105  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 105 dust
+pic: 6  next: 106  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 106 dust
+pic: 7  next: 107  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 107 dust
+pic: 8  next: 108  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 108 dust
+pic: 9  next: 109  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 109 dust
+pic: 10  next: 110  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 110 dust
+pic: 11  next: 111  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 111 dust
+pic: 12  next: 112  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 112 dust
+pic: 13  next: 113  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 113 dust
+pic: 14  next: 114  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 114 dust
+pic: 15  next: 0  wait: 0  centerx: 32  centery: 34
+state: 1000 {}
+</frame>
+
+<frame> 120 dust_02
+pic: 17  next: 121  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 121 dust_02
+pic: 18  next: 122  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 122 dust_02
+pic: 19  next: 123  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 123 dust_02
+pic: 20  next: 124  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 124 dust_02
+pic: 21  next: 125  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 125 dust_02
+pic: 22  next: 126  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 126 dust_02
+pic: 23  next: 127  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 127 dust_02
+pic: 24  next: 128  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 128 dust_02
+pic: 25  next: 129  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 129 dust_02
+pic: 26  next: 130  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 130 dust_02
+pic: 27  next: 131  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 131 dust_02
+pic: 28  next: 132  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 132 dust_02
+pic: 29  next: 133  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 133 dust_02
+pic: 30  next: 134  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 134 dust_02
+pic: 31  next: 135  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 135 dust_02
+pic: 32  next: 136  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 136 dust_02
+pic: 33  next: 137  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 137 dust_02
+pic: 34  next: 138  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 138 dust_02
+pic: 35  next: 139  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 139 dust_02
+pic: 36  next: 0  wait: 0  centerx: 75  centery: 135
+state: 1000 {}
+</frame>
+
+<frame> 140 dust_03
+pic: 38  next: 141  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 141 dust_03
+pic: 39  next: 142  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 142 dust_03
+pic: 40  next: 143  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 143 dust_03
+pic: 41  next: 144  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 144 dust_03
+pic: 42  next: 145  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 145 dust_03
+pic: 43  next: 146  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 146 dust_03
+pic: 44  next: 147  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 147 dust_03
+pic: 45  next: 148  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 148 dust_03
+pic: 46  next: 149  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 149 dust_03
+pic: 47  next: 150  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 150 dust_03
+pic: 48  next: 151  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 151 dust_03
+pic: 49  next: 152  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 152 dust_03
+pic: 50  next: 153  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 153 dust_03
+pic: 51  next: 154  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 154 dust_03
+pic: 52  next: 155  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 155 dust_03
+pic: 53  next: 156  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 156 dust_03
+pic: 54  next: 157  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 157 dust_03
+pic: 55  next: 158  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 158 dust_03
+pic: 56  next: 159  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 159 dust_03
+pic: 57  next: 0  wait: 0  centerx: 75  centery: 135
+state: 1000 {}
+</frame>

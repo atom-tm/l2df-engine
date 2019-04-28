@@ -10,7 +10,7 @@ local control = {}
 
 
 	function control:pressed(button)
-		if self.key_pressed[button] == 1 then return true
+		if self.key_pressed[button] > 0 then return true
 		else return false end
 	end
 	function control:timer(button)
@@ -83,7 +83,9 @@ local control = {}
 					if love.keyboard.isScancodeDown(settings.controls[i][key]) then
 						control.players[i].key_pressed[key] = 1
 					else
-						control.players[i].key_pressed[key] = 0
+						if control.players[i].key_pressed[key] > 0 then
+							control.players[i].key_pressed[key] = control.players[i].key_pressed[key] - 1
+						end
 					end
 					if control.players[i].key_timer[key] > 0 then
 						control.players[i].key_timer[key] = control.players[i].key_timer[key] - 1

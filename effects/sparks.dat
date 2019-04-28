@@ -26,16 +26,31 @@ sprite: {
 	file: "sprites/sparks/standart_blood.png"
 	w: 25 h: 25 row: 9 col: 1
 }
+sprite: {
+	file: "sprites/sparks/standart_injury_type2.png"
+	w: 120 h: 120 row: 4 col: 1
+}
+sprite: {
+	file: "sprites/sparks/standart_injury_type3.png"
+	w: 120 h: 120 row: 4 col: 1
+}
+sprite: {
+	file: "sprites/sparks/standart_injury_type4.png"
+	w: 120 h: 120 row: 5 col: 2
+}
 
 physic: false
 collision: false
 shadow: false
 nextZero: true
+
+states: { 101 }
 </head>
 
 
 <frame> 10 standart_block
 pic: 1  next: 11  wait: 0  centerx: 85  centery: 90
+sound: "sounds/hit_block.wav"
 </frame>
 <frame> 11 standart_block
 pic: 2  next: 12  wait: 0  centerx: 85  centery: 90
@@ -94,6 +109,7 @@ state: 1000 {}
 
 <frame> 30 standart_broken_block
 pic: 19  next: 31  wait: 0  centerx: 85  centery: 90
+sound: "sounds/broken_block.wav"
 </frame>
 <frame> 31 standart_broken_block
 pic: 20  next: 32  wait: 0  centerx: 85  centery: 90
@@ -130,6 +146,7 @@ state: 1000 {}
 
 <frame> 50 standart_defend
 pic: 31  next: 51  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_block.wav"
 </frame>
 <frame> 51 standart_defend
 pic: 32  next: 52  wait: 1  centerx: 60  centery: 60
@@ -153,6 +170,7 @@ state: 1000 {}
 
 <frame> 60 standart_broken_defend
 pic: 41  next: 61  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_01.wav"
 </frame>
 <frame> 61 standart_broken_defend
 pic: 42  next: 62  wait: 1  centerx: 60  centery: 60
@@ -176,6 +194,7 @@ state: 1000 {}
 
 <frame> 70 standart_injury
 pic: 51  next: 71  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_01.wav"
 </frame>
 <frame> 71 standart_injury
 pic: 52  next: 72  wait: 1  centerx: 60  centery: 60
@@ -190,6 +209,7 @@ state: 1000 {}
 
 <frame> 80 standart_blood
 pic: 55  next: 81  wait: 0  centerx: 20  centery: 20
+sound: "sounds/hit_01.wav"
 </frame>
 <frame> 81 standart_blood
 pic: 56  next: 82  wait: 0  centerx: 20  centery: 20
@@ -214,5 +234,60 @@ pic: 62  next: 88  wait: 0  centerx: 20  centery: 20
 </frame>
 <frame> 88 standart_blood
 pic: 63  next: 0  wait: 0  centerx: 20  centery: 20
+state: 1000 {}
+</frame>
+
+<frame> 90 standart_injury
+pic: 64  next: 91  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_01.wav"
+</frame>
+<frame> 91 standart_injury
+pic: 65  next: 92  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 92 standart_injury
+pic: 66  next: 93  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 93 standart_injury
+pic: 67  next: 0  wait: 1  centerx: 60  centery: 60
+state: 1000 {}
+</frame>
+
+<frame> 95 standart_injury
+pic: 68  next: 96  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_01.wav"
+</frame>
+<frame> 96 standart_injury
+pic: 69  next: 97  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 97 standart_injury
+pic: 70  next: 98  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 98 standart_injury
+pic: 71  next: 0  wait: 1  centerx: 60  centery: 60
+state: 1000 {}
+</frame>
+
+
+<frame> 100 standart_injury
+pic: 72  next: 101  wait: 1  centerx: 60  centery: 60
+sound: "sounds/hit_01.wav"
+</frame>
+<frame> 101 standart_injury
+pic: 73  next: 102  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 102 standart_injury
+pic: 74  next: 103  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 103 standart_injury
+pic: 75  next: 104  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 104 standart_injury
+pic: 76  next: 105  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 105 standart_injury
+pic: 77  next: 106  wait: 1  centerx: 60  centery: 60
+</frame>
+<frame> 106 standart_injury
+pic: 78  next: 0  wait: 1  centerx: 60  centery: 60
 state: 1000 {}
 </frame>

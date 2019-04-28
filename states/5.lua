@@ -27,8 +27,7 @@ function state:Processing(object,s)
 		end
 		object:setFrame("landing")
 	else
-		if object:timer("attack") then object:setFrame("air_attack")
-		elseif object:timer("special1") and object:pressed("down") then object:setFrame("shunshin_down") end
+		if object:timer("special1") and object:pressed("down") then object:setFrame("shunshin_down") end
 		if object.wait == 0 and object.frame.next == 0 then
 			object:setFrame(object.frame.number)
 		end

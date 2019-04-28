@@ -12,10 +12,15 @@ local images = {}
 			sprites = {},
 			path = file_path
 		}
+		image.image:setWrap( "clampzero", "clampzero" )
 		if cutting_info ~= nil then
+			if cutting_info.x == nil then cutting_info.x = 1 end
+			if cutting_info.y == nil then cutting_info.y = 1 end
+			if cutting_info.mx == nil then cutting_info.mx = 0 end
+			if cutting_info.my == nil then cutting_info.my = 0 end
 			for i = 0, cutting_info.y - 1 do
 				for j = 0, cutting_info.x - 1 do
-					quad = love.graphics.newQuad(cutting_info.w*j, cutting_info.h*i ,cutting_info.w,cutting_info.h, image.image:getDimensions())
+					quad = love.graphics.newQuad(cutting_info.w*j + cutting_info.mx, cutting_info.h*i + cutting_info.my ,cutting_info.w,cutting_info.h, image.image:getDimensions())
 					table.insert(image.sprites, quad)
 				end
 			end
@@ -25,8 +30,26 @@ local images = {}
 			image.w, image.h = image.image:getDimensions()
 		end
 		if filter ~= nil then image.image:setFilter(filter, filter) end
+		image.image:setFilter("nearest", "nearest")
 		table.insert(images.list, image)
+		image.setQuad = images.setQuad
 		return image
+	end
+
+	function images:setQuad(id, x, y, w, h)
+		if id ~= nil and self.sprites[id] ~= nil then
+			self.sprites[id]:setViewport(x,y,w,h)
+			return id
+		else
+			local quad = love.graphics.newQuad(x,y,w,h, self.image:getDimensions())
+			if id == nil then
+				self.sprites[#self.sprites + 1] = quad
+				return #self.sprites + 1
+			else
+				self.sprites[id] = quad
+				return id
+			end
+		end
 	end
 
 	function images.draw(image, sprite, x, y, facing, size, r,g,b,a, other)
@@ -57,7 +80,7 @@ local images = {}
 		if a == nil then a = ao end
 		love.graphics.setColor(r, g, b, a)
 		if sprite == 0 or sprite == nil then
-			love.graphics.draw(image.image,x,y,0,width * facing,height)
+			love.graphics.draw(image.image,x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
 		else
 			love.graphics.draw(image.image,image.sprites[sprite],x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
 		end

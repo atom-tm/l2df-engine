@@ -130,12 +130,15 @@ local resourses = {}
 		if data ~= nil then
 			
 			head.name 						= string.match(data, "name: ([%w_% ]+)")
-			--head.face						= image.Load(string.match(data, "face: \"([^\"]+)\""))
 			head.type 						= get.PString(data, "type")
+			if head.type == "character" then
+				head.face					= image.Load(string.match(data, "face: \"([^\"\"]+)\""))
+			end
 
 			head.gravity 					= get.PBool(data, "gravity")
 			head.collision 					= get.PBool(data, "collision")
 			head.shadow 					= get.PBool(data, "shadow")
+			head.reflection 				= get.PBool(data, "reflection")
 			head.nextZero 					= not get.PBool(data, "nextZero")
 
 			head.str 						= get.PNumber(data, "str")
@@ -144,10 +147,23 @@ local resourses = {}
 
 			head.hp 						= get.PNumber(data, "hp",1000)
 			head.mp 						= get.PNumber(data, "mp",500)
+			head.sp 						= get.PNumber(data, "sp",10)
+			head.hp_regeneration 			= get.PNumber(data, "hp_regeneration",1)
+			head.mp_regeneration 			= get.PNumber(data, "mp_regeneration",1)
+			head.sp_regeneration 			= get.PNumber(data, "sp_regeneration",1)
+
 			head.fall 						= get.PNumber(data, "fall",70)
 			head.bdefend 					= get.PNumber(data, "bdefend",60)
+			head.fall_timer 				= get.PNumber(data, "fall_timer",100)
+			head.bdefend_timer 				= get.PNumber(data, "bdefend_timer",160)
 
 			head.states						= get.PFramesString(data, "states")
+
+			local ai_path 					= string.match(data, "ai: \"([^\"\"]+).lua\"")
+			if ai_path then
+				ai_path = string.gsub(ai_path, "/", ".")
+				head.ai = require(ai_path)
+			end
 
 			return true
 		else
@@ -182,7 +198,7 @@ local resourses = {}
 		local head = resourses.entities[object.id].head
 		head.dtypes = func.CopyTable(data.dtypes)
 		local data = string.match(object.data, "<damage_types>(.*)</damage_types>")
-		if data ~= nil then
+		if data then
 			for dtype_number, dtype_info in string.gmatch(data, "([%d]+): %[([^%[%]]+)%]") do
 				if head.dtypes[dtype_number] == nil then head.dtypes[dtype_number] = {} end
 				for key, info in string.gmatch(dtype_info, "([%w%d_]+): ([-%d%.]+)") do
@@ -195,6 +211,7 @@ local resourses = {}
 					end
 					head.dtypes[dtype_number][key] = array
 				end
+				head.dtypes[dtype_number].Get = func.getDamageInfo
 			end
 		end
 		return true
@@ -323,6 +340,13 @@ local resourses = {}
 		frame.centerx 					= get.PNumber(header,"centerx")
 		frame.centery 					= get.PNumber(header,"centery")
 
+		local sound_path = string.match(header, "sound: \"(.*)\"")
+		if sound_path then
+			frame.sound = sounds.load(sound_path)
+		else
+			frame.sound = nil
+		end
+
 		frame.shadow 					= not get.PBool(header,"shadow")
 		frame.zoom 						= get.PNumber(header,"zoom",1)
 
@@ -379,15 +403,17 @@ local resourses = {}
 
 
 
-	function resourses.LoadBodys(data) -- Загрузка коллайдеров тела объекта
+	function resourses.LoadBodys(data_sourse) -- Загрузка коллайдеров тела объекта
 	----------------------------------------------------------------------------
 		local bodys = {}
 		local bodys_radiuses_x = {}
 		local bodys_radiuses_y = {}
 		local bodys_radiuses_z = {}
 
-		for body_data in string.gmatch(data, "body: {([^{}]*)}") do
+		for body_data in string.gmatch(data_sourse, "body: {([^{}]*)}") do
 			local body = {}
+			
+			body.frequency					= get.PNumber(body_data,"frequency",0)
 			
 			body.x 							= get.PNumber(body_data,"x",0)
 			body.y 							= get.PNumber(body_data,"y",0)
@@ -397,14 +423,15 @@ local resourses = {}
 			body.h 							= get.PNumber(body_data,"h",0)
 			body.l 							= get.PNumber(body_data,"l",10)
 
-
-			body.static 					= get.PBool(body_data,"static")
-			body.participle 				= get.PBool(body_data,"participle")
-			body.damaged_frame 				= get.PNumber(body_data,"damaged_frame")
-
 			body.x_rad 						= get.Biggest(math.abs(body.x),math.abs(body.x + body.w))
 			body.y_rad 						= get.Biggest(math.abs(body.y),math.abs(body.y + body.h))
 			body.z_rad 						= get.Biggest(math.abs(body.z),math.abs(body.z + body.l))
+
+			for key in pairs(data.kinds) do
+				if data.kinds[key].loadingBody then
+					body = data.kinds[key]:loadingBody(body,body_data)
+				end
+			end
 
 			table.insert(bodys_radiuses_x, body.x_rad)
 			table.insert(bodys_radiuses_y, body.y_rad)
@@ -422,38 +449,18 @@ local resourses = {}
 
 
 
-	function resourses.LoadItrs(data) -- Загрузка коллайдеров атаки объекта
+	function resourses.LoadItrs(data_sourse) -- Загрузка коллайдеров атаки объекта
 	----------------------------------------------------------------------------
 		local itrs = {}
 		local itrs_radiuses_x = {}
 		local itrs_radiuses_y = {}
 		local itrs_radiuses_z = {}
 
-		for itr_data in string.gmatch(data, "itr: {([^{}]*)}") do
+		for itr_data in string.gmatch(data_sourse, "itr: {([^{}]*)}") do
 			local itr = {}
 
-			itr.kind 						= get.PNumber(itr_data,"kind")
-			itr.dtype 						= get.PNumber(itr_data,"dtype")
-
-			itr.dvx 						= get.PNumber(itr_data,"dvx")
-			itr.dvy 						= get.PNumber(itr_data,"dvy")
-			itr.dvz 						= get.PNumber(itr_data,"dvz")
-			itr.y_repulsion 				= get.PBool(itr_data,"y_repulsion")
-			itr.x_repulsion 				= get.PBool(itr_data,"x_repulsion")
-			itr.reflection 					= get.PBool(itr_data,"reflection")
-			itr.static 						= get.PBool(itr_data,"static")
-
-			itr.injury 						= get.PNumber(itr_data,"injury")
-			itr.bdefend 					= get.PNumber(itr_data,"bdefend")
-			itr.fall 						= get.PNumber(itr_data,"fall")
-			itr.arest						= get.PNumber(itr_data,"arest",10)
-			itr.vrest 						= get.PNumber(itr_data,"vrest",15)
-			itr.purpose						= get.PNumber(itr_data,"purpose",1)
-
-			itr.not_knocking_down 			= get.PBool(itr_data,"not_knocking_down")
-
-			itr.attacker_frame 				= get.PNumber(itr_data,"attacker_frame")
-			itr.damaged_frame 				= get.PNumber(itr_data,"damaged_frame")
+			itr.kind 						= get.PNumber(itr_data,"kind",0)
+			itr.frequency					= get.PNumber(itr_data,"frequency",0)
 
 			itr.x 							= get.PNumber(itr_data,"x",0)
 			itr.y 							= get.PNumber(itr_data,"y",0)
@@ -466,6 +473,10 @@ local resourses = {}
 			itr.x_rad 						= get.Biggest(math.abs(itr.x),math.abs(itr.x + itr.w))
 			itr.y_rad 						= get.Biggest(math.abs(itr.y),math.abs(itr.y + itr.h))
 			itr.z_rad 						= get.Biggest(math.abs(itr.z),math.abs(itr.z + itr.l))
+
+			if data.kinds[itr.kind] and data.kinds[itr.kind].loadingInfo then
+				itr = data.kinds[itr.kind]:loadingInfo(itr, itr_data)
+			end
 
 			table.insert(itrs_radiuses_x, itr.x_rad)
 			table.insert(itrs_radiuses_y, itr.y_rad)
@@ -610,21 +621,17 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 		if data ~= nil then
 
 			head.name 						= get.PString(data, "name")
+
 			head.width 						= get.PNumber(data, "width")
 			head.height 					= get.PNumber(data, "height")
-			head.zoom						= get.PNumber(data, "zoom")
+
 			head.friction 					= get.PNumber(data, "friction")
 			head.gravity 					= get.PNumber(data, "gravity")
 
-			head.reflection 				= get.PBool(data, "reflection")
-			head.reflection_opacity 		= get.PNumber(data, "reflection_opacity")
-
 			head.shadow 					= get.PBool(data, "shadow")
-			head.shadow_centerx 			= get.PNumber(data, "shadow_centerx")
-			head.shadow_opacity 			= get.PNumber(data, "shadow_opacity")
-			head.shadow_direction 			= get.PNumber(data, "shadow_direction")
-			head.shadow_shear 				= get.PNumber(data, "shadow_shear")
-			head.shadow_size 				= get.PNumber(data, "shadow_size")
+			head.reflection 				= get.PBool(data, "reflection")
+
+			head.zoom						= get.PNumber(data, "zoom")
 
 
 			head.effects 					= get.PNumber(data, "effects",-1)
@@ -654,6 +661,27 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 				spawn_point.facing 		= get.PNumber(spawn_point_data, "facing")
 				table.insert(map.spawn_points, spawn_point)
 			end
+
+			map.lights = {}
+			for light_data in string.gmatch(data, "light: {([^{}]*)}") do
+				local light = {}
+				light.x 				= get.PNumber(light_data, "x")
+				light.y 				= get.PNumber(light_data, "y")
+				light.z 				= get.PNumber(light_data, "z")
+				light.r 				= get.PNumber(light_data, "r")
+				light.f 				= get.PNumber(light_data, "f")
+				light.s 				= get.PBool(light_data, "s")
+				table.insert(map.lights, light)
+			end
+
+			local shadow_path = string.match(data,"shadow_sprite: \"([^\"\"]+)\"")
+			if shadow_path ~= nil then
+				map.shadow_sprite 			= image.Load(shadow_path)
+				map.shadow_centerx 			= get.PNumber(data, "shadow_centerx")
+				map.shadow_centery			= get.PNumber(data, "shadow_centery")
+			end
+
+			map.opoints 					= resourses.LoadOpoints(data)
 
 			return true
 		else
@@ -689,6 +717,13 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 
 					layer.x 				= get.PNumber(data, "x")
 					layer.y 				= get.PNumber(data, "y")
+					layer.w 				= get.PNumber(data, "w")
+					layer.h 				= get.PNumber(data, "h")
+					layer.reflection 		= get.PBool(data, "reflection")
+					layer.important			= true
+					if string.match(data, "not_important") ~= nil then
+						layer.important = false
+					end
 
 					table.insert(resourses.maps[object.id].layers, layer)
 					object.current_layer = object.current_layer + 1
@@ -728,6 +763,12 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 
 					filter.x 				= get.PNumber(data, "x")
 					filter.y 				= get.PNumber(data, "y")
+					filter.w 				= get.PNumber(data, "w")
+					filter.h 				= get.PNumber(data, "h")
+					filter.important		= true
+					if string.match(data, "not_important") ~= nil then
+						filter.important = false
+					end
 
 					table.insert(resourses.maps[object.id].filters, filter)
 					object.current_filter = object.current_filter + 1

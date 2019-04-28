@@ -40,9 +40,11 @@ local room = {}
 		end
 		function setting:action_left()
 			if settings.window.music_vol > 0 then settings.window.music_vol = settings.window.music_vol - 5 end
+			sounds.music.resourse:setVolume(settings.window.music_vol*0.01)
 		end
 		function setting:action_right()
 			if settings.window.music_vol < 100 then settings.window.music_vol = settings.window.music_vol + 5 end
+			sounds.music.resourse:setVolume(settings.window.music_vol*0.01)
 		end
 		table.insert(self.list, setting)
 

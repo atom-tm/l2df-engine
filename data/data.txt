@@ -1,34 +1,14 @@
 [characters]
 id: 1	file: chars/itachi/character.dat
-id: 2	file: chars/kisame/character.dat
-id: 3	file: chars/pain/character.dat
-id: 4	file: chars/kakashi/character.dat
-id: 5	file: chars/guy/character.dat
 
 [objects]
-id: 100	file: objects/shuriken.dat
+id: 100	file: objects/sandbag/main.dat
 
-id: 110	file: objects/doton_wall.dat
-id: 111	file: objects/goukakyuu.dat
-id: 112	file: chars/pain/shinra_tensei.dat
-
-
-
-id: 200	file: effects/smoke.dat
-id: 210	file: effects/ground.dat
 id: 220	file: effects/fire.dat
-id: 221	file: effects/explosions01.dat
+id: 222	file: effects/water.dat
 
-
-id: 900  file: bg/Arena/effects.dat
-id: 901  file: bg/Bridge/effects.dat
-id: 902  file: bg/Hall/effects.dat
-
+id: 900  file: bg/effects.dat
 id: 1000 file: effects/sparks.dat
-id: 1001 file: effects/particles01.dat
 
 [maps]
-id: 3  file: bg/Arena/map.dat
-id: 2  file: bg/Bridge/map.dat
-id: 4  file: bg/Hall/map.dat
 id: 1  file: bg/TestArena/TestArena.dat
