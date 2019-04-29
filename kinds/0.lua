@@ -8,36 +8,37 @@ local kind = {}
 		return body
 	end
 
+
 	function kind:loadingInfo(itr, itr_data)
-		itr.team 				= get.PNumber(itr_data,"team",1)
-		itr.dtype 				= get.PNumber(itr_data,"dtype",0)
+		itr.team 				= get.PNumber(itr_data, "team", 1)
+		itr.dtype 				= get.PNumber(itr_data, "dtype", 0)
 
-		itr.injury 				= get.PNumber(itr_data,"injury")
-		itr.mana_injury 		= get.PNumber(itr_data,"mana_injury")
-		itr.bdefend 			= get.PNumber(itr_data,"bdefend")
-		itr.fall 				= get.PNumber(itr_data,"fall")
-		itr.arest				= get.PNumber(itr_data,"arest",10)
-		itr.vrest 				= get.PNumber(itr_data,"vrest",15)
+		itr.injury 				= get.PNumber(itr_data, "injury")
+		itr.mana_injury 		= get.PNumber(itr_data, "mana_injury")
+		itr.bdefend 			= get.PNumber(itr_data, "bdefend")
+		itr.fall 				= get.PNumber(itr_data, "fall")
+		itr.arest				= get.PNumber(itr_data, "arest", 10)
+		itr.vrest 				= get.PNumber(itr_data, "vrest", 15)
 
-		itr.dvx 				= get.PNumber(itr_data,"dvx",0)
-		itr.dvy 				= get.PNumber(itr_data,"dvy",0)
-		itr.dvz 				= get.PNumber(itr_data,"dvz")
+		itr.dvx 				= get.PNumber(itr_data, "dvx", 0)
+		itr.dvy 				= get.PNumber(itr_data, "dvy", 0)
+		itr.dvz 				= get.PNumber(itr_data, "dvz")
 
-		itr.static 				= get.PBool(itr_data,"static")
-		itr.reflection 			= get.PBool(itr_data,"reflection")
-		itr.x_repulsion 		= get.PBool(itr_data,"x_repulsion")
-		itr.y_repulsion 		= get.PBool(itr_data,"y_repulsion")
-		itr.x_stop		 		= get.PBool(itr_data, "x_stop")
+		itr.static 				= get.PBool(itr_data, "static")
+		itr.reflection 			= get.PBool(itr_data, "reflection")
+		itr.x_repulsion 		= get.PBool(itr_data, "x_repulsion")
+		itr.y_repulsion 		= get.PBool(itr_data, "y_repulsion")
+		itr.x_stop		 		= get.PBool(itr_data,  "x_stop")
 
-		itr.level				= get.PNumber(itr_data,"level",1)
-		itr.not_knocking_down 	= get.PBool(itr_data,"not_knocking_down")
-		itr.attacker_frame 		= get.PNumber(itr_data,"aframe")
-		itr.damaged_frame 		= get.PNumber(itr_data,"dframe")
+		itr.level				= get.PNumber(itr_data, "level", 1)
+		itr.not_knocking_down 	= get.PBool(itr_data, "not_knocking_down")
+		itr.attacker_frame 		= get.PNumber(itr_data, "aframe")
+		itr.damaged_frame 		= get.PNumber(itr_data, "dframe")
 
-		itr.no_shaking 			= get.PBool(itr_data,"no_shaking")
-		itr.stun 	 			= get.PNumber(itr_data,"stun")
+		itr.no_shaking 			= get.PBool(itr_data, "no_shaking")
+		itr.stun 	 			= get.PNumber(itr_data, "stun")
 
-		itr.no_spark 			= get.PBool(itr_data,"no_spark")
+		itr.no_spark 			= get.PBool(itr_data, "no_spark")
 		
 		return itr
 	end
@@ -45,20 +46,11 @@ local kind = {}
 
 	function kind:bodyCondition(attacker, defender, itr, body)
 		if attacker.arest > 0 or defender.vrest > 0 then return false end
-		if itr.team == 1 then
-			if attacker.team == -1 then
-				if attacker.owner == defender.owner then return false end
-			else
-				if attacker.team == defender.team then return false end
-			end
-		elseif itr.team == -1 then
-			if attacker.team == -1 then
-				if attacker.owner ~= defender.owner then return false end
-			else
-				if attacker.team ~= defender.team then return false end
-			end	
+
+		if itr.team == -1 then
+			return attacker.team == -1 and attacker.owner == defender.owner or attacker.team == defender.team
 		end
-		return true
+		return attacker.team == -1 and attacker.owner ~= defender.owner or attacker.team ~= defender.team
 	end
 
 
@@ -183,8 +175,8 @@ local kind = {}
 		if not body.static and defender.bdefend + defender.block <= 0 then defender.wait = defender.wait + itr.stun end
 
 		if spark ~= 0 and not itr.no_spark then
-			local spark_x, spark_y = battle.collision.centerCalculate(attacker, itr, defender, body)
-			local sprk = battle.entities.spawnObject(data.system["sparks"],spark_x,spark_y,defender.z + 5,attacker.facing,spark,attacker.owner)
+			local spark_x, spark_y = battle.collision.calculateCenter(attacker, itr, defender, body)
+			local sprk = battle.entities.spawnObject(data.system["sparks"], spark_x, spark_y, defender.z + 5, attacker.facing, spark, attacker.owner)
 			if sprk then sprk.target = defender end
 		end
 	end
@@ -193,6 +185,7 @@ local kind = {}
 	function kind:itrCondition(attacker, defender, itr1, itr2)
 		-- pass
 	end
+
 
 	function kind:itrProcessing(attacker, defender, itr1, itr2)
 		-- pass

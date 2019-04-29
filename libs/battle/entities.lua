@@ -109,7 +109,7 @@ local entities = {}
 				created_object.double_timer = battle.control.double_timer
 				created_object.hpBarsCalculation = battle.hpBarsCalculation
 
-				created_object.findCollaiders = battle.collision.findCollaiders
+				created_object.findColliders = battle.collision.findColliders
 				created_object.getDTVal = battle.collision.getDTVal
 				
 				created_object.drawPreparation = battle.graphic.drawPreparationObject

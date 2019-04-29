@@ -174,7 +174,7 @@ function battle:Update()
 				object:applyMotions()
 				object:applyGravity()
 			end
-			object:findCollaiders()
+			object:findColliders()
 			object:drawPreparation()
 			object:hpBarsCalculation()
 		end
@@ -197,7 +197,7 @@ function battle:Update()
 				object:applyMotions()
 				object:applyGravity()
 			end
-			object:findCollaiders()
+			object:findColliders()
 			object:drawPreparation()
 		end
 	end

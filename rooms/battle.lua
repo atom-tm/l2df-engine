@@ -67,25 +67,27 @@
 	function room:Debug()
 		local timers = ""
 		for tick in pairs(battle.tick) do
-			timers = timers..battle.tick[tick].." "
+			timers = timers..battle.tick[tick] .. " "
 		end
 
-		font.print("fps: "..love.timer.getFPS(), 10, 170)
-		font.print("timers: "..timers, 10, 190)
+		font.print("fps: " .. love.timer.getFPS(), 10, 170)
+		font.print("timers: " .. timers, 10, 190)
 
-		font.print("objects: "..battle.objects, 10, 220)
-		font.print("drawn objects: "..#battle.graphic.objects_for_drawing, 10, 240)
+		font.print("objects: " .. battle.objects, 10, 220)
+		font.print("drawn objects: " .. #battle.graphic.objects_for_drawing, 10, 240)
 
-		font.print("reflection sourses: "..#battle.graphic.reflection_sources, 10, 270)
-		font.print("lights: "..#battle.graphic.light_sources, 10, 290)
+		font.print("reflection sourses: " .. #battle.graphic.reflection_sources, 10, 270)
+		font.print("lights: " .. #battle.graphic.light_sources, 10, 290)
 		font.print("reflections: "..#battle.graphic.reflections_for_drawing, 10, 310)
-		font.print("quality: "..tostring(settings.quality), 10, 330)
+		font.print("quality: " .. tostring(settings.quality), 10, 330)
 
-		font.print("chars/objects: "..#battle.chars.."/"..#battle.objs, 10, 350)
-		font.print("bodys: "..#battle.collision.list.general.bodys.." itrs: "..#battle.collision.list.general.itrs.." processed: "..#battle.collision.list.processed.bodys + #battle.collision.list.processed.itrs, 10, 370)
-		font.print("block/bdefend: "..battle.entities.list[1].block.."/"..battle.entities.list[1].bdefend, 10, 390)
-		font.print("p1 combo: "..battle.entities.list[1].combo, 10, 410)
-		
+		font.print("chars/objects: " .. #battle.chars .. "/" .. #battle.objs, 10, 350)
+		font.print("bodys: " .. #battle.collision.list.pending.bodys ..
+				   " itrs: " .. #battle.collision.list.pending.itrs ..
+				   " processed: " .. #battle.collision.list.processed.bodys + #battle.collision.list.processed.itrs,
+			10, 370)
+		font.print("block/bdefend: " .. battle.entities.list[1].block .. "/" .. battle.entities.list[1].bdefend, 10, 390)
+		font.print("p1 combo: " .. battle.entities.list[1].combo, 10, 410)
 	end
 
 	return room
