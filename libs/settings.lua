@@ -1,22 +1,23 @@
 local settings = {}
 
 	local filesystem = love.filesystem
-	local parser = require("libs.JSON")
 
 	-- Выделение памяти под настройки игры и установка значений по умолчанию
-	function settings:settingsInitialize()
+	function settings:initialize()
 		
 		self.gamePath = filesystem.getSourceBaseDirectory()
 		filesystem.mount(self.gamePath, "")
 
 		self.global = {}								-- Таблица с настройками, доступными для изменения пользователем
 
-		self.file = "data/settings.conf" 				-- Путь файла настроек игры
-		self.global.data = "data/data.txt"				-- Путь до data.txt (список объектов и карт движка)
-		self.global.frames = "data/frames.dat" 			-- Путь до frames.dat (список кадров по умолчанию)
-		self.global.combos = "data/combos.dat"			-- Путь до combos.dat (список переходов по комбинациям клавиш)
-		self.global.dtypes = "data/dtypes.dat"			-- Путь до dtypes.dat (список поведения при разных типах урона)
+		self.file = "data/settings.s" 				-- Путь файла настроек игры
+		self.global.data = "data/data.c"				-- Путь до data.txt (список объектов и карт движка)
+		self.global.frames = "data/frames.c" 			-- Путь до frames.dat (список кадров по умолчанию)
+		self.global.combos = "data/combos.c"			-- Путь до combos.dat (список переходов по комбинациям клавиш)
+		self.global.dtypes = "data/dtypes.c"			-- Путь до dtypes.dat (список поведения при разных типах урона)
+		self.global.system = "data/system.c"
 
+		self.global.roomsFolder 	= "/rooms/" 	-- Папка с файлами комнат
 		self.global.statesFolder 	= "/data/states/"	-- Папка с файлами стейтов
 		self.global.kindsFolder 	= "/data/kinds/"	-- Папка с файлами типов взаимодействий
 		self.global.localesFolder	= "/data/locales/"	-- Папка с файлами локализаций
@@ -76,17 +77,17 @@ local settings = {}
 	function settings:load()
 		local settings_data = filesystem.read(self.file)
 		if settings_data then
-			self.global = parser:decode(settings_data)
-			love.window.showMessageBox( "..", self.global.musicVolume, "info", true)
-			love.window.showMessageBox( "..", self.global.graphic.fpsLimit, "info", true)
-		else
-			self:save()
+			local settings_array = json:decode(settings_data)
+			for key, val in pairs(settings_array) do
+				self.global[key] = val
+			end
 		end
+		self:save()
 	end
 
 	-- Функция сохранения настроек в файл settings.file
 	function settings:save()
-		local save_string = parser:encode_pretty(self.global)
+		local save_string = json:encode_pretty(self.global)
 		local settings_file = io.open(filesystem.getSource() .. "/" .. self.file,"w")
 		settings_file:write(save_string)
 		settings_file:flush()
@@ -210,51 +211,3 @@ local settings = {}
 	end
 
 return settings
-
-
-
-
---[[fonts = {}
-fonts.default = love.graphics.newFont("sprites/UI/menu.otf",16)
-fonts.menu_head = love.graphics.newFont("sprites/UI/menu.otf",42)
-fonts.menu_comment = love.graphics.newFont("sprites/UI/menu.otf",24)
-fonts.menu = love.graphics.newFont("sprites/UI/menu.otf",32)
-
-function save_settings()
-	local data_file = "data/settings.txt"
-	local File = io.open("../"..data_file,"w+")
-	if File ~= nil then
-		local data_save = "[settings]"
-		.."\nmusic_vol: "..window.music_vol
-		.."\nsound_vol: "..window.sound_vol
-		.."\nwindow_size: "..selected_window_size
-		.."\nfullscreen: "..tostring(window.fullscreen)
-		.."\nlanguage: "..localization_number
-		local controls_string = "controls: {"
-		for key1 in ipairs(control_settings) do
-			for key2 in pairs(control_settings[key1]) do
-				key = control_settings[key1][key2]
-				if key == "[" then
-					key = "lsqbr"
-				elseif key == "]" then
-					key = "lsqbr"
-				end
-				controls_string = controls_string .. key .. " "
-			end
-		end
-		controls_string = controls_string.."}"
-		data_save = data_save.."\n"..controls_string
-		File:write(data_save)
-		File:close()
-	end
-end
-
-function setWindowSize()
-	love.window.setMode( window_sizes[selected_window_size].width, window_sizes[selected_window_size].height )
-	camera = CameraCreate()
-end
-
-function setFullscreen ()
-	love.window.setFullscreen( window.fullscreen )
-	camera = CameraCreate()
-end]]
