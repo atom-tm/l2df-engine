@@ -100,7 +100,7 @@ local control = {}
 		for i = 1, #settings.controls do
 			if control.players[i] then
 				local k_pressed = control.players[i].key_pressed
-				local k_timer = k_timer
+				local k_timer = control.players[i].key_timer
 				local dk_timer = control.players[i].double_key_timer
 
 				for key in pairs(settings.controls[i]) do
