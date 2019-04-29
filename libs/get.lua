@@ -4,9 +4,7 @@ local get = {}
 	-- @param x, number  Specified value
 	-- @return number
 	function get.sign(x)
-		if x < 0 then return -1 end
-		if x > 0 then return 1 end
-		return 0
+		return x > 0 and 1 or x < 0 and -1 or 0
 	end
 
 	--- Get rounded value with precision
