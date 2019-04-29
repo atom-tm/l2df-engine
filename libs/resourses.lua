@@ -347,9 +347,9 @@ local resourses = {}
 		frame.hit_Fa 					= get.PNumber(header,"hit_Fa")
 		frame.hit_Fj 					= get.PNumber(header,"hit_Fj")
 
-		frame:add("hid_Ua","int",0)
-		frame:add("wait","int",1)
-		frame:add("shadow","bool",true)
+		-- frame:add("hid_Ua", "int", 0)
+		-- frame:add("wait", "int", 1)
+		-- frame:add("shadow", "bool", true)
 
 		frame.hit_a 					= get.PNumber(header,"hit_a")
 		frame.hit_j 					= get.PNumber(header,"hit_j")
