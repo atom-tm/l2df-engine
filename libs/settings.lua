@@ -1,6 +1,7 @@
 local settings = {}
 
 	local filesystem = love.filesystem
+	local parser = require("libs.JSON")
 
 	-- Выделение памяти под настройки игры и установка значений по умолчанию
 	function settings:settingsInitialize()
@@ -75,7 +76,9 @@ local settings = {}
 	function settings:load()
 		local settings_data = filesystem.read(self.file)
 		if settings_data then
-			self.global = self.readArray(settings_data)
+			self.global = parser:decode(settings_data)
+			love.window.showMessageBox( "..", self.global.musicVolume, "info", true)
+			love.window.showMessageBox( "..", self.global.graphic.fpsLimit, "info", true)
 		else
 			self:save()
 		end
@@ -83,48 +86,12 @@ local settings = {}
 
 	-- Функция сохранения настроек в файл settings.file
 	function settings:save()
-		local save_string = settings.writeArray(self.global)
+		local save_string = parser:encode_pretty(self.global)
 		local settings_file = io.open(filesystem.getSource() .. "/" .. self.file,"w")
 		settings_file:write(save_string)
 		settings_file:flush()
 		settings_file:close()
 	end
-
-	-- Функция обрабатывает массив и преобразует его в строку
-	-- @param array, table, Массив настроек
-	-- @param name, string, Необязательный параметр имени родителя
-	-- @return string
-	function settings.writeArray(array, name)
-		local result = ""
-		for key, val in pairs(array) do
-			if type(val) == "table" then
-				if name then
-					result = result .. settings.writeArray(val, name .. "." .. key)
-				else
-					result = result .. settings.writeArray(val, key)
-				end
-			else
-				local _s
-				if name then
-					_s = name .. "." .. key .. " = \"" .. tostring(val) .. "\""
-				else
-					_s = key .. " = \"" .. tostring(val) .. "\""
-				end
-				result = result .. _s .. "\n"
-			end
-		end
-		return result
-	end
-
-
-	function settings.readArray(string)
-		local result = {}
-		for key, val in string.gmatch(string,"([^= ]+) = \"([^\"]+)\"") do
-			result[key] = val
-		end
-		return result
-	end
-
 	
 	
 
