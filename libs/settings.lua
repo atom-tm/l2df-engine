@@ -145,14 +145,14 @@ local settings = {}
 		local settings_data = love.filesystem.read(settings_file)
 		if settings_data ~= nil then
 
-			self.window.music_vol = get.PNumber(settings_data, "music_volume", 50)
-			self.window.sound_vol = get.PNumber(settings_data, "sound_volume", 70)
-			self.quality = get.PBool(settings_data, "quality")
-			self.window.fullscreen = get.PBool(settings_data, "fullscreen")
-			self.window.selectedSize = get.PNumber(settings_data, "window_size", 3)
-			self.names[1] = get.PString(settings_data, "player1_name", "")
-			self.names[2] = get.PString(settings_data, "player2_name", "")
-			loc.id = get.PNumber(settings_data, "localization", 1)
+			self.window.music_vol = helper.PNumber(settings_data, "music_volume", 50)
+			self.window.sound_vol = helper.PNumber(settings_data, "sound_volume", 70)
+			self.quality = helper.PBool(settings_data, "quality")
+			self.window.fullscreen = helper.PBool(settings_data, "fullscreen")
+			self.window.selectedSize = helper.PNumber(settings_data, "window_size", 3)
+			self.names[1] = helper.PString(settings_data, "player1_name", "")
+			self.names[2] = helper.PString(settings_data, "player2_name", "")
+			loc.id = helper.PNumber(settings_data, "localization", 1)
 			
 			local controls_string = string.match(settings_data, "controls_player_1: {([^{}]+)}")
 			if controls_string ~= nil then

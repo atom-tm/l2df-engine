@@ -116,7 +116,7 @@ local control = {}
 					end
 
 					if abs(dk_timer[key]) > 0 then
-						dk_timer[key] = dk_timer[key] - get.sign(dk_timer[key])
+						dk_timer[key] = dk_timer[key] - helper.sign(dk_timer[key])
 					end
 
 				end

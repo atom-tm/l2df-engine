@@ -84,7 +84,7 @@ data = {}
 					end
 					damage_type[key] = array
 				end
-				damage_type.Get = func.getDamageInfo
+				damage_type.Get = helper.getDamageInfo
 				data.dtypes[dtype_number] = damage_type
 			end
 		end
@@ -102,35 +102,35 @@ data = {}
 					local character_file = love.filesystem.read(file)
 					local start_animation = string.match(character_file, "start_animation: {([^{}]*)}")
 					local start_animation_cinfo = {
-						x = get.PNumber(start_animation, "row"),
-						y = get.PNumber(start_animation, "col"),
-						w = get.PNumber(start_animation, "w"),
-						h = get.PNumber(start_animation, "h")
+						x = helper.PNumber(start_animation, "row"),
+						y = helper.PNumber(start_animation, "col"),
+						w = helper.PNumber(start_animation, "w"),
+						h = helper.PNumber(start_animation, "h")
 					}
 					local start_standing = string.match(character_file, "start_standing: {([^{}]*)}")
 					local start_standing_cinfo = {
-						x = get.PNumber(start_standing, "row"),
-						y = get.PNumber(start_standing, "col"),
-						w = get.PNumber(start_standing, "w"),
-						h = get.PNumber(start_standing, "h")
+						x = helper.PNumber(start_standing, "row"),
+						y = helper.PNumber(start_standing, "col"),
+						w = helper.PNumber(start_standing, "w"),
+						h = helper.PNumber(start_standing, "h")
 					}
 					local character_info = {
 						id = tonumber(id),
-						name = get.PString(character_file, "name"),
+						name = helper.PString(character_file, "name"),
 						head = image.Load(string.match(character_file, "head: \"([^\"\"]+)\"")),
 						animation = image.Load(string.match(start_animation, "file: \"(.*)\""), start_animation_cinfo),
 						standing = image.Load(string.match(start_standing, "file: \"(.*)\""), start_standing_cinfo)
 					}
 
-					character_info.animation.wait = get.PNumber(start_animation, "wait", 5)
-					character_info.animation.frames = get.PNumber(start_animation, "frames", start_animation_cinfo.x * start_animation_cinfo.y)
-					character_info.animation.centerx = get.PNumber(start_animation, "centerx", 0)
-					character_info.animation.centery = get.PNumber(start_animation,"centery", 0)
+					character_info.animation.wait = helper.PNumber(start_animation, "wait", 5)
+					character_info.animation.frames = helper.PNumber(start_animation, "frames", start_animation_cinfo.x * start_animation_cinfo.y)
+					character_info.animation.centerx = helper.PNumber(start_animation, "centerx", 0)
+					character_info.animation.centery = helper.PNumber(start_animation,"centery", 0)
 
-					character_info.standing.wait = get.PNumber(start_standing, "wait", 5)
-					character_info.standing.frames = get.PNumber(start_standing, "frames", start_standing_cinfo.x * start_standing_cinfo.y)
-					character_info.standing.centerx = get.PNumber(start_standing, "centerx", 0)
-					character_info.standing.centery = get.PNumber(start_standing, "centery", 0)
+					character_info.standing.wait = helper.PNumber(start_standing, "wait", 5)
+					character_info.standing.frames = helper.PNumber(start_standing, "frames", start_standing_cinfo.x * start_standing_cinfo.y)
+					character_info.standing.centerx = helper.PNumber(start_standing, "centerx", 0)
+					character_info.standing.centery = helper.PNumber(start_standing, "centery", 0)
 
 					table.insert(self.characters_list,character_info)
 				end
@@ -150,7 +150,7 @@ data = {}
 					local map_file = love.filesystem.read(file)
 					local map_info = {
 						id = tonumber(id),
-						name = get.PString(map_file, "name"),
+						name = helper.PString(map_file, "name"),
 						preview_0 = image.Load(string.match(map_file, "preview_0: \"([^\"\"]+)\"")),
 						preview_1 = image.Load(string.match(map_file, "preview_1: \"([^\"\"]+)\""))
 					}

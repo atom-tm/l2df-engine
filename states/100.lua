@@ -26,15 +26,15 @@ function state:Processing(object,s)
 		end
 
 		if checker then
-			local x = object.x + (get.notNil(s.x, 0) * object.facing)
-			local y = object.y + get.notNil(s.y, 0)
-			local z = object.z + get.notNil(s.z, 1)
-			local facing = object.facing * get.notNil(s.facing, 1)
+			local x = object.x + helper.notNil(s.x, 0) * object.facing
+			local y = object.y + helper.notNil(s.y, 0)
+			local z = object.z + helper.notNil(s.z, 1)
+			local facing = object.facing * helper.notNil(s.facing, 1)
 			local effect = battle.entities.spawnObject(battle.map.head.effects, x, y, z, facing, 0, object.owner)
 			if effect ~= nil then
 				effect:setFrame(effect.head.frames[s.effect])
 				if s.dvx_inheritance then effect:setMotion_X(object.vel_x) end
-				effect:addMotion_X(get.notNil(s.dvx,0) * object.facing)
+				effect:addMotion_X(helper.notNil(s.dvx,0) * object.facing)
 			end
 		end
 	end

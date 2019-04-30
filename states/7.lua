@@ -2,7 +2,7 @@ local state = { variables = {} } -- | 7 | -- Шуншин
 -- Персонаж совершает резкий рывок вперед с указанной силой
 ---------------------------------------------------------------------
 function state:Processing(object,s)
-	if object.first_tick and not get.stateExist(object.previous_frame,7) then
+	if object.first_tick and not helper.stateExist(object.previous_frame,7) then
 		if s.dvx ~= nil then
 			object:addMotion_X(s.dvx * object.facing);
 			if object.vel_x * object.facing > 15 then

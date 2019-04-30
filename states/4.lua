@@ -4,7 +4,7 @@ local state = { variables = {} } -- | 4 | -- Прыжок вверх
 ---------------------------------------------------------------------
 function state:Processing(object,s)
 	object.gravity = true
-	if object.first_tick and not get.stateExist(object.previous_frame,4) then
+	if object.first_tick and not helper.stateExist(object.previous_frame,4) then
 
 		if s.dvx ~= nil then
 			if s.dvx > 0 then

@@ -205,8 +205,8 @@ local graphic = {}
 							if self.shaking % 2 == 1 then x = x + 2
 							else x = x - 2 end
 						end
-						if get.Biggest(x + (self.sprites[i].file.w * self.facing), x) >= battle.graphic.camera_settings.x1
-						and get.Least(x + (self.sprites[i].file.w * self.facing), x) <= battle.graphic.camera_settings.x2 then
+						if helper.max(x + (self.sprites[i].file.w * self.facing), x) >= battle.graphic.camera_settings.x1
+						and helper.min(x + (self.sprites[i].file.w * self.facing), x) <= battle.graphic.camera_settings.x2 then
 							if self.index == nil then self.index = self.z end
 							local object_to_draw = {
 								x = x, y = y,
@@ -251,8 +251,8 @@ local graphic = {}
 					local y = battle.map.head.border_up - self.y + self.z - self.frame.centery
 					if (y <= battle.graphic.camera_settings.y2) and (y + self.sprites[i].file.h >= battle.graphic.camera_settings.y1) then
 						local x = self.x - (self.frame.centerx * self.facing)
-						if get.Biggest(x + (self.sprites[i].file.w * self.facing), x) >= battle.graphic.camera_settings.x1
-						and get.Least(x + (self.sprites[i].file.w * self.facing), x) <= battle.graphic.camera_settings.x2 then
+						if helper.max(x + (self.sprites[i].file.w * self.facing), x) >= battle.graphic.camera_settings.x1
+						and helper.min(x + (self.sprites[i].file.w * self.facing), x) <= battle.graphic.camera_settings.x2 then
 							if self.index == nil then self.index = self.z end
 							local object_to_draw = {
 								x = x, y = y,
@@ -328,7 +328,7 @@ local graphic = {}
 
 							if distance < light.r then
 								
-								local shadow_direction_z = get.sign(((object.z - light.z) / light.r))
+								local shadow_direction_z = helper.sign(((object.z - light.z) / light.r))
 								local scale_y = (object.z - light.z)/light.r
 
 								local direction = (((object.x - light.x) / light.r) * -object.facing)

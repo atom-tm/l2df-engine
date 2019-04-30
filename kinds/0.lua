@@ -1,44 +1,44 @@
 local kind = {}
 
 	function kind:loadingBody(body, body_data)
-		body.static 			= get.PBool(body_data,"static")
-		body.participle 		= get.PBool(body_data,"participle")
-		body.damaged_frame 		= get.PNumber(body_data,"damaged_frame")
+		body.static 			= helper.PBool(body_data,"static")
+		body.participle 		= helper.PBool(body_data,"participle")
+		body.damaged_frame 		= helper.PNumber(body_data,"damaged_frame")
 
 		return body
 	end
 
 
 	function kind:loadingInfo(itr, itr_data)
-		itr.team 				= get.PNumber(itr_data, "team", 1)
-		itr.dtype 				= get.PNumber(itr_data, "dtype", 0)
+		itr.team 				= helper.PNumber(itr_data, "team", 1)
+		itr.dtype 				= helper.PNumber(itr_data, "dtype", 0)
 
-		itr.injury 				= get.PNumber(itr_data, "injury")
-		itr.mana_injury 		= get.PNumber(itr_data, "mana_injury")
-		itr.bdefend 			= get.PNumber(itr_data, "bdefend")
-		itr.fall 				= get.PNumber(itr_data, "fall")
-		itr.arest				= get.PNumber(itr_data, "arest", 10)
-		itr.vrest 				= get.PNumber(itr_data, "vrest", 15)
+		itr.injury 				= helper.PNumber(itr_data, "injury")
+		itr.mana_injury 		= helper.PNumber(itr_data, "mana_injury")
+		itr.bdefend 			= helper.PNumber(itr_data, "bdefend")
+		itr.fall 				= helper.PNumber(itr_data, "fall")
+		itr.arest				= helper.PNumber(itr_data, "arest", 10)
+		itr.vrest 				= helper.PNumber(itr_data, "vrest", 15)
 
-		itr.dvx 				= get.PNumber(itr_data, "dvx", 0)
-		itr.dvy 				= get.PNumber(itr_data, "dvy", 0)
-		itr.dvz 				= get.PNumber(itr_data, "dvz")
+		itr.dvx 				= helper.PNumber(itr_data, "dvx", 0)
+		itr.dvy 				= helper.PNumber(itr_data, "dvy", 0)
+		itr.dvz 				= helper.PNumber(itr_data, "dvz")
 
-		itr.static 				= get.PBool(itr_data, "static")
-		itr.reflection 			= get.PBool(itr_data, "reflection")
-		itr.x_repulsion 		= get.PBool(itr_data, "x_repulsion")
-		itr.y_repulsion 		= get.PBool(itr_data, "y_repulsion")
-		itr.x_stop		 		= get.PBool(itr_data,  "x_stop")
+		itr.static 				= helper.PBool(itr_data, "static")
+		itr.reflection 			= helper.PBool(itr_data, "reflection")
+		itr.x_repulsion 		= helper.PBool(itr_data, "x_repulsion")
+		itr.y_repulsion 		= helper.PBool(itr_data, "y_repulsion")
+		itr.x_stop		 		= helper.PBool(itr_data,  "x_stop")
 
-		itr.level				= get.PNumber(itr_data, "level", 1)
-		itr.not_knocking_down 	= get.PBool(itr_data, "not_knocking_down")
-		itr.attacker_frame 		= get.PNumber(itr_data, "aframe")
-		itr.damaged_frame 		= get.PNumber(itr_data, "dframe")
+		itr.level				= helper.PNumber(itr_data, "level", 1)
+		itr.not_knocking_down 	= helper.PBool(itr_data, "not_knocking_down")
+		itr.attacker_frame 		= helper.PNumber(itr_data, "aframe")
+		itr.damaged_frame 		= helper.PNumber(itr_data, "dframe")
 
-		itr.no_shaking 			= get.PBool(itr_data, "no_shaking")
-		itr.stun 	 			= get.PNumber(itr_data, "stun")
+		itr.no_shaking 			= helper.PBool(itr_data, "no_shaking")
+		itr.stun 	 			= helper.PNumber(itr_data, "stun")
 
-		itr.no_spark 			= get.PBool(itr_data, "no_spark")
+		itr.no_spark 			= helper.PBool(itr_data, "no_spark")
 		
 		return itr
 	end

@@ -16,7 +16,7 @@ function state:Processing(object,s)
 			object.block = s.block
 		end
 		state.variables.block_status = true
-		object.block_timer = get.notNil(s.timer,0)
+		object.block_timer = helper.notNil(s.timer,0)
 		if object.wait == 0 then
 			object.wait = object.wait + 1
 		end

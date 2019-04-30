@@ -4,7 +4,7 @@ local entities = {}
 
 	function entities.create(id)
 		if resourses.entities[id] == nil then return nil end
-		local created_object = func.CopyTable(resourses.entities[id])
+		local created_object = helper.CopyTable(resourses.entities[id])
 		if created_object ~= nil then			
 			
 			created_object.destroy = false
@@ -158,13 +158,13 @@ local entities = {}
 				object.x = x
 				object.y = y
 				object.z = z
-				object.facing = get.notNil(facing, 1)
+				object.facing = helper.notNil(facing, 1)
 				object:setFrame(action)
 
 				if object.head.type == "character" or object.head.type == "object" then
 					for i = 1, #entities.list + 1 do
 						if entities.list[i] == nil then
-							object.owner = get.notNil(owner, i)
+							object.owner = helper.notNil(owner, i)
 							object.dynamic_id = i
 							entities.list[i] = object
 							return object
@@ -173,7 +173,7 @@ local entities = {}
 				elseif object.head.type == "effect" then
 					for i = 1, #entities.effects + 1 do
 						if entities.effects[i] == nil then
-							object.owner = get.notNil(owner, i)
+							object.owner = helper.notNil(owner, i)
 							object.dynamic_id = i
 							entities.effects[i] = object
 							return object

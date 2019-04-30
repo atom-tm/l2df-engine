@@ -101,11 +101,11 @@ local room = {}
 		end
 		function setting:action_left()
 			settings.window.fullscreen = not settings.window.fullscreen
-			func.SetWindowSize()
+			helper.SetWindowSize()
 		end
 		function setting:action_right()
 			settings.window.fullscreen = not settings.window.fullscreen
-			func.SetWindowSize()
+			helper.SetWindowSize()
 		end
 		table.insert(self.list, setting)
 
@@ -132,7 +132,7 @@ local room = {}
 		end
 		function setting:action_click()
 			settings.window.selectedSize = room.selected_size
-			func.SetWindowSize()
+			helper.SetWindowSize()
 		end
 		table.insert(self.list, setting)
 

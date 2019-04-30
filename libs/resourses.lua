@@ -114,34 +114,34 @@ local resourses = {}
 		if data ~= nil then
 			
 			head.name 						= string.match(data, "name: ([%w_% ]+)")
-			head.type 						= get.PString(data, "type")
+			head.type 						= helper.PString(data, "type")
 			if head.type == "character" then
 				head.face					= image.Load(string.match(data, "face: \"([^\"\"]+)\""))
 			end
 
-			head.gravity 					= get.PBool(data, "gravity")
-			head.collision 					= get.PBool(data, "collision")
-			head.shadow 					= get.PBool(data, "shadow")
-			head.reflection 				= get.PBool(data, "reflection")
-			head.nextZero 					= not get.PBool(data, "nextZero")
+			head.gravity 					= helper.PBool(data, "gravity")
+			head.collision 					= helper.PBool(data, "collision")
+			head.shadow 					= helper.PBool(data, "shadow")
+			head.reflection 				= helper.PBool(data, "reflection")
+			head.nextZero 					= not helper.PBool(data, "nextZero")
 
-			head.str 						= get.PNumber(data, "str")
-			head.int 						= get.PNumber(data, "int")
-			head.agl 						= get.PNumber(data, "agl")
+			head.str 						= helper.PNumber(data, "str")
+			head.int 						= helper.PNumber(data, "int")
+			head.agl 						= helper.PNumber(data, "agl")
 
-			head.hp 						= get.PNumber(data, "hp",1000)
-			head.mp 						= get.PNumber(data, "mp",500)
-			head.sp 						= get.PNumber(data, "sp",10)
-			head.hp_regeneration 			= get.PNumber(data, "hp_regeneration",1)
-			head.mp_regeneration 			= get.PNumber(data, "mp_regeneration",1)
-			head.sp_regeneration 			= get.PNumber(data, "sp_regeneration",1)
+			head.hp 						= helper.PNumber(data, "hp",1000)
+			head.mp 						= helper.PNumber(data, "mp",500)
+			head.sp 						= helper.PNumber(data, "sp",10)
+			head.hp_regeneration 			= helper.PNumber(data, "hp_regeneration",1)
+			head.mp_regeneration 			= helper.PNumber(data, "mp_regeneration",1)
+			head.sp_regeneration 			= helper.PNumber(data, "sp_regeneration",1)
 
-			head.fall 						= get.PNumber(data, "fall",70)
-			head.bdefend 					= get.PNumber(data, "bdefend",60)
-			head.fall_timer 				= get.PNumber(data, "fall_timer",100)
-			head.bdefend_timer 				= get.PNumber(data, "bdefend_timer",160)
+			head.fall 						= helper.PNumber(data, "fall",70)
+			head.bdefend 					= helper.PNumber(data, "bdefend",60)
+			head.fall_timer 				= helper.PNumber(data, "fall_timer",100)
+			head.bdefend_timer 				= helper.PNumber(data, "bdefend_timer",160)
 
-			head.states						= get.PFramesString(data, "states")
+			head.states						= helper.PFramesString(data, "states")
 
 			local ai_path 					= string.match(data, "ai: \"([^\"\"]+).lua\"")
 			if ai_path then
@@ -159,7 +159,7 @@ local resourses = {}
 	function resourses.EntityLoadingFramesList(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
 		local head = resourses.entities[object.id].head
-		head.frames = func.CopyTable(data.frames)
+		head.frames = helper.CopyTable(data.frames)
 		local data = string.match(object.data, "<frames_list>(.*)</frames_list>")
 		if data ~= nil then
 			for key, frame_number in string.gmatch(data, "([%w%d_]+): ([%d]+)") do
@@ -180,7 +180,7 @@ local resourses = {}
 	function resourses.EntityLoadingDtypes(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
 		local head = resourses.entities[object.id].head
-		head.dtypes = func.CopyTable(data.dtypes)
+		head.dtypes = helper.CopyTable(data.dtypes)
 		local data = string.match(object.data, "<damage_types>(.*)</damage_types>")
 		if data then
 			for dtype_number, dtype_info in string.gmatch(data, "([%d]+): %[([^%[%]]+)%]") do
@@ -195,7 +195,7 @@ local resourses = {}
 					end
 					head.dtypes[dtype_number][key] = array
 				end
-				head.dtypes[dtype_number].Get = func.getDamageInfo
+				head.dtypes[dtype_number].Get = helper.getDamageInfo
 			end
 		end
 		return true
@@ -256,13 +256,13 @@ local resourses = {}
 
 						local file_path = string.match(sprite_info, "file: \"(.*)\"")
 						local cutting_info = {
-							w = get.PNumber(sprite_info, "w"),
-							h = get.PNumber(sprite_info, "h"),
-							x = get.PNumber(sprite_info, "row"),
-							y = get.PNumber(sprite_info, "col"),
+							w = helper.PNumber(sprite_info, "w"),
+							h = helper.PNumber(sprite_info, "h"),
+							x = helper.PNumber(sprite_info, "row"),
+							y = helper.PNumber(sprite_info, "col"),
 						}
 						local filter = "nearest"
-						if get.PBool(sprite_info, "fsaa") then filter = "linear" end
+						if helper.PBool(sprite_info, "fsaa") then filter = "linear" end
 
 						local sprite = {}
 						sprite.file = image.Load(file_path,cutting_info,filter)
@@ -312,11 +312,11 @@ local resourses = {}
 		local header = string.match(data, "([^{}]+)")
 
 		frame.number 					= frame_number
-		frame.pic 						= get.PNumber(header,"pic")
-		frame.next 						= get.PNumber(header,"next")
-		frame.wait 						= get.PNumber(header,"wait")
-		frame.centerx 					= get.PNumber(header,"centerx")
-		frame.centery 					= get.PNumber(header,"centery")
+		frame.pic 						= helper.PNumber(header, "pic")
+		frame.next 						= helper.PNumber(header, "next")
+		frame.wait 						= helper.PNumber(header, "wait")
+		frame.centerx 					= helper.PNumber(header, "centerx")
+		frame.centery 					= helper.PNumber(header, "centery")
 
 		local sound_path = string.match(header, "sound: \"(.*)\"")
 		if sound_path then
@@ -325,52 +325,52 @@ local resourses = {}
 			frame.sound = nil
 		end
 
-		frame.shadow 					= not get.PBool(header,"shadow")
-		frame.zoom 						= get.PNumber(header,"zoom",1)
+		frame.shadow 					= not helper.PBool(header, "shadow")
+		frame.zoom 						= helper.PNumber(header, "zoom", 1)
 
-		frame.dvx 						= get.PNumber(header,"dvx")
-		frame.dsx 						= get.PNumber(header,"dsx")
-		frame.dx 						= get.PNumber(header,"dx")
+		frame.dvx 						= helper.PNumber(header, "dvx")
+		frame.dsx 						= helper.PNumber(header, "dsx")
+		frame.dx 						= helper.PNumber(header, "dx")
 
-		frame.dvy 						= get.PNumber(header,"dvy")
-		frame.dsy 						= get.PNumber(header,"dsy")
-		frame.dy 						= get.PNumber(header,"dy")
+		frame.dvy 						= helper.PNumber(header, "dvy")
+		frame.dsy 						= helper.PNumber(header, "dsy")
+		frame.dy 						= helper.PNumber(header, "dy")
 
-		frame.dvz 						= get.PNumber(header,"dvz")
-		frame.dsz 						= get.PNumber(header,"dsz")
-		frame.dz 						= get.PNumber(header,"dz")
+		frame.dvz 						= helper.PNumber(header, "dvz")
+		frame.dsz 						= helper.PNumber(header, "dsz")
+		frame.dz 						= helper.PNumber(header, "dz")
 
-		frame.hit_Ua 					= get.PNumber(header,"hit_Ua")
-		frame.hit_Uj 					= get.PNumber(header,"hit_Uj")
-		frame.hit_Da 					= get.PNumber(header,"hit_Da")
-		frame.hit_Dj 					= get.PNumber(header,"hit_Dj")
-		frame.hit_Fa 					= get.PNumber(header,"hit_Fa")
-		frame.hit_Fj 					= get.PNumber(header,"hit_Fj")
+		frame.hit_Ua 					= helper.PNumber(header, "hit_Ua")
+		frame.hit_Uj 					= helper.PNumber(header, "hit_Uj")
+		frame.hit_Da 					= helper.PNumber(header, "hit_Da")
+		frame.hit_Dj 					= helper.PNumber(header, "hit_Dj")
+		frame.hit_Fa 					= helper.PNumber(header, "hit_Fa")
+		frame.hit_Fj 					= helper.PNumber(header, "hit_Fj")
 
 		-- frame:add("hid_Ua", "int", 0)
 		-- frame:add("wait", "int", 1)
 		-- frame:add("shadow", "bool", true)
 
-		frame.hit_a 					= get.PNumber(header,"hit_a")
-		frame.hit_j 					= get.PNumber(header,"hit_j")
-		frame.hit_d 					= get.PNumber(header,"hit_d")
-		frame.hit_sp 					= get.PNumber(header,"hit_sp")
+		frame.hit_a 					= helper.PNumber(header, "hit_a")
+		frame.hit_j 					= helper.PNumber(header, "hit_j")
+		frame.hit_d 					= helper.PNumber(header, "hit_d")
+		frame.hit_sp 					= helper.PNumber(header, "hit_sp")
 
-		frame.hit_w 					= get.PNumber(header,"hit_w")
-		frame.hit_s 					= get.PNumber(header,"hit_s")
-		frame.hit_f 					= get.PNumber(header,"hit_f")
-		frame.hit_b						= get.PNumber(header,"hit_b")
+		frame.hit_w 					= helper.PNumber(header, "hit_w")
+		frame.hit_s 					= helper.PNumber(header, "hit_s")
+		frame.hit_f 					= helper.PNumber(header, "hit_f")
+		frame.hit_b						= helper.PNumber(header, "hit_b")
 
-		frame.hit_aa 					= get.PNumber(header,"hit_aa")
-		frame.hit_jj 					= get.PNumber(header,"hit_jj")
-		frame.hit_dd 					= get.PNumber(header,"hit_dd")
-		frame.hit_spsp 					= get.PNumber(header,"hit_spsp")
-		frame.hit_ww 					= get.PNumber(header,"hit_ww")
-		frame.hit_ss 					= get.PNumber(header,"hit_ss")
-		frame.hit_ff 					= get.PNumber(header,"hit_ff")
-		frame.hit_bb					= get.PNumber(header,"hit_bb")
+		frame.hit_aa 					= helper.PNumber(header, "hit_aa")
+		frame.hit_jj 					= helper.PNumber(header, "hit_jj")
+		frame.hit_dd 					= helper.PNumber(header, "hit_dd")
+		frame.hit_spsp 					= helper.PNumber(header, "hit_spsp")
+		frame.hit_ww 					= helper.PNumber(header, "hit_ww")
+		frame.hit_ss 					= helper.PNumber(header, "hit_ss")
+		frame.hit_ff 					= helper.PNumber(header, "hit_ff")
+		frame.hit_bb					= helper.PNumber(header, "hit_bb")
 
-		frame.grounded					= get.PNumber(header,"grounded")
+		frame.grounded					= helper.PNumber(header, "grounded")
 
 		frame.states 					= resourses.LoadStates(data)
 		frame.itrs	 					= resourses.LoadItrs(data)
@@ -391,19 +391,19 @@ local resourses = {}
 		for body_data in string.gmatch(data_sourse, "body: {([^{}]*)}") do
 			local body = {}
 			
-			body.frequency					= get.PNumber(body_data,"frequency",0)
+			body.frequency					= helper.PNumber(body_data, "frequency", 0)
 			
-			body.x 							= get.PNumber(body_data,"x",0)
-			body.y 							= get.PNumber(body_data,"y",0)
-			body.z 							= get.PNumber(body_data,"z",-5)
+			body.x 							= helper.PNumber(body_data, "x", 0)
+			body.y 							= helper.PNumber(body_data, "y", 0)
+			body.z 							= helper.PNumber(body_data, "z", -5)
 			
-			body.w 							= get.PNumber(body_data,"w",0)
-			body.h 							= get.PNumber(body_data,"h",0)
-			body.l 							= get.PNumber(body_data,"l",10)
+			body.w 							= helper.PNumber(body_data, "w", 0)
+			body.h 							= helper.PNumber(body_data, "h", 0)
+			body.l 							= helper.PNumber(body_data, "l", 10)
 
-			body.x_rad 						= get.Biggest(math.abs(body.x),math.abs(body.x + body.w))
-			body.y_rad 						= get.Biggest(math.abs(body.y),math.abs(body.y + body.h))
-			body.z_rad 						= get.Biggest(math.abs(body.z),math.abs(body.z + body.l))
+			body.x_rad 						= helper.max(math.abs(body.x), math.abs(body.x + body.w))
+			body.y_rad 						= helper.max(math.abs(body.y), math.abs(body.y + body.h))
+			body.z_rad 						= helper.max(math.abs(body.z), math.abs(body.z + body.l))
 
 			for key in pairs(data.kinds) do
 				if data.kinds[key].loadingBody then
@@ -416,9 +416,9 @@ local resourses = {}
 			table.insert(bodys_radiuses_z, body.z_rad)
 			table.insert(bodys, body)
 		end
-		bodys.radius_x = get.Maximum(bodys_radiuses_x)
-		bodys.radius_y = get.Maximum(bodys_radiuses_y)
-		bodys.radius_z = get.Maximum(bodys_radiuses_z)
+		bodys.radius_x = helper.Maximum(bodys_radiuses_x)
+		bodys.radius_y = helper.Maximum(bodys_radiuses_y)
+		bodys.radius_z = helper.Maximum(bodys_radiuses_z)
 		return bodys
 	end
 
@@ -433,20 +433,20 @@ local resourses = {}
 		for itr_data in string.gmatch(data_sourse, "itr: {([^{}]*)}") do
 			local itr = {}
 
-			itr.kind 						= get.PNumber(itr_data,"kind",0)
-			itr.frequency					= get.PNumber(itr_data,"frequency",0)
+			itr.kind 						= helper.PNumber(itr_data, "kind", 0)
+			itr.frequency					= helper.PNumber(itr_data, "frequency", 0)
 
-			itr.x 							= get.PNumber(itr_data,"x",0)
-			itr.y 							= get.PNumber(itr_data,"y",0)
-			itr.z 							= get.PNumber(itr_data,"z",-5)
+			itr.x 							= helper.PNumber(itr_data, "x", 0)
+			itr.y 							= helper.PNumber(itr_data, "y", 0)
+			itr.z 							= helper.PNumber(itr_data, "z", -5)
 			
-			itr.w 							= get.PNumber(itr_data,"w",0)
-			itr.h 							= get.PNumber(itr_data,"h",0)
-			itr.l 							= get.PNumber(itr_data,"l",10)
+			itr.w 							= helper.PNumber(itr_data, "w", 0)
+			itr.h 							= helper.PNumber(itr_data, "h", 0)
+			itr.l 							= helper.PNumber(itr_data, "l", 10)
 
-			itr.x_rad 						= get.Biggest(math.abs(itr.x),math.abs(itr.x + itr.w))
-			itr.y_rad 						= get.Biggest(math.abs(itr.y),math.abs(itr.y + itr.h))
-			itr.z_rad 						= get.Biggest(math.abs(itr.z),math.abs(itr.z + itr.l))
+			itr.x_rad 						= helper.max(math.abs(itr.x), math.abs(itr.x + itr.w))
+			itr.y_rad 						= helper.max(math.abs(itr.y), math.abs(itr.y + itr.h))
+			itr.z_rad 						= helper.max(math.abs(itr.z), math.abs(itr.z + itr.l))
 
 			if data.kinds[itr.kind] and data.kinds[itr.kind].loadingInfo then
 				itr = data.kinds[itr.kind]:loadingInfo(itr, itr_data)
@@ -457,9 +457,9 @@ local resourses = {}
 			table.insert(itrs_radiuses_z, itr.z_rad)
 			table.insert(itrs, itr)
 		end
-		itrs.radius_x = get.Maximum(itrs_radiuses_x)
-		itrs.radius_y = get.Maximum(itrs_radiuses_y)
-		itrs.radius_z = get.Maximum(itrs_radiuses_z)
+		itrs.radius_x = helper.Maximum(itrs_radiuses_x)
+		itrs.radius_y = helper.Maximum(itrs_radiuses_y)
+		itrs.radius_z = helper.Maximum(itrs_radiuses_z)
 		return itrs
 	end
 
@@ -471,32 +471,32 @@ local resourses = {}
 		for opoint_data in string.gmatch(data, "opoint: {([^{}]*)}") do
 			local opoint = {}
 
-			opoint.id 						= get.PNumber(opoint_data, "id")
-			opoint.action 					= get.PNumber(opoint_data, "action")
-			opoint.action_random 			= get.PNumber(opoint_data, "raction")
+			opoint.id 						= helper.PNumber(opoint_data, "id")
+			opoint.action 					= helper.PNumber(opoint_data, "action")
+			opoint.action_random 			= helper.PNumber(opoint_data, "raction")
 			
-			opoint.amount 					= get.PNumber(opoint_data, "amount",1)
-			opoint.amount_random 			= get.PNumber(opoint_data, "ramount")
-			opoint.count 					= get.PNumber(opoint_data, "count",1)
-			opoint.count_random				= get.PNumber(opoint_data, "rcount")
+			opoint.amount 					= helper.PNumber(opoint_data, "amount",1)
+			opoint.amount_random 			= helper.PNumber(opoint_data, "ramount")
+			opoint.count 					= helper.PNumber(opoint_data, "count",1)
+			opoint.count_random				= helper.PNumber(opoint_data, "rcount")
 
-			opoint.x 						= get.PNumber(opoint_data, "x")
-			opoint.y 						= get.PNumber(opoint_data, "y")
-			opoint.z 						= get.PNumber(opoint_data, "z")
+			opoint.x 						= helper.PNumber(opoint_data, "x")
+			opoint.y 						= helper.PNumber(opoint_data, "y")
+			opoint.z 						= helper.PNumber(opoint_data, "z")
 
-			opoint.x_random 				= get.PNumber(opoint_data, "rx")
-			opoint.y_random 				= get.PNumber(opoint_data, "ry")
-			opoint.z_random 				= get.PNumber(opoint_data, "rz")
+			opoint.x_random 				= helper.PNumber(opoint_data, "rx")
+			opoint.y_random 				= helper.PNumber(opoint_data, "ry")
+			opoint.z_random 				= helper.PNumber(opoint_data, "rz")
 
-			opoint.dvx						= get.PNumber(opoint_data, "dvx")
-			opoint.dvy						= get.PNumber(opoint_data, "dvy")
-			opoint.dvz						= get.PNumber(opoint_data, "dvz")
+			opoint.dvx						= helper.PNumber(opoint_data, "dvx")
+			opoint.dvy						= helper.PNumber(opoint_data, "dvy")
+			opoint.dvz						= helper.PNumber(opoint_data, "dvz")
 
-			opoint.dvx_random				= get.PNumber(opoint_data, "rdvx")
-			opoint.dvy_random				= get.PNumber(opoint_data, "rdvy")
-			opoint.dvz_random				= get.PNumber(opoint_data, "rdvz")
+			opoint.dvx_random				= helper.PNumber(opoint_data, "rdvx")
+			opoint.dvy_random				= helper.PNumber(opoint_data, "rdvy")
+			opoint.dvz_random				= helper.PNumber(opoint_data, "rdvz")
 
-			opoint.facing 					= get.PNumber(opoint_data, "facing",1)
+			opoint.facing 					= helper.PNumber(opoint_data, "facing",1)
 			
 			table.insert(opoints, opoint)
 			resourses.AddToLoading(opoint.id, "entity")
@@ -574,31 +574,31 @@ local resourses = {}
 
 		if data ~= nil then
 
-			head.name 						= get.PString(data, "name")
+			head.name 						= helper.PString(data, "name")
 
-			head.width 						= get.PNumber(data, "width")
-			head.height 					= get.PNumber(data, "height")
+			head.width 						= helper.PNumber(data, "width")
+			head.height 					= helper.PNumber(data, "height")
 
-			head.friction 					= get.PNumber(data, "friction")
-			head.gravity 					= get.PNumber(data, "gravity")
+			head.friction 					= helper.PNumber(data, "friction")
+			head.gravity 					= helper.PNumber(data, "gravity")
 
-			head.shadow 					= get.PBool(data, "shadow")
-			head.reflection 				= get.PBool(data, "reflection")
+			head.shadow 					= helper.PBool(data, "shadow")
+			head.reflection 				= helper.PBool(data, "reflection")
 
-			head.zoom						= get.PNumber(data, "zoom")
+			head.zoom						= helper.PNumber(data, "zoom")
 
 
-			head.effects 					= get.PNumber(data, "effects",-1)
+			head.effects 					= helper.PNumber(data, "effects",-1)
 			if head.effects ~= -1 then
 				resourses.AddToLoading(head.effects, "entity")
 			end
 
-			head.start_anim 				= get.PBool(data, "start_anim")
+			head.start_anim 				= helper.PBool(data, "start_anim")
 
-			head.border_up 					= get.PNumber(data, "border_up")
-			head.border_down 				= get.PNumber(data, "border_down")
+			head.border_up 					= helper.PNumber(data, "border_up")
+			head.border_down 				= helper.PNumber(data, "border_down")
 
-			head.objects_stock				= get.PNumber(data, "objects_stock", 15)
+			head.objects_stock				= helper.PNumber(data, "objects_stock", 15)
 
 			head.area 						= math.abs(head.border_down - head.border_up)
 			head.z_center 					= (head.border_up + head.border_down) * 0.5
@@ -606,33 +606,33 @@ local resourses = {}
 			map.spawn_points = {}
 			for spawn_point_data in string.gmatch(data, "spawn_point: {([^{}]*)}") do
 				local spawn_point = {}
-				spawn_point.x 			= get.PNumber(spawn_point_data, "x")
-				spawn_point.y 			= get.PNumber(spawn_point_data, "y")
-				spawn_point.z 			= get.PNumber(spawn_point_data, "z")
-				spawn_point.rx 			= get.PNumber(spawn_point_data, "rx")
-				spawn_point.ry 			= get.PNumber(spawn_point_data, "ry")
-				spawn_point.rz 			= get.PNumber(spawn_point_data, "rz")
-				spawn_point.facing 		= get.PNumber(spawn_point_data, "facing")
+				spawn_point.x 			= helper.PNumber(spawn_point_data, "x")
+				spawn_point.y 			= helper.PNumber(spawn_point_data, "y")
+				spawn_point.z 			= helper.PNumber(spawn_point_data, "z")
+				spawn_point.rx 			= helper.PNumber(spawn_point_data, "rx")
+				spawn_point.ry 			= helper.PNumber(spawn_point_data, "ry")
+				spawn_point.rz 			= helper.PNumber(spawn_point_data, "rz")
+				spawn_point.facing 		= helper.PNumber(spawn_point_data, "facing")
 				table.insert(map.spawn_points, spawn_point)
 			end
 
 			map.lights = {}
 			for light_data in string.gmatch(data, "light: {([^{}]*)}") do
 				local light = {}
-				light.x 				= get.PNumber(light_data, "x")
-				light.y 				= get.PNumber(light_data, "y")
-				light.z 				= get.PNumber(light_data, "z")
-				light.r 				= get.PNumber(light_data, "r")
-				light.f 				= get.PNumber(light_data, "f")
-				light.s 				= get.PBool(light_data, "s")
+				light.x 				= helper.PNumber(light_data, "x")
+				light.y 				= helper.PNumber(light_data, "y")
+				light.z 				= helper.PNumber(light_data, "z")
+				light.r 				= helper.PNumber(light_data, "r")
+				light.f 				= helper.PNumber(light_data, "f")
+				light.s 				= helper.PBool(light_data, "s")
 				table.insert(map.lights, light)
 			end
 
 			local shadow_path = string.match(data,"shadow_sprite: \"([^\"\"]+)\"")
 			if shadow_path ~= nil then
 				map.shadow_sprite 			= image.Load(shadow_path)
-				map.shadow_centerx 			= get.PNumber(data, "shadow_centerx")
-				map.shadow_centery			= get.PNumber(data, "shadow_centery")
+				map.shadow_centerx 			= helper.PNumber(data, "shadow_centerx")
+				map.shadow_centery			= helper.PNumber(data, "shadow_centery")
 			end
 
 			map.opoints 					= resourses.LoadOpoints(data)
@@ -663,15 +663,15 @@ local resourses = {}
 
 					local file_path = string.match(data, "file: \"(.*)\"") -- путь до файла слоя
 					local filter = "nearest"
-					if get.PBool(data, "fsaa") then filter = "linear" end
+					if helper.PBool(data, "fsaa") then filter = "linear" end
 
 					layer.sprite 			= image.Load(file_path, nil, filter)
 
-					layer.x 				= get.PNumber(data, "x")
-					layer.y 				= get.PNumber(data, "y")
-					layer.w 				= get.PNumber(data, "w")
-					layer.h 				= get.PNumber(data, "h")
-					layer.reflection 		= get.PBool(data, "reflection")
+					layer.x 				= helper.PNumber(data, "x")
+					layer.y 				= helper.PNumber(data, "y")
+					layer.w 				= helper.PNumber(data, "w")
+					layer.h 				= helper.PNumber(data, "h")
+					layer.reflection 		= helper.PBool(data, "reflection")
 					layer.important			= true
 					if string.match(data, "not_important") ~= nil then
 						layer.important = false
@@ -705,14 +705,14 @@ local resourses = {}
 
 					local file_path = string.match(data, "file: \"(.*)\"") -- путь до файла слоя
 					local fsaa = "nearest"
-					if get.PBool(data, "fsaa") then fsaa = "linear" end
+					if helper.PBool(data, "fsaa") then fsaa = "linear" end
 
 					filter.sprite 			= image.Load(file_path, nil, fsaa)
 
-					filter.x 				= get.PNumber(data, "x")
-					filter.y 				= get.PNumber(data, "y")
-					filter.w 				= get.PNumber(data, "w")
-					filter.h 				= get.PNumber(data, "h")
+					filter.x 				= helper.PNumber(data, "x")
+					filter.y 				= helper.PNumber(data, "y")
+					filter.w 				= helper.PNumber(data, "w")
+					filter.h 				= helper.PNumber(data, "h")
 					filter.important		= true
 					if string.match(data, "not_important") ~= nil then
 						filter.important = false

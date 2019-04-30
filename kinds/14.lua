@@ -19,21 +19,21 @@ local kind = {}
 
 		if defender.x < x_center_of_itr and defender.vel_x > 0 then
 			defender:setMotion_X(0)
-			defender.x = get.Least(x1,x2) + (defender.x - get.Biggest(bx1,bx2))
+			defender.x = helper.min(x1,x2) + (defender.x - helper.max(bx1,bx2))
 		elseif defender.x >= x_center_of_itr and defender.vel_x < 0 then
 			defender:setMotion_X(0)
-			defender.x = get.Biggest(x1,x2) + (defender.x - get.Least(bx1,bx2))
+			defender.x = helper.max(x1,x2) + (defender.x - helper.min(bx1,bx2))
 		--[[elseif z_center_of_body < z_center_of_itr and defender.vel_z > 0 then
 			defender:setMotion_Z(0)
-			defender.z = get.Least(z1,z2) + (defender.z - get.Biggest(bz1,bz2))
+			defender.z = helper.min(z1,z2) + (defender.z - helper.max(bz1,bz2))
 		elseif z_center_of_body >= z_center_of_itr and defender.vel_z < 0 then
 			defender:setMotion_Z(0)
-			defender.z = get.Biggest(z1,z2) + (defender.z - get.Least(bz1,bz2))]]
+			defender.z = helper.max(z1,z2) + (defender.z - helper.min(bz1,bz2))]]
 		else
 			if defender.x < x_center_of_itr then
-				defender.x = get.Least(x1,x2) + (defender.x - get.Biggest(bx1,bx2))
+				defender.x = helper.min(x1,x2) + (defender.x - helper.max(bx1,bx2))
 			elseif defender.x >= x_center_of_itr then
-				defender.x = get.Biggest(x1,x2) + (defender.x - get.Least(bx1,bx2))
+				defender.x = helper.max(x1,x2) + (defender.x - helper.min(bx1,bx2))
 			end
 		end
 	end

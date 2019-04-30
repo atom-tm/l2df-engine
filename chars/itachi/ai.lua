@@ -1,5 +1,5 @@
 local ai = {}
-local checkState = get.stateExist
+local checkState = helper.stateExist
 local f = battle.ai
 
 function ai:update(char)

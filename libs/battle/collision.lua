@@ -82,18 +82,18 @@ local collision = { }
 		local c2x1 = obj2.x - obj2.frame.centerx * obj2.facing + coll2.x * obj2.facing
 		local c2x2 = c2x1 + coll2.w * obj2.facing
 
-		if get.Least(c1x1, c1x2) < get.Biggest(c2x1, c2x2) and get.Least(c2x1, c2x2) < get.Biggest(c1x1, c1x2) then
+		if helper.min(c1x1, c1x2) < helper.max(c2x1, c2x2) and helper.min(c2x1, c2x2) < helper.max(c1x1, c1x2) then
 			local c1z1 = obj1.z + coll1.z
 			local c1z2 = c1z1 + coll1.l
 			local c2z1 = obj2.z + coll2.z
 			local c2z2 = c2z1 + coll2.l
 
-			if get.Least(c1z1, c1z2) < get.Biggest(c2z1, c2z2) and get.Least(c2z1, c2z2) < get.Biggest(c1z1, c1z2) then
+			if helper.min(c1z1, c1z2) < helper.max(c2z1, c2z2) and helper.min(c2z1, c2z2) < helper.max(c1z1, c1z2) then
 				local c1y1 = obj1.y + obj1.frame.centery - coll1.y
 				local c1y2 = c1y1 - coll1.h
 				local c2y1 = obj2.y + obj2.frame.centery - coll2.y
 				local c2y2 = c2y1 - coll2.h
-				return get.Least(c1y1, c1y2) < get.Biggest(c2y1, c2y2) and get.Least(c2y1, c2y2) < get.Biggest(c1y1, c1y2)
+				return helper.min(c1y1, c1y2) < helper.max(c2y1, c2y2) and helper.min(c2y1, c2y2) < helper.max(c1y1, c1y2)
 			end
 		end
 

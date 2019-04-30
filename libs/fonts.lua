@@ -15,10 +15,10 @@ local fonts = {}
 	}
 
 	function fonts.print(string, x, y, align, font, stroke, width, r, g, b, a)
-		align = get.NotZero(align, "left")
-		font = get.NotZero(font, fonts.list.default)
-		stroke = get.NotZero(stroke, false)
-		width = get.NotZero(width, 300)
+		align = helper.NotZero(align, "left")
+		font = helper.NotZero(font, fonts.list.default)
+		stroke = helper.NotZero(stroke, false)
+		width = helper.NotZero(width, 300)
 		local ro,go,bo,ao = love.graphics.getColor()
 		if r == nil then r = ro end
 		if g == nil then g = go end

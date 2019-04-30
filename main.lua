@@ -8,7 +8,7 @@ function love.load()
 	next_time = love.timer.getTime()
 	---------------
 	settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
-	func.SetWindowSize()
+	helper.SetWindowSize()
 	loc:Set(loc.id)
 	data:Load("data/data.txt")
 	data:Frames("data/frames.dat")
@@ -60,7 +60,7 @@ end
 function love.keypressed( button, scancode, isrepeat )
 	if button == "f11" then
 		settings.window.fullscreen = not settings.window.fullscreen
-		func.SetWindowSize()
+		helper.SetWindowSize()
 	elseif button == "f12" then
 		settings.debug_mode = not settings.debug_mode
 	else
