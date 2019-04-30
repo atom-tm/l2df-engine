@@ -2,18 +2,13 @@ local strfind = string.find
 local strsub = string.sub
 local strmatch = string.match
 
-local BaseParser = require("libs.parsers.base")
+local BaseParser = require "libs.parsers.base"
 local DatParser = BaseParser:extend()
 
-	function DatParser.parseFile(filepath)
-		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
-		if love then
-			return DatParser.parse( love.filesystem.read(filepath) )
-		end
-		return nil
-	end
-
-	function DatParser.parse(str)
+	--- Method for parsing dat formatted string
+	-- @param str, string  String for parsing
+	-- @return table
+	function DatParser:parse(str)
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 
 		local result = { }
@@ -26,7 +21,7 @@ local DatParser = BaseParser:extend()
 
 		while section do
 			to, pos, key = strfind(str, "%[%s*(%w+)%s*%]", pos)
-			result[section] = DatParser.parseBlock( str:sub(from, (to or len + 1) - 1) )
+			result[section] = self:parseBlock( str:sub(from, (to or len + 1) - 1) )
 			section = key
 			from = (pos or 0) + 1
 		end
@@ -34,12 +29,18 @@ local DatParser = BaseParser:extend()
 		return result
 	end
 
-	function DatParser.dump(data)
+	--- Method for dumping table to dat format
+	-- @param str, string  String for parsing
+	-- @return string
+	function DatParser:dump(data)
 		assert(type(str) == "table", "Parameter 'str' must be a table.")
 		return ""
 	end
 
-	function DatParser.parseBlock(str)
+	--- Method for parsing dat-file's section string
+	-- @param str, string  String for parsing
+	-- @return table
+	function DatParser:parseBlock(str)
 		str = (str or "") .. " "
 
 		local result = { }
@@ -89,9 +90,9 @@ local DatParser = BaseParser:extend()
 				elseif strmatch(char, "[%];,%s]") and not is_quoted or char == "\"" then
 					local x = stack[head][param]
 					if x and type(x) == "table" then
-						x[#x + 1] = DatParser.parseScalar(value)
+						x[#x + 1] = self:parseScalar(value)
 					else
-						stack[head][param] = DatParser.parseScalar(value)
+						stack[head][param] = self:parseScalar(value)
 						break
 					end
 					value = ""

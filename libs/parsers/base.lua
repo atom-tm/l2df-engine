@@ -1,23 +1,40 @@
 local strmatch = string.match
+local fs = love and love.filesystem
 
-local Object = require("libs.object")
+local Object = require "libs.object"
 local Parser = Object:extend()
 
-	function Parser:init()
-		-- pass
-	end
-
-	function Parser.parseFile(filepath)
+	--- Base method for parsing file
+	-- @param filepath, string  Path to file for parsing
+	-- @return table
+	function Parser:parseFile(filepath)
 		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
+		if fs then
+			return self:parse( fs.read(filepath) )
+		else
+			local io = require "io"
+			f = io.open(filepath)
+			if f then
+				local str = f:read("*a")
+				f:close()
+				return self:parse(str)
+			end
+		end
 		return nil
 	end
 
-	function Parser.parse(str)
+	--- Base method for parsing string
+	-- @param str, string  String for parsing
+	-- @return table
+	function Parser:parse(str)
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 		return nil
 	end
 
-	function Parser.parseScalar(str)
+	--- Method that tries to deduce type for given string. Returns casted value.
+	-- @param str, string  String for parsing
+	-- @return mixed
+	function Parser:parseScalar(str)
 		-- TODO: make stronger regex
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 		if tonumber(str) then
@@ -30,7 +47,10 @@ local Parser = Object:extend()
 		return str
 	end
 
-	function Parser.dump(data)
+	--- Base method for dumping table
+	-- @param str, string  String for parsing
+	-- @return string
+	function Parser:dump(data)
 		assert(type(str) == "table", "Parameter 'str' must be a table.")
 		return tostring(data)
 	end
