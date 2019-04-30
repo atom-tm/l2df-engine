@@ -3,10 +3,6 @@ math.randomseed(love.timer.getTime())
 require "libs.core"
 
 function love.load()
-	-- FPS Локер --
-	min_dt = 1/settings.fpsLimit -- требуемое фпс
-	next_time = love.timer.getTime()
-	---------------
 	settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
 	helper.SetWindowSize()
 	loc:Set(loc.id)
@@ -23,7 +19,6 @@ function love.update(dt)
 	if rooms.current.Update ~= nil then
 		rooms.current:Update()
 	end
-	next_time = next_time + min_dt
 end 
 
 
@@ -45,13 +40,6 @@ function love.draw()
 			rooms.current:Debug()
 		end
 	end
-
-	local cur_time = love.timer.getTime()
-	if next_time <= cur_time then
-		next_time = cur_time
-		return
-	end
-	love.timer.sleep(next_time - cur_time)
 end 
 
 

@@ -45,6 +45,7 @@ local settings = {}
 		self.global.graphic = {							-- Настройки графической составляющей игры
 			fullscreen 			= false,				-- Полный экран
 			fpsLimit 			= 60,					-- Ограничение FPS
+			vsync 				= false, 				-- Вертикальная синхронизация
 			shadows 			= true, 				-- Детализированные тени
 			reflections			= true,					-- Отражения
 			smoothing			= true, 				-- Фильтрация текстур
