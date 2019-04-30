@@ -3,7 +3,13 @@ rooms = {}
 	function rooms:initialize()
 		rooms.list = helper.requireAllFromFolder(settings.global.roomsFolder)
 		for key in pairs(love.handlers) do
-			--love.window.showMessageBox( "..", key, "info", true)
+			local old_func = love[key] or function() end
+			love[key] = function (...)
+				old_func(...)
+				if rooms.current[key] then
+					rooms.current[key](...)
+				end
+			end
 		end
 		rooms:set(settings.global.startRoom)
 	end
