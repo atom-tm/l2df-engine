@@ -19,36 +19,42 @@ locale = nil
 ---------------------------------------------
 --settings:load()
 
-local _tempLoad = love.load
-function love.load()
-	_tempLoad()
-	-- FPS Limiter initislize --
-	min_dt = 1/settings.fpsLimit
-	next_time = love.timer.getTime()
-	----------------------------
-	settings:initialize()
-	rooms:initialize()
-	love.window.showMessageBox( "..", "test", "info", true)
-end
+local core = {}
 
-local _tempUpdate = love.update
-function love.update()
-	_tempUpdate()
-	rooms.current:update()
-	next_time = next_time + min_dt -- FPS Limiter
-end
-
-
-local _tempDraw = love.draw
-function love.draw()
-	_tempDraw()
-	rooms.current:draw()
-	-- FPS Limiter working --
-	local cur_time = love.timer.getTime()
-	if next_time <= cur_time then
-		next_time = cur_time
-		return
+	function core.initialize()
+		-- FPS Limiter initislize --
+		min_dt = 1/settings.fpsLimit
+		next_time = love.timer.getTime()
+		----------------------------
+		local _tempUpdate = love.update
+		love.update = function (dt)
+			_tempUpdate(dt)
+			core.update(dt)
+		end
+		local _tempDraw = love.draw
+		love.draw = function ( )
+			_tempDraw()
+			core.draw()
+		end
+		settings:initialize()
+		rooms:initialize()
 	end
-	love.timer.sleep(next_time - cur_time)
-	-------------------------
-end
+
+	function core.update()
+		rooms.current:update()
+		next_time = next_time + min_dt -- FPS Limiter
+	end
+
+	function core.draw()
+		rooms.current:draw()
+		-- FPS Limiter working --
+		local cur_time = love.timer.getTime()
+		if next_time <= cur_time then
+			next_time = cur_time
+			return
+		end
+		love.timer.sleep(next_time - cur_time)
+		-------------------------
+	end
+
+return core

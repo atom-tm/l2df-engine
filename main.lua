@@ -1,8 +1,9 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 math.randomseed(love.timer.getTime())
-require "libs.core"
+love2dFighting = require "libs.core"
 
 function love.load()
+	love2dFighting.initialize()
 	--settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
 	--helper.SetWindowSize()
 	--loc:Set(loc.id)
@@ -13,7 +14,6 @@ function love.load()
 	--data:States("states")
 	--data:Kinds("kinds")
 	--rooms:Set("main_menu")
-	local x = ""
 end
 
 function love.update(dt)

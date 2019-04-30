@@ -3,7 +3,7 @@ rooms = {}
 	function rooms:initialize()
 		rooms.list = helper.requireAllFromFolder(settings.global.roomsFolder)
 		for key in pairs(love.handlers) do
-			love.window.showMessageBox( "..", key, "info", true)
+			--love.window.showMessageBox( "..", key, "info", true)
 		end
 		rooms:set(settings.global.startRoom)
 	end

@@ -1,18 +1,18 @@
 local room = {}
 
-	function room:Load()
+	function room:load()
 		
 	end
 
-	function room:Update()
+	function room:update()
 
 	end
 
-	function room:Draw()
+	function room:draw()
 
 	end
 
-	function room:Keypressed(key)
+	function room:keypressed(key)
 
 	end
 
