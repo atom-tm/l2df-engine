@@ -73,6 +73,13 @@ local helper = {}
 		return 0
 	end
 
+	--- Trim spaces at start and end of string
+	-- @param str, string  Given string
+	-- @return string
+	function helper.trim(str)
+		return str:gsub("^%s*(.-)%s*$", "%1")
+	end
+
 	--- Get sign of value
 	-- @param x, number  Specified value
 	-- @return number
