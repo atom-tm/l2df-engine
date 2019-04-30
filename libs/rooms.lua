@@ -2,21 +2,20 @@ rooms = {}
 
 	function rooms:initialize()
 		rooms.list = helper.requireAllFromFolder(settings.global.roomsFolder)
-	end
-
-	function rooms:Set(id, table_values)
-		if self.name ~= nil then
-			self.last = self.name
-		else
-		    self.last = "none"
+		for key in pairs(love.handlers) do
+			love.window.showMessageBox( "..", key, "info", true)
 		end
-		self.name = id
-		self.current = rooms.list[id]
-		self.current:Load(table_values)
+		rooms:set(settings.global.startRoom)
 	end
 
-	function rooms:Reload(table_values)
-		self.current:Load(table_values)
+	function rooms:set(room, input)
+		input = input or {}
+		self.current = rooms.list[tostring(room)]
+		self.current:load(input)
+	end
+
+	function rooms:reload(input)
+		self.current:load(input)
 	end
 	
 return rooms

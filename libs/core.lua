@@ -17,9 +17,7 @@ battle		= require "libs.battle"
 camera = nil
 locale = nil
 ---------------------------------------------
-settings:initialize()
-settings:load()
-rooms:initialize()
+--settings:load()
 
 local _tempLoad = love.load
 function love.load()
@@ -28,14 +26,15 @@ function love.load()
 	min_dt = 1/settings.fpsLimit
 	next_time = love.timer.getTime()
 	----------------------------
+	settings:initialize()
+	rooms:initialize()
+	love.window.showMessageBox( "..", "test", "info", true)
 end
 
 local _tempUpdate = love.update
 function love.update()
 	_tempUpdate()
-
-
-
+	rooms.current:update()
 	next_time = next_time + min_dt -- FPS Limiter
 end
 
@@ -43,8 +42,7 @@ end
 local _tempDraw = love.draw
 function love.draw()
 	_tempDraw()
-
-
+	rooms.current:draw()
 	-- FPS Limiter working --
 	local cur_time = love.timer.getTime()
 	if next_time <= cur_time then

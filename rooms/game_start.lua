@@ -1,6 +1,6 @@
 local room = {}
 
-	function room:Load(loadingList)
+	function room:Load()
 		
 	end
 

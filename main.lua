@@ -3,28 +3,29 @@ math.randomseed(love.timer.getTime())
 require "libs.core"
 
 function love.load()
-	settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
-	helper.SetWindowSize()
-	loc:Set(loc.id)
-	data:Load("data/data.txt")
-	data:Frames("data/frames.dat")
-	data:DTypes("data/damage_types.dat")
-	data:System("data/system.dat")
-	data:States("states")
-	data:Kinds("kinds")
-	rooms:Set("main_menu")
+	--settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
+	--helper.SetWindowSize()
+	--loc:Set(loc.id)
+	--data:Load("data/data.txt")
+	--data:Frames("data/frames.dat")
+	--data:DTypes("data/damage_types.dat")
+	--data:System("data/system.dat")
+	--data:States("states")
+	--data:Kinds("kinds")
+	--rooms:Set("main_menu")
+	local x = ""
 end
 
 function love.update(dt)
-	if rooms.current.Update ~= nil then
+	--[[if rooms.current.Update ~= nil then
 		rooms.current:Update()
-	end
+	end]]
 end 
 
 
 
 function love.draw()
-	if rooms.current.CustomDraw then
+	--[[if rooms.current.CustomDraw then
 		if rooms.current.Draw ~= nil then
 			rooms.current:Draw()
 		end
@@ -39,14 +40,14 @@ function love.draw()
 		if rooms.current.Debug ~= nil then
 			rooms.current:Debug()
 		end
-	end
+	end]]
 end 
 
 
 
 
 function love.keypressed( button, scancode, isrepeat )
-	if button == "f11" then
+	--[[if button == "f11" then
 		settings.window.fullscreen = not settings.window.fullscreen
 		helper.SetWindowSize()
 	elseif button == "f12" then
@@ -61,5 +62,5 @@ end
 function love.joystickhat( joystick, hat, direction )
 	if direction ~= "c" then
 		rooms.current:Keypressed("Joy"..hat..button)
-	end
+	end]]
 end

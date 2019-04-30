@@ -56,6 +56,7 @@ local settings = {}
 		self.global.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
 
 		self.global.localization 	= 1 				-- Выбранный файл локализации
+		self.global.startRoom 		= "game_start"		-- Начальная комната
 		self.global.debug 			= true 				-- Показ отладочной информации
 
 		self.global.controls = {						-- Настройки управления
