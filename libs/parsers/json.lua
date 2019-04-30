@@ -2,7 +2,6 @@ local json = require "libs.external.json"
 local BaseParser = require "libs.parsers.base"
 local JsonParser = BaseParser:extend()
 
-
 	--- Method for parsing json formatted string
 	-- @param str, string  String for parsing
 	-- @return table

@@ -5,6 +5,12 @@ local strmatch = string.match
 local BaseParser = require "libs.parsers.base"
 local DatParser = BaseParser:extend()
 
+	DatParser.ARRAY_LBRACKET = "{"
+	DatParser.ARRAY_RBRACKET = "}"
+	DatParser.BLOCK_LBRACKET = "["
+	DatParser.BLOCK_RBRACKET = "]"
+	DatParser.VALUE_END_PATTERN = "[%];,%s]"
+
 	--- Method for parsing dat formatted string
 	-- @param str, string  String for parsing
 	-- @return table
@@ -21,7 +27,7 @@ local DatParser = BaseParser:extend()
 
 		while section do
 			to, pos, key = strfind(str, "%[%s*(%w+)%s*%]", pos)
-			result[section] = self:parseBlock( str:sub(from, (to or len + 1) - 1) )
+			result[section] = self:parseBlock( strsub(str, from, (to or len + 1) - 1) )
 			section = key
 			from = (pos or 0) + 1
 		end
@@ -59,7 +65,7 @@ local DatParser = BaseParser:extend()
 			if not param then break end
 
 			if head > 1 then
-				bpos = strfind(str, "]", bpos)
+				bpos = strfind(str, self.BLOCK_RBRACKET, bpos)
 				if bpos and bpos < from then
 					head = head - 1
 				end
@@ -72,22 +78,22 @@ local DatParser = BaseParser:extend()
 				pos = pos + 1
 				char = strsub(str, pos, pos)
 
-				if char == "[" then
+				if char == self.BLOCK_LBRACKET then
 					stack[head][param] = { }
 					stack[head + 1] = stack[head][param]
 					head = head + 1
 					break
 
-				elseif char == "{" then
+				elseif char == self.ARRAY_LBRACKET then
 					stack[head][param] = { }
 
-				elseif char == "}" then
+				elseif char == self.ARRAY_RBRACKET then
 					break
 
 				elseif char == "\"" and not is_quoted then
 					is_quoted = true
 
-				elseif strmatch(char, "[%];,%s]") and not is_quoted or char == "\"" then
+				elseif strmatch(char, self.VALUE_END_PATTERN) and not is_quoted or char == "\"" then
 					local x = stack[head][param]
 					if x and type(x) == "table" then
 						x[#x + 1] = self:parseScalar(value)
