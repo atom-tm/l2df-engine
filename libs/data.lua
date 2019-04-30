@@ -12,13 +12,13 @@ data = {}
 	data.kinds = {}
 
 
-	function data:States(states_dir)
+	function data:States(dirPath)
 		self.states = {}
-		local states_list = love.filesystem.getDirectoryItems(states_dir)
+		local states_list = love.filesystem.getDirectoryItems(dirPath)
 		for i = 1, #states_list do
 			local state_number = string.gsub(states_list[i], ".lua", "")
 			if state_number ~= nil and tonumber(state_number) then
-				self.states[state_number] = require(states_dir .. "." .. state_number)
+				self.states[state_number] = require(dirPath .. "." .. state_number)
 				if self.states[state_number].Update ~= nil then
 					data.states_update[state_number] = data.states[state_number]
 				end
@@ -27,21 +27,21 @@ data = {}
 	end
 
 
-	function data:Kinds(kinds_dir)
+	function data:Kinds(dirPath)
 		self.kinds = {}
-		local itrs_list = love.filesystem.getDirectoryItems(kinds_dir)
+		local itrs_list = love.filesystem.getDirectoryItems(dirPath)
 		for i = 1, #itrs_list do
 			local kind_number = string.gsub(itrs_list[i], ".lua", "")
 			if kind_number ~= nil and tonumber(kind_number) then
-				self.kinds[tonumber(kind_number)] = require(kinds_dir .. "." .. kind_number)
+				self.kinds[tonumber(kind_number)] = require(dirPath .. "." .. kind_number)
 			end
 		end
 	end
 
 
-	function data:System(system_file_path)
+	function data:System(filePath)
 		data.system = {}
-		local system_file = love.filesystem.read(system_file_path)
+		local system_file = love.filesystem.read(filePath)
 		if system_file ~= nil then
 			for key, id in string.gmatch(system_file, "([%w%d_]+): ([%d]+)") do
 				data.system[key] = tonumber(id)
@@ -50,8 +50,8 @@ data = {}
 	end
 
 
-	function data:Frames(frames_file_path)
-		local frames_file = love.filesystem.read(frames_file_path)
+	function data:Frames(filePath)
+		local frames_file = love.filesystem.read(filePath)
 		if frames_file ~= nil then
 			for key, frame_number in string.gmatch(frames_file, "([%w%d_]+): ([%d]+)") do
 				data.frames[key] = tonumber(frame_number)
@@ -68,9 +68,9 @@ data = {}
 	end
 
 
-	function data:DTypes(dtypes_file_path)
+	function data:DTypes(filePath)
 		data.dtypes = {}
-		local dtypes_file = love.filesystem.read(dtypes_file_path)
+		local dtypes_file = love.filesystem.read(filePath)
 		if dtypes_file then
 			for dtype_number, dtype_info in string.gmatch(dtypes_file, "([%d]+): %[([^%[%]]+)%]") do
 				local damage_type = {}
@@ -91,10 +91,10 @@ data = {}
 	end
 
 
-	function data:Load(data_file_path)
-		local data_file = love.filesystem.read(data_file_path)
+	function data:Load(filePath)
+		local data_file = love.filesystem.read(filePath)
 		if data_file ~= nil then
-			self.file = data_file_path
+			self.file = filePath
 			local characters = string.match(data_file, "%[characters%]([^%[%]]+)")
 			for id, file in string.gmatch(characters, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.entities[tonumber(id)] == nil then

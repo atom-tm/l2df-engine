@@ -73,7 +73,7 @@ local settings = {}
 		}
 	end
 
-	-- Функция считывания настроек из файла settings.file
+	--- Функция считывания настроек из файла settings.file
 	function settings:load()
 		local settings_data = filesystem.read(self.file)
 		if settings_data then
@@ -85,7 +85,7 @@ local settings = {}
 		self:save()
 	end
 
-	-- Функция сохранения настроек в файл settings.file
+	--- Функция сохранения настроек в файл settings.file
 	function settings:save()
 		local save_string = json:encode_pretty(self.global)
 		local settings_file = io.open(filesystem.getSource() .. "/" .. self.file,"w")
