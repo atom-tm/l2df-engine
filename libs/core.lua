@@ -51,13 +51,11 @@ local core = {}
 		rooms:init()
 	end
 
-	function core.update(dt)
-		rooms.current:update(dt)
+	function core.update()
 		next_time = next_time + min_dt -- FPS Limiter
 	end
 
 	function core.draw()
-		rooms.current:draw()
 		-- FPS Limiter working --
 		local cur_time = love.timer.getTime()
 		if next_time <= cur_time then

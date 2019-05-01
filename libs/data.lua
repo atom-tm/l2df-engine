@@ -11,6 +11,12 @@ data = {}
 	data.system = {}
 	data.kinds = {}
 
+	function data:initialize()
+		self.characters = {}
+		self.objects = {}
+		self.maps = {}
+		
+	end
 
 	function data:States(dirPath)
 		self.states = {}
