@@ -11,6 +11,12 @@ local Object = { }
 
 	function Object:extend(...)
 		cls = self:__getInstance()
+		cls.super = setmetatable({ }, {
+				__index = self,
+				__call = function (_, child, ...)
+					return self.init(child, ...)
+				end
+			})
 		for _, f in pairs{...} do
 			f(cls, self)
 		end

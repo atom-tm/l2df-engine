@@ -19,12 +19,12 @@ UI.Button = UI:extend()
 
 
 function UI.Image:init(x,y,file)
-	UI.init(self,x,y)
+	self:super(x, y)
 	self.resource = file and image.Load(file) or nil
 end
 
 function UI.Text:init(x,y,content)
-	UI.init(self,x,y)
+	self:super(x, y)
 	self.content = content
 end
 
