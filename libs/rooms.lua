@@ -1,6 +1,6 @@
 local rooms = { list = { } }
 
-	function rooms:initialize()
+	function rooms:init()
 	local dummy = function () end
 		rooms.list = helper.requireAllFromFolder(settings.global.roomsFolder)
 		
@@ -8,7 +8,7 @@ local rooms = { list = { } }
 			local old_func = love[key] or dummy
 			love[key] = function (...)
 				old_func(...)
-				local _ = rooms.current[key] and rooms.current[key](...)
+				local _ = rooms.current[key] and rooms.current[key](rooms.current, ...)
 			end
 		end
 

@@ -2,17 +2,21 @@ gamera		= require "libs.external.gamera"
 json 		= require "libs.external.json"
 ---------------------------------------------
 settings 	= require "libs.settings"
+object 		= require "libs.object"
+helper 		= require "libs.helper"
+
+
 rooms 		= require "libs.rooms"
+ui 			= require "libs.ui"
 loc 		= require "libs.localization"
 data 		= require "libs.data"
-helper 		= require "libs.helper"
 
 sounds 		= require "libs.sounds"
 image 		= require "libs.images"
 resources	= require "libs.resources"
 font 		= require "libs.fonts"
 
-battle		= require "libs.battle"
+--battle		= require "libs.battle"
 ---------------------------------------------
 camera = nil
 locale = nil
@@ -22,8 +26,10 @@ locale = nil
 local core = {}
 
 	function core.init()
+		settings:init()
+
 		-- FPS Limiter initialize --
-		min_dt = 1 / settings.fpsLimit
+		min_dt = 1 / settings.global.graphic.fpsLimit
 		next_time = love.timer.getTime()
 		----------------------------
 
@@ -39,15 +45,6 @@ local core = {}
 			core.draw()
 		end
 
-		settings:init()
-		helper.SetWindowSize()
-		loc:Set(1)
-		data:Load("data/data.txt")
-		data:Frames("data/frames.dat")
-		data:DTypes("data/damage_types.dat")
-		data:System("data/system.dat")
-		data:States("states")
-		data:Kinds("kinds")
 		rooms:init()
 	end
 

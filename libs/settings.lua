@@ -1,50 +1,5 @@
 local fs = love.filesystem
-
 local settings = {}
-
-	local window = {}
-		window.fullscreen = false
-		window.music_vol = 100
-		window.sound_vol = 100
-		window.selectedSize = 1
-		window.width = 1280
-		window.height = 720
-		window.cameraScale = 0
-		window.realWidth = nil
-		window.realHeight = nil
-	settings.window = window
-
-	settings.gameWidth = 1280
-	settings.gameHeight = 720
-	settings.fpsLimit = 60
-
-	settings.quality = true
-	settings.difficulty = 7
-
-	settings.names = {}
-
-	settings.debug_mode = true
-
-	settings.windowSizes = {
-		{ width = 854, height = 480 },
-		{ width = 1024, height = 576 },
-		{ width = 1280, height = 720 },
-		{ width = 1366, height = 768 },
-		{ width = 1600, height = 900 },
-		{ width = 1920, height = 1080 },
-	}
-
-	settings.localizationsList = {
-		"english",
-		"russian"
-	}
-
-	settings.controls = {
-		{ up = "w", down = "s", left = "a", right = "d", attack = "f", jump = "g", defend = "h", special1 = "j" },
-		{ up = "o", down = "l", left = "k", right = ";", attack = "p", jump = "[", defend = "]", special1 = "\\" }
-	}
-
-	--settings.file = nil
 
 	--- Bootstrap game settings, set default values.
 	function settings:init()
@@ -100,7 +55,7 @@ local settings = {}
 		self.global.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
 
 		self.global.localization 	= 1 				-- Выбранный файл локализации
-		self.global.startRoom 		= "main_menu"		-- Начальная комната
+		self.global.startRoom 		= "game_start"		-- Начальная комната
 		self.global.debug 			= true 				-- Показ отладочной информации
 
 		self.global.controls = {						-- Настройки управления
@@ -138,76 +93,6 @@ local settings = {}
 		settings_file:write(save_string)
 		settings_file:flush()
 		settings_file:close()
-	end
-
-	--- Read settings from file
-	-- @param filepath, string  Path to settings file
-	function settings:Read(filepath)
-		local settings_data = fs.read(filepath)
-		if settings_data ~= nil then
-
-			self.window.music_vol = helper.PNumber(settings_data, "music_volume", 50)
-			self.window.sound_vol = helper.PNumber(settings_data, "sound_volume", 70)
-			self.quality = helper.PBool(settings_data, "quality")
-			self.window.fullscreen = helper.PBool(settings_data, "fullscreen")
-			self.window.selectedSize = helper.PNumber(settings_data, "window_size", 3)
-			self.names[1] = helper.PString(settings_data, "player1_name", "")
-			self.names[2] = helper.PString(settings_data, "player2_name", "")
-			loc.id = helper.PNumber(settings_data, "localization", 1)
-			
-			local controls_string = string.match(settings_data, "controls_player_1: {([^{}]+)}")
-			if controls_string ~= nil then
-				local controls_massive = {}
-				for key, key_code in string.gmatch(controls_string, "([%w]+): ([^%s]+)") do
-					if key_code == "lsqbr" then key_code = "["
-					elseif key_code == "rsqbr" then key_code = "]" end
-					settings.controls[1][key] = key_code
-				end
-			end
-
-			local controls_string = string.match(settings_data, "controls_player_2: {([^{}]+)}")
-			if controls_string ~= nil then
-				local controls_massive = {}
-				for key, key_code in string.gmatch(controls_string, "([%w]+): ([^%s]+)") do
-					if key_code == "lsqbr" then key_code = "["
-					elseif key_code == "rsqbr" then key_code = "]" end
-					settings.controls[2][key] = key_code
-				end
-			end
-		end
-		self.file = filepath
-	end
-
-	--- Save settings to settings.file
-	function settings:Save()
-		if settings_file ~= nil then
-
-			local controls_player_1 = " "
-			for key,key_code in pairs(self.controls[1]) do
-				controls_player_1 = controls_player_1..key..": "..key_code.." "
-			end
-			local controls_player_2 = " "
-			for key,key_code in pairs(self.controls[2]) do
-				controls_player_2 = controls_player_2..key..": "..key_code.." "
-			end
-
-			local save_data = "[settings]".."\n"..
-			"music_volume: "..self.window.music_vol.."\n"..
-			"sound_volume: "..self.window.sound_vol.."\n"..
-			"fullscreen: "..tostring(self.window.fullscreen).."\n"..
-			"window_size: "..self.window.selectedSize.."\n"..
-			"localization: "..loc.id.."\n"..
-			"quality: "..tostring(self.quality).."\n"..
-			"controls_player_1: {"..controls_player_1.."}\n"..
-			"controls_player_2: {"..controls_player_2.."}\n"..
-			"player1_name: "..self.names[1].."\n"..
-			"player2_name: "..self.names[2]
-
-			local file = io.open(self.file, "w")
-			file:write(save_data)
-			file:flush()
-			file:close()
-		end
 	end
 
 return settings
