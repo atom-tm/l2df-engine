@@ -1,20 +1,20 @@
 local room = {}
 
-function room.load ()
+function room:load ()
 	room.debug_info = false
 	room.objects = 0
 	room.pause = false
 	room.step = false
 end
 
-function room.update ()
+function room:update ()
 	if room.pause == false or room.step then
 	BattleProcessing()
 	if step then step = false end
 	end
 end
 
-function room.draw ()
+function room:draw ()
 	camera:draw(function(l,t,w,h)
 		BackgroundDraw()
 		ObjectsDraw()
@@ -28,13 +28,13 @@ function room.draw ()
 	end
 end
 
-function room.debug()
+function room:Debug()
 	love.graphics.setNewFont(12)
 	love.graphics.print("FPS: "..tostring(love.timer.getFPS()).." ("..delta_time..")", 10, 10)
 	love.graphics.print("Objects: "..tostring(objects).." Sourses: "..tostring(#sourse_list).." Collisions: "..tostring(#collisions_list), 10, 25)
 end
 
-function room.keypressed(button)
+function room:keypressed(button)
 
 	if button == "f3" then
 		if room.debug_info then room.debug_info = false

@@ -1,8 +1,6 @@
 local room = {}
 
-	room.selected_mode = 1
-
-	function room:Load()
+	function room:load()
 		self.opacity = 0.1
 		self.opacity_change = 0.001
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
@@ -14,23 +12,24 @@ local room = {}
 		}
 		self.scene = math.random(1, #self.scenes)
 
+		self.selected_mode = 1
 		self.modes = {
 			{
 				text = locale.main_menu.versus,
 				action = function ()
-					rooms:Set("character_select")
+					rooms:set("character_select")
 				end
 			},
 			{
 				text = locale.main_menu.story,
 				action = function ()
-					
+					-- ignore
 				end
 			},
 			{
 				text = loc.text.main_menu.settings,
 				action = function ()
-					rooms:Set("settings")
+					rooms:set("settings")
 				end
 			},
 			{
@@ -42,15 +41,14 @@ local room = {}
 		}
 
 		sounds.setMusic("music/main.mp3")
-
 	end
 
-	function room:Update()
+	function room:update()
 		self.opacity = self.opacity + self.opacity_change
 		if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
 	end
 
-	function room:Draw()
+	function room:draw()
 		image.draw(self.background_image,0,0,0)
 		image.draw(self.logotype_image,0,420,25)
 		image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
@@ -65,23 +63,21 @@ local room = {}
 		end
 	end
 
-	function room:Keypressed(key)
-		if key == settings.controls[1].up or key == settings.controls[2].up then 
-			self.selected_mode = self.selected_mode - 1
-			if self.selected_mode < 1 then
-				self.selected_mode = #self.modes
+	function room:keypressed(key)
+		local modes = #self.modes
+		for _, control in pairs(settings.controls) do
+			if key == control.up then 
+				self.selected_mode = self.selected_mode < 1 and (self.selected_mode - 1) or modes
+				return
+			elseif key == control.down then 
+				self.selected_mode = self.selected_mode > modes and (self.selected_mode + 1) or 1
+				return
+			elseif key == control.attack then 
+				self.modes[self.selected_mode].action()
+				return
 			end
 		end
-		if key == settings.controls[1].down or key == settings.controls[2].down then 
-			self.selected_mode = self.selected_mode + 1
-			if self.selected_mode > #self.modes then
-				self.selected_mode = 1
-			end
-		end
-		if key == settings.controls[1].attack or key == settings.controls[2].attack then 
-			self.modes[self.selected_mode].action()
-		end
-		if key == "f1" then rooms:Set("settings") end
+		if key == "f1" then rooms:set("settings") end
 	end
 
 return room

@@ -304,7 +304,7 @@ local room = {}
 
 
 
-	function room:Load()
+	function room:load()
 
 		self.background = image.Load("sprites/UI/CS0.png", nil, "linear")
 		self.foreground = image.Load("sprites/UI/CS1.png", nil, "linear")
@@ -434,7 +434,7 @@ local room = {}
 
 
 
-	function room:Update()
+	function room:update()
 		if self.mode == 0 then
 			self.mode = 1
 		elseif self.mode == 1 then
@@ -496,7 +496,7 @@ local room = {}
 
 
 
-	function room:Draw()
+	function room:draw()
 		image.draw(self.background, nil, 0, 0)
 		self:DrawCharacters()
 		self:DrawEffects()
@@ -542,7 +542,7 @@ local room = {}
 
 
 
-	function room:Keypressed(key)
+	function room:keypressed(key)
 
 		if key == "escape" then
 			rooms:Set("main_menu")
@@ -739,4 +739,5 @@ local room = {}
 			end
 		end
 	end
+
 return room

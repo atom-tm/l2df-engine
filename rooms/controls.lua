@@ -1,6 +1,6 @@
 local room = {}
 
-	function room:Load()
+	function room:load()
 		
 		self.list = {}
 		self.setup_mode = false
@@ -71,7 +71,7 @@ local room = {}
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
 	end
 
-	function room:Update()
+	function room:update()
 		self.opacity = self.opacity + self.opacity_change
 		if self.opacity < 0.05 or self.opacity > 0.15 then
 			self.opacity_change = -self.opacity_change
@@ -79,7 +79,7 @@ local room = {}
 	end
 
 
-	function room:Draw()
+	function room:draw()
 		image.draw(self.background_image,0,0,0)
 
 		font.print(locale.controls.controls, 250, 50, nil, font.list.setting_header, 0, 300, 0, 0, 0, 1)
@@ -114,7 +114,7 @@ local room = {}
 		end
 	end
 
-	function room:Keypressed (key)
+	function room:keypressed(key)
 		if self.setup_mode then
 			if self.player == 1 then
 				settings.controls[1][self.list[self.p1_opt].massive] = key

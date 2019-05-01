@@ -2,12 +2,12 @@
 	room.CustomDraw = true
 	test01 = 0
 
-	function room:Load(spawnList)
+	function room:load(spawnList)
 		battle:Load(spawnList)
 		self.pause_mode = 0
 	end
 
-	function room:Update()
+	function room:update()
 		if room.pause_mode < 1 then
 			if room.pause_mode < 0 then room.pause_mode = room.pause_mode + 2 end
 			battle:Update()
@@ -15,12 +15,12 @@
 		battle.control.Update()
 	end
 
-	function room:Draw()
+	function room:draw()
 		battle:DrawGame()
 		battle:DrawInterface()
 	end
 
-	function room:Keypressed(key)
+	function room:keypressed(key)
 		if key == "escape" then
 			rooms:Set("character_select")
 		end

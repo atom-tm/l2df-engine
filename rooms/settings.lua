@@ -1,6 +1,6 @@
 local room = {}
 
-	function room:Load()
+	function room:load()
 		self.selected = 1
 		self.opacity = 0.1
 		self.opacity_change = 0.0015
@@ -40,11 +40,11 @@ local room = {}
 		end
 		function setting:action_left()
 			if settings.window.music_vol > 0 then settings.window.music_vol = settings.window.music_vol - 5 end
-			sounds.music.resourse:setVolume(settings.window.music_vol*0.01)
+			sounds.setVolume(settings.window.music_vol)
 		end
 		function setting:action_right()
 			if settings.window.music_vol < 100 then settings.window.music_vol = settings.window.music_vol + 5 end
-			sounds.music.resourse:setVolume(settings.window.music_vol*0.01)
+			sounds.setVolume(settings.window.music_vol)
 		end
 		table.insert(self.list, setting)
 
@@ -173,7 +173,7 @@ local room = {}
 
 	end
 
-	function room:Update()
+	function room:update()
 		for i = 1, #self.list do
 			if self.list[i].update ~= nil then
 				self.list[i]:update()
@@ -185,7 +185,7 @@ local room = {}
 		end
 	end
 
-	function room:Draw()
+	function room:draw()
 		image.draw(self.background_image,0,0,0)
 		font.print(locale.settings.settings, 250, 20, nil, font.list.setting_header, 0, 300, 0, 0, 0, 1)
 		
@@ -217,7 +217,7 @@ local room = {}
 	end
 
 
-	function room:Keypressed(key)
+	function room:keypressed(key)
 
 		if key == settings.controls[1].up or key == settings.controls[2].up then
 			self.selected = self.selected - 1
