@@ -9,7 +9,7 @@ helper 		= require "libs.helper"
 
 sounds 		= require "libs.sounds"
 image 		= require "libs.images"
-resourses	= require "libs.resourses"
+resources	= require "libs.resources"
 font 		= require "libs.fonts"
 
 battle		= require "libs.battle"
@@ -21,27 +21,38 @@ locale = nil
 
 local core = {}
 
-	function core.initialize()
-		-- FPS Limiter initislize --
-		min_dt = 1/settings.fpsLimit
+	function core.init()
+		-- FPS Limiter initialize --
+		min_dt = 1 / settings.fpsLimit
 		next_time = love.timer.getTime()
 		----------------------------
-		local _tempUpdate = love.update
+
+		local update = love.update
 		love.update = function (dt)
-			_tempUpdate(dt)
+			update(dt)
 			core.update(dt)
 		end
-		local _tempDraw = love.draw
-		love.draw = function ( )
-			_tempDraw()
+
+		local draw = love.draw
+		love.draw = function ()
+			draw()
 			core.draw()
 		end
-		settings:initialize()
-		rooms:initialize()
+
+		settings:init()
+		helper.SetWindowSize()
+		loc:Set(1)
+		data:Load("data/data.txt")
+		data:Frames("data/frames.dat")
+		data:DTypes("data/damage_types.dat")
+		data:System("data/system.dat")
+		data:States("states")
+		data:Kinds("kinds")
+		rooms:init()
 	end
 
-	function core.update()
-		rooms.current:update()
+	function core.update(dt)
+		rooms.current:update(dt)
 		next_time = next_time + min_dt -- FPS Limiter
 	end
 

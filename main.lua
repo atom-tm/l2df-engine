@@ -3,7 +3,7 @@ math.randomseed(love.timer.getTime())
 love2dFighting = require "libs.core"
 
 function love.load()
-	love2dFighting.initialize()
+	love2dFighting.init()
 	--settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
 	--helper.SetWindowSize()
 	--loc:Set(loc.id)
@@ -47,7 +47,6 @@ end
 
 
 function love.keypressed( button, scancode, isrepeat )
-	love.window.showMessageBox( "..", "Я - кейпрессед в main.lua", "info", true)
 	--[[if button == "f11" then
 		settings.window.fullscreen = not settings.window.fullscreen
 		helper.SetWindowSize()
@@ -64,8 +63,4 @@ function love.joystickhat( joystick, hat, direction )
 	if direction ~= "c" then
 		rooms.current:Keypressed("Joy"..hat..button)
 	end]]
-end
-
-function love.mousepressed( ... )
-	love.window.showMessageBox( "..", "Я - моуспрессед в main.lua", "info", true)
 end
