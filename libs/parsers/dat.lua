@@ -65,7 +65,7 @@ local DatParser = BaseParser:extend()
 
 		while true do
 			bpos = pos
-			from, pos, param = strfind(str, "(%w+)%s*:%s*", pos)
+			from, pos, param = strfind(str, "([%w_]+)%s*:%s*", pos)
 			if not param then break end
 
 			if head > 1 then

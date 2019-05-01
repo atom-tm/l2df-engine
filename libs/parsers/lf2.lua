@@ -20,9 +20,9 @@ local LfParser = DatParser:extend()
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 
 		local result = obj or { }
-		for key, content in strgmatch(str, "<(%w+)>([^<>]*)</%w+>") do
+		for key, content in strgmatch(str, "<([%w_]+)>([^<>]*)</[%w_]+>") do
 			if key == "frame" then
-				local from, to, id, name = strfind(content, "(%d+)%s+(%w+)")
+				local from, to, id, name = strfind(content, "(%d+)%s+([%w_]+)")
 				if not result.frames or type(result.frames) ~= "table" then
 					result.frames = { }
 				end
