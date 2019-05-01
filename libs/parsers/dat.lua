@@ -12,12 +12,14 @@ local DatParser = BaseParser:extend()
 	DatParser.VALUE_END_PATTERN = "[%];,%s]"
 
 	--- Method for parsing dat formatted string
+	-- You can extend existing object by passing it as second parameter.
 	-- @param str, string  String for parsing
+	-- @param obj, table   Object to extend, optional.
 	-- @return table
-	function DatParser:parse(str)
+	function DatParser:parse(str, obj)
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 
-		local result = { }
+		local result = obj or { }
 		local key = nil
 		local section = "global"
 		local len = #str
@@ -27,7 +29,7 @@ local DatParser = BaseParser:extend()
 
 		while section do
 			to, pos, key = strfind(str, "%[%s*(%w+)%s*%]", pos)
-			result[section] = self:parseBlock( strsub(str, from, (to or len + 1) - 1) )
+			result[section] = self:parseBlock(strsub(str, from, (to or len + 1) - 1), result[section])
 			section = key
 			from = (pos or 0) + 1
 		end
@@ -44,12 +46,14 @@ local DatParser = BaseParser:extend()
 	end
 
 	--- Method for parsing dat-file's section string
+	-- You can extend existing object by passing it as second parameter.
 	-- @param str, string  String for parsing
+	-- @param obj, table   Object to extend, optional.
 	-- @return table
-	function DatParser:parseBlock(str)
+	function DatParser:parseBlock(str, obj)
 		str = (str or "") .. " "
 
-		local result = { }
+		local result = obj or { }
 		local stack = { result }
 		local head = 1
 		local param = nil
@@ -79,7 +83,7 @@ local DatParser = BaseParser:extend()
 				char = strsub(str, pos, pos)
 
 				if char == self.BLOCK_LBRACKET then
-					stack[head][param] = { }
+					stack[head][param] = stack[head][param] or { }
 					stack[head + 1] = stack[head][param]
 					head = head + 1
 					break

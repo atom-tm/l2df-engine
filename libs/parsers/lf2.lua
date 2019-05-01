@@ -11,13 +11,15 @@ local LfParser = DatParser:extend()
 	LfParser.BLOCK_RBRACKET = "}"
 	LfParser.VALUE_END_PATTERN = "[};,%s]"
 
-	--- Method for parsing lf2 formatted string
+	--- Method for parsing lf2 formatted string.
+	-- You can extend existing object by passing it as second parameter.
 	-- @param str, string  String for parsing
+	-- @param obj, table   Object to extend, optional.
 	-- @return table
-	function LfParser:parse(str)
+	function LfParser:parse(str, obj)
 		assert(type(str) == "string", "Parameter 'str' must be a string.")
 
-		local result = { }
+		local result = obj or { }
 		for key, content in strgmatch(str, "<(%w+)>([^<>]*)</%w+>") do
 			if key == "frame" then
 				local from, to, id, name = strfind(content, "(%d+)%s+(%w+)")
@@ -28,7 +30,7 @@ local LfParser = DatParser:extend()
 				result.frames[frames_count] = self:parseBlock( strsub(content, (to or 0) + 1, -1) )
 				result.frames[frames_count].__internal = { id, name }
 			else
-				result[key] = self:parseBlock(content)
+				result[key] = self:parseBlock(content, result[key])
 			end
 		end
 
