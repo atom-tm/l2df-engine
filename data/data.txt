@@ -1,14 +1,14 @@
 [characters]
-id: 1	file: chars/itachi/character.dat
+1:    [ file: chars/itachi/character.dat ]
 
 [objects]
-id: 100	file: objects/sandbag/main.dat
+100:  [ file: objects/sandbag/main.dat ]
 
-id: 220	file: effects/fire.dat
-id: 222	file: effects/water.dat
+220:  [ file: effects/fire.dat ]
+222:  [ file: effects/water.dat ]
 
-id: 900  file: bg/effects.dat
-id: 1000 file: effects/sparks.dat
+900:  [ file: bg/effects.dat ]
+1000: [ file: effects/sparks.dat ]
 
 [maps]
-id: 1  file: bg/TestArena/TestArena.dat
+1:    [ file: bg/TestArena/TestArena.dat ]
