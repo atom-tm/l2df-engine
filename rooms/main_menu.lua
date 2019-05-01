@@ -1,4 +1,40 @@
 local room = {}
+
+	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
+
+	room.elements = {
+		load_image,
+	}
+
+
+	function room:load()
+		print("hello!!!!")
+	end
+
+	function room:update()
+		for i = 1, #self.elements do
+			self.elements[i]:update()
+		end
+	end
+
+	function room:draw()
+		for i = 1, #self.elements do
+			self.elements[i]:draw()
+		end
+	end
+
+	function room:keypressed()
+		
+	end
+
+	function room:exit()
+		for i = 1, #self.elements do
+			if self.elements[i].stop then self.elements[i]:stop() end
+		end
+	end
+
+return room
+
 	--[[
 	function room:load()
 		self.opacity = 0.1
@@ -80,4 +116,3 @@ local room = {}
 		if key == "f1" then rooms:set("settings") end
 	end
 ]]
-return room
