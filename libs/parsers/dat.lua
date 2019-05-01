@@ -100,7 +100,9 @@ local DatParser = BaseParser:extend()
 				elseif strmatch(char, self.VALUE_END_PATTERN) and not is_quoted or char == "\"" then
 					local x = stack[head][param]
 					if x and type(x) == "table" then
-						x[#x + 1] = self:parseScalar(value)
+						if value ~= "" then
+							x[#x + 1] = self:parseScalar(value)
+						end
 					else
 						stack[head][param] = self:parseScalar(value)
 						break
