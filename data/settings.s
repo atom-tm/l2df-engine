@@ -27,6 +27,8 @@
   "difficulty": 2,
   "dtypes": "data/dtypes.c",
   "frames": "data/frames.c",
+  "gameHeight": 720,
+  "gameWidth": 1280,
   "graphic": {
     "details": true,
     "effects": true,
@@ -41,12 +43,12 @@
   "localesFolder": "/data/locales/",
   "localization": 1,
   "musicVolume": 50,
-  "resolution": 1,
+  "resolution": 3,
   "roomsFolder": "/rooms/",
   "soundVolume": 100,
   "startRoom": "game_start",
   "statesFolder": "/data/states/",
   "system": "data/system.c",
-  "windowHeight": 480,
-  "windowWidth": 854
+  "windowHeight": 720,
+  "windowWidth": 1280
 }

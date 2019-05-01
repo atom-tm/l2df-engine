@@ -31,12 +31,12 @@ local settings = { }
 			{ width = 1920, height = 1080 },				-- 1920х1080
 		}
 
-		self.global.resolution 		= 1					-- Текущее разрешение холста
-		self.gameWidth		 		= 0 				-- Ширина холста игры
-		self.gameHeight				= 0 				-- Высота холста игры
+		self.global.resolution 		= 3					-- Текущее разрешение холста
+		self.gameWidth		 		= 1024 				-- Ширина холста игры
+		self.gameHeight				= 576 				-- Высота холста игры
 
-		self.global.windowWidth		= 854 				-- Ширина окна игры
-		self.global.windowHeight	= 480 				-- Высота окна игры
+		self.global.windowWidth		= 1024 				-- Ширина окна игры
+		self.global.windowHeight	= 576 				-- Высота окна игры
 
 		self.global.musicVolume 	= 50				-- Громкость музыки
 		self.global.soundVolume 	= 100				-- Громкость звука
@@ -97,34 +97,8 @@ local settings = { }
 
 	--- Apply game settings
 	function settings:apply()
-		math.randomseed(love.timer.getTime())
 		love.graphics.setDefaultFilter("nearest", "nearest")
-
-		self.gameWidth = self.resolutions[self.global.resolution].width
-		self.gameHeight = self.resolutions[self.global.resolution].height
-
-		love.window.setMode(self.gameWidth, self.gameHeight, {
-				fullscreen = self.global.graphic.fullscreen,
-				vsync = self.global.graphic.vsync,
-				msaa = 0,
-				depth = 0,
-				minwidth = self.resolutions[1].width,
-				minheight = self.resolutions[1].height,
-				resizable = true
-			})
-		if self.global.graphic.fullscreen then
-			self.global.windowWidth, self.global.windowHeight = love.window.getMode()
-		else
-			self.global.windowWidth, self.global.windowHeight = self.gameWidth, self.gameHeight
-		end
-		-- camera = gamera.new(0, 0, self.gameWidth, self.gameHeight)
-		-- camera:setWindow(0, 0, w, h)
-		-- self.cameraScale = h / self.gameHeight
-		-- camera:setScale(self.cameraScale)
-
-		mainCanvas = love.graphics.newCanvas(self.gameWidth, self.gameHeight)
-		self.canvasW = self.global.windowWidth / self.gameWidth
-		self.canvasH = self.global.windowHeight / self.gameHeight
+		math.randomseed(love.timer.getTime())
 	end
 
 return settings

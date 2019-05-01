@@ -1,12 +1,5 @@
 local room = {}
-
-	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
-
-	room.elements = {
-		load_image,
-	}
-
-
+	--[[
 	function room:load()
 		print("hello!!!!")
 	end
@@ -116,3 +109,4 @@ return room
 		if key == "f1" then rooms:set("settings") end
 	end
 ]]
+return room

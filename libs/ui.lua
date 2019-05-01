@@ -1,10 +1,10 @@
 local UI = object:extend()
 
-	function UI:init(x,y)
-		self.x = x or 0
-		self.y = y or 0
-		self.hidden = false
-	end
+function UI:init(x,y)
+	self.x = x or 0
+	self.y = y or 0
+	self.hidden = false
+end
 
 	function UI:update()
 		-- plug
@@ -14,12 +14,22 @@ local UI = object:extend()
 		-- plug
 	end
 
-	function UI:hide()
-		self.hidden = true
+function UI:hide()
+	self.hidden = true
+end
+function UI:show()
+	self.hidden = false
+end
+
+function UI:edit(input)
+	for key,val in pairs(input) do
+		self[key] = val
 	end
-	function UI:show()
-		self.hidden = false
-	end
+end
+
+UI.Image = UI:extend()
+UI.Text = UI:extend()
+UI.Button = UI:extend()
 
 	function UI:edit(input)
 		for key,val in pairs(input) do
@@ -30,25 +40,10 @@ local UI = object:extend()
 
 	UI.Button = UI:extend()
 
-
-	UI.Image = UI:extend()
-	function UI.Image:init(x,y,file)
-		self:super(x, y)
-		self.resource = file and image.Load(file) or nil
-	end
-
-
-	UI.Text = UI:extend()
-	function UI.Text:init(x,y,content)
-		self:super(x, y)
-		self.content = content
-	end
-
-	function UI.Text:draw()
-		if self.hidden then return end
-		font.print(self.content, self.x, self.y)
-	end
-
+function UI.Text:draw()
+	if self.hidden then return end
+	font.print(self.content, self.x, self.y)
+end
 
 	UI.Video = UI:extend()
 	function UI.Video:init(x, y, file, stretch)
@@ -58,7 +53,7 @@ local UI = object:extend()
 	end
 
 	function UI.Video:draw()
-		videos.draw(self.video, self.x, self.y, self.stretch)
+		videos.draw(self.video,self.x,self.y,self.stretch)
 	end
 
 	function UI.Video:play()
@@ -111,7 +106,7 @@ local UI = object:extend()
 
 	function UI.Animation:draw()
 		if self.hidden then return end
-		image.draw(self.resource, self.frame, self.x, self.y)
+		image.draw(self.resource,self.frame,self.x,self.y)
 	end
 
 return UI

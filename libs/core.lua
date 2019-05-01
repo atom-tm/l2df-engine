@@ -32,6 +32,7 @@ local core = {}
 		min_dt = 1 / settings.global.graphic.fpsLimit
 		next_time = love.timer.getTime()
 		----------------------------
+		mainCanvas = love.graphics.newCanvas(settings.gameWidth, settings.gameHeight)
 
 		helper.interception("update",core.update)
 		helper.interception("draw",core.draw)
@@ -46,9 +47,7 @@ local core = {}
 	end
 
 	function core.draw()
-		if mainCanvas then
-			love.graphics.draw(mainCanvas,0,0,0,settings.canvasW,settings.canvasH)
-		end
+		love.graphics.draw(mainCanvas,0,0,0,canvas_xsize,canvas_ysize)
 		-- FPS Limiter working --
 		local cur_time = love.timer.getTime()
 		if next_time <= cur_time then
@@ -60,8 +59,10 @@ local core = {}
 	end
 
 	function core.resize(w, h)
-		settings.canvasW = w / settings.gameWidth
-		settings.canvasH = h / settings.gameHeight
+		settings.global.windowWidth = w
+		settings.global.windowHeight = h
+		canvas_xsize = w / settings.gameWidth
+		canvas_ysize = h / settings.gameHeight
 	end
 
 return core
