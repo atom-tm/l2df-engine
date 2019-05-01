@@ -1,5 +1,5 @@
 local room = {}
-
+	--[[
 	function room:load()
 		self.opacity = 0.1
 		self.opacity_change = 0.001
@@ -79,5 +79,5 @@ local room = {}
 		end
 		if key == "f1" then rooms:set("settings") end
 	end
-
+]]
 return room

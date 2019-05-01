@@ -1,5 +1,13 @@
 local helper = {}
 
+	function helper.interception(key,func)
+		local old = love[key] or function () end
+		love[key] = function (...)
+			old(...)
+			func(...)
+		end
+	end
+
 	--- Require all scripts from specified directory. Returns table with them.
 	-- @param path, string     Scripts path
 	-- @param pattern, string  If specified only scripts that match pattern would be loaded

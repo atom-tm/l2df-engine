@@ -1,28 +1,61 @@
 local room = {}
+
+	local loading_ended = false
+	
+	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
+	local background_video = ui.Video(0,0,"sprites/bg.ogv",true)
+	local end_loading_text = ui.Text(250,250,"Press any key to continue...")
+
 	room.elements = {
-		ui.Text(100,100,"hello world!!"),
-		ui.Text(190,150,"nice!"),
-		ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
+		background_video,
+		load_image,
+		end_loading_text,
 	}
 
-	function room:load()
+	local initialProcessing = coroutine.create(function ()
+		coroutine.yield()
+			settings:load()
+		coroutine.yield()
+			data:loadStates()
+		coroutine.yield()
+			data:loadKinds()
+		coroutine.yield()
+			data:loadLocales()
+		coroutine.yield()
+	end)
 
+	function room:load()
+		background_video:play()
+		end_loading_text:hide()
 	end
 
 	function room:update()
-		for key in pairs(self.elements) do
-			self.elements[key]:update()
+		loading_ended = not coroutine.resume(initialProcessing)
+		if loading_ended then
+			end_loading_text:show()
+			load_image:hide()
+		end
+		for i = 1, #self.elements do
+			self.elements[i]:update()
 		end
 	end
 
 	function room:draw()
-		for key in pairs(self.elements) do
-			self.elements[key]:draw()
+		for i = 1, #self.elements do
+			self.elements[i]:draw()
 		end
 	end
 
-	function room:keypressed(key)
-		love.window.showMessageBox( "..", "Я - кейпрессед в комнате game_start", "info", true)
+	function room:keypressed()
+		if loading_ended then
+			rooms:set("main_menu")
+		end
+	end
+
+	function room:exit()
+		for i = 1, #self.elements do
+			if self.elements[i].stop then self.elements[i]:stop() end
+		end
 	end
 
 return room

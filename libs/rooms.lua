@@ -16,12 +16,10 @@ local rooms = { list = { } }
 		love.update = function (...)
 			oldUpdate(...)
 			local _ = rooms.current.update and rooms.current:update(...)
-		end
-
-		local oldDraw = love.draw or dummy
-		love.draw = function (...)
-			oldDraw(...)
+			love.graphics.setCanvas(mainCanvas)
+			love.graphics.clear()
 			local _ = rooms.current.draw and rooms.current:draw(...)
+			love.graphics.setCanvas()
 		end
 
 		rooms:set(settings.global.startRoom)
@@ -30,13 +28,14 @@ local rooms = { list = { } }
 
 	function rooms:set(room, input)
 		input = input or { }
+		if rooms.current and rooms.current.exit then rooms.current:exit() end
 		rooms.current = rooms.list[tostring(room)]
-		rooms.current:load(input)
+		if rooms.current.load then rooms.current:load(input) end
 	end
 
 
 	function rooms:reload(input)
-		rooms.current:load(input)
+		if rooms.current.load then rooms.current:load(input) end
 	end
 	
 	

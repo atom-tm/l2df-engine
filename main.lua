@@ -1,5 +1,3 @@
-love.graphics.setDefaultFilter("nearest", "nearest")
-math.randomseed(love.timer.getTime())
 love2dFighting = require "libs.core"
 
 function love.load()

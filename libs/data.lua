@@ -6,19 +6,26 @@ data = {}
 	data.maps = {}
 	data.frames = {}
 	data.dtypes = {}
-	data.states = {}
-	data.states_update = {}
 	data.system = {}
-	data.kinds = {}
 
-	function data:initialize()
-		self.characters = {}
-		self.objects = {}
-		self.maps = {}
-		
+	function data:loadStates()
+		self.states = helper.requireAllFromFolder(settings.global.statesFolder)
+		self.states_update = {}
+		for key in pairs(self.states) do
+			if self.states[key].update then self.states_update[key] = self.states[key] end
+		end
 	end
 
-	function data:States(dirPath)
+	function data:loadKinds()
+		self.kinds = helper.requireAllFromFolder(settings.global.kindsFolder)
+	end
+
+	function data:loadLocales()
+		self.locales = helper.requireAllFromFolder(settings.global.localesFolder)
+	end
+
+
+	--[[function data:States(dirPath)
 		self.states = {}
 		local states_list = love.filesystem.getDirectoryItems(dirPath)
 		for i = 1, #states_list do
@@ -78,7 +85,7 @@ data = {}
 		data.dtypes = {}
 		local dtypes_file = love.filesystem.read(filePath)
 		if dtypes_file then
-			for dtype_number, dtype_info in string.gmatch(dtypes_file, "([%d]+): %[([^%[%]]+)%]") do
+			for dtype_number, dtype_info in string.gmatch(dtypes_file, "([%d]+): %[([^%[%") do
 				local damage_type = {}
 				for key, info in string.gmatch(dtype_info, "([%w%d_]+): ([-%d%.]+)") do
 					damage_type[key] = tonumber(info)
@@ -101,7 +108,7 @@ data = {}
 		local data_file = love.filesystem.read(filePath)
 		if data_file ~= nil then
 			self.file = filePath
-			local characters = string.match(data_file, "%[characters%]([^%[%]]+)")
+			local characters = string.match(data_file, "%[characters%]([^%[%]+)")
 			for id, file in string.gmatch(characters, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.entities[tonumber(id)] == nil then
 					self.entities[tonumber(id)] = file
@@ -142,14 +149,14 @@ data = {}
 				end
 			end
 
-			local objects = string.match(data_file, "%[objects%]([^%[%]]+)")
+			local objects = string.match(data_file, "%[objects%]([^%[%]+)")
 			for id, file in string.gmatch(objects, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.entities[tonumber(id)] == nil then
 					self.entities[tonumber(id)] = file
 				end
 			end
 
-			local maps = string.match(data_file, "%[maps%]([^%[%]]+)")
+			local maps = string.match(data_file, "%[maps%]([^%[%]+)")
 			for id, file in string.gmatch(maps, "id: (%d+)%s+file: ([%w._/]+)") do
 				if self.maps[tonumber(id)] == nil then
 					self.maps[tonumber(id)] = file
@@ -164,6 +171,6 @@ data = {}
 				end
 			end
 		end
-	end
+	end]]
 
 return data

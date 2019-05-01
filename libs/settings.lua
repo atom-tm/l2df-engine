@@ -32,11 +32,11 @@ local settings = { }
 		}
 
 		self.global.resolution 		= 3					-- Текущее разрешение холста
-		self.global.gameWidth 		= 1280 				-- Ширина холста игры
-		self.global.gameHeight		= 720 				-- Высота холста игры
+		self.gameWidth		 		= 1024 				-- Ширина холста игры
+		self.gameHeight				= 576 				-- Высота холста игры
 
-		self.global.windowWidth		= 1280 				-- Ширина окна игры
-		self.global.windowHeight	= 720 				-- Высота окна игры
+		self.global.windowWidth		= 1024 				-- Ширина окна игры
+		self.global.windowHeight	= 576 				-- Высота окна игры
 
 		self.global.musicVolume 	= 50				-- Громкость музыки
 		self.global.soundVolume 	= 100				-- Громкость звука
@@ -95,6 +95,12 @@ local settings = { }
 		settings_file:write(save_string)
 		settings_file:flush()
 		settings_file:close()
+	end
+
+	--- Apply game settings
+	function settings:apply()
+		love.graphics.setDefaultFilter("nearest", "nearest")
+		math.randomseed(love.timer.getTime())
 	end
 
 	--- Update window size by settings

@@ -13,6 +13,7 @@ data 		= require "libs.data"
 
 sounds 		= require "libs.sounds"
 image 		= require "libs.images"
+videos 		= require "libs.videos"
 resources	= require "libs.resources"
 font 		= require "libs.fonts"
 
@@ -21,8 +22,7 @@ font 		= require "libs.fonts"
 camera = nil
 locale = nil
 ---------------------------------------------
---settings:load()
-
+local canvas_xsize, canvas_ysize = 1,1
 local core = {}
 
 	function core.init()
@@ -32,18 +32,12 @@ local core = {}
 		min_dt = 1 / settings.global.graphic.fpsLimit
 		next_time = love.timer.getTime()
 		----------------------------
+		mainCanvas = love.graphics.newCanvas(settings.gameWidth, settings.gameHeight)
 
-		local update = love.update
-		love.update = function (dt)
-			update(dt)
-			core.update(dt)
-		end
+		helper.interception("update",core.update)
+		helper.interception("draw",core.draw)
+		helper.interception("resize",core.resize)
 
-		local draw = love.draw
-		love.draw = function ()
-			draw()
-			core.draw()
-		end
 
 		rooms:init()
 	end
@@ -53,6 +47,7 @@ local core = {}
 	end
 
 	function core.draw()
+		love.graphics.draw(mainCanvas,0,0,0,canvas_xsize,canvas_ysize)
 		-- FPS Limiter working --
 		local cur_time = love.timer.getTime()
 		if next_time <= cur_time then
@@ -61,6 +56,13 @@ local core = {}
 		end
 		love.timer.sleep(next_time - cur_time)
 		-------------------------
+	end
+
+	function core.resize(w, h)
+		settings.global.windowWidth = w
+		settings.global.windowHeight = h
+		canvas_xsize = w / settings.gameWidth
+		canvas_ysize = h / settings.gameHeight
 	end
 
 return core
