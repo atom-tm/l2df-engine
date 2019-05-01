@@ -5,7 +5,7 @@ local helper = {}
 	-- @param pattern, string  If specified only scripts that match pattern would be loaded
 	-- @return table
 	function helper.requireAllFromFolder(path, pattern)
-		local result = {}
+		local result = { }
 		local file_list = love.filesystem.getDirectoryItems(path)
 		if file_list then
 			local formated_path = ""
