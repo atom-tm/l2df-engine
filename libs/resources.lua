@@ -1,39 +1,39 @@
-local resourses = {}
+local resources = {}
 	
-	resourses.entities = {}
-	resourses.maps = {}
-	resourses.sounds = {}
+	resources.entities = {}
+	resources.maps = {}
+	resources.sounds = {}
 
-	resourses.loading_list = {
+	resources.loading_list = {
 		entities = {},
 		maps = {},
 		sounds = {}
 	}
 
 
-	function resourses.Clear()
-		resourses.loading_list = {
+	function resources.Clear()
+		resources.loading_list = {
 			entities = {},
 			maps = {},
 			sounds = {}
 		}
-		resourses.entities = {}
-		resourses.maps = {}
-		resourses.sounds = {}
-		resourses.pointer = 0
+		resources.entities = {}
+		resources.maps = {}
+		resources.sounds = {}
+		resources.pointer = 0
 		collectgarbage()
 	end
 
 
-	function resourses.AddToLoading(Id, Etype)
+	function resources.AddToLoading(Id, Etype)
 		local massive = nil
 		local data_sourse = nil
 
 		if Etype == nil or Etype == "entity" then
-			massive = resourses.loading_list.entities
+			massive = resources.loading_list.entities
 			data_sourse = data.entities
 		elseif Etype == "map" then
-			massive = resourses.loading_list.maps
+			massive = resources.loading_list.maps
 			data_sourse = data.maps
 		else
 		    return false
@@ -56,16 +56,16 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoading() -- Поэтапная загрузка объекта
+	function resources.EntityLoading() -- Поэтапная загрузка объекта
 	----------------------------------------------------------------------------
-		if resourses.pointer == nil or resourses.pointer == 0 then
-			resourses.pointer = 1
-		elseif resourses.pointer > #resourses.loading_list.entities then
-			resourses.pointer = 0
+		if resources.pointer == nil or resources.pointer == 0 then
+			resources.pointer = 1
+		elseif resources.pointer > #resources.loading_list.entities then
+			resources.pointer = 0
 			return true
 		end
 
-		local object = resourses.loading_list.entities[resourses.pointer]
+		local object = resources.loading_list.entities[resources.pointer]
 
 		if object.stage == 1 then
 			local entity = {
@@ -76,39 +76,39 @@ local resourses = {}
 				variables = {},
 				scripts = {}
 			}
-			resourses.entities[object.id] = entity
+			resources.entities[object.id] = entity
 			object.stage = 2
 		elseif object.stage == 2 then
-			if resourses.EntityLoadingHeader(object) then
+			if resources.EntityLoadingHeader(object) then
 				object.stage = 3
 			end
 		elseif object.stage == 3 then
-			if resourses.EntityLoadingSprites(object) then
+			if resources.EntityLoadingSprites(object) then
 				object.stage = 4
 			end
 		elseif object.stage == 4 then
-		    if resourses.EntityLoadFrames(object) then
+		    if resources.EntityLoadFrames(object) then
 				object.stage = 5
 			end
 		elseif object.stage == 5 then
-		    if resourses.EntityLoadingFramesList(object) then
-				if resourses.EntityLoadingDtypes(object) then
-					if resourses.EntityLoadingOther(object) then
+		    if resources.EntityLoadingFramesList(object) then
+				if resources.EntityLoadingDtypes(object) then
+					if resources.EntityLoadingOther(object) then
 						object.stage = 6
 					end
 				end
 			end
 		elseif object.stage == 6 then
-		    resourses.pointer = resourses.pointer + 1
+		    resources.pointer = resources.pointer + 1
 		end
 
 		return false
 	end
 
 
-	function resourses.EntityLoadingHeader(object) -- Загрузка шапки объекта
+	function resources.EntityLoadingHeader(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
-		local head = resourses.entities[object.id].head
+		local head = resources.entities[object.id].head
 		local data = string.match(object.data, "<head>(.*)</head>")
 
 		if data ~= nil then
@@ -156,9 +156,9 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoadingFramesList(object) -- Загрузка шапки объекта
+	function resources.EntityLoadingFramesList(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
-		local head = resourses.entities[object.id].head
+		local head = resources.entities[object.id].head
 		head.frames = helper.CopyTable(data.frames)
 		local data = string.match(object.data, "<frames_list>(.*)</frames_list>")
 		if data ~= nil then
@@ -177,9 +177,9 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoadingDtypes(object) -- Загрузка шапки объекта
+	function resources.EntityLoadingDtypes(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
-		local head = resourses.entities[object.id].head
+		local head = resources.entities[object.id].head
 		head.dtypes = helper.CopyTable(data.dtypes)
 		local data = string.match(object.data, "<damage_types>(.*)</damage_types>")
 		if data then
@@ -202,9 +202,9 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoadingOther(object) -- Загрузка шапки объекта
+	function resources.EntityLoadingOther(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
-		local head = resourses.entities[object.id].head
+		local head = resources.entities[object.id].head
 		
 		if head.frames["walking"] ~= nil and type(head.frames["walking"]) == "table" then
 			head.walking_frames = #head.frames["walking"]
@@ -218,12 +218,12 @@ local resourses = {}
 			head.running_frames = #data.frames["running"]
 		else head.running_frames = 0 end
 
-		resourses.entities[object.id].variables.states = {}
+		resources.entities[object.id].variables.states = {}
 		for key in pairs(data.states) do
-			resourses.entities[object.id].variables.states[key] = {}
+			resources.entities[object.id].variables.states[key] = {}
 			if data.states[key].Load ~= nil then
-				data.states[key].variables = resourses.entities[object.id].variables.states[key]
-				data.states[key]:Load(resourses.entities[object.id])
+				data.states[key].variables = resources.entities[object.id].variables.states[key]
+				data.states[key]:Load(resources.entities[object.id])
 			end
 		end
 
@@ -231,10 +231,10 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoadingSprites(object) -- Поочередная загрузка спрайтов объекта
+	function resources.EntityLoadingSprites(object) -- Поочередная загрузка спрайтов объекта
 	----------------------------------------------------------------------------
 
-		local sprites = resourses.entities[object.id].sprites
+		local sprites = resources.entities[object.id].sprites
 		local data = string.match(object.data, "<head>(.*)</head>")
 
 		if data ~= nil then
@@ -280,7 +280,7 @@ local resourses = {}
 	end
 
 
-	function resourses.EntityLoadFrames(object) -- Поочередная загрузка фреймов объекта
+	function resources.EntityLoadFrames(object) -- Поочередная загрузка фреймов объекта
 	----------------------------------------------------------------------------
 		if object.frames == nil or object.current_frame == nil then
 			object.frames = {}
@@ -296,8 +296,8 @@ local resourses = {}
 				else
 					local data = object.frames[object.current_frame]
 					local frame_number = tonumber(string.match(data, "(%d+)"))
-					local frame = resourses.LoadFrame(data,frame_number)
-					resourses.entities[object.id].frames[frame_number] = frame
+					local frame = resources.LoadFrame(data,frame_number)
+					resources.entities[object.id].frames[frame_number] = frame
 					object.current_frame = object.current_frame + 1
 				end
 			end
@@ -306,7 +306,7 @@ local resourses = {}
 	end
 
 
-	function resourses.LoadFrame(data,frame_number) -- Загрузка фрейма объекта
+	function resources.LoadFrame(data,frame_number) -- Загрузка фрейма объекта
 	----------------------------------------------------------------------------
 		local frame = {}
 		local header = string.match(data, "([^{}]+)")
@@ -372,16 +372,16 @@ local resourses = {}
 
 		frame.grounded					= helper.PNumber(header, "grounded")
 
-		frame.states 					= resourses.LoadStates(data)
-		frame.itrs	 					= resourses.LoadItrs(data)
-		frame.bodys 					= resourses.LoadBodys(data)
-		frame.opoints 					= resourses.LoadOpoints(data)
+		frame.states 					= resources.LoadStates(data)
+		frame.itrs	 					= resources.LoadItrs(data)
+		frame.bodys 					= resources.LoadBodys(data)
+		frame.opoints 					= resources.LoadOpoints(data)
 
 		return frame
 	end
 
 
-	function resourses.LoadBodys(data_sourse) -- Загрузка коллайдеров тела объекта
+	function resources.LoadBodys(data_sourse) -- Загрузка коллайдеров тела объекта
 	----------------------------------------------------------------------------
 		local bodys = {}
 		local bodys_radiuses_x = {}
@@ -423,7 +423,7 @@ local resourses = {}
 	end
 
 
-	function resourses.LoadItrs(data_sourse) -- Загрузка коллайдеров атаки объекта
+	function resources.LoadItrs(data_sourse) -- Загрузка коллайдеров атаки объекта
 	----------------------------------------------------------------------------
 		local itrs = {}
 		local itrs_radiuses_x = {}
@@ -464,7 +464,7 @@ local resourses = {}
 	end
 
 
-	function resourses.LoadOpoints(data) -- Загрузка блока вызова объекта
+	function resources.LoadOpoints(data) -- Загрузка блока вызова объекта
 	----------------------------------------------------------------------------
 		local opoints = {}
 
@@ -499,14 +499,14 @@ local resourses = {}
 			opoint.facing 					= helper.PNumber(opoint_data, "facing",1)
 			
 			table.insert(opoints, opoint)
-			resourses.AddToLoading(opoint.id, "entity")
+			resources.AddToLoading(opoint.id, "entity")
 		end
 
 		return opoints
 	end
 
 
-	function resourses.LoadStates(data) -- Загрузка стейтов объекта
+	function resources.LoadStates(data) -- Загрузка стейтов объекта
 	----------------------------------------------------------------------------
 		local states = {}
 		for state_number, state_data in string.gmatch(data, "state: (%d+) {([^{}]*)}") do
@@ -526,16 +526,16 @@ local resourses = {}
 	end
 
 
-	function resourses.MapLoading() -- Поэтапная загрузка карты
+	function resources.MapLoading() -- Поэтапная загрузка карты
 	----------------------------------------------------------------------------
-		if resourses.pointer == nil or resourses.pointer == 0 then
-			resourses.pointer = 1
-		elseif resourses.pointer > #resourses.loading_list.maps then
-			resourses.pointer = 0
+		if resources.pointer == nil or resources.pointer == 0 then
+			resources.pointer = 1
+		elseif resources.pointer > #resources.loading_list.maps then
+			resources.pointer = 0
 			return true
 		end
 
-		local object = resourses.loading_list.maps[resourses.pointer]
+		local object = resources.loading_list.maps[resources.pointer]
 
 		if object.stage == 1 then
 			local map = {
@@ -544,31 +544,31 @@ local resourses = {}
 				filters = {},
 				spawn_points = {}
 			}
-			resourses.maps[object.id] = map
+			resources.maps[object.id] = map
 			object.stage = 2
 		elseif object.stage == 2 then
-			if resourses.MapLoadingHeader(object) then
+			if resources.MapLoadingHeader(object) then
 				object.stage = 3
 			end
 		elseif object.stage == 3 then
-			if resourses.MapLoadLayers(object) then
+			if resources.MapLoadLayers(object) then
 				object.stage = 4
 			end
 		elseif object.stage == 4 then
-			if resourses.MapLoadFilters(object) then
+			if resources.MapLoadFilters(object) then
 				object.stage = 5
 			end
 		elseif object.stage == 5 then
-			resourses.pointer = resourses.pointer + 1
+			resources.pointer = resources.pointer + 1
 		end
 
 		return false
 	end
 
 
-	function resourses.MapLoadingHeader(object) -- Загрузка шапки карты
+	function resources.MapLoadingHeader(object) -- Загрузка шапки карты
 	----------------------------------------------------------------------------
-		local map = resourses.maps[object.id]
+		local map = resources.maps[object.id]
 		local head = map.head
 		local data = object.data
 
@@ -590,7 +590,7 @@ local resourses = {}
 
 			head.effects 					= helper.PNumber(data, "effects",-1)
 			if head.effects ~= -1 then
-				resourses.AddToLoading(head.effects, "entity")
+				resources.AddToLoading(head.effects, "entity")
 			end
 
 			head.start_anim 				= helper.PBool(data, "start_anim")
@@ -635,7 +635,7 @@ local resourses = {}
 				map.shadow_centery			= helper.PNumber(data, "shadow_centery")
 			end
 
-			map.opoints 					= resourses.LoadOpoints(data)
+			map.opoints 					= resources.LoadOpoints(data)
 
 			return true
 		else
@@ -644,7 +644,7 @@ local resourses = {}
 	end
 
 
-	function resourses.MapLoadLayers(object) -- Поочередная загрузка слоёв карты
+	function resources.MapLoadLayers(object) -- Поочередная загрузка слоёв карты
 	----------------------------------------------------------------------------
 		if object.layers == nil or object.current_layer == nil then
 			object.layers = {}
@@ -677,7 +677,7 @@ local resourses = {}
 						layer.important = false
 					end
 
-					table.insert(resourses.maps[object.id].layers, layer)
+					table.insert(resources.maps[object.id].layers, layer)
 					object.current_layer = object.current_layer + 1
 				end
 			end
@@ -686,7 +686,7 @@ local resourses = {}
 	end
 
 
-	function resourses.MapLoadFilters(object) -- Поочередная загрузка слоёв карты
+	function resources.MapLoadFilters(object) -- Поочередная загрузка слоёв карты
 	----------------------------------------------------------------------------
 		if object.filters == nil or object.current_filter == nil then
 			object.filters = {}
@@ -718,7 +718,7 @@ local resourses = {}
 						filter.important = false
 					end
 
-					table.insert(resourses.maps[object.id].filters, filter)
+					table.insert(resources.maps[object.id].filters, filter)
 					object.current_filter = object.current_filter + 1
 				end
 			end
@@ -727,4 +727,4 @@ local resourses = {}
 	end
 
 
-return resourses
+return resources

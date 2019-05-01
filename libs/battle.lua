@@ -1,6 +1,6 @@
 local battle = {}
 
-battle.res = require("libs.battle.resourses")
+battle.res = require("libs.battle.resources")
 battle.graphic = require("libs.battle.graphic")
 battle.entities = require("libs.battle.entities")
 battle.control = require("libs.battle.control")
@@ -63,9 +63,9 @@ end
 function battle:mapOpointsProcessing()
 	for i = 1, #self.map.opoints do
 		local opoint = self.map.opoints[i]
-		if resourses.entities[opoint.id] ~= nil then
+		if resources.entities[opoint.id] ~= nil then
 			local amount = opoint.amount
-			if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
+			if settings.quality or resources.entities[opoint.id].head.type ~= "effect" then
 				amount = amount + math.random(0,opoint.amount_random)
 			end
 			for a = 1, amount do
@@ -73,7 +73,7 @@ function battle:mapOpointsProcessing()
 				local y = opoint.y + math.random(-opoint.y_random, opoint.y_random)
 				local z = opoint.z + math.random(-opoint.z_random, opoint.z_random)
 				local count = opoint.count
-				if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
+				if settings.quality or resources.entities[opoint.id].head.type ~= "effect" then
 					count = count + math.random(0,opoint.count_random)
 				end
 				local facing = opoint.facing
@@ -139,7 +139,7 @@ function battle:Load(spawnList)
 	}
 	self.objects = 0
 	self.res:Load()
-	self:setMap(resourses.maps[spawnList.maps[1]])
+	self:setMap(resources.maps[spawnList.maps[1]])
 	sounds.setMusic("music/battle.mp3")
 	self:createStartingObjects(spawnList.entities)
 end

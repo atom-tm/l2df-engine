@@ -3,8 +3,8 @@ local entities = {}
 	entities.effects = {}
 
 	function entities.create(id)
-		if resourses.entities[id] == nil then return nil end
-		local created_object = helper.CopyTable(resourses.entities[id])
+		if resources.entities[id] == nil then return nil end
+		local created_object = helper.CopyTable(resources.entities[id])
 		if created_object ~= nil then			
 			
 			created_object.destroy = false
@@ -351,9 +351,9 @@ local entities = {}
 		if self.first_tick then
 			for i = 1, #self.frame.opoints do
 				local opoint = self.frame.opoints[i]
-				if resourses.entities[opoint.id] ~= nil then
+				if resources.entities[opoint.id] ~= nil then
 					local amount = opoint.amount
-					if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
+					if settings.quality or resources.entities[opoint.id].head.type ~= "effect" then
 						amount = amount + math.random(0,opoint.amount_random)
 					end
 					for a = 1, amount do
@@ -361,7 +361,7 @@ local entities = {}
 						local y = self.y + self.frame.centery - opoint.y + math.random(-opoint.y_random, opoint.y_random)
 						local z = self.z + opoint.z + math.random(-opoint.z_random, opoint.z_random)
 						local count = opoint.count
-						if settings.quality or resourses.entities[opoint.id].head.type ~= "effect" then
+						if settings.quality or resources.entities[opoint.id].head.type ~= "effect" then
 							count = count + math.random(0,opoint.count_random)
 						end
 						local facing = opoint.facing

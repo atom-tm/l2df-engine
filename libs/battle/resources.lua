@@ -1,6 +1,6 @@
-local resourses = {}
+local resources = {}
 
-	function resourses:Load()
+	function resources:Load()
 		self.light_filter = image.Load("sprites/UI/light_filter.png", nil, "linear")
 
 		self.hp_bar = image.Load("sprites/UI/hp_bar.png", nil, "linear")
@@ -58,4 +58,4 @@ local resourses = {}
 		}
 	end
 
-return resourses
+return resources
