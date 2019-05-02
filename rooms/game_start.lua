@@ -2,9 +2,9 @@ local room = {}
 
 	local loading_ended = false
 	
-	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
-	local background_video = ui.Video(0,0,"sprites/bg.ogv",true)
-	local end_loading_text = ui.Text(0,0,"Press any key to continue...")
+	local load_image = ui.Animation(250 ,250, "sprites/UI/loading.png", 140, 140, 4, 3, 12, 2, true)
+	local background_video = ui.Video(0, 0, "sprites/bg.ogv", true)
+	local end_loading_text = ui.Text(0, 0, "Press any key to continue...")
 
 	room.elements = {
 		background_video,
