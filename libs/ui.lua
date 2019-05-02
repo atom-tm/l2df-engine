@@ -1,51 +1,54 @@
 local UI = object:extend()
 
-function UI:init(x,y)
-	self.x = x or 0
-	self.y = y or 0
-	self.hidden = false
-end
-
-function UI:update()
-	-- plug
-end
-
-function UI:draw()
-	-- plug
-end
-
-function UI:hide()
-	self.hidden = true
-end
-function UI:show()
-	self.hidden = false
-end
-
-function UI:edit(input)
-	for key,val in pairs(input) do
-		self[key] = val
+	function UI:init(x,y)
+		self.x = x or 0
+		self.y = y or 0
+		self.hidden = false
 	end
-end
 
-UI.Image = UI:extend()
-UI.Text = UI:extend()
-UI.Button = UI:extend()
+	function UI:update()
+		-- plug
+	end
+
+	function UI:draw()
+		-- plug
+	end
+
+	function UI:hide()
+		self.hidden = true
+	end
+	function UI:show()
+		self.hidden = false
+	end
+
+	function UI:edit(input)
+		for key,val in pairs(input) do
+			self[key] = val
+		end
+	end
 
 
-function UI.Image:init(x,y,file)
-	self:super(x, y)
-	self.resource = file and image.Load(file) or nil
-end
+	UI.Button = UI:extend()
 
-function UI.Text:init(x,y,content)
-	self:super(x, y)
-	self.content = content
-end
 
-function UI.Text:draw()
-	if self.hidden then return end
-	font.print(self.content, self.x, self.y)
-end
+	UI.Image = UI:extend()
+	function UI.Image:init(x,y,file)
+		self:super(x, y)
+		self.resource = file and image.Load(file) or nil
+	end
+
+
+	UI.Text = UI:extend()
+	function UI.Text:init(x,y,content)
+		self:super(x, y)
+		self.content = content
+	end
+
+	function UI.Text:draw()
+		if self.hidden then return end
+		font.print(self.content, self.x, self.y)
+	end
+
 
 	UI.Video = UI:extend()
 	function UI.Video:init(x, y, file, stretch)
@@ -55,7 +58,7 @@ end
 	end
 
 	function UI.Video:draw()
-		videos.draw(self.video,self.x,self.y,self.stretch)
+		videos.draw(self.video, self.x, self.y, self.stretch)
 	end
 
 	function UI.Video:play()
@@ -84,8 +87,8 @@ end
 
 	UI.Animation = UI:extend()
 	function UI.Animation:init(x, y, file, w, h, row, col, frames, wait, looped)
-		UI.init(self,x,y)
-		self.resource = file and image.Load(file,{w = w or 1, h = h or 1, x = row or 1, y = col or 1}) or nil
+		self:super(x, y)
+		self.resource = file and image.Load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1}) or nil
 		self.frame = 1
 		self.max_frames = frames
 		self.wait = 0
@@ -98,17 +101,17 @@ end
 			self.wait = self.wait + 1
 		else
 			self.wait = 0
-			if self.frame == self.max_frames then
-				if self.looped then self.frame = 1 end
-			else
+			if self.frame < self.max_frames then
 				self.frame = self.frame + 1
+			elseif self.looped then
+				self.frame = 1
 			end
 		end
 	end
 
 	function UI.Animation:draw()
 		if self.hidden then return end
-		image.draw(self.resource,self.frame,self.x,self.y)
+		image.draw(self.resource, self.frame, self.x, self.y)
 	end
 
 return UI
