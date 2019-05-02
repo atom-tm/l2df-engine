@@ -8,6 +8,7 @@ local videos = { }
 				return videos.list[i]
 			end
 		end
+
 		local video = {
 			resource = love.graphics.newVideo(file_path),
 			path = file_path,
@@ -19,20 +20,19 @@ local videos = { }
 
 	function videos.draw(video, x, y, stretch, facing, size, r,g,b,a, other)
 		stretch = stretch or false
-		facing = facing and facing ~= 0 or 1
-		if facing == 0 or facing == nil then facing = 1 end
-		local width = size and size.width or size or 1
-		local height = size and size.height or size or 1
-		if stretch then width = width * (settings.gameWidth / video.width) end
-		if stretch then height = height * (settings.gameHeight / video.height) end
+		facing = facing ~= 0 and facing or 1
 		other = other or { r = 0, ox = 0, oy = 0, kx = 0, ky = 0 }
-		local ro,go,bo,ao = love.graphics.getColor()
-		r = r or ro
-		g = g or go
-		b = b or bo 
-		a = a or ao 
-		love.graphics.setColor(r, g, b, a)
-		love.graphics.draw(video.resource,x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
+
+		local w = size and size.width or size or 1
+		local h = size and size.height or size or 1
+		if stretch then
+			w = w * settings.gameWidth / video.width
+			h = h * settings.gameHeight / video.height
+		end
+
+		local ro, go, bo, ao = love.graphics.getColor()
+		love.graphics.setColor(r or ro, g or go, b or bo, a or ao)
+		love.graphics.draw(video.resource, x, y, other.r, w * facing, h, other.ox, other.oy, other.kx, other.ky)
 		love.graphics.setColor(ro, go, bo, ao)
 	end
 
