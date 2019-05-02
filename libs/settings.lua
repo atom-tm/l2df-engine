@@ -72,8 +72,6 @@ local settings = { }
 			  	special1 = "\\"
 			}
 		}
-
-		self:updateResolution()
 	end
 
 	--- Load game settings from settings.file
@@ -101,43 +99,32 @@ local settings = { }
 	function settings:apply()
 		math.randomseed(love.timer.getTime())
 		love.graphics.setDefaultFilter("nearest", "nearest")
+
 		self.gameWidth = self.resolutions[self.global.resolution].width
 		self.gameHeight = self.resolutions[self.global.resolution].height
+
+		love.window.setMode(self.gameWidth, self.gameHeight, {
+				fullscreen = self.global.graphic.fullscreen,
+				vsync = self.global.graphic.vsync,
+				msaa = 0,
+				depth = 0,
+				minwidth = self.resolutions[1].width,
+				minheight = self.resolutions[1].height,
+				resizable = true
+			})
+		if self.global.graphic.fullscreen then
+			self.global.windowWidth, self.global.windowHeight = love.window.getMode()
+		else
+			self.global.windowWidth, self.global.windowHeight = self.gameWidth, self.gameHeight
+		end
+		-- camera = gamera.new(0, 0, self.gameWidth, self.gameHeight)
+		-- camera:setWindow(0, 0, w, h)
+		-- self.cameraScale = h / self.gameHeight
+		-- camera:setScale(self.cameraScale)
+
 		mainCanvas = love.graphics.newCanvas(self.gameWidth, self.gameHeight)
 		self.canvasW = self.global.windowWidth / self.gameWidth
 		self.canvasH = self.global.windowHeight / self.gameHeight
-		love.window.setMode( self.global.windowWidth, self.global.windowHeight, {
-			fullscreen = self.global.graphic.fullscreen,
-			vsync = self.global.graphic.vsync,
-			msaa = 0,
-			depth = 0,
-			minwidth = self.resolutions[1].width,
-			minheight = self.resolutions[1].height,
-			resizable = true
-		})
-	end
-
-	--- Update window size by settings
-	function settings:updateResolution(w, h)
-		if not (w and h) then
-			w = self.resolutions[self.global.resolution].width
-			h = self.resolutions[self.global.resolution].height
-		end
-		self.global.gameWidth = w
-		self.global.gameHeight = h
-
-		love.window.setMode(w, h)
-		love.window.setFullscreen(self.global.graphic.fullscreen)
-		if self.global.graphic.fullscreen then
-			w, h = love.window.getMode() 
-		end
-
-		camera = gamera.new(0, 0, self.global.gameWidth, self.global.gameHeight)
-		camera:setWindow(0, 0, w, h)
-		self.cameraScale = h / self.global.gameHeight
-		camera:setScale(self.cameraScale)
-		self.global.windowHeight = h
-		self.global.windowWidth = w
 	end
 
 return settings
