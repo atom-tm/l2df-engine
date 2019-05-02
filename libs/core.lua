@@ -42,13 +42,19 @@ local core = {}
 	end
 
 	function core.update()
+		-- Mouse position calculation --
+		local x, y = love.mouse.getPosition( )
+		settings.mouseX = x * (settings.gameWidth / settings.global.windowWidth)
+		settings.mouseY = y * (settings.gameHeight / settings.global.windowHeight)
+		--------------------------------
 		next_time = next_time + min_dt -- FPS Limiter
 	end
 
 	function core.draw()
 		if mainCanvas then
-			love.graphics.draw(mainCanvas,0,0,0,settings.canvasW,settings.canvasH)
+			love.graphics.draw(mainCanvas, 0, 0, 0, settings.canvasW, settings.canvasH)
 		end
+		font.print(settings.mouseClick, 100, 100)
 		-- FPS Limiter working --
 		local cur_time = love.timer.getTime()
 		if next_time <= cur_time then
@@ -60,8 +66,12 @@ local core = {}
 	end
 
 	function core.resize(w, h)
-		settings.canvasW = w / settings.gameWidth
-		settings.canvasH = h / settings.gameHeight
+		if mainCanvas then
+			settings.canvasW = w / settings.gameWidth
+			settings.canvasH = h / settings.gameHeight
+			settings.global.windowWidth = w
+			settings.global.windowHeight = h
+		end
 	end
 
 return core

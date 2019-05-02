@@ -7,7 +7,9 @@ local room = {}
 	local end_loading_text = ui.Text(0,0,"Press any key to continue...")
 
 	local list = ui.List(20,50,{
-		ui.Button(10,10,{"Element1","Element1_hover","Element1_pressed"}),
+		ui.Button(10,10,130,30,{"Element1","Element1_hover","Element1_pressed"},nil,function ()
+			rooms:set("main_menu")
+		end),
 	})
 
 	room.elements = {
@@ -75,6 +77,16 @@ local room = {}
 	function room:exit()
 		for i = 1, #self.elements do
 			if self.elements[i].stop then self.elements[i]:stop() end
+		end
+	end
+
+	function room:mousepressed(x, y, button, istouch, presses)
+		print("stage 1")
+		if button == 1 then
+			print("stage 2")
+			for i = 1, #self.elements do
+				self.elements[i].click = true
+			end
 		end
 	end
 

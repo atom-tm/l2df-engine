@@ -35,39 +35,65 @@
 	end
 
 	UI.Button = UI:extend()
-	function UI.Button:init(x, y, content, bg, action)
+	function UI.Button:init(x, y, w, h, content, bg, action)
 		self:super(x, y)
+		self.w = w
+		self.h = h
 		self.content_n = type(content) == "string" and content or type(content) == "table" and content and content[1] or ""
 		self.content_h = type(content) == "table" and content and content[2] or self.content_n or ""
 		self.content_p = type(content) == "table" and content and content[3] or self.content_h or ""
+		self.content_offsetX = content and content[4] or 0
+		self.content_offsetY = content and content[5] or 0
 		self.background_n = type(bg) == "string" and image.Load(bg) or type(bg) == "table" and bg and image.Load(bg[1]) or nil
-		self.background_h = type(bg) == "table" and bg and bg[2] and image.Load(bg[2]) or self.background_n or ""
-		self.background_p = type(bg) == "table" and bg and bg[3] and image.Load(bg[3]) or self.background_h or ""
+		self.background_h = type(bg) == "table" and bg and bg[2] and image.Load(bg[2]) or self.background_n or nil
+		self.background_p = type(bg) == "table" and bg and bg[3] and image.Load(bg[3]) or self.background_h or nil
+		self.background_offsetX = bg and bg[4] or 0
+		self.background_offsetY = bg and bg[5] or 0
 		self.action = type(action) == "function" and action or function () end
 		self.hover = false
 		self.pressed = false
+		self.click = false
+	end
+
+	function UI.Button:update(offsetX, offsetY)
+		if settings.mouseX > self.x + offsetX
+		and settings.mouseX < self.x + offsetX + self.w
+		and settings.mouseY > self.y + offsetY
+		and settings.mouseY < self.y + offsetY + self.h then
+			self.hover = true
+		else
+			self.hover = false
+		end
+		if self.click and self.hover then
+				self.pressed = true
+				if self.action then
+					self:action()
+				end
+			else
+				self.pressed = false
+				self.click = false
+			end
 	end
 
 	function UI.Button:draw(offsetX, offsetY)
 		if self.hidden then return end
 		offsetX = offsetX or 0
 		offsetY = offsetY or 0
-		--image.draw(self.resource, self.x + offsetX, self.y + offsetY)
 		if self.pressed then
 			if self.background_p then
-				image.draw(self.background_p, self.x + offsetX, self.y + offsetY)
+				image.draw(self.background_p, self.x + offsetX + self.background_offsetX, self.y + offsetY + self.background_offsetY)
 			end
-			font.print(self.content_p, self.x + offsetX, self.y + offsetY)
+			font.print(self.content_p, self.x + offsetX + self.content_offsetX, self.y + offsetY + self.content_offsetY)
 		elseif self.hover then
 			if self.background_h then
-				image.draw(self.background_h, self.x + offsetX, self.y + offsetY)
+				image.draw(self.background_h, self.x + offsetX + self.background_offsetX, self.y + offsetY + self.background_offsetY)
 			end
-			font.print(self.content_h, self.x + offsetX, self.y + offsetY)
+			font.print(self.content_h, self.x + offsetX + self.content_offsetX, self.y + offsetY + self.content_offsetY)
 		else
 			if self.background_n then
-				image.draw(self.background_n, self.x + offsetX, self.y + offsetY)
+				image.draw(self.background_n, self.x + offsetX + self.background_offsetX, self.y + offsetY + self.background_offsetY)
 			end
-			font.print(self.content_n, self.x + offsetX, self.y + offsetY)
+			font.print(self.content_n, self.x + offsetX + self.content_offsetX, self.y + offsetY + self.content_offsetY)
 		end
 	end
 
@@ -170,12 +196,14 @@
 
 
 	UI.List = UI:extend()
-	function UI.List:init(x, y, content)
+	function UI.List:init(x, y, content, mouse)
 		assert(type(content) == "table", "Parameter 'content' must be a table.")
 		self:super(x,y)
 		self.content = content
 		self.item = 1
 		self.max_items = #content
+		self.pressed = false
+		self.mouse = mouse or false
  	end
 
  	function UI.List:draw(offsetX, offsetY)
@@ -188,7 +216,13 @@
 
  	function UI.List:update()
  		for i = 1, self.max_items do
- 			self.content[i]:update()
+ 			if self.click and self.mouse then
+ 				self.content[i].click = true
+ 				self.click = false
+ 			else
+ 				self.click = false
+ 			end
+ 			self.content[i]:update(self.x, self.y)
  		end
  	end
 

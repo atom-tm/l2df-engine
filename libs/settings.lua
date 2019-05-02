@@ -9,6 +9,9 @@ local settings = { }
 
 		self.global = {}								-- Таблица с настройками, доступными для изменения пользователем
 
+		self.mouseX = 0									-- Позиция курсора мыши по оси X
+		self.mouseY = 0									-- Позиция курсора мыши по оси Y
+
 		self.file = "data/settings.s" 					-- Путь файла настроек игры
 		self.global.data = "data/data.c"				-- Путь до data.txt (список объектов и карт движка)
 		self.global.frames = "data/frames.c" 			-- Путь до frames.dat (список кадров по умолчанию)
