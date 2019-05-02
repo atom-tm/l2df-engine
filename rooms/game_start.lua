@@ -26,8 +26,17 @@ local room = {}
 		coroutine.yield()
 			data:loadFrames()
 		coroutine.yield()
-			love.window.showMessageBox("title", "cicle")
+			data:loadSystem()
 		coroutine.yield()
+			data:loadCombos()
+		coroutine.yield()
+			data:loadDtypes()
+		coroutine.yield()
+			data:loadData()
+		coroutine.yield()
+		for i = 1, 100 do
+			coroutine.yield()
+		end
 	end)
 
 	function room:load()

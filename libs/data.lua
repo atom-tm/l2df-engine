@@ -2,14 +2,6 @@ local data = {}
 
 	local datParser = require("libs.parsers.dat")
 
-	data.entities = {}
-	data.characters_list = {}
-	data.maps_list = {}
-	data.maps = {}
-	data.frames = {}
-	data.dtypes = {}
-	data.system = {}
-
 	function data:loadStates()
 		self.states = helper.requireAllFromFolder(settings.global.statesFolder)
 		self.states_update = {}
@@ -27,9 +19,23 @@ local data = {}
 	end
 
 	function data:loadFrames()
-		love.window.showMessageBox("title", "start")
 		self.frames = datParser:parseFile(settings.global.frames)
-		love.window.showMessageBox("title", "end")
+	end
+
+	function data:loadSystem()
+		self.system = datParser:parseFile(settings.global.system)
+	end
+
+	function data:loadCombos()
+		self.combos = datParser:parseFile(settings.global.combos)
+	end
+
+	function data:loadDtypes()
+		self.dtypes = datParser:parseFile(settings.global.dtypes)
+	end
+
+	function data:loadData()
+		self.list = datParser:parseFile(settings.global.data)
 	end
 
 
