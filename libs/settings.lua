@@ -1,5 +1,5 @@
 local fs = love.filesystem
-local settings = {}
+local settings = { }
 
 	--- Bootstrap game settings, set default values.
 	function settings:init()
@@ -42,14 +42,14 @@ local settings = {}
 		self.global.soundVolume 	= 100				-- Громкость звука
 
 		self.global.graphic = {							-- Настройки графической составляющей игры
-			fullscreen 			= false,				-- Полный экран
-			fpsLimit 			= 60,					-- Ограничение FPS
-			vsync 				= false, 				-- Вертикальная синхронизация
-			shadows 			= true, 				-- Детализированные тени
-			reflections			= true,					-- Отражения
-			smoothing			= true, 				-- Фильтрация текстур
-			effects				= true,					-- Количество эффектов и частиц
-			details 			= true,					-- Показ необязательных элементов
+			fullscreen 			= false,					-- Полный экран
+			fpsLimit 			= 60,						-- Ограничение FPS
+			vsync 				= false, 					-- Вертикальная синхронизация
+			shadows 			= true, 					-- Детализированные тени
+			reflections			= true,						-- Отражения
+			smoothing			= true, 					-- Фильтрация текстур
+			effects				= true,						-- Количество эффектов и частиц
+			details 			= true,						-- Показ необязательных элементов
 		}
 
 		self.global.difficulty 		= 2 				-- Сложность игры (от 1 до 3)
@@ -72,6 +72,8 @@ local settings = {}
 			  	special1 = "\\"
 			}
 		}
+
+		self:updateResolution()
 	end
 
 	--- Load game settings from settings.file
@@ -93,6 +95,29 @@ local settings = {}
 		settings_file:write(save_string)
 		settings_file:flush()
 		settings_file:close()
+	end
+
+	--- Update window size by settings
+	function settings:updateResolution(w, h)
+		if not (w and h) then
+			w = self.resolutions[self.global.resolution].width
+			h = self.resolutions[self.global.resolution].height
+		end
+		self.global.gameWidth = w
+		self.global.gameHeight = h
+
+		love.window.setMode(w, h)
+		love.window.setFullscreen(self.global.graphic.fullscreen)
+		if self.global.graphic.fullscreen then
+			w, h = love.window.getMode() 
+		end
+
+		camera = gamera.new(0, 0, self.global.gameWidth, self.global.gameHeight)
+		camera:setWindow(0, 0, w, h)
+		self.cameraScale = h / self.global.gameHeight
+		camera:setScale(self.cameraScale)
+		self.global.windowHeight = h
+		self.global.windowWidth = w
 	end
 
 return settings
