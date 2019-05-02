@@ -24,6 +24,10 @@ local room = {}
 		coroutine.yield()
 			data:loadLocales()
 		coroutine.yield()
+			data:loadFrames()
+		coroutine.yield()
+			love.window.showMessageBox("title", "cicle")
+		coroutine.yield()
 	end)
 
 	function room:load()
