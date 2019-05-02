@@ -6,10 +6,15 @@ local room = {}
 	local background_video = ui.Video(0,0,"sprites/bg.ogv",true)
 	local end_loading_text = ui.Text(0,0,"Press any key to continue...")
 
+	local list = ui.List(20,50,{
+		ui.Button(10,10,{"Element1","Element1_hover","Element1_pressed"}),
+	})
+
 	room.elements = {
 		background_video,
 		load_image,
 		end_loading_text,
+		list,
 	}
 
 	local initialProcessing = coroutine.create(function ()
