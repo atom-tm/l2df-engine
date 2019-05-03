@@ -1,13 +1,13 @@
 local room = { }
 
 	local list = ui.List(20, 50, {
-			ui.Button("Play", 16, 50, 130, 30)
+			ui.Button("Play", 16, 50)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
 
-			ui.Button("Settings", 16, 100, 130, 30)
+			ui.Button("Settings", 16, 100)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
 
-			ui.Button("Exit", 16, 150, 130, 30)
+			ui.Button("Exit", 16, 150, nil, nil, 0, 0, nil, nil, true)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end)
 				:on("click", function () love.event.quit() end),
 		})
@@ -18,6 +18,9 @@ local room = { }
 
 	room.nodes = {
 		ui.Image("sprites/UI/logotype.png"),
+		ui.Button("Hover me!", 160, 32, nil, nil, -32, 16, nil, "sprites/UI/small.png", true)
+			:on("update", function (self) self.text = self.hover and not self.clicked and "Yeah, now click on me!" or self.text end)
+			:on("click", function (self) self.text = "You're a good boy!" end),
 		list,
 	}
 

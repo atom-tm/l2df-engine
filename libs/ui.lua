@@ -41,8 +41,13 @@ local UI = object:extend()
 	end
 
 	function UI:edit(callback)
-		assert(type(callback) == "function", "Callback must be a function")
-		callback(self)
+		if type(callback) == "function" then
+			callback(self)
+		elseif type(callback) == "table" then
+			for k, v in pairs(callback) do
+				self[k] = v
+			end
+		end
 		return self
 	end
 
@@ -150,13 +155,15 @@ local UI = object:extend()
 		self.background = type(bg) == "string" and image.Load(bg) or bg
 		self.use_mouse = use_mouse and true or false
 		self.hover = false
+		self.clicked = false
 	end
 
 	function UI.Button:mousemoved(x, y, dx, dy)
 		if not self.use_mouse then return end
-		local mx = x + dx
-		local my = y + dy
+		local mx = x + dx - self.ox
+		local my = y + dy - self.oy
 		self.hover = mx > self.x and mx < self.x + self.w and my > self.y and my < self.y + self.h
+		self.clicked = self.clicked and self.hover
 	end
 
 	function UI.Button:update(dt)
@@ -168,14 +175,16 @@ local UI = object:extend()
 	end
 
 	function UI.Button:mousepressed(x, y, button, istouch, presses)
+		self.clicked = false
 		if self.use_mouse and self.hover then
 			self:click(x, y, button)
+			self.clicked = true
 		end
 	end
 
 	function UI.Button:draw()
 		if self.background then
-			image.draw(self.background, self.x, self.y)
+			image.draw(self.background, 0, self.x, self.y)
 		end
 		font.print(self.text, self.x + self.ox, self.y + self.oy, nil, nil, nil, nil, self.color)
 	end

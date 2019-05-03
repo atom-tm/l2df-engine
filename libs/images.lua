@@ -65,25 +65,17 @@ local images = {}
 		    width = size.width
 		    height = size.height
 		end
-		if other == nil then
-			other = {
-				r = 0,
-				ox = 0,
-				oy = 0,
-				kx = 0,
-				ky = 0
-			}
-		end
-		local ro,go,bo,ao = love.graphics.getColor()
-		if r == nil then r = ro end
-		if g == nil then g = go end
-		if b == nil then b = bo end
-		if a == nil then a = ao end
-		love.graphics.setColor(r, g, b, a)
-		if sprite == 0 or sprite == nil then
-			love.graphics.draw(image.image,x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
-		else
+		other = other or {
+			r = 0,
+			ox = 0, oy = 0,
+			kx = 0, ky = 0,
+		}
+		local ro, go, bo, ao = love.graphics.getColor()
+		love.graphics.setColor(r or ro, g or go, b or bo, a or ao)
+		if sprite and sprite ~= 0 then
 			love.graphics.draw(image.image,image.sprites[sprite],x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
+		else
+			love.graphics.draw(image.image,x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
 		end
 		love.graphics.setColor(ro, go, bo, ao)
 	end
