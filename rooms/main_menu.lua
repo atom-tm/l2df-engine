@@ -1,35 +1,33 @@
-local room = {}
+local room = { }
 
-	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
+	local list = ui.List(20, 50, {
+			ui.Button("Play", 16, 50, 130, 30)
+				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+			ui.Button("Settings", 16, 100, 130, 30)
+				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+			ui.Button("Exit", 16, 150, 130, 30)
+				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end)
+				:on("click", function () love.event.quit() end),
+		})
+		-- :on("change", function (self, new, old)
+		-- 	old.color[3] = 1
+		-- 	new.color[3] = 0
+		-- end)
 
-	room.elements = {
-		load_image,
+	room.nodes = {
+		ui.Image("sprites/UI/logotype.png"),
+		list,
 	}
 
-
-	function room:load()
-		print("hello!!!!")
-	end
-
-	function room:update()
-		for i = 1, #self.elements do
-			self.elements[i]:update()
-		end
-	end
-
-	function room:draw()
-		for i = 1, #self.elements do
-			self.elements[i]:draw()
-		end
-	end
-
-	function room:keypressed()
-		
-	end
-
 	function room:exit()
-		for i = 1, #self.elements do
-			if self.elements[i].stop then self.elements[i]:stop() end
+		for i = 1, #self.nodes do
+			if self.nodes[i].stop then self.nodes[i]:stop() end
+		end
+	end
+
+	function room:keypressed(key)
+		if key == "f1" then
+			rooms:set("settings")
 		end
 	end
 
@@ -126,22 +124,5 @@ return room
 			end
 			font.print(self.modes[i].text, settings.gameWidth / 2 - 250, 370 + 65 * i, "center", font.list.menu_element, nil, 500)
 		end
-	end
-
-	function room:keypressed(key)
-		local modes = #self.modes
-		for _, control in pairs(settings.controls) do
-			if key == control.up then 
-				self.selected_mode = self.selected_mode < 1 and (self.selected_mode - 1) or modes
-				return
-			elseif key == control.down then 
-				self.selected_mode = self.selected_mode > modes and (self.selected_mode + 1) or 1
-				return
-			elseif key == control.attack then 
-				self.modes[self.selected_mode].action()
-				return
-			end
-		end
-		if key == "f1" then rooms:set("settings") end
 	end
 ]]

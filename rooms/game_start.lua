@@ -1,22 +1,15 @@
-local room = {}
+local room = { }
 
 	local loading_ended = false
 	
-	local load_image = ui.Animation(250,250,"sprites/UI/loading.png",140,140,4,3,12,2,true)
-	local background_video = ui.Video(0,0,"sprites/bg.ogv",true)
-	local end_loading_text = ui.Text(0,0,"Press any key to continue...")
+	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
+	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
+	local loaded_text = ui.Text("Press any key to continue...", 8, 8)
 
-	local list = ui.List(20,50,{
-		ui.Button(10,10,130,30,{"Element1","Element1_hover","Element1_pressed"},nil,function ()
-			rooms:set("main_menu")
-		end),
-	})
-
-	room.elements = {
-		background_video,
-		load_image,
-		end_loading_text,
-		list,
+	room.nodes = {
+		bg_video,
+		loading_anim,
+		loaded_text,
 	}
 
 	local initialProcessing = coroutine.create(function ()
@@ -47,24 +40,15 @@ local room = {}
 	end)
 
 	function room:load()
-		background_video:play()
-		end_loading_text:hide()
+		bg_video:play()
+		loaded_text:hide()
 	end
 
 	function room:update()
 		loading_ended = not coroutine.resume(initialProcessing)
 		if loading_ended then
-			end_loading_text:show()
-			load_image:hide()
-		end
-		for i = 1, #self.elements do
-			self.elements[i]:update()
-		end
-	end
-
-	function room:draw()
-		for i = 1, #self.elements do
-			self.elements[i]:draw()
+			loaded_text:show()
+			loading_anim:hide()
 		end
 	end
 
@@ -75,18 +59,8 @@ local room = {}
 	end
 
 	function room:exit()
-		for i = 1, #self.elements do
-			if self.elements[i].stop then self.elements[i]:stop() end
-		end
-	end
-
-	function room:mousepressed(x, y, button, istouch, presses)
-		print("stage 1")
-		if button == 1 then
-			print("stage 2")
-			for i = 1, #self.elements do
-				self.elements[i].click = true
-			end
+		for i = 1, #self.nodes do
+			if self.nodes[i].stop then self.nodes[i]:stop() end
 		end
 	end
 

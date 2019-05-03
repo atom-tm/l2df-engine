@@ -54,7 +54,7 @@ local core = {}
 		if mainCanvas then
 			love.graphics.draw(mainCanvas, 0, 0, 0, settings.canvasW, settings.canvasH)
 		end
-		font.print(settings.mouseClick, 100, 100)
+		-- font.print(settings.mouseClick, 100, 100)
 		-- FPS Limiter working --
 		local cur_time = love.timer.getTime()
 		if next_time <= cur_time then
