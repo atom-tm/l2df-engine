@@ -12,8 +12,10 @@ local Parser = Object:extend()
 	-- @return table
 	function Parser:parseFile(filepath, obj)
 		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
-		if fs and fs.getInfo(filepath) then
-			return self:parse(fs.read(filepath), obj)
+		if fs then
+			if fs.getInfo(filepath) then
+				return self:parse(fs.read(filepath), obj)
+			end
 		else
 			f = io.open(filepath, "r")
 			if f then
