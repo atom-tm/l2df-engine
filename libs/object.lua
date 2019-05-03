@@ -1,7 +1,7 @@
 local Object = { }
 
 	function Object:__getInstance()
-		obj = setmetatable({
+		local obj = setmetatable({
 				___class = self
 			}, self)
 		self.__index = self
@@ -10,7 +10,7 @@ local Object = { }
 	end
 
 	function Object:extend(...)
-		cls = self:__getInstance()
+		local cls = self:__getInstance()
 		cls.super = setmetatable({ }, {
 				__index = self,
 				__call = function (_, child, ...)
@@ -24,7 +24,7 @@ local Object = { }
 	end
 
 	function Object:new(...)
-		obj = self:__getInstance()
+		local obj = self:__getInstance()
 		obj:init(...)
 		return obj
 	end
