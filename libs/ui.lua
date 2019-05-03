@@ -1,3 +1,4 @@
+local font = require "libs.fonts"
 local UI = object:extend()
 
 	function UI:init(x, y, childs)
@@ -133,25 +134,35 @@ local UI = object:extend()
 
 
 	UI.Text = UI:extend()
-	function UI.Text:init(text, x, y)
+	function UI.Text:init(text, fnt, x, y, color, align)
 		self:super(x, y)
-		self.text = text
+		self.text = text or ""
+		self.align = align
+		self.font = fnt or font.list.default
+		self.color = color or { 1, 1, 1, 1 }
 	end
 
 	function UI.Text:draw()
-		font.print(self.text, self.x, self.y)
+		font.print(self.text, self.x, self.y, self.align, self.font, nil, nil, self.color)
+	end
+
+	function UI.Text:getWidth()
+		return self.font:getWidth(self.text)
+	end
+
+	function UI.Text:getHeight()
+		return self.font:getHeight(self.text)
 	end
 
 
 	UI.Button = UI:extend()
-	function UI.Button:init(text, x, y, w, h, ox, oy, color, bg, use_mouse)
+	function UI.Button:init(text, x, y, w, h, ox, oy, bg, use_mouse)
 		self:super(x, y)
-		self.w = w or (text and font.list.default:getWidth(text)) or 1
-		self.h = h or (text and font.list.default:getHeight(text)) or 1
 		self.ox = ox or 0
 		self.oy = oy or 0
-		self.text = text or ""
-		self.color = color or { 1, 1, 1, 1 }
+		self.text = type(text) == "string" and UI.Text:new(text, self.x + self.ox, self.y + self.oy) or text
+		self.w = w or (self.text and self.text:getWidth()) or 1
+		self.h = h or (self.text and self.text:getHeight()) or 1
 		self.background = type(bg) == "string" and image.Load(bg) or bg
 		self.use_mouse = use_mouse and true or false
 		self.hover = false
@@ -174,6 +185,16 @@ local UI = object:extend()
 		-- hook
 	end
 
+	function UI.Button:setText(newText)
+		if type(text) == "string" then
+			self.text.text = newText
+		else
+			self.text = newText
+		end
+		self.w = self.text:getWidth()
+		self.h = self.text:getHeight()
+	end
+
 	function UI.Button:mousepressed(x, y, button, istouch, presses)
 		self.clicked = false
 		if self.use_mouse and self.hover then
@@ -186,7 +207,12 @@ local UI = object:extend()
 		if self.background then
 			image.draw(self.background, 0, self.x, self.y)
 		end
-		font.print(self.text, self.x + self.ox, self.y + self.oy, nil, nil, nil, nil, self.color)
+
+		if self.text then
+			self.text.x = self.x + self.ox
+			self.text.y = self.y + self.oy
+			self.text:draw()
+		end
 	end
 
 

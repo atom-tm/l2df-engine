@@ -1,4 +1,4 @@
-local room = {}
+local room = { }
 
 	function room:load()
 		self.selected = 1

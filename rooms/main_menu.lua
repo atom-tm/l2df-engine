@@ -1,14 +1,14 @@
 local room = { }
 
-	local list = ui.List(20, 50, {
-			ui.Button("Play", 16, 50)
-				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+	local list = ui.List(32, 64, {
+			ui.Button(ui.Text("Play", font.list.menu_element), 16, 50)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
 
-			ui.Button("Settings", 16, 100)
-				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+			ui.Button(ui.Text("Settings", font.list.menu_element), 16, 100)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
 
-			ui.Button("Exit", 16, 150, nil, nil, 0, 0, nil, nil, true)
-				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end)
+			ui.Button(ui.Text("Exit", font.list.menu_element), 16, 150, nil, nil, 0, 0, nil, true)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
 				:on("click", function () love.event.quit() end),
 		})
 		-- :on("change", function (self, new, old)
@@ -16,12 +16,15 @@ local room = { }
 		-- 	new.color[3] = 0
 		-- end)
 
+	local btn = ui.Button("Hover me!", 280, 32, nil, nil, -32, 16, "sprites/UI/small.png", true)
+			:on("update", function (self) self:setText((self.hover and not self.clicked and "Yeah, now click on me!") or self.text.text) end)
+			:on("click", function (self) self:setText("You're a good boy!") end)
+
 	room.nodes = {
+		ui.Image("sprites/UI/background.png"),
 		ui.Image("sprites/UI/logotype.png"),
-		ui.Button("Hover me!", 160, 32, nil, nil, -32, 16, nil, "sprites/UI/small.png", true)
-			:on("update", function (self) self.text = self.hover and not self.clicked and "Yeah, now click on me!" or self.text end)
-			:on("click", function (self) self.text = "You're a good boy!" end),
 		list,
+		btn,
 	}
 
 	function room:exit()
@@ -34,6 +37,15 @@ local room = { }
 		if key == "f1" then
 			rooms:set("settings")
 		end
+	end
+
+	function room:update()
+		-- self.opacity = self.opacity + self.opacity_change
+		-- if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
+	end
+
+	function room:draw()
+		-- image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
 	end
 
 return room
@@ -109,25 +121,5 @@ return room
 		}
 
 		sounds.setMusic("music/main.mp3")
-	end
-
-	function room:update()
-		self.opacity = self.opacity + self.opacity_change
-		if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
-	end
-
-	function room:draw()
-		image.draw(self.background_image,0,0,0)
-		image.draw(self.logotype_image,0,420,25)
-		image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
-
-		for i = 1, #self.modes do
-			if i == self.selected_mode then
-				love.graphics.setColor(0, 0, 0, .2 + self.opacity)
-				love.graphics.rectangle("fill", settings.gameWidth / 2 - 150, 370 + 65 * i, 300, 65)
-				love.graphics.setColor(1, 1, 1, 1)
-			end
-			font.print(self.modes[i].text, settings.gameWidth / 2 - 250, 370 + 65 * i, "center", font.list.menu_element, nil, 500)
-		end
 	end
 ]]

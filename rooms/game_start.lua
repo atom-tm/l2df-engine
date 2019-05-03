@@ -4,7 +4,7 @@ local room = { }
 	
 	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
 	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
-	local loaded_text = ui.Text("Press any key to continue...", 8, 8)
+	local loaded_text = ui.Text("Press any key to continue...", nil, 8, 8)
 
 	room.nodes = {
 		bg_video,

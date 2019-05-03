@@ -24,7 +24,7 @@ local rooms = { list = { } }
 	end
 
 	function rooms:handleEvent(key, ...)
-		if self.current.nodes and next(self.current.nodes) then
+		if self.current.nodes and #self.current.nodes > 0 then
 			local containers = { {self.current.nodes, 1, #self.current.nodes} }
 			local current = containers[1]
 			local node = nil
@@ -34,7 +34,7 @@ local rooms = { list = { } }
 			while head > 1 or i <= current[3] do
 				node = current[1][i]
 				i = i + 1
-				if not node.hidden and node[key] then node[key](node, ...) end
+				if not node.hidden and type(node[key]) == "function" then node[key](node, ...) end
 				if node.childs and next(node.childs) then
 					current[2] = i
 					containers[head + 1] = { node.childs, 1, node.size }
