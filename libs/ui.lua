@@ -1,4 +1,3 @@
-local font = require "libs.fonts"
 local UI = object:extend()
 
 	function UI:init(x, y, childs)
@@ -160,7 +159,7 @@ local UI = object:extend()
 		self:super(x, y)
 		self.ox = ox or 0
 		self.oy = oy or 0
-		self.text = type(text) == "string" and UI.Text:new(text, self.x + self.ox, self.y + self.oy) or text
+		self.text = type(text) == "string" and UI.Text:new(text) or text
 		self.w = w or (self.text and self.text:getWidth()) or 1
 		self.h = h or (self.text and self.text:getHeight()) or 1
 		self.background = type(bg) == "string" and image.Load(bg) or bg
@@ -186,7 +185,7 @@ local UI = object:extend()
 	end
 
 	function UI.Button:setText(newText)
-		if type(text) == "string" then
+		if type(newText) == "string" then
 			self.text.text = newText
 		else
 			self.text = newText
@@ -196,10 +195,11 @@ local UI = object:extend()
 	end
 
 	function UI.Button:mousepressed(x, y, button, istouch, presses)
-		self.clicked = false
-		if self.use_mouse and self.hover then
+		x = x - self.ox
+		y = y - self.oy
+		self.clicked = self.use_mouse and x > self.x and x < self.x + self.w and y > self.y and y < self.y + self.h
+		if self.clicked then
 			self:click(x, y, button)
-			self.clicked = true
 		end
 	end
 

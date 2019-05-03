@@ -17,7 +17,7 @@ local room = { }
 		-- end)
 
 	local btn = ui.Button("Hover me!", 280, 32, nil, nil, -32, 16, "sprites/UI/small.png", true)
-			:on("update", function (self) self:setText((self.hover and not self.clicked and "Yeah, now click on me!") or self.text.text) end)
+			:on("update", function (self) if self.hover and not self.clicked then self:setText("Yeah, now click on me!") end end)
 			:on("click", function (self) self:setText("You're a good boy!") end)
 
 	room.nodes = {
@@ -26,6 +26,10 @@ local room = { }
 		list,
 		btn,
 	}
+
+	function room:load()
+		sounds.setMusic("music/main.mp3")
+	end
 
 	function room:exit()
 		for i = 1, #self.nodes do
@@ -119,7 +123,5 @@ return room
 				end
 			},
 		}
-
-		sounds.setMusic("music/main.mp3")
 	end
 ]]

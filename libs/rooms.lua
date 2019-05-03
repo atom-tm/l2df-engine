@@ -24,7 +24,7 @@ local rooms = { list = { } }
 	end
 
 	function rooms:handleEvent(key, ...)
-		if self.current.nodes and #self.current.nodes > 0 then
+		if self.current.nodes and next(self.current.nodes) then
 			local containers = { {self.current.nodes, 1, #self.current.nodes} }
 			local current = containers[1]
 			local node = nil

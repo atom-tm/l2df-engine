@@ -8,7 +8,7 @@ local sounds = { }
 
 	function sounds.setMusic(file_path)
 		if sounds.music.file_path == file_path then
-			sounds.music.resource:setVolume(settings.window.music_vol * 0.01)
+			sounds.music.resource:setVolume(settings.global.musicVolume * 0.01)
 		else
 			if sounds.music.resource then
 				sounds.music.resource:stop()
@@ -16,7 +16,7 @@ local sounds = { }
 			sounds.music.file_path = file_path
 			sounds.music.resource = love.audio.newSource(file_path, "static")
 			sounds.music.resource:setLooping(true)
-			sounds.music.resource:setVolume(settings.window.music_vol * 0.01)
+			sounds.music.resource:setVolume(settings.global.musicVolume * 0.01)
 			sounds.music.resource:play()
 		end
 	end
@@ -36,12 +36,12 @@ local sounds = { }
 	end
 
 	function sounds.play(sound)
-		sound.resource:setVolume(settings.window.sound_vol * 0.01)
+		sound.resource:setVolume(settings.global.soundVolume * 0.01)
 		sound.resource:play()
 	end
 
 	function sounds.setVolume(volume)
-		settings.window.sound_vol = volume
+		settings.global.musicVolume = volume
 		sounds.music.resource:setVolume(volume * 0.01)
 	end
 
