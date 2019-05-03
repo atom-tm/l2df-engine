@@ -1,5 +1,6 @@
 local strmatch = string.match
-local fs = love and love.filesystem
+local fs, io = love and love.filesystem
+if not fs then io = require "io" end
 
 local Object = require "libs.object"
 local Parser = Object:extend()
@@ -14,8 +15,7 @@ local Parser = Object:extend()
 		if fs and fs.getInfo(filepath) then
 			return self:parse(fs.read(filepath), obj)
 		else
-			local io = require "io"
-			f = io.open(filepath)
+			f = io.open(filepath, "r")
 			if f then
 				local str = f:read("*a")
 				f:close()
