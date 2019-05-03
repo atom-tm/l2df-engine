@@ -1,41 +1,40 @@
+local interception = helper.interception
+
 local rooms = { list = { } }
 
 	function rooms:init()
-	local dummy = function () end
-		rooms.list = helper.requireAllFromFolder(settings.global.roomsFolder)
-		
-		for key in pairs(love.handlers) do
-			local old_func = love[key] or dummy
-			love[key] = function (...)
-				old_func(...)
-				local _ = rooms.current[key] and rooms.current[key](rooms.current, ...)
-			end
+		self.list = helper.requireAllFromFolder(settings.global.roomsFolder)
+
+		local events = love.handlers
+		events.update = true
+
+		for key in pairs(events) do
+			interception(key, function (...)
+				return self.current[key] and self.current[key](self.current, ...)
+			end)
 		end
 
-		local oldUpdate = love.update or dummy
-		love.update = function (...)
-			oldUpdate(...)
-			local _ = rooms.current.update and rooms.current:update(...)
+		interception("draw", function (...)
 			love.graphics.setCanvas(mainCanvas)
 			love.graphics.clear()
-			local _ = rooms.current.draw and rooms.current:draw(...)
+			local _ = self.current.draw and self.current:draw(...)
 			love.graphics.setCanvas()
-		end
+		end)
 
-		rooms:set(settings.global.startRoom)
+		self:set(settings.global.startRoom)
 	end
 
 
 	function rooms:set(room, input)
 		input = input or { }
-		if rooms.current and rooms.current.exit then rooms.current:exit() end
-		rooms.current = rooms.list[tostring(room)]
-		if rooms.current.load then rooms.current:load(input) end
+		local _ = self.current and self.current.exit and self.current:exit()
+		self.current = self.list[tostring(room)]
+		local _ = self.current.load and self.current:load(input)
 	end
 
 
 	function rooms:reload(input)
-		if rooms.current.load then rooms.current:load(input) end
+		local _ = self.current.load and self.current:load(input)
 	end
 	
 	

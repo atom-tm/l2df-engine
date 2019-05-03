@@ -1,9 +1,9 @@
 local helper = {}
 
-	function helper.interception(key,func)
-		local old = love[key] or function () end
+	function helper.interception(key, func)
+		local old = love[key]
 		love[key] = function (...)
-			old(...)
+			local _ = old and old(...)
 			func(...)
 		end
 	end
