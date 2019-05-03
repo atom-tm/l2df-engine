@@ -14,7 +14,7 @@ local sounds = { }
 				sounds.music.resource:stop()
 			end
 			sounds.music.file_path = file_path
-			sounds.music.resource = love.audio.newSource(file_path,"static")
+			sounds.music.resource = love.audio.newSource(file_path, "static")
 			sounds.music.resource:setLooping(true)
 			sounds.music.resource:setVolume(settings.window.music_vol * 0.01)
 			sounds.music.resource:play()
@@ -31,7 +31,7 @@ local sounds = { }
 			resource = love.audio.newSource(file_path,"static"),
 			path = file_path
 		}
-		table.insert(sounds.list,sound)
+		table.insert(sounds.list, sound)
 		return sound
 	end
 
@@ -41,7 +41,8 @@ local sounds = { }
 	end
 
 	function sounds.setVolume(volume)
-		sound.resource:setVolume(volume * 0.01)
+		settings.window.sound_vol = volume
+		sounds.music.resource:setVolume(volume * 0.01)
 	end
 
 return sounds
