@@ -198,7 +198,7 @@
 	UI.List = UI:extend()
 	function UI.List:init(x, y, content, mouse)
 		assert(type(content) == "table", "Parameter 'content' must be a table.")
-		self:super(x,y)
+		self:super(x, y)
 		self.content = content
 		self.item = 1
 		self.max_items = #content

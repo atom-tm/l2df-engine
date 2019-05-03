@@ -10,9 +10,9 @@ local resources = {}
 		self.bars.hp = { x = 0, y = 0, w = 330, h = 28 }
 		self.bars.mp = { x = 0, y = 29, w = 296, h = 17 }
 		self.bars.sp = { x = 0, y = 47, w = 255, h = 12 }
-		self.bars:setQuad("hp_back",0,60,330,28)
-		self.bars:setQuad("mp_back",0,89,296,17)
-		self.bars:setQuad("sp_back",0,107,255,12)
+		self.bars:setQuad("hp_back", 0, 60, 330, 28)
+		self.bars:setQuad("mp_back", 0, 89, 296, 17)
+		self.bars:setQuad("sp_back", 0, 107, 255, 12)
 
 		self.control_visuals = {
 			up = {
