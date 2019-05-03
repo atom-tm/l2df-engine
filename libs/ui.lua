@@ -27,19 +27,23 @@ local UI = object:extend()
 
 	function UI:hide()
 		self.hidden = true
+		return self
 	end
 
 	function UI:show()
 		self.hidden = false
+		return self
 	end
 
 	function UI:toggle()
 		self.hidden = not self.hidden
+		return self
 	end
 
 	function UI:edit(callback)
 		assert(type(callback) == "function", "Callback must be a function")
 		callback(self)
+		return self
 	end
 
 
@@ -67,25 +71,30 @@ local UI = object:extend()
 
 	function UI.Video:play()
 		self.video.resource:play()
+		return self
 	end
 
 	function UI.Video:stop()
 		self.video.resource:pause()
 		self.video.resource:rewind()
+		return self
 	end
 
 	function UI.Video:pause()
 		self.video.resource:pause()
+		return self
 	end
 
 	function UI.Video:hide()
 		self.video.resource:pause()
 		self.hidden = true
+		return self
 	end
 
 	function UI.Video:show()
 		self.video.resource:play()
 		self.hidden = false
+		return self
 	end
 
 

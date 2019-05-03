@@ -3,8 +3,10 @@ local room = { }
 	local list = ui.List(20, 50, {
 			ui.Button("Play", 16, 50, 130, 30)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+
 			ui.Button("Settings", 16, 100, 130, 30)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end),
+
 			ui.Button("Exit", 16, 150, 130, 30)
 				:on("update", function (self) self.color[2] = self.hover and 0 or 1 end)
 				:on("click", function () love.event.quit() end),
