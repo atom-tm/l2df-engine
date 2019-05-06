@@ -19,7 +19,11 @@ local room = { }
 			ui.Button(ui.Text("settings.effects", fnt_button), 0, 128):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
 
-			ui.Button(ui.Text("settings.back", fnt_button), 0, 192):useMouse(true)
+			ui.Button(ui.Text("settings.save", fnt_button), 0, 192):useMouse(true)
+				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+				:on("click", function () settings:save() end),
+
+			ui.Button(ui.Text("settings.back", fnt_button), 0, 256):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 				:on("click", function () l2df.rooms:set("menu") end),
 		})

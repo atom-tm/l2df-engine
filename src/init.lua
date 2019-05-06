@@ -42,7 +42,7 @@ local core = l2df
 		next_time = love.timer.getTime()
 		----------------------------
 
-		helper.hook(self.i18n, "setLocale", function (_, key) self.settings.lang = key end, self.i18n)
+		helper.hook(self.i18n, "setLocale", function (locale) self.settings.global.lang = locale.current end, self.i18n)
 		helper.hook(love, "update", self.update, self)
 		helper.hook(love, "draw", self.draw, self)
 		helper.hook(love, "resize", self.resize, self)
