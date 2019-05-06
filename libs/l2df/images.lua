@@ -1,23 +1,23 @@
 local images = {}
 	
 	images.list = {}
-	function images.Load(file_path, cutting_info , filter)
+	function images.Load(filepath, cutting_info , filter)
 		for i in pairs(images.list) do
-			if images.list[i].path == file_path then
+			if images.list[i].path == filepath then
 				return images.list[i]
 			end
 		end
 		local image = {
-			image = love.graphics.newImage(file_path, {linear = true, mipmaps = true} ),
+			image = love.graphics.newImage(filepath, {linear = true, mipmaps = true} ),
 			sprites = {},
-			path = file_path
+			path = filepath
 		}
 		image.image:setWrap("clampzero", "clampzero")
-		if cutting_info ~= nil then
-			if cutting_info.x == nil then cutting_info.x = 1 end
-			if cutting_info.y == nil then cutting_info.y = 1 end
-			if cutting_info.mx == nil then cutting_info.mx = 0 end
-			if cutting_info.my == nil then cutting_info.my = 0 end
+		if type(cutting_info) == "table" then
+			cutting_info.x = cutting_info.x or 1
+			cutting_info.y = cutting_info.y or 1
+			cutting_info.mx = cutting_info.mx or 0
+			cutting_info.my = cutting_info.my or 0
 			for i = 0, cutting_info.y - 1 do
 				for j = 0, cutting_info.x - 1 do
 					quad = love.graphics.newQuad(cutting_info.w*j + cutting_info.mx, cutting_info.h*i + cutting_info.my ,cutting_info.w,cutting_info.h, image.image:getDimensions())
@@ -29,7 +29,7 @@ local images = {}
 		else
 			image.w, image.h = image.image:getDimensions()
 		end
-		if filter ~= nil then
+		if filter then
 			image.image:setFilter(filter, filter)
 		end
 		table.insert(images.list, image)

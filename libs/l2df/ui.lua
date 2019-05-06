@@ -76,9 +76,9 @@ local UI = Object:extend()
 
 
 	UI.Image = UI:extend()
-	function UI.Image:init(file, x, y)
+	function UI.Image:init(file, x, y, cutting, filter)
 		self:super(x, y)
-		self.resource = file and images.Load(file)
+		self.resource = file and images.Load(file, cutting, filter)
 	end
 
 	function UI.Image:draw()
@@ -164,11 +164,13 @@ local UI = Object:extend()
 
 
 	UI.Text = UI:extend()
-	function UI.Text:init(text, fnt, x, y, color, align)
+	function UI.Text:init(text, fnt, x, y, color, align, stroke, width)
 		self:super(x, y)
 		self.align = align
+		self.stroke = stroke
+		self.width = width
 		self.font = fnt or fonts.list.default
-		self.color = color or { 1, 1, 1, 1 }
+		self.color = color or { 0, 0, 0, 1 }
 
 		self.text = text or ""
 		self.token = text
@@ -179,7 +181,7 @@ local UI = Object:extend()
 		if text and text ~= "" then
 			self.text = text
 		end
-		fonts.print(self.text, self.x, self.y, self.align, self.font, nil, nil, self.color)
+		fonts.print(self.text, self.x, self.y, self.align, self.font, self.stroke, self.width, self.color)
 	end
 
 	function UI.Text:getWidth()
@@ -211,6 +213,11 @@ local UI = Object:extend()
 		local my = (y + dy - self.oy) / core.scaley
 		self.hover = mx > self.x and mx < self.x + self.w and my > self.y and my < self.y + self.h
 		self.clicked = self.clicked and self.hover
+	end
+
+	function UI.Button:useMouse(value)
+		self.use_mouse = value and true or false
+		return self
 	end
 
 	function UI.Button:update(dt)

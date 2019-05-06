@@ -8,7 +8,7 @@
 		"exit": "Exit"
 	},
 	"settings": {
-		"settings": "Settings",
+		"caption": "Settings",
 		"language": "Language",
 		"effects": "Effects",
 		"music": "Music",
