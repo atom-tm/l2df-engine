@@ -7,7 +7,7 @@ local images = core.image
 local videos = core.video
 local fonts = core.font
 local settings = core.settings
-local Object = require(__DIR__ .. "object")
+local Object = core.import "object"
 
 local UI = Object:extend()
 
@@ -79,13 +79,13 @@ local UI = Object:extend()
 		self:super(x, y)
 		self.video = videos.load(file)
 		self.stretch = stretch or false
-		self.size = { }
+		self.size = { width = 1, height = 1 }
 	end
 
 	function UI.Video:resize(w, h)
 		if self.stretch then
-			self.size.width = w / self.video.width
-			self.size.height = h / self.video.height
+			self.size.width = core.settings.gameWidth / self.video.width
+			self.size.height = core.settings.gameHeight / self.video.height
 		end
 	end
 

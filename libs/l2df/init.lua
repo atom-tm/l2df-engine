@@ -8,31 +8,34 @@ helper 		= require(__DIR__ .. "helper")
 camera = nil
 locale = nil
 ---------------------------------------------
-local min_dt, next_time
 
-l2df = { }
+l2df = { version = 1.0 }
+local core = l2df
 
-	l2df.version	= 1.0
+	function core.import(name)
+		return require(__DIR__ .. name)
+	end
 
-	l2df.settings	= require(__DIR__ .. "settings")
-	-- l2df.resources	= require(__DIR__ .. "resources")
-	-- l2df.data		= require(__DIR__ .. "data")
-	l2df.i18n		= require(__DIR__ .. "i18n")
+	local min_dt, next_time
 
-	l2df.font		= require(__DIR__ .. "fonts")
-	l2df.sound		= require(__DIR__ .. "sounds")
-	l2df.image		= require(__DIR__ .. "images")
-	l2df.video		= require(__DIR__ .. "videos")
-	l2df.ui			= require(__DIR__ .. "ui")
-	l2df.rooms		= require(__DIR__ .. "rooms")
+	core.settings	= core.import "settings"
+	-- core.resources	= core.import "resources"
+	-- core.data		= core.import "data"
+	core.i18n		= core.import "i18n"
 
-	l2df.scalex = 1
-	l2df.scaley = 1
+	core.font		= core.import "fonts"
+	core.sound		= core.import "sounds"
+	core.image		= core.import "images"
+	core.video		= core.import "videos"
+	core.ui			= core.import "ui"
+	core.rooms		= core.import "rooms"
 
-	function l2df:init(filepath)
-		local settings = self.settings.global
-		self.settings:load(filepath)
-		self.sound:setConfig(settings)
+	core.scalex = 1
+	core.scaley = 1
+
+	function core:init(filepath)
+		local _ = filepath and self.settings:load(filepath)
+		self.sound:setConfig(self.settings.global)
 
 		-- FPS Limiter initialize --
 		min_dt = 1 / self.settings.graphic.fpsLimit
@@ -45,10 +48,9 @@ l2df = { }
 		helper.hook(love, "resize", self.resize, self)
 
 		self.rooms:init()
-		self.settings:apply()
 	end
 
-	function l2df:update()
+	function core:update()
 		-- Mouse position calculation --
 		-- local x, y = love.mouse.getPosition( )
 		-- settings.mouseX = x * (settings.gameWidth / settings.global.width)
@@ -59,7 +61,7 @@ l2df = { }
 		----------------------------
 	end
 
-	function l2df:draw()
+	function core:draw()
 		if self.canvas then
 			love.graphics.draw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
 		end
@@ -86,7 +88,7 @@ l2df = { }
 		end
 	end
 
-	function l2df:resize(w, h)
+	function core:resize(w, h)
 		self.settings.global.width = w
 		self.settings.global.height = h
 
@@ -94,4 +96,4 @@ l2df = { }
 		self.scaley = h / self.settings.gameHeight
 	end
 
-return l2df
+return core

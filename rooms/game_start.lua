@@ -17,6 +17,10 @@ local room = { }
 
 	local initialProcessing = coroutine.create(function ()
 		coroutine.yield()
+			l2df.settings:load()
+		coroutine.yield()
+			l2df.settings:apply()
+		coroutine.yield()
 			l2df.i18n:loadLocales(settings.global.locales_path)
 		coroutine.yield()
 		-- 	data:loadStates(settings.global.states_path)

@@ -1,12 +1,10 @@
-local __DIR__ = (...):match("(.-)[^%.]+$")
-
 local core = l2df
 assert(type(core) == "table" and core.version <= 1.0, "Settings works only with love2d-fighting v1.0 and less")
 
 local fs = love and love.filesystem
-assert(fs, "settings works only under love2d's environment")
+assert(fs, "Settings works only under love2d's environment")
 
-local datParser = require(__DIR__ .. "parsers.dat")
+local datParser = core.import "parsers.dat"
 
 local settings = { }
 
@@ -38,7 +36,7 @@ local settings = { }
 		{ width = 1920, height = 1080 },				-- 1920х1080
 	}
 
-	settings.global.resolution = 1						-- Текущее разрешение холста
+	settings.global.resolution = 3						-- Текущее разрешение холста
 	settings.gameWidth = 0 								-- Ширина холста игры
 	settings.gameHeight = 0 							-- Высота холста игры
 
