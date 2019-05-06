@@ -1,4 +1,16 @@
-local UI = object:extend()
+local __DIR__ = (...):match("(.-)[^%.]+$")
+
+local images = require(__DIR__ .. "images")
+local videos = require(__DIR__ .. "videos")
+local fonts = require(__DIR__ .. "fonts")
+local Object = require(__DIR__ .. "object")
+
+local UI = Object:extend()
+
+ 	local controls = { }
+	function UI:setControls(mapping)
+		controls = mapping
+	end
 
 	function UI:init(x, y, childs)
 		self.x = x or 0
@@ -55,11 +67,11 @@ local UI = object:extend()
 	UI.Image = UI:extend()
 	function UI.Image:init(file, x, y)
 		self:super(x, y)
-		self.resource = file and image.Load(file)
+		self.resource = file and images.Load(file)
 	end
 
 	function UI.Image:draw()
-		image.draw(self.resource, self.x, self.y)
+		images.draw(self.resource, self.x, self.y)
 	end
 
 
@@ -68,10 +80,18 @@ local UI = object:extend()
 		self:super(x, y)
 		self.video = videos.load(file)
 		self.stretch = stretch or false
+		self.size = { }
+	end
+
+	function UI.Video:resize(w, h)
+		if self.stretch then
+			self.size.width = w / self.video.width
+			self.size.height = h / self.video.height
+		end
 	end
 
 	function UI.Video:draw()
-		videos.draw(self.video, self.x, self.y, self.stretch)
+		videos.draw(self.video, self.x, self.y, self.size)
 	end
 
 	function UI.Video:play()
@@ -106,7 +126,7 @@ local UI = object:extend()
 	UI.Animation = UI:extend()
 	function UI.Animation:init(file, x, y, w, h, row, col, frames, wait, looped)
 		self:super(x, y)
-		self.resource = file and image.Load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
+		self.resource = file and images.Load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
 		self.frame = 1
 		self.max_frames = frames
 		self.wait = 0
@@ -128,7 +148,7 @@ local UI = object:extend()
 	end
 
 	function UI.Animation:draw()
-		image.draw(self.resource, self.frame, self.x, self.y)
+		images.draw(self.resource, self.frame, self.x, self.y)
 	end
 
 
@@ -137,12 +157,12 @@ local UI = object:extend()
 		self:super(x, y)
 		self.text = text or ""
 		self.align = align
-		self.font = fnt or font.list.default
+		self.font = fnt or fonts.list.default
 		self.color = color or { 1, 1, 1, 1 }
 	end
 
 	function UI.Text:draw()
-		font.print(self.text, self.x, self.y, self.align, self.font, nil, nil, self.color)
+		fonts.print(self.text, self.x, self.y, self.align, self.font, nil, nil, self.color)
 	end
 
 	function UI.Text:getWidth()
@@ -162,7 +182,7 @@ local UI = object:extend()
 		self.text = type(text) == "string" and UI.Text:new(text) or text
 		self.w = w or (self.text and self.text:getWidth()) or 1
 		self.h = h or (self.text and self.text:getHeight()) or 1
-		self.background = type(bg) == "string" and image.Load(bg) or bg
+		self.background = type(bg) == "string" and images.Load(bg) or bg
 		self.use_mouse = use_mouse and true or false
 		self.hover = false
 		self.clicked = false
@@ -205,7 +225,7 @@ local UI = object:extend()
 
 	function UI.Button:draw()
 		if self.background then
-			image.draw(self.background, 0, self.x, self.y)
+			images.draw(self.background, 0, self.x, self.y)
 		end
 
 		if self.text then
@@ -224,7 +244,6 @@ local UI = object:extend()
  	end
 
  	function UI.List:keypressed(key)
- 		local controls = settings.global.controls
  		for i = 1, #controls do
  			if key == controls[i].up then
  				local old = self.childs[self.cursor]

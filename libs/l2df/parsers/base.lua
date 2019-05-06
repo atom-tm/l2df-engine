@@ -1,8 +1,11 @@
-local strmatch = string.match
-local fs, io = love and love.filesystem
-if not fs then io = require "io" end
+local __DIR__ = (...):match("(.-)[^%.]+%.[^%.]+$")
 
-local Object = require "libs.object"
+local strmatch = string.match
+local fopen = io.open
+local fs = love and love.filesystem
+
+local Object = require(__DIR__ .. "object")
+
 local Parser = Object:extend()
 
 	--- Base method for parsing file
@@ -12,12 +15,10 @@ local Parser = Object:extend()
 	-- @return table
 	function Parser:parseFile(filepath, obj)
 		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
-		if fs then
-			if fs.getInfo(filepath) then
-				return self:parse(fs.read(filepath), obj)
-			end
+		if fs and fs.getInfo(filepath) then
+			return self:parse(fs.read(filepath), obj)
 		else
-			f = io.open(filepath, "r")
+			local f = fopen(filepath, "r")
 			if f then
 				local str = f:read("*a")
 				f:close()
@@ -53,11 +54,45 @@ local Parser = Object:extend()
 		return str
 	end
 
+	--- Method for converting scalar value to string.
+	-- @param value, string  Value for dumping
+	-- @return string
+	function Parser:dumpScalar(value)
+		local t = type(value)
+		assert(t ~= "function", "Parameter 'value' can't be a function.")
+
+		if t == "string" then
+			return "\"" .. tostring(value) .. "\""
+		end
+		return tostring(value)
+	end
+
+	--- Base method for dumping table to file
+	-- @param filepath, string  Path to file for dumping
+	-- @param data, table       Table for dumping
+	-- @return table
+	function Parser:dumpToFile(filepath, data)
+		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
+
+		data = self:dump(data)
+		if fs then
+			filepath = fs.getSource() .. "/" .. filepath
+		end
+
+		local f = fopen(filepath, "w")
+		if f then
+			f:write(data)
+			f:flush()
+			f:close()
+		end
+		return nil
+	end
+
 	--- Base method for dumping table
-	-- @param str, string  String for parsing
+	-- @param data, table  Table for dumping
 	-- @return string
 	function Parser:dump(data)
-		assert(type(str) == "table", "Parameter 'str' must be a table.")
+		assert(type(data) == "table", "Parameter 'data' must be a table.")
 		return tostring(data)
 	end
 

@@ -1,7 +1,9 @@
-love2dFighting = require "libs.core"
+package.path = package.path .. ";./libs/?.lua;./libs/?/init.lua"
+
+l2df = require "l2df"
 
 function love.load()
-	love2dFighting.init()
+	l2df:init()
 	--settings:Read("data/settings.dat") -- чтение настроек из файла с настройками игры
 	--helper.SetWindowSize()
 	--loc:Set(loc.id)

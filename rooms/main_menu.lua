@@ -1,13 +1,17 @@
+local l2df = l2df
+local ui = l2df.ui
+local settings = l2df.settings
+
 local room = { }
 
 	local list = ui.List(32, 64, {
-			ui.Button(ui.Text("Play", font.list.menu_element), 16, 50)
+			ui.Button(ui.Text("Play", l2df.font.list.menu_element), 16, 50)
 				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
 
-			ui.Button(ui.Text("Settings", font.list.menu_element), 16, 100)
+			ui.Button(ui.Text("Settings", l2df.font.list.menu_element), 16, 100)
 				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
 
-			ui.Button(ui.Text("Exit", font.list.menu_element), 16, 150, nil, nil, 0, 0, nil, true)
+			ui.Button(ui.Text("Exit", l2df.font.list.menu_element), 16, 150, nil, nil, 0, 0, nil, true)
 				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
 				:on("click", function () love.event.quit() end),
 		})
@@ -28,7 +32,13 @@ local room = { }
 	}
 
 	function room:load()
-		sounds.setMusic("music/main.mp3")
+		l2df.sound:setMusic("music/main.mp3")
+		self.scenes = {
+			l2df.image.Load("sprites/UI/MainMenu/1.png"),
+			l2df.image.Load("sprites/UI/MainMenu/2.png"),
+			l2df.image.Load("sprites/UI/MainMenu/3.png"),
+		}
+		self.scene = math.random(1, #self.scenes)
 	end
 
 	function room:exit()
@@ -37,19 +47,19 @@ local room = { }
 		end
 	end
 
-	function room:keypressed(key)
-		if key == "f1" then
-			rooms:set("settings")
-		end
-	end
+	-- function room:keypressed(key)
+	-- 	if key == "f1" then
+	-- 		rooms:set("settings")
+	-- 	end
+	-- end
 
-	function room:update()
-		-- self.opacity = self.opacity + self.opacity_change
-		-- if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
-	end
+	-- function room:update()
+	-- 	-- self.opacity = self.opacity + self.opacity_change
+	-- 	-- if self.opacity > 0.3 or self.opacity < 0.1 then self.opacity_change = -self.opacity_change end
+	-- end
 
 	function room:draw()
-		-- image.draw(self.scenes[self.scene],0,0,settings.gameHeight - 240, 0, 2)
+		l2df.image.draw(self.scenes[self.scene], 0, 0, settings.gameHeight - 240, 0, 1)
 	end
 
 return room
@@ -89,12 +99,6 @@ return room
 		self.opacity_change = 0.001
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
 		self.logotype_image = image.Load("sprites/UI/logotype.png", nil, "linear")
-		self.scenes = {
-			image.Load("sprites/UI/MainMenu/1.png"),
-			image.Load("sprites/UI/MainMenu/2.png"),
-			image.Load("sprites/UI/MainMenu/3.png"),
-		}
-		self.scene = math.random(1, #self.scenes)
 
 		self.selected_mode = 1
 		self.modes = {

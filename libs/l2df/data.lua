@@ -1,41 +1,37 @@
-local data = {}
+local datParser = require("libs.parsers.dat")
 
-	local datParser = require("libs.parsers.dat")
+local data = { }
 
-	function data:loadStates()
-		self.states = helper.requireAllFromFolder(settings.global.statesFolder)
-		self.states_update = {}
-		for key in pairs(self.states) do
-			if self.states[key].update then self.states_update[key] = self.states[key] end
+	function data:loadStates(path)
+		self.states = helper.requireAllFromFolder(path)
+		self.states_update = { }
+		for key, state in pairs(self.states) do
+			if state.update then self.states_update[key] = state end
 		end
 	end
 
-	function data:loadKinds()
-		self.kinds = helper.requireAllFromFolder(settings.global.kindsFolder)
+	function data:loadKinds(path)
+		self.kinds = helper.requireAllFromFolder(path)
 	end
 
-	function data:loadLocales()
-		self.locales = helper.requireAllFromFolder(settings.global.localesFolder)
+	function data:loadFrames(path)
+		self.frames = datParser:parseFile(path, self.frames)
 	end
 
-	function data:loadFrames()
-		self.frames = datParser:parseFile(settings.global.frames)
+	function data:loadSystem(path)
+		self.system = datParser:parseFile(path, self.system)
 	end
 
-	function data:loadSystem()
-		self.system = datParser:parseFile(settings.global.system)
+	function data:loadCombos(path)
+		self.combos = datParser:parseFile(path, self.combos)
 	end
 
-	function data:loadCombos()
-		self.combos = datParser:parseFile(settings.global.combos)
+	function data:loadDtypes(path)
+		self.dtypes = datParser:parseFile(path, self.dtypes)
 	end
 
-	function data:loadDtypes()
-		self.dtypes = datParser:parseFile(settings.global.dtypes)
-	end
-
-	function data:loadData()
-		self.list = datParser:parseFile(settings.global.data)
+	function data:loadData(path)
+		self.list = datParser:parseFile(path, self.list)
 	end
 
 

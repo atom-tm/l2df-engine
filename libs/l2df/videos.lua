@@ -1,5 +1,5 @@
 local videos = { }
-	
+
 	videos.list = { }
 
 	function videos.load(file_path)

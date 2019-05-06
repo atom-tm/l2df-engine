@@ -1,3 +1,6 @@
+local l2df = l2df
+local ui = l2df.ui
+
 local room = { }
 
 	local loading_ended = false
@@ -14,29 +17,22 @@ local room = { }
 
 	local initialProcessing = coroutine.create(function ()
 		coroutine.yield()
-			settings:load()
+			l2df.i18n:loadLocales(settings.global.locales_path)
 		coroutine.yield()
-			settings:apply()
-		coroutine.yield()			
-			data:loadStates()
-		coroutine.yield()
-			data:loadKinds()
-		coroutine.yield()
-			data:loadLocales()
-		coroutine.yield()
-			data:loadFrames()
-		coroutine.yield()
-			data:loadSystem()
-		coroutine.yield()
-			data:loadCombos()
-		coroutine.yield()
-			data:loadDtypes()
-		coroutine.yield()
-			data:loadData()
-		coroutine.yield()
-		for i = 1, 100 do
-			coroutine.yield()
-		end
+		-- 	data:loadStates(settings.global.states_path)
+		-- coroutine.yield()
+		-- 	data:loadKinds(settings.global.kinds_path)
+		-- coroutine.yield()
+		-- 	data:loadFrames(settings.global.frames)
+		-- coroutine.yield()
+		-- 	data:loadSystem(settings.global.system)
+		-- coroutine.yield()
+		-- 	data:loadCombos(settings.global.system)
+		-- coroutine.yield()
+		-- 	data:loadDtypes(settings.global.dtypes)
+		-- coroutine.yield()
+		-- 	data:loadData(settings.global.data)
+		-- coroutine.yield()
 	end)
 
 	function room:load()
@@ -54,7 +50,7 @@ local room = { }
 
 	function room:keypressed()
 		if loading_ended then
-			rooms:set("main_menu")
+			l2df.rooms:set("main_menu")
 		end
 	end
 

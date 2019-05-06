@@ -1,30 +1,32 @@
-local interception = helper.interception
+local hook = helper.hook
 
 local rooms = { list = { } }
 
-	function rooms:init()
-		self.list = helper.requireAllFromFolder(settings.global.roomsFolder)
+	function rooms:init(path, room)
+		assert(path and room, "'path' and 'room' are required for rooms' init")
+
+		self.list = helper.requireAllFromFolder(path)
 
 		local next = next
 		local events = love.handlers
 		events.update = true
 
 		for key in pairs(events) do
-			interception(key, function (...) self:handleEvent(key, ...) end)
+			hook(love, key, function (...) self:handleEvent(key, ...) end)
 		end
 
-		interception("draw", function (...)
+		hook(love, "draw", function (...)
 			love.graphics.setCanvas(mainCanvas)
 			love.graphics.clear()
 			self:handleEvent("draw", ...)
 			love.graphics.setCanvas()
 		end)
 
-		self:set(settings.global.startRoom)
+		self:set(room)
 	end
 
 	function rooms:handleEvent(key, ...)
-		if self.current.nodes and next(self.current.nodes) then
+		if self.current and self.current.nodes and next(self.current.nodes) then
 			local containers = { {self.current.nodes, 1, #self.current.nodes} }
 			local current = containers[1]
 			local node = nil
@@ -48,7 +50,7 @@ local rooms = { list = { } }
 				end
 			end
 		end
-		return self.current[key] and self.current[key](self.current, ...)
+		return self.current and self.current[key] and self.current[key](self.current, ...)
 	end
 
 	function rooms:set(room, input)

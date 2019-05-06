@@ -1,10 +1,30 @@
 local helper = {}
 
-	function helper.interception(key, func)
-		local old = love[key]
-		love[key] = function (...)
-			local _ = old and old(...)
-			func(...)
+	--- Creates a hook for table's event / function.
+	-- @param obj, table          table to hook
+	-- @param key, string         table's event / function to hook
+	-- @param callback, function  Hook's callback function
+	-- @param caller, table       Optional. First parameter to callback function
+	function helper.hook(obj, key, callback, caller)
+		assert(type(callback) == "function", "Parameter 'callback' must be a function")
+
+		local old = obj[key]
+		if caller and old then
+			obj[key] = function (...)
+				old(...)
+				callback(caller, ...)
+			end
+		elseif caller then
+			obj[key] = function (...)
+				callback(caller, ...)
+			end
+		elseif old then
+			obj[key] = function (...)
+				old(...)
+				callback(...)
+			end
+		else
+			obj[key] = callback
 		end
 	end
 
@@ -22,7 +42,7 @@ local helper = {}
 			end
 			for i = 1, #file_list do
 				if file_list[i]:find("^[%a%d_]+%.lua$") then
-					local file_name = file_list[i]:gsub(".lua$","")
+					local file_name = file_list[i]:gsub(".lua$", "")
 					if not pattern or file_name:find(pattern) then
 						result[tostring(file_name)] = require(formated_path .. file_name)
 					end

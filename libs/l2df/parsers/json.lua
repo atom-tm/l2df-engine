@@ -1,5 +1,8 @@
-local json = require "libs.external.json"
-local BaseParser = require "libs.parsers.base"
+local __DIR__ = (...):match("(.-)[^%.]+%.[^%.]+$")
+
+local json = require(__DIR__ .. "external.json")
+local BaseParser = require(__DIR__ .. "parsers.base")
+
 local JsonParser = BaseParser:extend()
 
 	--- Method for parsing json formatted string
@@ -11,10 +14,10 @@ local JsonParser = BaseParser:extend()
 	end
 
 	--- Method for dumping table to json format
-	-- @param str, string  String for parsing
+	-- @param data, table  Table for dumping
 	-- @return string
 	function JsonParser:dump(data)
-		assert(type(str) == "table", "Parameter 'str' must be a table.")
+		assert(type(data) == "table", "Parameter 'data' must be a table.")
 		return json:encode_pretty(data)
 	end
 

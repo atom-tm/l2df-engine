@@ -21,10 +21,11 @@ local fonts = { }
 			a = r[4]
 			r = r[1]
 		end
-		align = helper.NotZero(align, "left")
-		font = helper.NotZero(font, fonts.list.default)
-		stroke = helper.NotZero(stroke, false)
-		width = helper.NotZero(width, 300)
+		align = align or "left"
+		font = font or fonts.list.default
+		stroke = stroke or false
+		width = width or 300
+
 		local ro, go, bo, ao = love.graphics.getColor()
 		love.graphics.setFont(font)
 		love.graphics.setColor(r or ro, g or go, b or bo, a or ao)

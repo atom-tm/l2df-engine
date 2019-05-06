@@ -1,8 +1,11 @@
+local __DIR__ = (...):match("(.-)[^%.]+%.[^%.]+$")
+
 local strsub = string.sub
 local strfind = string.find
 local strgmatch = string.gmatch
 
-local DatParser = require "libs.parsers.dat"
+local DatParser = require(__DIR__ .. "parsers.dat")
+
 local LfParser = DatParser:extend()
 
 	LfParser.ARRAY_LBRACKET = "["
@@ -38,10 +41,10 @@ local LfParser = DatParser:extend()
 	end
 
 	--- Method for dumping table to lf2 format
-	-- @param str, string  String for parsing
+	-- @param data, table  Table for dumping
 	-- @return string
 	function LfParser:dump(data)
-		assert(type(str) == "table", "Parameter 'str' must be a table.")
+		assert(type(data) == "table", "Parameter 'data' must be a table.")
 		return ""
 	end
 
