@@ -1,16 +1,15 @@
 local __DIR__ = (...):match("(.-)[^%.]+$")
 
-local images = require(__DIR__ .. "images")
-local videos = require(__DIR__ .. "videos")
-local fonts = require(__DIR__ .. "fonts")
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "UI works only with love2d-fighting v1.0 and less")
+
+local images = core.image
+local videos = core.video
+local fonts = core.font
+local settings = core.settings
 local Object = require(__DIR__ .. "object")
 
 local UI = Object:extend()
-
- 	local controls = { }
-	function UI:setControls(mapping)
-		controls = mapping
-	end
 
 	function UI:init(x, y, childs)
 		self.x = x or 0
@@ -190,8 +189,8 @@ local UI = Object:extend()
 
 	function UI.Button:mousemoved(x, y, dx, dy)
 		if not self.use_mouse then return end
-		local mx = x + dx - self.ox
-		local my = y + dy - self.oy
+		local mx = (x + dx - self.ox) / core.scalex
+		local my = (y + dy - self.oy) / core.scaley
 		self.hover = mx > self.x and mx < self.x + self.w and my > self.y and my < self.y + self.h
 		self.clicked = self.clicked and self.hover
 	end
@@ -215,8 +214,8 @@ local UI = Object:extend()
 	end
 
 	function UI.Button:mousepressed(x, y, button, istouch, presses)
-		x = x - self.ox
-		y = y - self.oy
+		x = (x - self.ox) / core.scalex
+		y = (y - self.oy) / core.scaley
 		self.clicked = self.use_mouse and x > self.x and x < self.x + self.w and y > self.y and y < self.y + self.h
 		if self.clicked then
 			self:click(x, y, button)
@@ -244,6 +243,7 @@ local UI = Object:extend()
  	end
 
  	function UI.List:keypressed(key)
+ 		local controls = settings.controls
  		for i = 1, #controls do
  			if key == controls[i].up then
  				local old = self.childs[self.cursor]

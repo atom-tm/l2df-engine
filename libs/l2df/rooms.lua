@@ -1,11 +1,12 @@
 local hook = helper.hook
 
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "Rooms works only with love2d-fighting v1.0 and less")
+
 local rooms = { list = { } }
 
-	function rooms:init(path, room)
-		assert(path and room, "'path' and 'room' are required for rooms' init")
-
-		self.list = helper.requireAllFromFolder(path)
+	function rooms:init()
+		self.list = helper.requireAllFromFolder(core.settings.global.rooms_path)
 
 		local next = next
 		local events = love.handlers
@@ -16,13 +17,13 @@ local rooms = { list = { } }
 		end
 
 		hook(love, "draw", function (...)
-			love.graphics.setCanvas(mainCanvas)
+			love.graphics.setCanvas(core.canvas)
 			love.graphics.clear()
 			self:handleEvent("draw", ...)
 			love.graphics.setCanvas()
 		end)
 
-		self:set(room)
+		self:set(core.settings.global.startRoom)
 	end
 
 	function rooms:handleEvent(key, ...)

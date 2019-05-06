@@ -1,5 +1,8 @@
 local __DIR__ = (...):match("(.-)[^%.]+$")
 
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "Settings works only with love2d-fighting v1.0 and less")
+
 local fs = love and love.filesystem
 assert(fs, "settings works only under love2d's environment")
 
@@ -89,9 +92,7 @@ local settings = { }
 	end
 
 	--- Apply game settings
-	function settings:apply(core)
-		assert(type(core) == "table" and core.version == "1.0", "Settings can be applied only on love2d-fighting v1.0")
-
+	function settings:apply()
 		math.randomseed(love.timer.getTime())
 		love.graphics.setDefaultFilter("nearest", "nearest")
 

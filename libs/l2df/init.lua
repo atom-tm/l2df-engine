@@ -10,44 +10,45 @@ locale = nil
 ---------------------------------------------
 local min_dt, next_time
 
-local core = { version = "1.0" }
+l2df = { }
 
-	core.settings	= require(__DIR__ .. "settings")
-	-- core.resources	= require(__DIR__ .. "resources")
-	-- core.data		= require(__DIR__ .. "data")
-	core.i18n		= require(__DIR__ .. "i18n")
+	l2df.version	= 1.0
 
-	core.font		= require(__DIR__ .. "fonts")
-	core.sound		= require(__DIR__ .. "sounds")
-	core.image		= require(__DIR__ .. "images")
-	core.video		= require(__DIR__ .. "videos")
-	core.ui			= require(__DIR__ .. "ui")
-	core.rooms		= require(__DIR__ .. "rooms")
+	l2df.settings	= require(__DIR__ .. "settings")
+	-- l2df.resources	= require(__DIR__ .. "resources")
+	-- l2df.data		= require(__DIR__ .. "data")
+	l2df.i18n		= require(__DIR__ .. "i18n")
 
-	core.canvasW = 1
-	core.canvasH = 1
+	l2df.font		= require(__DIR__ .. "fonts")
+	l2df.sound		= require(__DIR__ .. "sounds")
+	l2df.image		= require(__DIR__ .. "images")
+	l2df.video		= require(__DIR__ .. "videos")
+	l2df.ui			= require(__DIR__ .. "ui")
+	l2df.rooms		= require(__DIR__ .. "rooms")
 
-	function core:init(filepath)
+	l2df.scalex = 1
+	l2df.scaley = 1
+
+	function l2df:init(filepath)
 		local settings = self.settings.global
 		self.settings:load(filepath)
 		self.sound:setConfig(settings)
-		self.ui:setControls(self.settings.controls)
 
-		-- -- FPS Limiter initialize --
+		-- FPS Limiter initialize --
 		min_dt = 1 / self.settings.graphic.fpsLimit
 		next_time = love.timer.getTime()
-		-- ----------------------------
+		----------------------------
 
 		helper.hook(self.i18n, "setLocale", function (_, key) self.settings.lang = key end, self.i18n)
 		helper.hook(love, "update", self.update, self)
 		helper.hook(love, "draw", self.draw, self)
 		helper.hook(love, "resize", self.resize, self)
 
-		self.rooms:init(settings.rooms_path, settings.startRoom)
-		self.settings:apply(self)
+		self.rooms:init()
+		self.settings:apply()
 	end
 
-	function core:update()
+	function l2df:update()
 		-- Mouse position calculation --
 		-- local x, y = love.mouse.getPosition( )
 		-- settings.mouseX = x * (settings.gameWidth / settings.global.width)
@@ -55,11 +56,12 @@ local core = { version = "1.0" }
 
 		-- FPS Limiter --
 		next_time = next_time + min_dt
+		----------------------------
 	end
 
-	function core:draw()
+	function l2df:draw()
 		if self.canvas then
-			love.graphics.draw(self.canvas, 0, 0, 0, self.canvasW, self.canvasH)
+			love.graphics.draw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
 		end
 
 		-- FPS Limiter working --
@@ -69,14 +71,27 @@ local core = { version = "1.0" }
 			return
 		end
 		love.timer.sleep(next_time - cur_time)
+		----------------------------
+
+		if self.camera then
+			self.camera:draw(function(l, t, w, h)
+				-- if rooms.current.Draw ~= nil then
+				-- 	rooms.current:Draw()
+				-- end
+			end)
+		end
+
+		if self.settings.debug then
+			-- debug drawings
+		end
 	end
 
-	function core:resize(w, h)
+	function l2df:resize(w, h)
 		self.settings.global.width = w
 		self.settings.global.height = h
 
-		self.canvasW = w / self.settings.gameWidth
-		self.canvasH = h / self.settings.gameHeight
+		self.scalex = w / self.settings.gameWidth
+		self.scaley = h / self.settings.gameHeight
 	end
 
-return core
+return l2df

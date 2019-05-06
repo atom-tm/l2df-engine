@@ -1,4 +1,3 @@
-local core
 local sounds = { }
 	
 	sounds.list = { }
