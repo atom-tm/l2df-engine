@@ -1,6 +1,7 @@
 {
 	"language": "English",
-	"main_menu": {
+	"press_anykey": "Press any key to continue...",
+	"menu": {
 		"versus": "Versus",
 		"story": "Story",
 		"settings": "Settings",

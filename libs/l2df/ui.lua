@@ -1,11 +1,10 @@
-local __DIR__ = (...):match("(.-)[^%.]+$")
-
 local core = l2df
 assert(type(core) == "table" and core.version <= 1.0, "UI works only with love2d-fighting v1.0 and less")
 
-local images = core.image
+local i18n = core.i18n
 local videos = core.video
 local fonts = core.font
+local images = core.image
 local settings = core.settings
 local Object = core.import "object"
 
@@ -18,7 +17,10 @@ local UI = Object:extend()
 		self.childs = childs or { }
 		assert(type(self.childs) == "table", "Parameter 'childs' must be a table.")
 		for i = 1, #self.childs do
-			assert(childs[i] and childs[i].isInstanceOf(UI), "Only UI elements can be a part of UI.")
+			local child = childs[i]
+			assert(child and child.isInstanceOf(UI), "Only UI elements can be a part of UI.")
+			child.x = child.x + self.x
+			child.y = child.y + self.y
 		end
 	end
 
@@ -52,11 +54,21 @@ local UI = Object:extend()
 	end
 
 	function UI:edit(callback)
+		local x, y = self.x, self.y
+
 		if type(callback) == "function" then
 			callback(self)
 		elseif type(callback) == "table" then
 			for k, v in pairs(callback) do
 				self[k] = v
+			end
+		end
+
+		if x ~= self.x or y ~= self.y then
+			for i = 1, #self.childs do
+				local child = self.childs[i]
+				child.x = child.x - x + self.x 
+				child.y = child.y - y + self.y 
 			end
 		end
 		return self
@@ -154,13 +166,19 @@ local UI = Object:extend()
 	UI.Text = UI:extend()
 	function UI.Text:init(text, fnt, x, y, color, align)
 		self:super(x, y)
-		self.text = text or ""
 		self.align = align
 		self.font = fnt or fonts.list.default
 		self.color = color or { 1, 1, 1, 1 }
+
+		self.text = text or ""
+		self.token = text
 	end
 
 	function UI.Text:draw()
+		local text = i18n(self.token)
+		if text and text ~= "" then
+			self.text = text
+		end
 		fonts.print(self.text, self.x, self.y, self.align, self.font, nil, nil, self.color)
 	end
 
@@ -206,6 +224,7 @@ local UI = Object:extend()
 	function UI.Button:setText(newText)
 		if type(newText) == "string" then
 			self.text.text = newText
+			self.text.token = newText
 		else
 			self.text = newText
 		end

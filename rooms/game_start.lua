@@ -1,5 +1,7 @@
 local l2df = l2df
 local ui = l2df.ui
+local data = l2df.data
+local settings = l2df.settings.global
 
 local room = { }
 
@@ -7,7 +9,7 @@ local room = { }
 	
 	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
 	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
-	local loaded_text = ui.Text("Press any key to continue...", nil, 8, 8)
+	local loaded_text = ui.Text("press_anykey", nil, 8, 8)
 
 	room.nodes = {
 		bg_video,
@@ -21,22 +23,22 @@ local room = { }
 		coroutine.yield()
 			l2df.settings:apply()
 		coroutine.yield()
-			l2df.i18n:loadLocales(settings.global.locales_path)
+			l2df.i18n:loadLocales(settings.langs_path, settings.lang)
 		coroutine.yield()
-		-- 	data:loadStates(settings.global.states_path)
-		-- coroutine.yield()
-		-- 	data:loadKinds(settings.global.kinds_path)
-		-- coroutine.yield()
-		-- 	data:loadFrames(settings.global.frames)
-		-- coroutine.yield()
-		-- 	data:loadSystem(settings.global.system)
-		-- coroutine.yield()
-		-- 	data:loadCombos(settings.global.system)
-		-- coroutine.yield()
-		-- 	data:loadDtypes(settings.global.dtypes)
-		-- coroutine.yield()
-		-- 	data:loadData(settings.global.data)
-		-- coroutine.yield()
+			data:loadStates()
+		coroutine.yield()
+			data:loadKinds()
+		coroutine.yield()
+			data:loadFrames()
+		coroutine.yield()
+			data:loadSystem()
+		coroutine.yield()
+			data:loadCombos()
+		coroutine.yield()
+			data:loadDtypes()
+		coroutine.yield()
+			data:loadData()
+		coroutine.yield()
 	end)
 
 	function room:load()
@@ -45,16 +47,22 @@ local room = { }
 	end
 
 	function room:update()
-		loading_ended = not coroutine.resume(initialProcessing)
+		if loading_ended then return end
+
+		loading_ended = coroutine.status(initialProcessing) == "dead"
 		if loading_ended then
 			loaded_text:show()
 			loading_anim:hide()
+			initialProcessing = nil
+		else
+			local err, message = coroutine.resume(initialProcessing)
+			assert(err, "Loading failed: " .. tostring(message))
 		end
 	end
 
 	function room:keypressed()
 		if loading_ended then
-			l2df.rooms:set("main_menu")
+			l2df.rooms:set("menu")
 		end
 	end
 

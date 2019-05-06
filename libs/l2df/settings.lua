@@ -15,12 +15,11 @@ local settings = { }
 	settings.private = { }
 
 	settings.file = filepath or "data/settings.dat"		-- Путь файла настроек игры
-	settings.global.data = "data/data.c"				-- Путь до data.txt (список объектов и карт движка)
-	settings.global.frames = "data/frames.c" 			-- Путь до frames.dat (список кадров по умолчанию)
-	settings.global.combos = "data/combos.c"			-- Путь до combos.dat (список переходов по комбинациям клавиш)
-	settings.global.dtypes = "data/dtypes.c"			-- Путь до dtypes.dat (список поведения при разных типах урона)
-	settings.global.system = "data/system.c"
-
+	settings.global.data_path = "data/data.txt"			-- Путь до data.txt (список объектов и карт движка)
+	settings.global.frames_path = "data/frames.dat"		-- Путь до frames.dat (список кадров по умолчанию)
+	settings.global.combos_path = "data/combos.dat"		-- Путь до combos.dat (список переходов по комбинациям клавиш)
+	settings.global.dtypes_path = "data/dtypes.dat"		-- Путь до dtypes.dat (список поведения при разных типах урона)
+	settings.global.system_path = "data/system.dat"		-- Путь до system.dat
 	settings.global.rooms_path = "/rooms/"				-- Папка с файлами комнат
 	settings.global.states_path = "/data/states/"		-- Папка с файлами стейтов
 	settings.global.kinds_path = "/data/kinds/"			-- Папка с файлами типов взаимодействий

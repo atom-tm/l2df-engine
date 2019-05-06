@@ -12,7 +12,7 @@ local module = { }
 	module.locale = { }
 	module.locales = { }
 
-	function module:loadLocales(path)
+	function module:loadLocales(path, default)
 		assert(fs, "Loading locales currently works only with love2d")
 
 		local files = fs.getDirectoryItems(path)
@@ -24,14 +24,13 @@ local module = { }
 				self.locales[strgsub(files[i], ".json$", "")] = jsonParser:parseFile(file)
 			end
 		end
-		self:setLocale(next(self.locales))
+		self:setLocale(default)
 	end
 
 	function module:setLocale(key)
-		if self.locales[key] then
-			self.current = key
-			self.locale = self.locales[key]
-		end
+		key = key or next(self.locales)
+		self.current = key
+		self.locale = self.locales[key] or { }
 	end
 
 	function module:get(key)

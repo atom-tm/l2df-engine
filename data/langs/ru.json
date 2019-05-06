@@ -1,6 +1,7 @@
 {
 	"language": "Русский",
-	"main_menu": {
+	"press_anykey": "Нажмите любую клавишу...",
+	"menu": {
 		"versus": "Поединок",
 		"story": "Миссии",
 		"settings": "Настройки",

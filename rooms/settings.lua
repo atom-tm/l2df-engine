@@ -1,3 +1,7 @@
+local l2df = l2df
+local ui = l2df.ui
+local settings = l2df.settings
+
 local room = { }
 
 	function room:load()

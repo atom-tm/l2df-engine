@@ -20,7 +20,7 @@ local core = l2df
 
 	core.settings	= core.import "settings"
 	-- core.resources	= core.import "resources"
-	-- core.data		= core.import "data"
+	core.data		= core.import "data"
 	core.i18n		= core.import "i18n"
 
 	core.font		= core.import "fonts"

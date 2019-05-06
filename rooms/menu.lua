@@ -4,14 +4,22 @@ local settings = l2df.settings
 
 local room = { }
 
-	local list = ui.List(32, 64, {
-			ui.Button(ui.Text("Play", l2df.font.list.menu_element), 16, 50)
-				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
+	local fnt_menu = l2df.font.list.menu_element
 
-			ui.Button(ui.Text("Settings", l2df.font.list.menu_element), 16, 100)
-				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end),
+	local list = ui.List(32, 32, {
+			ui.Button(ui.Text("menu.versus", fnt_menu), 0, 0)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
+				:on("click", function () l2df.i18n:setLocale("ru") end),
 
-			ui.Button(ui.Text("Exit", l2df.font.list.menu_element), 16, 150, nil, nil, 0, 0, nil, true)
+			ui.Button(ui.Text("menu.story", fnt_menu), 0, 64)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
+				:on("click", function () l2df.i18n:setLocale("en") end),
+
+			ui.Button(ui.Text("menu.settings", fnt_menu), 0, 128)
+				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
+				:on("click", function () l2df.rooms:set("settings") end),
+
+			ui.Button(ui.Text("menu.exit", fnt_menu), 0, 192, nil, nil, 0, 0, nil, true)
 				:on("update", function (self) self.text.color[3] = self.hover and 0 or 1 end)
 				:on("click", function () love.event.quit() end),
 		})
@@ -47,11 +55,11 @@ local room = { }
 		end
 	end
 
-	-- function room:keypressed(key)
-	-- 	if key == "f1" then
-	-- 		rooms:set("settings")
-	-- 	end
-	-- end
+	function room:keypressed(key)
+		if key == "f1" then
+			l2df.rooms:set("settings")
+		end
+	end
 
 	-- function room:update()
 	-- 	-- self.opacity = self.opacity + self.opacity_change
@@ -59,7 +67,7 @@ local room = { }
 	-- end
 
 	function room:draw()
-		l2df.image.draw(self.scenes[self.scene], 0, 0, settings.gameHeight - 240, 0, 1)
+		l2df.image.draw(self.scenes[self.scene], 0, 0, settings.gameHeight - 240, 0, 2)
 	end
 
 return room

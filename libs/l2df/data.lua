@@ -1,9 +1,12 @@
-local datParser = require("libs.parsers.dat")
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "Data works only with love2d-fighting v1.0 and less")
+
+local datParser = core.import "parsers.dat"
 
 local data = { }
 
 	function data:loadStates(path)
-		self.states = helper.requireAllFromFolder(path)
+		self.states = helper.requireAllFromFolder(path or core.settings.global.states_path)
 		self.states_update = { }
 		for key, state in pairs(self.states) do
 			if state.update then self.states_update[key] = state end
@@ -11,27 +14,27 @@ local data = { }
 	end
 
 	function data:loadKinds(path)
-		self.kinds = helper.requireAllFromFolder(path)
+		self.kinds = helper.requireAllFromFolder(path or core.settings.global.kinds_path)
 	end
 
 	function data:loadFrames(path)
-		self.frames = datParser:parseFile(path, self.frames)
+		self.frames = datParser:parseFile(path or core.settings.global.frames_path, self.frames)
 	end
 
 	function data:loadSystem(path)
-		self.system = datParser:parseFile(path, self.system)
+		self.system = datParser:parseFile(path or core.settings.global.system_path, self.system)
 	end
 
 	function data:loadCombos(path)
-		self.combos = datParser:parseFile(path, self.combos)
+		self.combos = datParser:parseFile(path or core.settings.global.combos_path, self.combos)
 	end
 
 	function data:loadDtypes(path)
-		self.dtypes = datParser:parseFile(path, self.dtypes)
+		self.dtypes = datParser:parseFile(path or core.settings.global.dtypes_path, self.dtypes)
 	end
 
 	function data:loadData(path)
-		self.list = datParser:parseFile(path, self.list)
+		self.list = datParser:parseFile(path or core.settings.global.data_path, self.list)
 	end
 
 
