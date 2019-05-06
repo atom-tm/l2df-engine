@@ -2,3 +2,4 @@ bg/Arena
 bg/Hall
 dev/
 *.sublime-*
+data/settings\.dat
