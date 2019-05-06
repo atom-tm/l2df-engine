@@ -1,8 +1,5 @@
-if love.system.getOS() == "Windows" then
-	package.path = package.path .. ";.\\libs\\?.lua;.\\libs\\?\\init.lua"
-else
-	package.path = package.path .. ";./libs/?.lua;./libs/?/init.lua"
-end
+local src = love.filesystem.getSource()
+package.path = ("%s;%s/libs/?.lua;%s/libs/?/init.lua"):format(package.path, src, src)
 
 l2df = require "l2df"
 
