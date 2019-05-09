@@ -29,6 +29,7 @@ local core = l2df
 	core.video		= core.import "videos"
 	core.ui			= core.import "ui"
 	core.rooms		= core.import "rooms"
+	core.battle		= core.import "battle"
 
 	core.scalex = 1
 	core.scaley = 1

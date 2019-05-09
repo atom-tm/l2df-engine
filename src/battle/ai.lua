@@ -1,4 +1,4 @@
-local ai = {}
+local ai = { }
 
 	function ai:processing()
 		if self.ai and self.head.ai then

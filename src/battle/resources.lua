@@ -1,4 +1,9 @@
-local resources = {}
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "Battle.Graphic works only with love2d-fighting v1.0 and less")
+
+local image = core.image
+
+local resources = { }
 
 	function resources:Load()
 		self.light_filter = image.Load("sprites/UI/light_filter.png", nil, "linear")

@@ -11,7 +11,8 @@ local room = { }
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
 
 			ui.Button(ui.Text("menu.story", fnt_menu), 0, 64):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
+				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+				:on("click", function () l2df.rooms:set("battle") end),
 
 			ui.Button(ui.Text("menu.settings", fnt_menu), 0, 128):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)

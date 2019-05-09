@@ -1,9 +1,9 @@
-local control = {}
+local control = { }
 	-- TODO: change the whole combo system, it's pretty sluggish
 
 	local abs = math.abs
 
-	control.players = {}
+	control.players = { }
 	control.key_timer = 7
 	control.key_double_timer_reverse = -15
 	control.key_double_timer = 7

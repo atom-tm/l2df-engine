@@ -1,4 +1,10 @@
-local graphic = {}
+local core = l2df
+assert(type(core) == "table" and core.version <= 1.0, "Battle.Graphic works only with love2d-fighting v1.0 and less")
+
+local image = core.image
+local settings = core.settings
+
+local graphic = { }
 
 	graphic.filter = image.Load("sprites/filter.png")
 	graphic.camera = nil
@@ -21,15 +27,15 @@ local graphic = {}
 	}
 
 	graphic.camera_owner = nil
-	graphic.last_fullscreen_mode = settings.window.fullscreen
+	graphic.last_fullscreen_mode = settings.graphic.fullscreen
 
 	graphic.layers = {
-		background = love.graphics.newCanvas(1,1),
-		foreground = love.graphics.newCanvas(1,1),
-		shadows = love.graphics.newCanvas(1,1),
-		shadow_filter = love.graphics.newCanvas(1,1),
-		reflection = love.graphics.newCanvas(1,1),
-		reflections = love.graphics.newCanvas(1,1)
+		background = love.graphics.newCanvas(1, 1),
+		foreground = love.graphics.newCanvas(1, 1),
+		shadows = love.graphics.newCanvas(1, 1),
+		shadow_filter = love.graphics.newCanvas(1, 1),
+		reflection = love.graphics.newCanvas(1, 1),
+		reflections = love.graphics.newCanvas(1, 1)
 	}
 
 	graphic.objects_for_drawing = {}
@@ -39,17 +45,17 @@ local graphic = {}
 	graphic.reflection_sources = {}
 
 
-	function graphic:cameraCreate() -- отвечает за создание камеры
-	-------------------------------------------------------------------
+	--- Main method for creating camera
+	function graphic:cameraCreate()
 		local l,t,w,h = camera:getWindow()
 		self.camera = gamera.new(0,0,battle.map.head.width, battle.map.head.height)
 		self.camera:setWindow(0,0,w,h)
 		self.camera_settings.x = battle.map.head.width * 0.5
 		self.camera_settings.y = battle.map.head.height * 0.5
 		self.camera_settings.scale = self.camera_settings.scale_mod
-		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
+		self.camera:setScale(settings.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
 		self.camera:setPosition(self.camera_settings.x, self.camera_settings.y)
-		self.last_fullscreen_mode = settings.window.fullscreen
+		self.last_fullscreen_mode = settings.graphic.fullscreen
 		self:layersCreate(w,h)
 	end
 
@@ -93,7 +99,7 @@ local graphic = {}
 		if self.camera_settings.scale < 0 then self.camera_settings.scale = 0
 		elseif self.camera_settings.scale > 1 then self.camera_settings.scale = 1 end
 
-		self.camera:setScale(settings.window.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
+		self.camera:setScale(settings.cameraScale + self.camera_settings.scale + battle.map.head.zoom)
 
 		self.camera_settings.x = self.camera_settings.x - (self.camera_settings.x - camera_x) * self.camera_settings.x_speed
 		self.camera_settings.y = self.camera_settings.y - (self.camera_settings.y - camera_y) * self.camera_settings.y_speed
@@ -106,7 +112,7 @@ local graphic = {}
 		self.camera_settings.y1 = t
 		self.camera_settings.y2 = t+h
 
-		if self.last_fullscreen_mode ~= settings.window.fullscreen then self:cameraCreate() end
+		if self.last_fullscreen_mode ~= settings.graphic.fullscreen then self:cameraCreate() end
 	end
 
 

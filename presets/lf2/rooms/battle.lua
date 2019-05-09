@@ -1,67 +1,69 @@
-	local room = {}
-	room.CustomDraw = true
-	test01 = 0
+local l2df = l2df
+local settings = l2df.settings
+local battle = l2df.battle
+
+local room = {}
 
 	function room:load(spawnList)
-		battle:Load(spawnList)
+		-- battle:Load(spawnList)
 		self.pause_mode = 0
 	end
 
 	function room:update()
-		if room.pause_mode < 1 then
-			if room.pause_mode < 0 then room.pause_mode = room.pause_mode + 2 end
-			battle:Update()
+		if self.pause_mode < 1 then
+			if self.pause_mode < 0 then self.pause_mode = self.pause_mode + 2 end
+			-- battle:Update()
 		end
-		battle.control.Update()
+		-- battle.control.Update()
 	end
 
 	function room:draw()
-		battle:DrawGame()
-		battle:DrawInterface()
+		-- battle:DrawGame()
+		-- battle:DrawInterface()
 	end
 
 	function room:keypressed(key)
 		if key == "escape" then
-			rooms:Set("character_select")
-		end
-		if key == "f1" then
-			if room.pause_mode == 0 then
-				room.pause_mode = 1
+			l2df.rooms:set("menu")
+			-- rooms:set("character_select")
+
+		elseif key == "f1" then
+			if self.pause_mode == 0 then
+				self.pause_mode = 1
 			else
-				room.pause_mode = 0
+				self.pause_mode = 0
 			end
-		end
-		if key == "f2" then
-			room.pause_mode = -1
-		end
-		if key == "f3" then
+
+		elseif key == "f2" then
+			self.pause_mode = -1
+
+		elseif key == "f3" then
 			for i = 1, 10 do
 				battle.entities.spawnObject(1,1700 + math.random(-600, 600),0,130 + math.random(-110, 110),nil,"standing",nil)
 			end
-		end
-		if key == "f4" then
+
+		elseif key == "f4" then
 			for i = 1, 5 do
 				battle.entities.spawnObject(5,1700 + math.random(-600, 600),0,130 + math.random(-110, 110),nil,"standing",nil)
 			end
-		end
-		if key == "f5" then
+
+		elseif key == "f5" then
 			battle.entities.list[1].hp = battle.entities.list[1].hp - math.random(0,100)
 			battle.entities.list[1].mp = battle.entities.list[1].mp - math.random(0,70)
 			battle.entities.list[1].sp = battle.entities.list[1].sp - math.random(0,5)
-		end
-		if key == "f6" then
+
+		elseif key == "f6" then
 			battle.entities.list[2].hp = battle.entities.list[2].hp - math.random(0,100)
 			battle.entities.list[2].mp = battle.entities.list[2].mp - math.random(0,70)
 			battle.entities.list[2].sp = battle.entities.list[2].sp - math.random(0,5)
-		end
-		if key == "f7" then
+
+		elseif key == "f7" then
 			--battle.entities.spawnObject(220,1700 + math.random(-600, 600),0,130 + math.random(-110, 110),nil,1,nil)
 			battle.entities.spawnObject(222,1500 + math.random(-600, 600),0,100 + math.random(-110, 110),nil,1,nil)
+
+		else
+			-- battle.control.keyPressed(key)
 		end
-		if key == "f8" then
-			settings.quality = not (settings.quality)
-		end
-		battle.control.keyPressed(key)
 	end
 
 	function room:Debug()
@@ -90,4 +92,4 @@
 		font.print("p1 combo: " .. battle.entities.list[1].combo, 10, 410)
 	end
 
-	return room
+return room
