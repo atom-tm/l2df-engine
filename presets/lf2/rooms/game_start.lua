@@ -6,10 +6,12 @@ local settings = l2df.settings.global
 local room = { }
 
 	local loading_ended = false
-	
+
 	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
 	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
 	local loaded_text = ui.Text("press_anykey", nil, 8, 8, { 1, 1, 1, 1})
+
+	local image_logotype = ui.Image(settings.getUI("logotype.png"), 100, 100, 1)
 
 	room.nodes = {
 		bg_video,
@@ -65,6 +67,13 @@ local room = { }
 			l2df.rooms:set("menu")
 		end
 	end
+
+	function room:mousepressed()
+		if loading_ended then
+			l2df.rooms:set("menu")
+		end
+	end
+
 
 	function room:exit()
 		for i = 1, #self.nodes do
