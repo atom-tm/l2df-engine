@@ -42,5 +42,13 @@
 	"stats": {
 		"file": "sprites/UI/fonts/Default.ttf",
 		"size": 10
+	},
+	"main_menu": {
+		"file": "fonts/main_menu.otf",
+		"size": 48
+	},
+	"press_anykey": {
+		"file": "sprites/UI/fonts/Default.ttf",
+		"size": 20
 	}
 }

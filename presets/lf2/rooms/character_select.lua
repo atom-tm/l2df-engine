@@ -7,7 +7,6 @@ local room = { }
 
 	local loading_ended = false
 
-	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
 	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
 	local loaded_text = ui.Text("press_anykey", nil, 8, 8, { 1, 1, 1, 1})
 
