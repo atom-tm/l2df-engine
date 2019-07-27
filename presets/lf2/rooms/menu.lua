@@ -1,28 +1,37 @@
 local l2df = l2df
 local ui = l2df.ui
 local settings = l2df.settings
+local i18n = l2df.i18n
 
 local room = { }
 
-	local fnt_menu = l2df.font.list.menu_element
+	local fnt_menu = "menu_element"
 
 	local list = ui.List(512, 32, {
-			ui.Button(ui.Text("menu.versus", fnt_menu), 0, 0):useMouse(true)
+			ui.Button(ui.Text(i18n("menu.versus"), fnt_menu), 0, 0):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 				:on("click", function () l2df.rooms:set("character_select") end),
 
-			ui.Button(ui.Text("menu.story", fnt_menu), 0, 64):useMouse(true)
+			ui.Button(ui.Text(i18n("menu.story"), fnt_menu), 0, 64):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 				:on("click", function () l2df.rooms:set("myroom") end),
 
-			ui.Button(ui.Text("menu.settings", fnt_menu), 0, 128):useMouse(true)
+			ui.Button(ui.Text(i18n("menu.settings"), fnt_menu), 0, 128):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 				:on("click", function () l2df.rooms:set("settings") end),
 
-			ui.Button(ui.Text("menu.exit", fnt_menu), 0, 192):useMouse(true)
+			ui.Button(ui.Text(i18n("menu.exit"), fnt_menu), 0, 192):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 				:on("click", function () love.event.quit() end),
 		})
+
+		local test_image0 = ui.Image(ui.resource("interface_test00.png"),settings.global.width - 10,100)
+		local test_image010 = ui.Image(ui.resource("interface_test01.png"),10,10,{w=150,h=150,x=4,y=1},4)
+		local test_image011 = ui.Image(ui.resource("interface_test01.png"),settings.global.width / 2 + 75,250,{w=150,h=150,x=4,y=1},3)
+
+		local test_text = ui.Text("That's Racist!", nil, 100, 100)
+
+
 		-- :on("change", function (self, new, old)
 		-- 	old.color[3] = 1
 		-- 	new.color[3] = 0
@@ -34,11 +43,16 @@ local room = { }
 
 	room.nodes = {
 		ui.Image("sprites/UI/background.png"),
-		ui.Image("sprites/UI/logotype.png"),
+		ui.Image("sprites/UI/logotype.png", 25, 25),
 		list,
+		test_image0,
+		test_image010,
+		test_image011,
+		test_text,
 	}
 
 	function room:load()
+		self.nodes[#self.nodes + 1] = ui.Text(i18n "menu.versus", fnt_menu, 825, 15)
 		l2df.sound:setMusic("music/main.mp3")
 		self.scenes = {
 			l2df.image.Load("sprites/UI/MainMenu/1.png"),
@@ -58,9 +72,15 @@ local room = { }
 	end
 
 	function room:keypressed(key)
+
 		if key == "f1" then
 			l2df.rooms:set("settings")
 		end
+
+		if key == "escape" then
+			love.event.quit()
+		end
+
 	end
 
 	function room:update()

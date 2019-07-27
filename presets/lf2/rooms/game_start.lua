@@ -9,9 +9,7 @@ local room = { }
 
 	local bg_video = ui.Video("sprites/bg.ogv", 0, 0, true)
 	local loading_anim = ui.Animation("sprites/UI/loading.png", 8, 8, 140, 140, 4, 3, 12, 2, true)
-	local loaded_text = ui.Text("press_anykey", nil, 8, 8, { 1, 1, 1, 1})
-
-	local image_logotype = ui.Image(settings.getUI("logotype.png"), 100, 100, 1)
+	local loaded_text = ui.Text(l2df.i18n("press_anykey"), nil, 8, 8, { 1, 1, 1, 1})
 
 	room.nodes = {
 		bg_video,
@@ -21,11 +19,13 @@ local room = { }
 
 	local initialProcessing = coroutine.create(function ()
 		coroutine.yield()
-			l2df.settings:load()
+			l2df.settings:load() -- loading settings file
 		coroutine.yield()
-			l2df.settings:apply()
+			l2df.settings:apply() -- apply all settings
 		coroutine.yield()
-			l2df.i18n:loadLocales(settings.langs_path, settings.lang)
+			l2df.i18n:loadLocales(settings.langs_path, settings.lang) -- load locales files from folder
+		coroutine.yield()
+			l2df.font:loadFonts(settings.fonts_path) -- load fonts file
 		coroutine.yield()
 			data:loadStates()
 		coroutine.yield()
@@ -41,6 +41,9 @@ local room = { }
 		coroutine.yield()
 			data:loadData()
 		coroutine.yield()
+		for i = 1, 50 do
+			coroutine.yield()
+		end
 	end)
 
 	function room:load()

@@ -10,10 +10,19 @@ local Object = core.import "object"
 
 local UI = Object:extend()
 
+
+	function UI.resource(file)
+		if love.filesystem.getInfo(settings.global.ui_path .. file) then
+			return settings.global.ui_path .. file
+		end
+		return settings.global.ui_path .. "dummy.png"
+	end
+
 	function UI:init(x, y, childs)
 		self.x = x or 0
 		self.y = y or 0
 		self.hidden = false
+		self.active = true
 		self.childs = childs or { }
 		assert(type(self.childs) == "table", "Parameter 'childs' must be a table.")
 		for i = 1, #self.childs do
@@ -67,8 +76,8 @@ local UI = Object:extend()
 		if x ~= self.x or y ~= self.y then
 			for i = 1, #self.childs do
 				local child = self.childs[i]
-				child.x = child.x - x + self.x 
-				child.y = child.y - y + self.y 
+				child.x = child.x - x + self.x
+				child.y = child.y - y + self.y
 			end
 		end
 		return self
@@ -76,13 +85,14 @@ local UI = Object:extend()
 
 
 	UI.Image = UI:extend()
-	function UI.Image:init(file, x, y, cutting, filter)
+	function UI.Image:init(file, x, y, cutting, sprite, filter)
 		self:super(x, y)
 		self.resource = file and images.Load(file, cutting, filter)
+		self.sprite = sprite or 0
 	end
 
 	function UI.Image:draw()
-		images.draw(self.resource, self.x, self.y)
+		images.draw(self.resource, self.sprite, self.x, self.y)
 	end
 
 
@@ -168,25 +178,31 @@ local UI = Object:extend()
 		self:super(x, y)
 		self.align = align
 		self.stroke = stroke
-		self.font = fnt or fonts.list.default
+		self.font = fnt or "default"
 		self.color = color or { 0, 0, 0, 1 }
-
-		self:setText(text, text or "")
+		self:setText(text)
 	end
 
 	function UI.Text:update()
-		local text = i18n(self.token)
-		if text and text ~= "" and self.text ~= text then
-			self:setText(nil, text)
-		end
+		self:setText()
 	end
 
-	function UI.Text:setText(token, raw_text)
-		self.token = token or self.token
+	function UI.Text:setText(raw_text)
 		if type(raw_text) == "string" then
 			self.text = raw_text
-			self.width = self.font:getWidth(raw_text)
-			self.height = self.font:getHeight(raw_text)
+		elseif type(raw_text) == "table" then
+			self.text = raw_text.text
+			self.key = raw_text.key
+		elseif self.key then
+			local temp = i18n(self.key)
+			self.text = temp and temp.text
+		else
+			self.text = self.text or ""
+		end
+		local font = fonts.list[self.font]
+		if font and self.text then
+			self.width = font:getWidth(self.text)
+			self.height = font:getHeight(self.text)
 		end
 	end
 
@@ -264,9 +280,10 @@ local UI = Object:extend()
 
 
 	UI.List = UI:extend()
-	function UI.List:init(x, y, childs)
+	function UI.List:init(x, y, childs, horizontal)
 		self:super(x, y, childs)
 		self.cursor = 1
+		self.horizontal = horizontal or false
  	end
 
  	function UI.List:keypressed(key)
@@ -274,17 +291,30 @@ local UI = Object:extend()
 
  		local controls = settings.controls
  		for i = 1, #controls do
- 			if key == controls[i].up then
- 				local old = self.childs[self.cursor]
- 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
- 				return self:change(self.childs[self.cursor], old)
 
- 			elseif key == controls[i].down then
- 				local old = self.childs[self.cursor]
- 				self.cursor = self.cursor < size and self.cursor + 1 or 1
- 				return self:change(self.childs[self.cursor], old)
+ 			if self.horizontal then
+	 			if key == controls[i].left then
+	 				local old = self.childs[self.cursor]
+	 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
+	 				return self:change(self.childs[self.cursor], old)
+	 			elseif key == controls[i].right then
+	 				local old = self.childs[self.cursor]
+	 				self.cursor = self.cursor < size and self.cursor + 1 or 1
+	 				return self:change(self.childs[self.cursor], old)
+	 			end
+	 		else
+	 			if key == controls[i].up then
+	 				local old = self.childs[self.cursor]
+	 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
+	 				return self:change(self.childs[self.cursor], old)
+	 			elseif key == controls[i].down then
+	 				local old = self.childs[self.cursor]
+	 				self.cursor = self.cursor < size and self.cursor + 1 or 1
+	 				return self:change(self.childs[self.cursor], old)
+	 			end
+	 		end
 
- 			elseif key == controls[i].attack and self.childs[self.cursor].click then
+ 			if key == controls[i].attack and self.childs[self.cursor].click then
  				return self.childs[self.cursor]:click(nil, nil, 1)
  			end
  		end

@@ -20,6 +20,7 @@ local settings = { }
 	settings.global.combos_path = "data/combos.dat"		-- Путь до combos.dat (список переходов по комбинациям клавиш)
 	settings.global.dtypes_path = "data/dtypes.dat"		-- Путь до dtypes.dat (список поведения при разных типах урона)
 	settings.global.system_path = "data/system.dat"		-- Путь до system.dat
+	settings.global.fonts_path = "data/fonts.json"		-- Путь до fonts.json (список шрифтов используемых в игре)
 	settings.global.rooms_path = "/rooms/"				-- Папка с файлами комнат
 	settings.global.states_path = "/data/states/"		-- Папка с файлами стейтов
 	settings.global.kinds_path = "/data/kinds/"			-- Папка с файлами типов взаимодействий

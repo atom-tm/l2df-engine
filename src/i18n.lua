@@ -43,7 +43,7 @@ local module = { }
 			for k in strgmatch(key, "[^.]+") do
 				x = x and x[k] or ""
 			end
-			return x
+			return {text = x, key = key}
 		end
 		return self.locale
 	end

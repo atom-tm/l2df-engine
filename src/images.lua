@@ -1,5 +1,5 @@
 local images = {}
-	
+
 	images.list = {}
 	function images.Load(filepath, cutting_info , filter)
 		for i in pairs(images.list) do
