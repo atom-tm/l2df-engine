@@ -10,7 +10,6 @@ local Object = core.import "object"
 
 local UI = Object:extend()
 
-
 	function UI.resource(file)
 		if love.filesystem.getInfo(settings.global.ui_path .. file) then
 			return settings.global.ui_path .. file

@@ -57,8 +57,10 @@ local room = { opacity }
 		end
 	end
 
-	function room:update()
-		if self.opacity and self.opacity > 0 then self.opacity = self.opacity - 0.01 end
+	function room:update(dt)
+		if self.opacity and self.opacity > 0 then
+			self.opacity = self.opacity - 0.65 * dt
+		end
 	end
 
 	function room:draw()

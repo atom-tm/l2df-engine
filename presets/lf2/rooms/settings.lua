@@ -8,34 +8,37 @@ local room = { }
 	local settings_font = "settings_menu"
 
 	local list = ui.List(512, 32, {
-			ui.Button(ui.Text(i18n "settings.language", settings_font), 0, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () i18n:setLocale() end),
+		ui.Button(ui.Text(i18n "settings.language", settings_font), 0, 0):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () i18n:setLocale() end),
 
-			ui.Button(ui.Text(i18n "settings.music", settings_font), 0, 46):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
+		ui.Button(ui.Text(i18n "settings.music", settings_font), 0, 46):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
 
-			ui.Button(ui.Text("settings.effects", settings_font), 0, 82):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
+		ui.Button(ui.Text(i18n "settings.effects", settings_font), 0, 82):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
 
-			ui.Button(ui.Text("settings.save", settings_font), 0, 192):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () settings:save() end),
+		ui.Button(ui.Text(i18n "settings.save", settings_font), 0, 192):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () settings:save() end),
 
-			ui.Button(ui.Text("settings.back", settings_font), 0, 256):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () l2df.rooms:set("menu") end),
-		})
+		ui.Button(ui.Text(i18n "settings.back", settings_font), 0, 256):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () l2df.rooms:set("menu") end),
+	})
+
 	local music_volume_list = ui.List(512 + 200, 32 + 46, {
 		ui.Button(ui.Text( "I", settings_font), 0, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () self.hover = true end),
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () end),
+
 		ui.Button(ui.Text( "I", settings_font), 10, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () i18n:setLocale() end),
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () end),
+
 		ui.Button(ui.Text( "I", settings_font), 20, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () i18n:setLocale() end),
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () end),
 	}, true)
 
 	room.nodes = {
@@ -56,6 +59,5 @@ local room = { }
 	function room:draw()
 
 	end
-
 
 return room
