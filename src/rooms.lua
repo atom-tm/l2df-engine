@@ -1,7 +1,7 @@
 local hook = helper.hook
 
 local core = l2df
-assert(type(core) == "table" and core.version <= 1.0, "Rooms works only with love2d-fighting v1.0 and less")
+assert(type(core) == "table" and core.version >= 1.0, "Rooms works only with love2d-fighting v1.0 and higher")
 
 local rooms = { list = { } }
 
