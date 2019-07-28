@@ -13,20 +13,42 @@ local rooms = { list = { } }
 		events.update = true
 
 		for key in pairs(events) do
-			hook(love, key, function (...) self:handleEvent(key, ...) end)
+			hook(love, key, function (...) self:trigger(key, ...) end)
 		end
 
+		hook(core, "localechanged", function () self:forceTrigger("localechanged") end, core)
 		hook(love, "draw", function (...)
 			love.graphics.setCanvas(core.canvas)
 			love.graphics.clear()
-			self:handleEvent("draw", ...)
+			self:trigger("draw", ...)
 			love.graphics.setCanvas()
 		end)
 
 		self:set(core.settings.global.startRoom)
 	end
 
-	function rooms:handleEvent(key, ...)
+	function rooms:trigger(event, ...)
+		return self:__trigger(event, false, ...)
+	end
+
+	function rooms:forceTrigger(event, ...)
+		return self:__trigger(event, true, ...)
+	end
+
+	function rooms:set(room, input)
+		input = input or { }
+		local _ = self.current and self.current.exit and self.current:exit()
+		self.current = self.list[tostring(room)]
+		local _ = self.current.load and self.current:load(input)
+		self:forceTrigger("roomloaded")
+	end
+
+	function rooms:reload(input)
+		local _ = self.current.load and self.current:load(input)
+		self:forceTrigger("roomloaded")
+	end
+
+	function rooms:__trigger(event, force, ...)
 		if self.current and self.current.nodes and next(self.current.nodes) then
 			local containers = { {self.current.nodes, 1, #self.current.nodes} }
 			local current = containers[1]
@@ -37,7 +59,11 @@ local rooms = { list = { } }
 			while head > 1 or i <= current[3] do
 				node = current[1][i]
 				i = i + 1
-				if node and not node.hidden and type(node[key]) == "function" then node[key](node, ...) end
+
+				if node and (force or not node.hidden) and type(node[event]) == "function" then
+					node[event](node, ...)
+				end
+
 				if node and node.childs and next(node.childs) then
 					current[2] = i
 					containers[head + 1] = { node.childs, 1, #node.childs }
@@ -51,18 +77,7 @@ local rooms = { list = { } }
 				end
 			end
 		end
-		return self.current and self.current[key] and self.current[key](self.current, ...)
-	end
-
-	function rooms:set(room, input)
-		input = input or { }
-		local _ = self.current and self.current.exit and self.current:exit()
-		self.current = self.list[tostring(room)]
-		local _ = self.current.load and self.current:load(input)
-	end
-
-	function rooms:reload(input)
-		local _ = self.current.load and self.current:load(input)
+		return self.current and self.current[event] and self.current[event](self.current, ...)
 	end
 
 return rooms

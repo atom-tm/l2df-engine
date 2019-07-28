@@ -193,16 +193,20 @@ local UI = Object:extend()
 		self:setText(text)
 	end
 
-	function UI.Text:update()
+	function UI.Text:roomloaded()
 		self:setText()
 	end
 
-	function UI.Text:setText(raw_text)
-		if type(raw_text) == "string" then
-			self.text = raw_text
-		elseif type(raw_text) == "table" then
-			self.text = raw_text.text
-			self.key = raw_text.key
+	function UI.Text:localechanged()
+		self:setText()
+	end
+
+	function UI.Text:setText(new_text)
+		if type(new_text) == "string" then
+			self.text = new_text
+		elseif type(new_text) == "table" then
+			self.text = new_text.text
+			self.key = new_text.key
 		elseif self.key then
 			local temp = i18n(self.key)
 			self.text = temp and temp.text
@@ -256,11 +260,19 @@ local UI = Object:extend()
 		-- hook
 	end
 
-	function UI.Button:setText(newText)
-		if type(newText) == "string" then
-			self.text:setText(newText)
-		elseif not self.text and newText:isTypeOf(UI.Text) then
-			self.text = newText:on("setText", function (text)
+	function UI.Button:roomloaded()
+		self.text:localechanged()
+	end
+
+	function UI.Button:localechanged()
+		self.text:localechanged()
+	end
+
+	function UI.Button:setText(new_text)
+		if type(new_text) == "string" then
+			self.text:setText(new_text)
+		elseif not self.text and new_text:isTypeOf(UI.Text) then
+			self.text = new_text:on("setText", function (text)
 				self.w = text.width or 1
 				self.h = text.height or 1
 			end)

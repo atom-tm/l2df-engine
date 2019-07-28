@@ -43,12 +43,13 @@ local core = l2df
 		next_time = love.timer.getTime()
 		----------------------------
 
-		helper.hook(self.i18n, "setLocale", function (locale) self.settings.global.lang = locale.current end, self.i18n)
+		-- I've moved it above, but it can be bad, needs testing
+		self.rooms:init()
+
+		helper.hook(self.i18n, "setLocale", self.localechanged, self)
 		helper.hook(love, "update", self.update, self)
 		helper.hook(love, "draw", self.draw, self)
 		helper.hook(love, "resize", self.resize, self)
-
-		self.rooms:init()
 	end
 
 	function core:update()
@@ -60,6 +61,10 @@ local core = l2df
 		-- FPS Limiter --
 		next_time = next_time + min_dt
 		----------------------------
+	end
+
+	function core:localechanged()
+		self.settings.global.lang = self.i18n.current
 	end
 
 	function core:draw()
