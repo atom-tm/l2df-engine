@@ -46,7 +46,7 @@ local room = { }
 		coroutine.yield()
 			data:loadData()
 		coroutine.yield()
-		for i = 1, 100 do
+		for i = 1, 25 do
 			coroutine.yield()
 		end
 	end)

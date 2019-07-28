@@ -3,7 +3,7 @@ local ui = l2df.ui
 local settings = l2df.settings
 local i18n = l2df.i18n
 
-local room = { }
+local room = { opacity }
 
 	local fnt_menu = "main_menu"
 
@@ -32,6 +32,7 @@ local room = { }
 	}
 
 	function room:load()
+		self.opacity = 1
 		l2df.sound:setMusic("music/main.mp3")
 		self.scenes = {
 			l2df.image.Load("sprites/UI/MainMenu/1.png"),
@@ -57,11 +58,17 @@ local room = { }
 	end
 
 	function room:update()
-
+		if self.opacity and self.opacity > 0 then self.opacity = self.opacity - 0.01 end
 	end
 
 	function room:draw()
 		l2df.image.draw(self.scenes[self.scene], 0, 0, settings.gameHeight - 240, 0, 2)
+
+		local ro, go, bo, ao = love.graphics.getColor()
+		love.graphics.setColor(0,0,0,self.opacity)
+		love.graphics.rectangle("fill", 0, 0, settings.global.width, settings.global.height)
+		love.graphics.setColor(ro, go, bo, ao)
 	end
+
 
 return room

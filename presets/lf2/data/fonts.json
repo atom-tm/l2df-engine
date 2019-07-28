@@ -47,6 +47,10 @@
 		"file": "fonts/main_menu.otf",
 		"size": 48
 	},
+	"settings_menu": {
+		"file": "fonts/main_menu.otf",
+		"size": 34
+	},
 	"press_anykey": {
 		"file": "sprites/UI/fonts/Default.ttf",
 		"size": 20
