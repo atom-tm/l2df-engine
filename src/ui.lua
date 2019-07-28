@@ -1,6 +1,9 @@
 local core = l2df
 assert(type(core) == "table" and core.version >= 1.0, "UI works only with love2d-fighting v1.0 and higher")
 
+local fopen = io.open
+local fs = love and love.filesystem
+
 local i18n = core.i18n
 local videos = core.video
 local fonts = core.font
@@ -11,9 +14,17 @@ local Object = core.import "object"
 local UI = Object:extend()
 
 	function UI.resource(file)
-		if love.filesystem.getInfo(settings.global.ui_path .. file) then
-			return settings.global.ui_path .. file
+		local path = settings.global.ui_path .. file
+		if fs and fs.getInfo(path) then
+			return path
+		else
+			local f = fopen(path, "r")
+			if f then
+				f:close()
+				return path
+			end
 		end
+		-- stuff below is a hardcoded resource == bad, needs refactor
 		return settings.global.ui_path .. "dummy.png"
 	end
 
