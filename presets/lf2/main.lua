@@ -2,11 +2,16 @@ local src = love.filesystem.getSource()
 package.path = ("%s;%s/libs/?.lua;%s/libs/?/init.lua"):format(package.path, src, src)
 
 l2df = require "l2df"
+local lurker = require "lurker"
 
 local settings = l2df.settings
 
 function love.load()
 	l2df:init()
+end
+
+function love.update()
+	lurker.update()
 end
 
 function love.joystickpressed(joystick, button)
