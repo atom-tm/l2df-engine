@@ -62,7 +62,7 @@ local helper = {}
 		love.window.setMode(width, height)
 		love.window.setFullscreen(settings.window.fullscreen)
 		if settings.window.fullscreen then
-			width, height = love.window.getMode() 
+			width, height = love.window.getMode()
 		end
 
 		camera = gamera.new(0, 0, settings.gameWidth, settings.gameHeight)
@@ -148,7 +148,7 @@ local helper = {}
 	-- @param default, mixed  Default value. nil if not setted
 	-- @return mixed
 	function helper.notNil(var, default)
-		return var or default
+		return var ~= nil or default
 	end
 
 	--- Get maximum of array
@@ -156,7 +156,7 @@ local helper = {}
 	-- @return int
 	function helper.Maximum(arr)
 		max = 0
-		for i = 1, #arr do 
+		for i = 1, #arr do
 			if arr[i] > max then max = arr[i] end
 		end
 		return max
