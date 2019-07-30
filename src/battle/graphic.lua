@@ -282,7 +282,7 @@ local graphic = { }
 		end
 	end
 
-
+	--- Bubble sort objects
 	function graphic:sortObjects()
 		for i = 1, #self.objects_for_drawing do
 			for j = i + 1, #self.objects_for_drawing do
@@ -417,7 +417,7 @@ local graphic = { }
 		end
 	end
 
-	function graphic:addLightSourse(x,y,z,r,f,s)
+	function graphic:addLightSource(x,y,z,r,f,s)
 		if settings.quality then
 			local light = {
 				x = x,

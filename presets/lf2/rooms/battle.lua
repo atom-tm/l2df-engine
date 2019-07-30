@@ -11,15 +11,13 @@ local room = {}
 
 	function room:update()
 		if self.pause_mode < 1 then
-			if self.pause_mode < 0 then self.pause_mode = self.pause_mode + 2 end
 			-- battle:Update()
 		end
 		-- battle.control.Update()
 	end
 
 	function room:draw()
-		-- battle:DrawGame()
-		-- battle:DrawInterface()
+		-- battle:draw()
 	end
 
 	function room:keypressed(key)
@@ -28,11 +26,7 @@ local room = {}
 			-- rooms:set("character_select")
 
 		elseif key == "f1" then
-			if self.pause_mode == 0 then
-				self.pause_mode = 1
-			else
-				self.pause_mode = 0
-			end
+			self.pause_mode = self.pause_mode == 0 and 1 or 0
 
 		elseif key == "f2" then
 			self.pause_mode = -1

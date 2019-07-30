@@ -159,7 +159,7 @@ local resources = {}
 	function resources.EntityLoadingFramesList(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
 		local head = resources.entities[object.id].head
-		head.frames = helper.CopyTable(data.frames)
+		head.frames = helper.copyTable(data.frames)
 		local data = string.match(object.data, "<frames_list>(.*)</frames_list>")
 		if data ~= nil then
 			for key, frame_number in string.gmatch(data, "([%w%d_]+): ([%d]+)") do
@@ -180,7 +180,7 @@ local resources = {}
 	function resources.EntityLoadingDtypes(object) -- Загрузка шапки объекта
 	----------------------------------------------------------------------------
 		local head = resources.entities[object.id].head
-		head.dtypes = helper.CopyTable(data.dtypes)
+		head.dtypes = helper.copyTable(data.dtypes)
 		local data = string.match(object.data, "<damage_types>(.*)</damage_types>")
 		if data then
 			for dtype_number, dtype_info in string.gmatch(data, "([%d]+): %[([^%[%]]+)%]") do

@@ -24,7 +24,7 @@ local UI = Object:extend()
 				return path
 			end
 		end
-		-- stuff below is a hardcoded resource == bad, needs refactor
+		-- TODO: stuff below is a hardcoded resource == bad, needs refactor
 		return settings.global.ui_path .. "dummy.png"
 	end
 

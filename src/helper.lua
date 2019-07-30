@@ -75,11 +75,11 @@ local helper = {}
 
 	--- Deep-copy of table
 	-- @param table, table  Given string
-	function helper.CopyTable(table)
+	function helper.copyTable(table)
 		local result = {}
 		for key, val in pairs(table) do
 			if type(val) == "table" then
-				result[key] = helper.CopyTable(val)
+				result[key] = helper.copyTable(val)
 			else
 				result[key] = val
 			end

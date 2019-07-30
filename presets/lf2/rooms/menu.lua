@@ -8,22 +8,22 @@ local room = { opacity }
 	local fnt_menu = "main_menu"
 
 	local list = ui.List(512, 32, {
-			ui.Button(ui.Text(i18n("menu.versus"), fnt_menu), 0, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () l2df.rooms:set("character_select") end),
+		ui.Button(ui.Text(i18n "menu.versus", fnt_menu), 0, 0):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () l2df.rooms:set("battle") end),
 
-			ui.Button(ui.Text(i18n("menu.story"), fnt_menu), 0, 64):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () l2df.rooms:set("myroom") end),
+		ui.Button(ui.Text(i18n "menu.story", fnt_menu), 0, 64):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () l2df.rooms:set("myroom") end),
 
-			ui.Button(ui.Text(i18n("menu.settings"), fnt_menu), 0, 128):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () l2df.rooms:set("settings") end),
+		ui.Button(ui.Text(i18n "menu.settings", fnt_menu), 0, 128):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () l2df.rooms:set("settings") end),
 
-			ui.Button(ui.Text(i18n("menu.exit"), fnt_menu), 0, 192):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-				:on("click", function () love.event.quit() end),
-		})
+		ui.Button(ui.Text(i18n "menu.exit", fnt_menu), 0, 192):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () love.event.quit() end),
+	})
 
 	room.nodes = {
 		ui.Image("sprites/UI/background.png"),

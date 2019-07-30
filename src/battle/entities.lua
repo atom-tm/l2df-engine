@@ -4,7 +4,7 @@ local entities = {}
 
 	function entities.create(id)
 		if resources.entities[id] == nil then return nil end
-		local created_object = helper.CopyTable(resources.entities[id])
+		local created_object = helper.copyTable(resources.entities[id])
 		if created_object ~= nil then			
 			
 			created_object.destroy = false

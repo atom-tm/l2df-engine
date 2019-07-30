@@ -1,14 +1,13 @@
-local hook = helper.hook
-
 local core = l2df
 assert(type(core) == "table" and core.version >= 1.0, "Rooms works only with love2d-fighting v1.0 and higher")
+
+local hook = helper.hook
 
 local rooms = { list = { } }
 
 	function rooms:init()
 		self.list = helper.requireAllFromFolder(core.settings.global.rooms_path)
 
-		local next = next
 		local events = love.handlers
 		events.update = true
 

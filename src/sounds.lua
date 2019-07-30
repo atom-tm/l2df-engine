@@ -12,7 +12,7 @@ local sounds = { }
 
 	function sounds:setConfig(config)
 		assert(type(config) == "table", "Sounds' config must be a table")
-		assert(config.music_volume, "Sounds' config must contain 'musicVolum' property")
+		assert(config.music_volume, "Sounds' config must contain 'music_volume' property")
 		assert(config.sound_volume, "Sounds' config must contain 'sound_volume' property")
 
 		self.config = config
