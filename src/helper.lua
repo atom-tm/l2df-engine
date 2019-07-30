@@ -148,7 +148,11 @@ local helper = {}
 	-- @param default, mixed  Default value. nil if not setted
 	-- @return mixed
 	function helper.notNil(var, default)
-		return var ~= nil or default
+		if var ~= nil then
+			return var
+		else
+			return default
+		end
 	end
 
 	--- Get maximum of array
