@@ -3,8 +3,6 @@ assert(type(core) == "table" and core.version >= 1.0, "Core.Entities.System work
 
 local Object = core.import "core.object"
 
-local System = Object:extend()
-
-	System.manager = { }
+local System = Object:extend({ manager = { }, groups = { } })
 
 return System

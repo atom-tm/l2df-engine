@@ -30,9 +30,11 @@ local function matchesFilter(object, filter)
 					return false
 				end
 			end
+		elseif filter.isTypeOf then
+			return object:isInstanceOf(filter)
 		else
-			for _, key in ipairs(filter) do
-				if object[key] == nil then
+			for key, value in pairs(filter) do
+				if object[key] ~= value then
 					return false
 				end
 			end
@@ -210,6 +212,7 @@ local EntityManager = Object:extend()
 	function EntityManager:addSystem(system)
 		-- assert(system:isInstanceOf(System), "not a subclass of Entities.System")
 		system.manager = self
+		system.groups = self.groups
 		rawset(self.___systems, #self.___systems + 1, system)
 	end
 
