@@ -53,6 +53,7 @@ local EntityManager = Object:extend()
 		options = options or { }
 		self.entities = { }
 		self.groups = { }
+		self.context = { }
 		self.has_entity = { }
 		self.___systems = { }
 		self.___events = { }
@@ -105,6 +106,33 @@ local EntityManager = Object:extend()
 			end
 			self:emit("entityadded", entity)
 		end
+	end
+
+	---
+	-- @param ctx, table
+	function EntityManager:setContext(ctx)
+		local context = self.context[ctx]
+		if not context then
+			context = { entities = { }, groups = { }, has_entity = { } }
+			for name, group in pairs(self.groups) do
+				context.groups[name] = {
+					name = group.name,
+					filter = group.filter,
+					entities = { },
+					has_entity = { }
+				}
+			end
+		end
+		self.groups = context.groups
+		self.entities = context.entities
+		self.has_entity = context.has_entity
+
+		for i = 1, #self.___systems do
+			self.___systems[i].manager = self
+			self.___systems[i].groups = self.groups
+		end
+
+		self.context[ctx] = context
 	end
 
 	--- Remove entity from manager by id

@@ -114,7 +114,7 @@ local settings = { }
 			love.resize(self.gameWidth, self.gameHeight)
 		end
 
-		core.canvas = love.graphics.newCanvas(self.gameWidth, self.gameHeight)
+		-- core.canvas = love.graphics.newCanvas(self.gameWidth, self.gameHeight)
 		-- camera = gamera.new(0, 0, self.gameWidth, self.gameHeight)
 		-- camera:setWindow(0, 0, w, h)
 		-- self.cameraScale = h / self.gameHeight

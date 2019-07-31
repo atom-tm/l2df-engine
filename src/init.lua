@@ -64,7 +64,7 @@ local core = l2df
 
 	function core:draw()
 		if self.canvas then
-			love.graphics.draw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
+			-- love.graphics.draw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
 		end
 
 		-- FPS Limiter working --
