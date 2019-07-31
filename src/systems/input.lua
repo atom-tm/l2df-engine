@@ -1,0 +1,3 @@
+local InputSystem = { }
+
+return InputSystem

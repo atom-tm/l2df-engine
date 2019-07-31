@@ -1,0 +1,3 @@
+local RenderSystem = { }
+
+return RenderSystem

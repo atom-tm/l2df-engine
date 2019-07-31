@@ -1,3 +1,7 @@
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Sounds works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Sounds works only under love2d environment")
+
 local sounds = { }
 	
 	sounds.list = { }

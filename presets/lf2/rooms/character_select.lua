@@ -11,52 +11,16 @@ local room = { }
 	local loaded_text = ui.Text("press_anykey", nil, 8, 8, { 1, 1, 1, 1})
 
 	room.nodes = {
-		bg_video,
 		loading_anim,
 		loaded_text,
 	}
 
-	local initialProcessing = coroutine.create(function ()
-		coroutine.yield()
-			l2df.settings:load()
-		coroutine.yield()
-			l2df.settings:apply()
-		coroutine.yield()
-			l2df.i18n:loadLocales(settings.langs_path, settings.lang)
-		coroutine.yield()
-			data:loadStates()
-		coroutine.yield()
-			data:loadKinds()
-		coroutine.yield()
-			data:loadFrames()
-		coroutine.yield()
-			data:loadSystem()
-		coroutine.yield()
-			data:loadCombos()
-		coroutine.yield()
-			data:loadDtypes()
-		coroutine.yield()
-			data:loadData()
-		coroutine.yield()
-	end)
-
 	function room:load()
-		bg_video:play()
 		loaded_text:hide()
 	end
 
 	function room:update()
 		if loading_ended then return end
-
-		loading_ended = coroutine.status(initialProcessing) == "dead"
-		if loading_ended then
-			loaded_text:show()
-			loading_anim:hide()
-			initialProcessing = nil
-		else
-			local err, message = coroutine.resume(initialProcessing)
-			assert(err, "Loading failed: " .. tostring(message))
-		end
 	end
 
 	function room:keypressed()

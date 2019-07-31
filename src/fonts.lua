@@ -1,10 +1,12 @@
-local __DIR__ = (...):match("(.-)[^%.]+$")
-local jsonParser = require(__DIR__ .. "parsers.json")
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Fonts works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Fonts works only under love2d environment")
 
-local fs = love and love.filesystem
+local jsonParser = core.import "parsers.json"
 
-local fonts = { list = {} }
+local fs = love.filesystem
 
+local fonts = { list = { } }
 
 	--- The function loads the list of game fonts from the json file
 	-- @param file, string        link to json file

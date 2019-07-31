@@ -1,12 +1,20 @@
-local core = l2df
-assert(type(core) == "table" and core.version >= 1.0, "Rooms works only with love2d-fighting v1.0 and higher")
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Rooms works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Rooms works only under love2d environment")
+
+local EntityManager = core.import "core.entities"
+local EventSystem = core.import "systems.event"
+local PhysixSystem = core.import "systems.physix"
+local UI = core.import "ui"
 
 local hook = helper.hook
 
 local rooms = { list = { } }
 
 	function rooms:init()
-		self.list = helper.requireAllFromFolder(core.settings.global.rooms_path)
+		for name, room in pairs(helper.requireAllFromFolder(core.settings.global.rooms_path)) do
+			self:add(name, room)
+		end
 
 		local events = love.handlers
 		events.update = true
@@ -15,7 +23,7 @@ local rooms = { list = { } }
 			hook(love, key, function (...) self:trigger(key, ...) end)
 		end
 
-		hook(core, "localechanged", function () self:forceTrigger("localechanged") end, core)
+		hook(core, "localechanged", function () self:trigger("localechanged") end, core)
 		hook(love, "draw", function (...)
 			love.graphics.setCanvas(core.canvas)
 			love.graphics.clear()
@@ -26,12 +34,27 @@ local rooms = { list = { } }
 		self:set(core.settings.global.startRoom)
 	end
 
-	function rooms:trigger(event, ...)
-		return self:__trigger(event, false, ...)
-	end
-
-	function rooms:forceTrigger(event, ...)
-		return self:__trigger(event, true, ...)
+	function rooms:add(name, room)
+		room = room or { }
+		if not room.manager or not room.manager.isTypeOf or not room.manager:isTypeOf(EntityManager) then
+			room.manager = EntityManager {
+				groups = {
+					physical = { "x", "y" },
+					drawable = function (x) return x.isInstanceOf(UI) end
+				},
+				systems = {
+					EventSystem:new({
+						forced = { "localechanged", "roomloaded" }
+					}),
+					PhysixSystem()
+				}
+			}
+		end
+		if type(room.nodes) == "table" and #room.nodes > 0 then
+			room.manager:add(room.nodes)
+		end
+		self.list[name] = room
+		return room
 	end
 
 	function rooms:set(room, input)
@@ -39,42 +62,17 @@ local rooms = { list = { } }
 		local _ = self.current and self.current.exit and self.current:exit()
 		self.current = self.list[tostring(room)]
 		local _ = self.current.load and self.current:load(input)
-		self:forceTrigger("roomloaded")
+		self:trigger("roomloaded")
 	end
 
 	function rooms:reload(input)
 		local _ = self.current.load and self.current:load(input)
-		self:forceTrigger("roomloaded")
+		self:trigger("roomloaded")
 	end
 
-	function rooms:__trigger(event, force, ...)
-		if self.current and self.current.nodes and next(self.current.nodes) then
-			local containers = { {self.current.nodes, 1, #self.current.nodes} }
-			local current = containers[1]
-			local node = nil
-			local head = 1
-			local i = 1
-
-			while head > 1 or i <= current[3] do
-				node = current[1][i]
-				i = i + 1
-
-				if node and (force or not node.hidden) and type(node[event]) == "function" then
-					node[event](node, ...)
-				end
-
-				if node and node.childs and next(node.childs) then
-					current[2] = i
-					containers[head + 1] = { node.childs, 1, #node.childs }
-					head = head + 1
-					current = containers[head]
-					i = 1
-				elseif i > current[3] and head > 1 then
-					head = head - 1
-					current = containers[head]
-					i = current[2]
-				end
-			end
+	function rooms:trigger(event, ...)
+		if self.current and self.current.manager then
+			self.current.manager:emit(event, ...)
 		end
 		return self.current and self.current[event] and self.current[event](self.current, ...)
 	end

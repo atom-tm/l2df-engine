@@ -1,17 +1,17 @@
-local core = l2df
-assert(type(core) == "table" and core.version >= 1.0, "UI works only with love2d-fighting v1.0 and higher")
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "UI works only with l2df v1.0 and higher")
+
+local i18n = core.import "i18n"
+local videos = core.import "videos"
+local fonts = core.import "fonts"
+local images = core.import "images"
+local settings = core.import "settings"
+local Entity = core.import "core.entities.entity"
 
 local fopen = io.open
 local fs = love and love.filesystem
 
-local i18n = core.i18n
-local videos = core.video
-local fonts = core.font
-local images = core.image
-local settings = core.settings
-local Object = core.import "object"
-
-local UI = Object:extend()
+local UI = Entity:extend()
 
 	function UI.resource(file)
 		local path = settings.global.ui_path .. file
@@ -37,7 +37,7 @@ local UI = Object:extend()
 		assert(type(self.childs) == "table", "Parameter 'childs' must be a table.")
 		for i = 1, #self.childs do
 			local child = childs[i]
-			assert(child and child.isInstanceOf(UI), "Only UI elements can be a part of UI.")
+			assert(child and child:isInstanceOf(UI), "Only UI elements can be a part of UI.")
 			child.x = child.x + self.x
 			child.y = child.y + self.y
 		end

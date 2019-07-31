@@ -1,3 +1,7 @@
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Videos works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Videos works only under love2d's environment")
+
 local videos = { }
 
 	videos.list = { }

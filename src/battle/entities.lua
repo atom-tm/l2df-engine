@@ -414,35 +414,16 @@ local entities = {}
 		self.slow_forse = force
 	end
 
-	function entities.isAlly(obj1,obj2)
-		if obj1 == obj2 then return false end
-		if obj1.team == obj2.team and obj1.team ~= -1 then
-			return true
-		elseif obj1.owner == obj2.owner then
-			return true
-		else
-			return false
-		end
+	function entities.isAlly(obj1, obj2)
+		return obj1 ~= obj2 and (obj1.owner == obj2.owner or obj1.team ~= -1 and obj1.team == obj2.team)
 	end
 
-	function entities.isEnemy(obj1,obj2)
-		if obj1 == obj2 then return false end
-		if ojb1.team ~= obj2.team then
-			return true
-		elseif obj1.team == -1 and obj1.owner ~= obj2.owner then
-			return true
-		else
-			return false
-		end
+	function entities.isEnemy(obj1, obj2)
+		return obj1 ~= obj2 and (obj1.team ~= obj2.team or obj1.team == -1 and obj1.owner ~= obj2.owner)
 	end
 
-	function entities.isOwner(obj1,obj2)
-		if obj1 == obj2 then return false end
-		if obj1.owner == obj2.owner then
-			return true
-		else
-			return false
-		end
+	function entities.isOwner(obj1, obj2)
+		return obj1 ~= obj2 and obj1.owner == obj2.owner
 	end
 
 return entities

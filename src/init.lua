@@ -3,18 +3,13 @@ gamera		= require(__DIR__ .. "external.gamera")
 json 		= require(__DIR__ .. "external.json")
 helper 		= require(__DIR__ .. "helper")
 
---battle		= require(__DIR__ .. "battle")
 ---------------------------------------------
 camera = nil
 locale = nil
 ---------------------------------------------
 
-l2df = { version = 1.0 }
+l2df = require(__DIR__ .. "core")
 local core = l2df
-
-	function core.import(name)
-		return require(__DIR__ .. name)
-	end
 
 	local min_dt, next_time
 
@@ -27,6 +22,7 @@ local core = l2df
 	core.sound		= core.import "sounds"
 	core.image		= core.import "images"
 	core.video		= core.import "videos"
+	core.input		= core.import "input"
 	core.ui			= core.import "ui"
 	core.rooms		= core.import "rooms"
 	core.battle		= core.import "battle"
@@ -41,9 +37,9 @@ local core = l2df
 		-- FPS Limiter initialize --
 		min_dt = 1 / self.settings.graphic.fpsLimit
 		next_time = love.timer.getTime()
-		----------------------------
 
 		-- I've moved it above, but it can be bad, needs testing
+		self.input:init()
 		self.rooms:init()
 
 		helper.hook(self.i18n, "setLocale", self.localechanged, self)
@@ -60,7 +56,6 @@ local core = l2df
 
 		-- FPS Limiter --
 		next_time = next_time + min_dt
-		----------------------------
 	end
 
 	function core:localechanged()
@@ -79,7 +74,6 @@ local core = l2df
 			return
 		end
 		love.timer.sleep(next_time - cur_time)
-		----------------------------
 
 		if self.camera then
 			self.camera:draw(function(l, t, w, h)

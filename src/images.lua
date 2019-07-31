@@ -1,6 +1,9 @@
-local images = {}
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Images works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Images works only under love2d environment")
 
-	images.list = {}
+local images = { list = { } }
+
 	function images.Load(filepath, cutting_info , filter)
 		for i in pairs(images.list) do
 			if images.list[i].path == filepath then

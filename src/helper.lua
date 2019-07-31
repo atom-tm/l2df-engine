@@ -1,4 +1,4 @@
-local helper = {}
+local helper = { }
 
 	--- Creates a hook for table's event / function.
 	-- @param obj, table          table to hook

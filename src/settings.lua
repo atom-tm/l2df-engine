@@ -1,10 +1,10 @@
-local core = l2df
-assert(type(core) == "table" and core.version >= 1.0, "Settings works only with love2d-fighting v1.0 and higher")
-
-local fs = love and love.filesystem
-assert(fs, "Settings works only under love2d's environment")
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Settings works only with l2df v1.0 and higher")
+assert(type(love) == "table", "Settings works only under love2d environment")
 
 local datParser = core.import "parsers.dat"
+
+local fs = love and love.filesystem
 
 local settings = { }
 

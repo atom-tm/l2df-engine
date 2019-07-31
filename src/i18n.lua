@@ -1,10 +1,11 @@
-local __DIR__ = (...):match("(.-)[^%.]+$")
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "i18n works only with l2df v1.0 and higher")
+
+local jsonParser = core.import "parsers.json"
 
 local strgsub = string.gsub
 local strgmatch = string.gmatch
 local fs = love and love.filesystem
-
-local jsonParser = require(__DIR__ .. "parsers.json")
 
 local module = { }
 

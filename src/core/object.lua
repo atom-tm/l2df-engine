@@ -1,6 +1,6 @@
 local Object = { }
 
-	function Object:__getInstance()
+	function Object:___getInstance()
 		local obj = setmetatable({
 				___class = self
 			}, self)
@@ -10,21 +10,27 @@ local Object = { }
 	end
 
 	function Object:extend(...)
-		local cls = self:__getInstance()
+		local cls = self:___getInstance()
 		cls.super = setmetatable({ }, {
 				__index = self,
 				__call = function (_, child, ...)
 					return self.init(child, ...)
 				end
 			})
-		for _, f in pairs{...} do
-			f(cls, self)
+		for _, param in pairs{...} do
+			if type(param) == "function" then
+				param(cls, self)
+			elseif type(param) == "table" then
+				for k, v in pairs(param) do
+					cls[k] = v
+				end
+			end
 		end
 		return cls
 	end
 
 	function Object:new(...)
-		local obj = self:__getInstance()
+		local obj = self:___getInstance()
 		obj:init(...)
 		return obj
 	end
