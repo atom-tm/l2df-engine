@@ -2,8 +2,9 @@ local core = l2df
 assert(type(core) == "table" and core.version >= 1.0, "Input works only with l2df v1.0 and higher")
 assert(type(love) == "table", "Input works only under love2d's environment")
 
+local settings = core.import "settings"
+
 local hook = helper.hook
-local settings = core.settings
 
 local input = { }
 

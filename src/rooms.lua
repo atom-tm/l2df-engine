@@ -3,11 +3,11 @@ assert(type(core) == "table" and core.version >= 1.0, "Rooms works only with l2d
 assert(type(love) == "table", "Rooms works only under love2d environment")
 
 local UI = core.import "ui"
+local settings = core.import "settings"
 local EntityManager = core.import "core.entities"
 local EventSystem = core.import "systems.event"
 local PhysixSystem = core.import "systems.physix"
 local RenderSystem = core.import "systems.render"
-local settings = core.settings
 
 local hook = helper.hook
 
