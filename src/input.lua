@@ -4,8 +4,6 @@ assert(type(love) == "table", "Input works only under love2d's environment")
 
 local settings = core.import "settings"
 
-local hook = helper.hook
-
 local input = { }
 
 	input.buttons = { }
@@ -15,8 +13,8 @@ local input = { }
 
 	--- Init input system
 	function input:init()
-		hook(love, "keypressed", self.keypressed, self)
-		hook(love, "keyreleased", self.keypressed, self)
+		-- helper.hook(love, "keypressed", self.keypressed, self)
+		-- helper.hook(love, "keyreleased", self.keypressed, self)
 	end
 
 	--- Check if button is pressed
@@ -25,7 +23,7 @@ local input = { }
 	-- @return boolean
 	function input:pressed(button, player)
 		player = player or 1
-		return self.buttons[player][button] > 0
+		return self.buttons[player][button] and self.buttons[player][button] > 0
 	end
 
 	--- Button pressed event
@@ -69,8 +67,8 @@ local input = { }
 
 	--- Hook for love.keyreleased
 	function input:keyreleased(key)
-		if self.mapping[key] then
-			local map = self.mapping[key]
+		local map = self.mapping[key]
+		if map then
 			self:release(map[1], map[2])
 		end
 	end

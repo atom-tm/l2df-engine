@@ -6,6 +6,7 @@ local UI = core.import "ui"
 local settings = core.import "settings"
 local EntityManager = core.import "core.entities"
 local EventSystem = core.import "systems.event"
+local InputSystem = core.import "systems.input"
 local PhysixSystem = core.import "systems.physix"
 local RenderSystem = core.import "systems.render"
 
@@ -20,9 +21,10 @@ local rooms = { list = { } }
 				ui = UI
 			},
 			systems = {
+				InputSystem(),
 				EventSystem({
 					forced = { "localechanged", "roomloaded" },
-					except = { "draw" }
+					except = { "draw", "keypressed", "keyreleased" }
 				}),
 				PhysixSystem(),
 				RenderSystem()

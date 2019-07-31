@@ -306,49 +306,45 @@ local UI = Entity:extend()
 		self:super(x, y, childs)
 		self.cursor = 1
 		self.horizontal = horizontal or false
- 	end
+	end
 
- 	function UI.List:keypressed(key)
- 		local size = #self.childs
+	function UI.List:press(button, player)
+		local size = #self.childs
 
- 		local controls = settings.controls
- 		for i = 1, #controls do
+		if self.horizontal then
+			if button == "left" then
+				local old = self.childs[self.cursor]
+				self.cursor = self.cursor > 1 and self.cursor - 1 or size
+				return self:change(self.childs[self.cursor], old)
+			elseif button == "right" then
+				local old = self.childs[self.cursor]
+				self.cursor = self.cursor < size and self.cursor + 1 or 1
+				return self:change(self.childs[self.cursor], old)
+			end
+		else
+			if button == "up" then
+				local old = self.childs[self.cursor]
+				self.cursor = self.cursor > 1 and self.cursor - 1 or size
+				return self:change(self.childs[self.cursor], old)
+			elseif button == "down" then
+				local old = self.childs[self.cursor]
+				self.cursor = self.cursor < size and self.cursor + 1 or 1
+				return self:change(self.childs[self.cursor], old)
+			end
+		end
 
- 			if self.horizontal then
-	 			if key == controls[i].left then
-	 				local old = self.childs[self.cursor]
-	 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
-	 				return self:change(self.childs[self.cursor], old)
-	 			elseif key == controls[i].right then
-	 				local old = self.childs[self.cursor]
-	 				self.cursor = self.cursor < size and self.cursor + 1 or 1
-	 				return self:change(self.childs[self.cursor], old)
-	 			end
-	 		else
-	 			if key == controls[i].up then
-	 				local old = self.childs[self.cursor]
-	 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
-	 				return self:change(self.childs[self.cursor], old)
-	 			elseif key == controls[i].down then
-	 				local old = self.childs[self.cursor]
-	 				self.cursor = self.cursor < size and self.cursor + 1 or 1
-	 				return self:change(self.childs[self.cursor], old)
-	 			end
-	 		end
+		if button == "attack" and self.childs[self.cursor].click then
+			return self.childs[self.cursor]:click(nil, nil, 1)
+		end
+	end
 
- 			if key == controls[i].attack and self.childs[self.cursor].click then
- 				return self.childs[self.cursor]:click(nil, nil, 1)
- 			end
- 		end
- 	end
+	function UI.List:change(new, old)
+		old.hover = false
+		new.hover = true
+	end
 
- 	function UI.List:change(new, old)
- 		old.hover = false
- 		new.hover = true
- 	end
-
- 	function UI.List:update(dt)
- 		self.childs[self.cursor].hover = true
- 	end
+	function UI.List:update(dt)
+		self.childs[self.cursor].hover = true
+	end
 
 return UI
