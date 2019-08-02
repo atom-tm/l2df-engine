@@ -97,12 +97,12 @@ local UI = Entity:extend()
 	UI.Image = UI:extend()
 	function UI.Image:init(file, x, y, cutting, sprite, filter)
 		self:super(x, y)
-		self.resource = file and images.Load(file, cutting, filter)
+		self.resource = file and images.load(file, cutting, nil, filter)
 		self.sprite = sprite or 0
 	end
 
 	function UI.Image:draw()
-		images.draw(self.resource, self.sprite, self.x, self.y)
+		self.resource:draw(self.x, self.y)
 	end
 
 
@@ -157,7 +157,7 @@ local UI = Entity:extend()
 	UI.Animation = UI:extend()
 	function UI.Animation:init(file, x, y, w, h, row, col, frames, wait, looped)
 		self:super(x, y)
-		self.resource = file and images.Load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
+		self.resource = file and images.load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
 		self.frame = 1
 		self.max_frames = frames
 		self.wait = 0
@@ -179,7 +179,7 @@ local UI = Entity:extend()
 	end
 
 	function UI.Animation:draw()
-		images.draw(self.resource, self.frame, self.x, self.y)
+		images.draw(self.resource, self.x, self.y)
 	end
 
 

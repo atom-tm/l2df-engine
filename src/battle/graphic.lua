@@ -6,7 +6,7 @@ local settings = core.settings
 
 local graphic = { }
 
-	graphic.filter = image.Load("sprites/filter.png")
+	graphic.filter = image.load("sprites/filter.png")
 	graphic.camera = nil
 	graphic.camera_settings = {
 		owner = nil,
@@ -90,10 +90,10 @@ local graphic = { }
 		elseif direction < 0 then
 			x_offset = -self.camera_settings.x_offset
 		end
-		
+
 		local camera_x = (right + left) * 0.5 + x_offset
 		local camera_y = (top + bottom) * 0.5 - self.camera_settings.y_offset
- 
+
 		self.camera_settings.scale = 1 - math.sqrt((right - left)^2 + (top - bottom)^2) * 0.001
 
 		if self.camera_settings.scale < 0 then self.camera_settings.scale = 0
@@ -333,13 +333,13 @@ local graphic = { }
 							local distance = math.sqrt((object.x - light.x)^2+(object.y - light.y)^2+(object.z - light.z)^2)
 
 							if distance < light.r then
-								
+
 								local shadow_direction_z = helper.sign(((object.z - light.z) / light.r))
 								local scale_y = (object.z - light.z)/light.r
 
 								local direction = (((object.x - light.x) / light.r) * -object.facing)
 								local opacity = light.f - distance/light.r - object.y * 0.001
-								
+
 								image.draw(object.sprite, object.pic,
 									object.x, battle.map.head.border_up + object.y * 0.1 + object.z, object.facing,
 									{width = 1, height = -scale_y}, 0,0,0,opacity,
@@ -352,12 +352,12 @@ local graphic = { }
 					if #graphic.light_sources > 0 then
 						if object.shadow_sprite ~= nil then
 						elseif battle.map.shadow_sprite ~= nil then
-							
+
 							image.draw(battle.map.shadow_sprite,0,
 								object.x,battle.map.head.border_up + object.z, object.facing,
 								{width = 1 - object.y * 0.0020, height = 1 - object.y * 0.0020}, 1,1,1,1 - object.y * 0.0020,
 								{ox = battle.map.shadow_centerx, oy = battle.map.shadow_centery})
-						
+
 						end
 					end
 				end

@@ -5,6 +5,8 @@ assert(type(love) == "table", "Images works only under love2d environment")
 local fs = love.filesystem
 local notNil = core.import("helper").notNil
 
+local images = { list = { global = {}, temporary = {} }, load, draw }
+
 --- Loads an image into an array
 local function loadResourse(filepath, global, linear, mipmaps, wrap)
 	local index = filepath
@@ -13,7 +15,7 @@ local function loadResourse(filepath, global, linear, mipmaps, wrap)
 	if resourse then return resourse end
 
 	local storage = global and images.list.global or images.list.temporary
-	storage[index] = love.graphics.newImage(filename, {linear = linear, mipmaps = mipmaps})
+	storage[index] = love.graphics.newImage(filepath, {linear = linear, mipmaps = mipmaps})
 	resourse = storage[index]
 	if resourse then
 		resourse:setWrap(wrap,wrap)
@@ -30,8 +32,6 @@ local function addQuad(self, x, y, w, h, id)
 	self.quads[id] = quad
 	self.info.frames = self.info.frames + 1
 end
-
-local images = { list = { global = {}, temporary = {} }, load, draw }
 
 	--- Clearing an array of temporary resources to free up memory
 	function images.clear()

@@ -35,9 +35,9 @@ local room = { opacity }
 		self.opacity = 1
 		l2df.sound:setMusic("music/main.mp3")
 		self.scenes = {
-			l2df.image.Load("sprites/UI/MainMenu/1.png"),
-			l2df.image.Load("sprites/UI/MainMenu/2.png"),
-			l2df.image.Load("sprites/UI/MainMenu/3.png"),
+			l2df.image.load("sprites/UI/MainMenu/1.png"),
+			l2df.image.load("sprites/UI/MainMenu/2.png"),
+			l2df.image.load("sprites/UI/MainMenu/3.png"),
 		}
 		self.scene = math.random(1, #self.scenes)
 	end
@@ -64,7 +64,7 @@ local room = { opacity }
 	end
 
 	function room:draw()
-		l2df.image.draw(self.scenes[self.scene], 0, 0, settings.gameHeight - 240, 0, 2)
+		l2df.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240)
 
 		local ro, go, bo, ao = love.graphics.getColor()
 		love.graphics.setColor(0,0,0,self.opacity)
