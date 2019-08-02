@@ -4,7 +4,7 @@ assert(type(core) == "table" and core.version >= 1.0, "Core.Entities.Entity work
 local Object = core.import "core.object"
 local Component = core.import "core.entities.component"
 
-local table_remove = table.remove
+local tableRemove = table.remove
 
 local Entity = Object:extend({ ___groups = { }, components = { }, has_components = { }, childs = { } })
 
@@ -25,7 +25,7 @@ local Entity = Object:extend({ ___groups = { }, components = { }, has_components
 
 		for i = #self.component, 1, -1 do
 			if self.components[i] == component then
-				table_remove(self.components, i)
+				tableRemove(self.components, i)
 				break
 			end
 		end

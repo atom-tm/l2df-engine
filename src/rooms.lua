@@ -15,20 +15,22 @@ local hook = helper.hook
 local rooms = { list = { } }
 
 	function rooms:init()
+		self.systems = {
+			InputSystem(),
+			EventSystem({
+				forced = { "localechanged", "roomloaded" },
+				except = { "draw", "keypressed", "keyreleased" }
+			}),
+			PhysixSystem(),
+			RenderSystem()
+		}
+
 		self.entityManager = EntityManager {
 			groups = {
 				physical = { "x", "y" },
 				ui = UI
 			},
-			systems = {
-				InputSystem(),
-				EventSystem({
-					forced = { "localechanged", "roomloaded" },
-					except = { "draw", "keypressed", "keyreleased" }
-				}),
-				PhysixSystem(),
-				RenderSystem()
-			}
+			systems = self.systems
 		}
 
 		for name, room in pairs(helper.requireAllFromFolder(settings.global.rooms_path)) do

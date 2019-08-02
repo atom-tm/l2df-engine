@@ -28,13 +28,11 @@ local EventSystem = System:extend()
 		end
 	end
 
-local function dummyFunction() end
-
 local EventProxy = { ___events = { } }
 
 	function EventProxy:generateEvent(event)
 		if self.child.except[event] then
-			return dummyFunction
+			return false
 		elseif self.child.forced[event] then
 			return function (self, ...)
 				local containers = { {self.manager.entities, 1, #self.manager.entities} }
