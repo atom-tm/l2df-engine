@@ -179,7 +179,7 @@ local UI = Entity:extend()
 	end
 
 	function UI.Animation:draw()
-		images.draw(self.resource, self.x, self.y)
+		images.draw(self.resource, self.x, self.y, self.frame)
 	end
 
 

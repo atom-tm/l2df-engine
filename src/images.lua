@@ -28,7 +28,7 @@ end
 --- Adds a frame
 local function addQuad(self, x, y, w, h, id)
 	local quad = love.graphics.newQuad(x, y, w, h, self.info.width, self.info.height)
-	id = id or #self.quads
+	id = id or #self.quads + 1
 	self.quads[id] = quad
 	self.info.frames = self.info.frames + 1
 end
@@ -76,10 +76,12 @@ end
 		info.height = image.resourse:getHeight()
 		info.frames = x * y
 
-		image.batch = info.frames > 1 and love.graphics.newSpriteBatch(image.resourse,1000)
+		image.batch = info.frames > 1 and love.graphics.newSpriteBatch(image.resourse)
 		image.info = info
 		image.addQuad = addQuad
 		image.draw = images.draw
+
+		image:addQuad(0, 0, info.width, info.height, 0)
 
 		for j = 0, y - 1 do
 			for i = 0, x - 1 do
@@ -91,16 +93,42 @@ end
 	end
 
 
-	function images.draw(self, x, y)
+	function images.draw(self, x, y, frame, facing, arguments, color)
 
-		if not self then return end
-		local sprite = self.batch or self.resourse
+		sprite = self and self.resourse
 		if not sprite then return end
 
+		facing = facing and -1 or 1
 		x = x or 0
 		y = y or 0
+		frame = self.quads[frame or 0]
 
-		love.graphics.draw(sprite, x, y)
+		local sx, sy, ra, ox, oy, kx, ky = 1, 1, 0, 0, 0, 0, 0
+		local r, g, b, a = 1, 1, 1, 1
+		local ro, go, bo, ao = love.graphics.getColor()
+
+		if type(arguments) == "table" then
+			sx = notNil(arguments.sx or arguments[1], sx)
+			sy = notNil(arguments.sy or arguments[2], sy)
+			ra = notNil(arguments.ra or arguments[3], ra)
+			ox = notNil(arguments.ox or arguments[4], ox)
+			oy = notNil(arguments.oy or arguments[5], oy)
+			kx = notNil(arguments.kx or arguments[6], kx)
+			ky = notNil(arguments.ky or arguments[7], ky)
+		else
+			sx = notNil(arguments, sx)
+			sy = notNil(arguments, sy)
+		end
+
+		color = type(cutting_info) == "table" and color or {}
+		r = color.r or color[1] or ro
+		g = color.g or color[2] or go
+		b = color.b or color[3] or bo
+		a = color.a or color[4] or ao
+
+		love.graphics.setColor(r, g, b, a)
+		love.graphics.draw(sprite, frame, x, y, ra, sx * facing, sy, ox, oy, kx, ky)
+		love.graphics.setColor(ro, go, bo, ao)
 
 	end
 
