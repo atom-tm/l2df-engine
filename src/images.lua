@@ -108,19 +108,19 @@ end
 		local ro, go, bo, ao = love.graphics.getColor()
 
 		if type(arguments) == "table" then
-			sx = notNil(arguments.sx or arguments[1], sx)
-			sy = notNil(arguments.sy or arguments[2], sy)
-			ra = notNil(arguments.ra or arguments[3], ra)
-			ox = notNil(arguments.ox or arguments[4], ox)
-			oy = notNil(arguments.oy or arguments[5], oy)
-			kx = notNil(arguments.kx or arguments[6], kx)
-			ky = notNil(arguments.ky or arguments[7], ky)
+			sx = arguments.sx or arguments[1] or sx
+			sy = arguments.sy or arguments[2] or sy
+			ra = arguments.ra or arguments[3] or ra
+			ox = arguments.ox or arguments[4] or ox
+			oy = arguments.oy or arguments[5] or oy
+			kx = arguments.kx or arguments[6] or kx
+			ky = arguments.ky or arguments[7] or ky
 		else
-			sx = notNil(arguments, sx)
-			sy = notNil(arguments, sy)
+			sx = arguments or sx
+			sy = arguments or sy
 		end
 
-		color = type(cutting_info) == "table" and color or {}
+		color = type(color) == "table" and color or {}
 		r = color.r or color[1] or ro
 		g = color.g or color[2] or go
 		b = color.b or color[3] or bo

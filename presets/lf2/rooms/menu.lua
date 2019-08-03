@@ -70,7 +70,7 @@ local room = { opacity }
 		image01:draw(0,0,4)
 		image01:draw(300,0,4,-1)
 		image01:draw(150,150,3,nil,{ra = math.rad(45)})
-		image01:draw(300,300,2,nil,{kx = 0.2})
+		image01:draw(300,300,2,nil,{kx = 0.2},{1,0.5,1,1})
 
 		local ro, go, bo, ao = love.graphics.getColor()
 		love.graphics.setColor(0,0,0,self.opacity)
