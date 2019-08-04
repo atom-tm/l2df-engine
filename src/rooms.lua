@@ -17,10 +17,10 @@ local rooms = { list = { } }
 	function rooms:init()
 		self.systems = {
 			InputSystem(),
-			EventSystem({
+			EventSystem {
 				forced = { "localechanged", "roomloaded" },
 				except = { "draw", "keypressed", "keyreleased" }
-			}),
+			},
 			PhysixSystem(),
 			RenderSystem()
 		}
