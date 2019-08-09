@@ -2,6 +2,7 @@ local l2df = l2df
 local ui = l2df.ui
 local settings = l2df.settings
 local i18n = l2df.i18n
+local media = l2df.import("media")
 
 local room = { opacity }
 
@@ -31,15 +32,13 @@ local room = { opacity }
 		list,
 	}
 
-	local image01 = l2df.image.load(ui.resource("interface_test01.png"),{150,150,4,1})
-
 	function room:load()
 		self.opacity = 1
 		l2df.sound:setMusic("music/main.mp3")
 		self.scenes = {
-			l2df.image.load("sprites/UI/MainMenu/1.png"),
-			l2df.image.load("sprites/UI/MainMenu/2.png"),
-			l2df.image.load("sprites/UI/MainMenu/3.png"),
+			l2df.image.load("sprites/UI/MainMenu/1.png",nil,nil,{linear = false}),
+			l2df.image.load("sprites/UI/MainMenu/2.png",nil,nil,{linear = false}),
+			l2df.image.load("sprites/UI/MainMenu/3.png",nil,nil,{linear = false}),
 		}
 		self.scene = math.random(1, #self.scenes)
 	end
@@ -66,11 +65,8 @@ local room = { opacity }
 	end
 
 	function room:draw()
+
 		l2df.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240, 0, nil, 2)
-		image01:draw(0,0,4)
-		image01:draw(300,0,4,-1)
-		image01:draw(150,150,3,nil,{ra = math.rad(45)})
-		image01:draw(300,300,2,nil,{kx = 0.2},{1,0.5,1,1})
 
 		local ro, go, bo, ao = love.graphics.getColor()
 		love.graphics.setColor(0,0,0,self.opacity)

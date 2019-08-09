@@ -2,9 +2,8 @@ local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "UI works only with l2df v1.0 and higher")
 
 local i18n = core.import "i18n"
-local videos = core.import "videos"
 local fonts = core.import "fonts"
-local images = core.import "images"
+local media = core.import "media"
 local settings = core.import "settings"
 local Entity = core.import "core.entities.entity"
 
@@ -97,7 +96,7 @@ local UI = Entity:extend()
 	UI.Image = UI:extend()
 	function UI.Image:init(file, x, y, cutting, sprite, filter)
 		self:super(x, y)
-		self.resource = file and images.load(file, cutting, nil, filter)
+		self.resource = file and media.Image(file, cutting, nil, filter)
 		self.sprite = sprite or 0
 	end
 
@@ -109,20 +108,20 @@ local UI = Entity:extend()
 	UI.Video = UI:extend()
 	function UI.Video:init(file, x, y, stretch)
 		self:super(x, y)
-		self.video = videos.load(file)
+		self.video = media.Video(file)
 		self.stretch = stretch or false
 		self.size = { width = 1, height = 1 }
 	end
 
 	function UI.Video:resize(w, h)
 		if self.stretch then
-			self.size.width = core.settings.gameWidth / self.video.width
-			self.size.height = core.settings.gameHeight / self.video.height
+			self.size.width = core.settings.gameWidth / self.video.info.width
+			self.size.height = core.settings.gameHeight / self.video.info.height
 		end
 	end
 
 	function UI.Video:draw()
-		videos.draw(self.video, self.x, self.y, self.size)
+		self.video:draw(self.x, self.y, self.size)
 	end
 
 	function UI.Video:play()
@@ -157,7 +156,7 @@ local UI = Entity:extend()
 	UI.Animation = UI:extend()
 	function UI.Animation:init(file, x, y, w, h, row, col, frames, wait, looped)
 		self:super(x, y)
-		self.resource = file and images.load(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
+		self.resource = file and media.Image(file, {w = w or 1, h = h or 1, x = row or 1, y = col or 1})
 		self.frame = 1
 		self.max_frames = frames
 		self.wait = 0
@@ -179,7 +178,7 @@ local UI = Entity:extend()
 	end
 
 	function UI.Animation:draw()
-		images.draw(self.resource, self.x, self.y, self.frame)
+		self.resource:draw(self.x, self.y, self.frame)
 	end
 
 
@@ -233,7 +232,7 @@ local UI = Entity:extend()
 		self.oy = oy or 0
 		self.w = w or self.text.width or 1
 		self.h = h or self.text.height or 1
-		self.background = type(bg) == "string" and images.Load(bg) or bg
+		self.background = type(bg) == "string" and media.Image(bg) or bg
 		self.use_mouse = use_mouse and true or false
 		self.hover = false
 		self.clicked = false
@@ -290,7 +289,7 @@ local UI = Entity:extend()
 
 	function UI.Button:draw()
 		if self.background then
-			images.draw(self.background, 0, self.x, self.y)
+			self.background(self.x, self.y,0)
 		end
 
 		if self.text then

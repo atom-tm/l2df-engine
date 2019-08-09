@@ -93,6 +93,7 @@ end
 	end
 
 
+	--- The function of rendering the images
 	function images.draw(self, x, y, frame, facing, arguments, color)
 
 		sprite = self and self.resourse
@@ -131,33 +132,6 @@ end
 		love.graphics.setColor(ro, go, bo, ao)
 
 	end
-
-	--[[function images.draw(image, sprite, x, y, facing, size, r,g,b,a, other)
-		if size == nil then size = 1 end
-		if facing == 0 or facing == nil then facing = 1 end
-		local width = 1
-		local height = 1
-		if type(size) == "number" then
-			width = size
-			height = size
-		else
-		    width = size.width
-		    height = size.height
-		end
-		other = other or {
-			r = 0,
-			ox = 0, oy = 0,
-			kx = 0, ky = 0,
-		}
-		local ro, go, bo, ao = love.graphics.getColor()
-		love.graphics.setColor(r or ro, g or go, b or bo, a or ao)
-		if sprite and sprite ~= 0 then
-			love.graphics.draw(image.image,image.sprites[sprite],x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
-		else
-			love.graphics.draw(image.image,x,y,other.r,width * facing,height,other.ox,other.oy,other.kx,other.ky)
-		end
-		love.graphics.setColor(ro, go, bo, ao)
-	end]]
 
 return images
 

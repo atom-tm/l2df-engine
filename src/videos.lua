@@ -2,9 +2,35 @@ local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "Videos works only with l2df v1.0 and higher")
 assert(type(love) == "table", "Videos works only under love2d's environment")
 
-local videos = { }
+local fs = love.filesystem
+local notNil = core.import("helper").notNil
 
-	videos.list = { }
+local videos = { list = { global = {}, temporary = {} }, load, draw  }
+
+
+	--- Clearing an array of temporary resources to free up memory
+	function videos.clear()
+		for key in pairs(videos.list.temporary) do
+			videos.list.temporary[key] = nil
+		end
+		videos.list.temporary = {}
+	end
+
+
+	--- Loads an video and returns the object of that video
+	function videos.load(filepath, audio, privacy)
+
+		if not (filepath and fs.getRealDirectory(filepath)) then return end
+
+		local video = { resourse, info = {}, draw }
+
+	end
+
+
+
+
+
+
 
 	function videos.load(file_path)
 		for i in pairs(videos.list) do
