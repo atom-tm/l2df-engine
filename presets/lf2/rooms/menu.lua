@@ -1,25 +1,26 @@
-local l2df = l2df
-local ui = l2df.ui
-local settings = l2df.settings
-local i18n = l2df.i18n
-local media = l2df.import("media")
+local core = l2df
+local ui = core.ui
+local settings = core.settings
+local i18n = core.i18n
+local media = core.import "media"
+local Room = core.import "rooms.room"
 
-local room = { opacity }
+local room = Room:extend()
 
 	local fnt_menu = "main_menu"
 
 	local list = ui.List(512, 32, {
 		ui.Button(ui.Text(i18n "menu.versus", fnt_menu), 0, 0):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () l2df.rooms:set("battle") end),
+			:on("click", function () core.rooms:set("battle") end),
 
 		ui.Button(ui.Text(i18n "menu.story", fnt_menu), 0, 64):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () l2df.rooms:set("myroom") end),
+			:on("click", function () core.rooms:set("myroom") end),
 
 		ui.Button(ui.Text(i18n "menu.settings", fnt_menu), 0, 128):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () l2df.rooms:set("settings") end),
+			:on("click", function () core.rooms:set("settings") end),
 
 		ui.Button(ui.Text(i18n "menu.exit", fnt_menu), 0, 192):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
@@ -34,11 +35,11 @@ local room = { opacity }
 
 	function room:load()
 		self.opacity = 1
-		l2df.sound:setMusic("music/main.mp3")
+		core.sound:setMusic("music/main.mp3")
 		self.scenes = {
-			l2df.image.load("sprites/UI/MainMenu/1.png",nil,nil,{linear = false}),
-			l2df.image.load("sprites/UI/MainMenu/2.png",nil,nil,{linear = false}),
-			l2df.image.load("sprites/UI/MainMenu/3.png",nil,nil,{linear = false}),
+			core.image.load("sprites/UI/MainMenu/1.png",nil,nil,{linear = false}),
+			core.image.load("sprites/UI/MainMenu/2.png",nil,nil,{linear = false}),
+			core.image.load("sprites/UI/MainMenu/3.png",nil,nil,{linear = false}),
 		}
 		self.scene = math.random(1, #self.scenes)
 	end
@@ -51,7 +52,7 @@ local room = { opacity }
 
 	function room:keypressed(key)
 		if key == "f1" then
-			l2df.rooms:set("settings")
+			core.rooms:set("settings")
 		end
 		if key == "escape" then
 			love.event.quit()
@@ -66,13 +67,15 @@ local room = { opacity }
 
 	function room:draw()
 
-		l2df.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240, 0, nil, 2)
+		core.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240, 0, nil, 2)
 
 		local ro, go, bo, ao = love.graphics.getColor()
 		love.graphics.setColor(0,0,0,self.opacity)
 		love.graphics.rectangle("fill", 0, 0, settings.global.width, settings.global.height)
 		love.graphics.setColor(ro, go, bo, ao)
 	end
+
+
 
 
 return room

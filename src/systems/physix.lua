@@ -33,10 +33,6 @@ local PhysixSystem = System:extend()
 		if not self.loaded then return end
 
 		self.time = self.time + dt
-		for _, obj in pairs(self.groups.physical.entities) do
-			obj.y = obj.y - 256 * sin(self.time) * dt
-			obj.x = obj.x - 256 * cos(self.time) * dt
-		end
 	end
 
 return PhysixSystem

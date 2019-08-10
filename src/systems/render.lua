@@ -6,8 +6,10 @@ local System = core.import "core.entities.system"
 local settings = core.import "settings"
 local UI = core.import "ui"
 
-local background_layer = 0
-local ui_layer = 0
+local BACKGROUND = 1
+local GAME_OBJECTS = 2
+local FOREGROUND = 3
+local UI = 4
 
 local RenderSystem = System:extend()
 
@@ -18,7 +20,9 @@ local RenderSystem = System:extend()
 
 	function RenderSystem:settingsupdated()
 		self.layers = {
-			-- love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
+			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
+			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
+			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
 			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight)
 		}
 	end
@@ -31,12 +35,10 @@ local RenderSystem = System:extend()
 	function RenderSystem:draw()
 		if not self.layers then return end
 
-		-- Background
-
-		-- Foreground
-
-		-- UI
-		self:drawEntities(ui_layer, self.groups.ui.entities)
+		self:drawEntities(BACKGROUND, self.groups.background.entities)
+		self:drawEntities(GAME_OBJECTS, self.groups.objects.entities)
+		self:drawEntities(FOREGROUND, self.groups.foreground.entities)
+		self:drawEntities(UI, self.groups.ui.entities)
 
 		-- Draw all canvases
 		for i = 1, #self.layers do
@@ -49,8 +51,8 @@ local RenderSystem = System:extend()
 
 		love.graphics.setCanvas(self.layers[layer])
 		love.graphics.clear()
-		local containers = { {entities, 1, #entities} }
-		local current = containers[1]
+		local enumeration = { {entities, 1, #entities} }
+		local current = enumeration[1]
 		local node = nil
 		local head = 1
 		local i = 1
@@ -65,13 +67,13 @@ local RenderSystem = System:extend()
 
 			if node and node.childs and next(node.childs) then
 				current[2] = i
-				containers[head + 1] = { node.childs, 1, #node.childs }
+				enumeration[head + 1] = { node.childs, 1, #node.childs }
 				head = head + 1
-				current = containers[head]
+				current = enumeration[head]
 				i = 1
 			elseif i > current[3] and head > 1 then
 				head = head - 1
-				current = containers[head]
+				current = enumeration[head]
 				i = current[2]
 			end
 		end

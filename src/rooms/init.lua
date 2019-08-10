@@ -28,7 +28,10 @@ local rooms = { list = { } }
 		self.entityManager = EntityManager {
 			groups = {
 				physical = { "x", "y" },
-				ui = UI
+				ui = UI,
+				background = {"wtf"},
+				foreground = {"wtf"},
+				objects = {"wtf"}
 			},
 			systems = self.systems
 		}
