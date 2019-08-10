@@ -14,13 +14,13 @@ local room = Room:extend()
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
 			:on("click", function () core.rooms:set("battle") end),
 
-		ui.Button(ui.Text(i18n "menu.story", fnt_menu), 0, 64):useMouse(true)
+		ui.Button(ui.Text("MyROOM", fnt_menu), 0, 64):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () core.rooms:set("myroom") end),
+			:on("click", function () core.rooms:change("myroom") end),
 
 		ui.Button(ui.Text(i18n "menu.settings", fnt_menu), 0, 128):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () core.rooms:set("settings") end),
+			:on("click", function () core.rooms:push("settings") end),
 
 		ui.Button(ui.Text(i18n "menu.exit", fnt_menu), 0, 192):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)

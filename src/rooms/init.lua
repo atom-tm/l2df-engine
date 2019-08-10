@@ -12,6 +12,8 @@ local RenderSystem = core.import "systems.render"
 
 local hook = helper.hook
 
+local stack = {}
+
 local rooms = { list = { } }
 
 	function rooms:init()
@@ -66,6 +68,32 @@ local rooms = { list = { } }
 		return room
 	end
 
+	function rooms:push(...)
+		stack[#stack+1] = self.current or nil
+		rooms:set(...)
+	end
+
+	function rooms:pop()
+		if stack[#stack] then
+			if self.current then
+				local _ = self.current.exit and self.current:exit()
+				self:emit("roomleaved", self.current)
+			end
+
+			self.current = stack[#stack]
+			stack[#stack] = nil
+
+			self.entityManager:setContext(self.current)
+			local _ = self.current.load and self.current:load(options)
+			self:emit("roomloaded", self.current)
+		end
+	end
+
+	function rooms:change(...)
+		stack = {}
+		rooms:push(...)
+	end
+
 	function rooms:set(room, options)
 		options = options or { }
 		if self.current then
@@ -84,6 +112,7 @@ local rooms = { list = { } }
 	end
 
 	function rooms:emit(event, ...)
+		if self.current.transition and event ~= "draw" then return nil end
 		if self.current and self.current.manager then
 			self.current.manager:emit(event, ...)
 		end

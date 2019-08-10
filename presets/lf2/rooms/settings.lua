@@ -24,7 +24,11 @@ local room = { }
 
 		ui.Button(ui.Text(i18n "settings.back", settings_font), 0, 256):useMouse(true)
 			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
-			:on("click", function () l2df.rooms:set("menu") end),
+			:on("click", function () l2df.rooms:pop() end),
+
+		ui.Button(ui.Text("MyROOM", settings_font), 0, 320):useMouse(true)
+			:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+			:on("click", function () l2df.rooms:push("myroom") end),
 	})
 
 	local music_volume_list = ui.List(512 + 200, 32 + 46, {
