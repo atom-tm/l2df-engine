@@ -32,7 +32,7 @@ local helper = { }
 	-- @param path, string     Scripts path
 	-- @param pattern, string  If specified only scripts that match pattern would be loaded
 	-- @return table
-	function helper.requireAllFromFolder(path, pattern)
+	function helper.requireFrom(path, pattern)
 		local result = { }
 		local file_list = love.filesystem.getDirectoryItems(path)
 		if file_list then
@@ -86,7 +86,7 @@ local helper = { }
 		end
 
 		for key, val in pairs(table) do
-			if type(val) == "table" then
+			if type(val) == "table" and val.___class == nil then
 				result[key] = helper.copyTable(val, result[key])
 			else
 				result[key] = val

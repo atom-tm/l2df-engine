@@ -28,9 +28,6 @@ function state:Processing(object,s)
 		end
 	end
 
-
-
-
 	if object:timer("attack") then object:setFrame("battle_stance") end
 	if object:timer("jump") then object:setFrame("jump_preparing") end
 	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("defend_stance") end

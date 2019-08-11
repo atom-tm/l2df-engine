@@ -8,8 +8,8 @@ local helper = core.import "helper"
 local InputSystem = System:extend()
 
 	function InputSystem:init()
-		helper.hook(input, "press", function (a, b, ...) self.manager:emit("press", ...) end, input)
-		helper.hook(input, "release", function (a, b, ...) self.manager:emit("release", ...) end, input)
+		helper.hook(input, "press", function (i, ...) self.manager:emit("press", ...) end)
+		helper.hook(input, "release", function (i, ...) self.manager:emit("release", ...) end)
 	end
 
 	function InputSystem:keypressed(key)

@@ -50,7 +50,7 @@ local rooms = { list = { } }
 			systems = self.systems
 		}
 
-		for name, room in pairs(helper.requireAllFromFolder(settings.global.rooms_path)) do
+		for name, room in pairs(helper.requireFrom(settings.global.rooms_path)) do
 			self.list[name] = self:new(room)
 		end
 
@@ -62,8 +62,8 @@ local rooms = { list = { } }
 			hook(love, key, function (...) self:emit(key, ...) end)
 		end
 
-		hook(core, "localechanged", function () self:emit("localechanged") end, core)
-		hook(settings, "apply", function () self:emit("settingsupdated") end, settings)
+		hook(core, "localechanged", function () self:emit("localechanged") end)
+		hook(settings, "apply", function () self:emit("settingsupdated") end)
 
 		self:set(settings.global.startRoom)
 	end

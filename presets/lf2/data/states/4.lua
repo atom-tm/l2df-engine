@@ -55,7 +55,7 @@ function state:Processing(object,s)
 			if s.attack then object:setFrame(s.attack) end
 		end
 	else
-		object:setFrame("air_standing")
+		object:setFrame("air_idle")
 	end
 end
 return state

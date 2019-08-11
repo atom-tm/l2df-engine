@@ -7,7 +7,7 @@ local state = { variables = {} } -- | 0 | -- Стойка
 --		D		Защитная стойка
 -- При длительном нахождении в состоянии покоя, персонаж переходит в кадры "анимации".
 ---------------------------------------------------------------------
-function state:Processing(object,s)
+function state:Processing(object, s)
 	if object:timer("attack") then object:setFrame("battle_stance") end
 	if object:timer("jump") then object:setFrame("jump_preparing") end
 	if object:pressed("defend") and object.block_timer == 0 then object:setFrame("defend_stance") end
@@ -22,6 +22,6 @@ function state:Processing(object,s)
 		if object:pressed("right") then object.facing = 1 end
 		object:setFrame("walking", object.walking_frame)
 	end
-	-- FUNSERVISE
+	-- FUNSERVICE
 end
 return state

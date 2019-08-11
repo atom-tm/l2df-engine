@@ -2,7 +2,7 @@ local core = l2df
 local ui = core.ui
 local settings = core.settings
 local i18n = core.i18n
-local media = core.import "media"
+local Media = core.import "media"
 local Room = core.import "rooms.room"
 
 local repo = l2df.import "repository.char"
@@ -45,9 +45,9 @@ local room = Room:extend()
 		self.opacity = 1
 		core.sound:setMusic("music/main.mp3")
 		self.scenes = {
-			core.image.load("sprites/UI/MainMenu/1.png",nil,nil,{linear = false}),
-			core.image.load("sprites/UI/MainMenu/2.png",nil,nil,{linear = false}),
-			core.image.load("sprites/UI/MainMenu/3.png",nil,nil,{linear = false}),
+			Media.Image("sprites/UI/MainMenu/1.png", nil, nil, {linear = false}),
+			Media.Image("sprites/UI/MainMenu/2.png", nil, nil, {linear = false}),
+			Media.Image("sprites/UI/MainMenu/3.png", nil, nil, {linear = false}),
 		}
 		self.scene = math.random(1, #self.scenes)
 
@@ -80,10 +80,10 @@ local room = Room:extend()
 
 	function room:draw()
 
-		core.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240, 0, nil, 2)
+		self.scenes[self.scene]:draw(0, settings.gameHeight - 240, 0, nil, 2)
 
 		local ro, go, bo, ao = loveGetColor()
-		loveSetColor(0,0,0,self.opacity)
+		loveSetColor(0, 0, 0, self.opacity)
 		loveRectangle("fill", 0, 0, settings.global.width, settings.global.height)
 		loveSetColor(ro, go, bo, ao)
 	end

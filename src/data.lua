@@ -6,7 +6,7 @@ local datParser = core.import "parsers.dat"
 local data = { list = { } }
 
 	function data:loadStates(path)
-		self.states = helper.requireAllFromFolder(path or core.settings.global.states_path)
+		self.states = helper.requireFrom(path or core.settings.global.states_path)
 		self.states_update = { }
 		for key, state in pairs(self.states) do
 			if state.update then self.states_update[key] = state end
@@ -14,7 +14,7 @@ local data = { list = { } }
 	end
 
 	function data:loadKinds(path)
-		self.kinds = helper.requireAllFromFolder(path or core.settings.global.kinds_path)
+		self.kinds = helper.requireFrom(path or core.settings.global.kinds_path)
 	end
 
 	function data:loadFrames(path)

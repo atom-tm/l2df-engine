@@ -7,8 +7,7 @@ local PhysixComponent = Component:extend({
 	x = 0, y = 0, z = 0,
 	vx = 0, vy = 0, vz = 0,
 	grounded = true,
-	gravity = true,
-	map = { head = { } }
+	kinematic = false
 })
 
 	--- Apply motion to current velocity_x
@@ -48,7 +47,7 @@ local PhysixComponent = Component:extend({
 	end
 
 	--- Process motion by applying velocity to current position
-	function PhysixComponent:applyMotions(dt)
+	function PhysixComponent:applyMotions(map, dt)
 		self.x = self.x + self.vx * dt
 		self.y = self.y + self.vy * dt
 		self.z = self.z + self.vz * dt
@@ -56,10 +55,10 @@ local PhysixComponent = Component:extend({
 		if self.head.type == "character" then
 			if self.x <= 0 then
 				self.x = 0
-			elseif self.x >= self.map.head.width then
-				self.x = self.map.head.width
+			elseif self.x >= map.width then
+				self.x = map.width
 			end
-		elseif self.x <= -300 or self.x >= self.map.head.width + 300 then
+		elseif self.x <= -300 or self.x >= map.width + 300 then
 			self.destroy = true
 		end
 
@@ -67,39 +66,35 @@ local PhysixComponent = Component:extend({
 		if self.y <= 0 and self.vy <= 0 then
 			self.y = 0
 			self.grounded = true
-		elseif self.y >= self.map.head.height then
-			self.y = self.map.head.height
+		elseif self.y >= map.height then
+			self.y = map.height
 		end
 
 		if self.head.type == "character" then
 			if self.z <= 0 then
 				self.z = 0
-			elseif self.z >= self.map.head.area then
-				self.z = self.map.head.area
+			elseif self.z >= map.area then
+				self.z = map.area
 			end
 		else
-			if self.z <= 0 - self.map.head.objects_stock then
-				self.z = 0 - self.map.head.objects_stock
-			elseif self.z >= self.map.head.area + self.map.head.objects_stock then
-				self.z = self.map.head.area + self.map.head.objects_stock
+			if self.z <= 0 - map.objects_stock then
+				self.z = 0 - map.objects_stock
+			elseif self.z >= map.area + map.objects_stock then
+				self.z = map.area + map.objects_stock
 			end
 		end
 	end
 
 	--- Apply gravity to current velocity
-	function PhysixComponent:applyGravity(dt)
-		self.old_vx = self.vx
-		self.old_vy = self.vy
-		self.old_vz = self.vz
-		
-		if not self.gravity then return end
+	function PhysixComponent:applyGravity(map, dt)		
+		if self.kinematic then return end
 
 		if self.grounded then
 			if self.x_friction then
-				self.vx = self.vx * self.map.friction * dt
+				self.vx = self.vx * map.friction * dt
 			end
 			if self.z_friction then
-				self.vz = self.vz * self.map.friction * dt
+				self.vz = self.vz * map.friction * dt
 			end
 			self.vy = 0
 		else
@@ -109,7 +104,7 @@ local PhysixComponent = Component:extend({
 			if self.z_friction then
 				self.vz = self.vz * 0.99 * dt
 			end
-			self.vy = self.vy - self.map.head.gravity * dt
+			self.vy = self.vy - map.gravity * dt
 		end
 	end
 

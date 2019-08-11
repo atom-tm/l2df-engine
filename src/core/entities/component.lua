@@ -4,6 +4,7 @@ assert(type(core) == "table" and core.version >= 1.0, "Core.Entities.Component w
 local Object = core.import "core.object"
 local helper = core.import "helper"
 
+local hook = helper.hook
 local copyTable = helper.copyTable
 
 local Component = Object:extend()
@@ -13,7 +14,11 @@ local Component = Object:extend()
 		while class and not class:isTypeOf(Object) do
 			for k, v in pairs(class) do
 				if k:sub(1, 1) ~= "_" and k ~= "super" and k ~= "init" then
-					entity[k] = copyTable(v, entity[k])
+					if type(v) == "function" then
+						hook(entity, k, v)
+					else
+						entity[k] = copyTable(v, entity[k])
+					end
 				end
 			end
 			class = class.___class

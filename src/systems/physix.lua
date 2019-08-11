@@ -12,6 +12,13 @@ local PhysixSystem = System:extend()
 		self.time = 0
 		self.loaded = false
 		self.rooms = { }
+		self.map = {
+			friction = 0.5,
+			gravity = 1.0,
+			width = 1000,
+			height = 1000,
+			area = 1000
+		}
 	end
 
 	function PhysixSystem:roomloaded(room)
@@ -34,8 +41,8 @@ local PhysixSystem = System:extend()
 
 		self.time = self.time + dt
 		for _, obj in pairs(self.groups.physical.entities) do
-			obj:applyGravity(dt)
-			-- obj:applyMotions(dt)
+			obj:applyGravity(self.map, dt)
+			obj:applyMotions(self.map, dt)
 		end
 	end
 
