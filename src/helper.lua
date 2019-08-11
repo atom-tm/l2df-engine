@@ -74,12 +74,20 @@ local helper = { }
 	end
 
 	--- Deep-copy of table
-	-- @param table, table  Given string
-	function helper.copyTable(table)
-		local result = {}
+	-- @param table, table  Given table
+	-- @param result, table
+	function helper.copyTable(table, result)
+		result = result or { }
+		if type(result) ~= "table" then
+			return result
+		end
+		if type(table) ~= "table" then
+			return table
+		end
+
 		for key, val in pairs(table) do
 			if type(val) == "table" then
-				result[key] = helper.copyTable(val)
+				result[key] = helper.copyTable(val, result[key])
 			else
 				result[key] = val
 			end
