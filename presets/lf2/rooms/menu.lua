@@ -5,6 +5,14 @@ local i18n = core.i18n
 local media = core.import "media"
 local Room = core.import "rooms.room"
 
+local repo = l2df.import "repository.char"
+local Char = l2df.import "entities.char"
+
+local loveGetColor = love.graphics.getColor
+local loveSetColor = love.graphics.setColor
+local loveRectangle = love.graphics.rectangle
+local loveSetColor = love.graphics.setColor
+
 local room = Room:extend()
 
 	local fnt_menu = "main_menu"
@@ -28,7 +36,7 @@ local room = Room:extend()
 	})
 
 	room.nodes = {
-		ui.Image("sprites/UI/background.png"),
+		-- ui.Image("sprites/UI/background.png"),
 		ui.Image("sprites/UI/logotype.png", 25, 25),
 		list,
 	}
@@ -42,6 +50,11 @@ local room = Room:extend()
 			core.image.load("sprites/UI/MainMenu/3.png",nil,nil,{linear = false}),
 		}
 		self.scene = math.random(1, #self.scenes)
+
+		if not self.char then
+			self.char = Char(repo.get(1))
+			self.manager:add(self.char)
+		end
 	end
 
 	function room:exit()
@@ -69,10 +82,10 @@ local room = Room:extend()
 
 		core.image.draw(self.scenes[self.scene], 0, settings.gameHeight - 240, 0, nil, 2)
 
-		local ro, go, bo, ao = love.graphics.getColor()
-		love.graphics.setColor(0,0,0,self.opacity)
-		love.graphics.rectangle("fill", 0, 0, settings.global.width, settings.global.height)
-		love.graphics.setColor(ro, go, bo, ao)
+		local ro, go, bo, ao = loveGetColor()
+		loveSetColor(0,0,0,self.opacity)
+		loveRectangle("fill", 0, 0, settings.global.width, settings.global.height)
+		loveSetColor(ro, go, bo, ao)
 	end
 
 

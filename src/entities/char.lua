@@ -2,11 +2,10 @@ local core = l2df or require((...):match("(.-)[^%.]+%.[^%.]+$") or "" .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "Entities works only with l2df v1.0 and higher")
 
 local helper = core.import "helper"
+local Media = core.import "media"
 local Actor = core.import "entities.actor"
 local PhysixComponent = core.import "components.physix"
 local FramesComponent = core.import "components.frames"
-
-local images = core.import "images"
 
 local function getBasicChar()
 	return {
@@ -92,11 +91,10 @@ local Char = Actor:extend(getBasicChar())
 				x_offset = sprite.x_offset,
 				y_offset = sprite.y_offset
 			}
-			local img = images.load(sprite.file, info)
+			local img = Media.Image(sprite.file, info)
 			local size = #self.pics
 			for j = 1, img.info.frames do
 				self.pics[size + j] = { img, j }
-				print(j, img.info.frames)
 			end
 		end
 

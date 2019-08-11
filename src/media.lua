@@ -43,15 +43,15 @@ local function addResourse(filepath, arguments, temporary)
 
 	local extension = filepath:match("^.+(%..+)$")
 	local location = temporary and media_list.temporary or media_list.permanent
-	arguments = type(arguments) == table and arguments or {}
+	arguments = type(arguments) == table and arguments or { }
 
 	if extensions.image[extension] then
 		location[index] = love.graphics.newImage(filepath, {linear = arguments.linear, mipmaps = arguments.mipmaps})
 		resource = location[index]
-		if arguments.wrap then resource:setWrap(arguments.wrap,arguments.wrap) end
+		if arguments.wrap then resource:setWrap(arguments.wrap, arguments.wrap) end
 	elseif extensions.video[extension] then
 		location[index] = love.graphics.newVideo(filepath, {audio = arguments.audio})
-		if arguments.filter then resource:setFilter(arguments.filter,arguments.filter) end
+		if arguments.filter then resource:setFilter(arguments.filter, arguments.filter) end
 		resource = location[index]
 	elseif extensions.sound[extension] then
 		if arguments.static then
