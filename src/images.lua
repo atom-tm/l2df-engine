@@ -7,31 +7,31 @@ local notNil = core.import("helper").notNil
 
 local images = { list = { global = {}, temporary = {} }, load, draw }
 
---- Loads an image into an array
-local function loadResourse(filepath, global, linear, mipmaps, wrap)
-	local index = filepath
+	--- Loads an image into an array
+	local function loadResourse(filepath, global, linear, mipmaps, wrap)
+		local index = filepath
 
-	local resourse = images.list.global[index] or images.list.temporary[index] or nil
-	if resourse then return resourse end
+		local resourse = images.list.global[index] or images.list.temporary[index] or nil
+		if resourse then return resourse end
 
-	local storage = global and images.list.global or images.list.temporary
-	storage[index] = love.graphics.newImage(filepath, {linear = linear, mipmaps = mipmaps})
-	resourse = storage[index]
-	if resourse then
-		resourse:setWrap(wrap,wrap)
-		return resourse
+		local storage = global and images.list.global or images.list.temporary
+		storage[index] = love.graphics.newImage(filepath, {linear = linear, mipmaps = mipmaps})
+		resourse = storage[index]
+		if resourse then
+			resourse:setWrap(wrap,wrap)
+			return resourse
+		end
+
+		return nil
 	end
 
-	return nil
-end
-
---- Adds a frame
-local function addQuad(self, x, y, w, h, id)
-	local quad = love.graphics.newQuad(x, y, w, h, self.info.width, self.info.height)
-	id = id or #self.quads + 1
-	self.quads[id] = quad
-	self.info.frames = self.info.frames + 1
-end
+	--- Adds a frame
+	local function addQuad(self, x, y, w, h, id)
+		local quad = love.graphics.newQuad(x, y, w, h, self.info.width, self.info.height)
+		id = id or #self.quads + 1
+		self.quads[id] = quad
+		self.info.frames = self.info.frames + 1
+	end
 
 	--- Clearing an array of temporary resources to free up memory
 	function images.clear()
@@ -43,14 +43,13 @@ end
 
 	--- Loads an image and returns the object of that image
 	function images.load(filepath, cutting_info, privacy, properties)
-
 		if not (filepath and fs.getRealDirectory(filepath)) then return end
 
 		local image = { resourse, batch, quads = {}, info = {} }
 		local w, h, x, y
 		local x_offset, y_offset = 0, 0
 		local linear, mipmaps, wrap, global = false, true, "clampzero", true
-		local info = {width = 0, height = 0, frames = 1}
+		local info = {width = 0, height = 0, frames = -1}
 
 		if type(properties) == "table" then
 			linear = notNil(properties.linear, linear)
@@ -64,17 +63,16 @@ end
 		image.resourse = loadResourse(filepath, global, linear, mipmaps, wrap)
 		if not image.resourse then return end
 
-		cutting_info = type(cutting_info) == "table" and cutting_info or {}
-		w = cutting_info.w or cutting_info[1] or info.width
-		h = cutting_info.h or cutting_info[2] or info.height
-		x = cutting_info.x or cutting_info[3] or 1
-		y = cutting_info.y or cutting_info[4] or 1
-		x_offset = cutting_info.x_offset or cutting_info[5] or 0
-		y_offset = cutting_info.y_offset or cutting_info[6] or 0
-
 		info.width = image.resourse:getWidth()
 		info.height = image.resourse:getHeight()
-		info.frames = x * y
+
+		cutting_info = type(cutting_info) == "table" and cutting_info or {}
+		x = cutting_info.x or cutting_info[3] or 1
+		y = cutting_info.y or cutting_info[4] or 1
+		w = cutting_info.w or cutting_info[1] or info.width / x
+		h = cutting_info.h or cutting_info[2] or info.height / y
+		x_offset = cutting_info.x_offset or cutting_info[5] or 0
+		y_offset = cutting_info.y_offset or cutting_info[6] or 0
 
 		image.batch = info.frames > 1 and love.graphics.newSpriteBatch(image.resourse)
 		image.info = info

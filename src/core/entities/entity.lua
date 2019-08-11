@@ -14,7 +14,7 @@ local Entity = Object:extend({ ___groups = { }, components = { }, has_components
 		assert(type(component) == "function" or component:isInstanceOf(Component), "not a subclass of Entities.Component")
 		if self.has_components[component] then return end
 
-		rawset(self.components, #self.components + 1, component(entity))
+		rawset(self.components, #self.components + 1, component(self))
 		self.has_components[component] = true
 	end
 

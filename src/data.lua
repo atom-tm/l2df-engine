@@ -3,7 +3,7 @@ assert(type(core) == "table" and core.version >= 1.0, "Data works only with l2df
 
 local datParser = core.import "parsers.dat"
 
-local data = { }
+local data = { list = { } }
 
 	function data:loadStates(path)
 		self.states = helper.requireAllFromFolder(path or core.settings.global.states_path)
