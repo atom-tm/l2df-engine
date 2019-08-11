@@ -16,6 +16,18 @@ local DatParser = BaseParser:extend()
 	DatParser.BLOCK_RBRACKET = "]"
 	DatParser.VALUE_END_PATTERN = "[;,%s]"
 
+	--- Get the plural form of a word
+	-- @param str, string
+	local function plural(str)
+		local last = str:sub(#str, -1)
+		if last == "y" then
+			return str:sub(1, -2) .. "ies"
+		elseif last == "z" or last == "s" or last == "h" then
+			return str .. "es"
+		end
+		return str .. "s"
+	end
+
 	--- Method for parsing dat formatted string
 	-- You can extend existing object by passing it as second parameter.
 	-- @param str, string  String for parsing
