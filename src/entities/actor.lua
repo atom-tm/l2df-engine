@@ -4,11 +4,13 @@ assert(type(core) == "table" and core.version >= 1.0, "Actor works only with l2d
 local Entity = core.import "core.entities.entity"
 local PhysixComponent = core.import "components.physix"
 local FramesComponent = core.import "components.frames"
+local Controller = core.import "components.controller"
 
 local Actor = Entity:extend()
 
 	function Actor:init(options)
 		helper.copyTable(options, self)
+		self:addComponent(Controller)
 		self:addComponent(PhysixComponent)
 		self:addComponent(FramesComponent)
 		self:setFrame(self.head.default_idle)
