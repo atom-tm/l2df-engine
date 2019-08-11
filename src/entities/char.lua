@@ -2,10 +2,7 @@ local core = l2df or require((...):match("(.-)[^%.]+%.[^%.]+$") or "" .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "Entities works only with l2df v1.0 and higher")
 
 local helper = core.import "helper"
-local Media = core.import "media"
 local Actor = core.import "entities.actor"
-local PhysixComponent = core.import "components.physix"
-local FramesComponent = core.import "components.frames"
 
 local function getBasicChar()
 	return {
@@ -76,30 +73,7 @@ end
 local Char = Actor:extend(getBasicChar())
 
 	function Char:init(options)
-		self:addComponent(PhysixComponent)
-		self:addComponent(FramesComponent)
-		helper.copyTable(options, self)
-
-		self.pics = { }
-		for i = 1, #self.head.sprites do
-			local sprite = self.head.sprites[i]
-			local info = {
-				w = sprite.w,
-				h = sprite.h,
-				x = sprite.row,
-				y = sprite.col,
-				x_offset = sprite.x_offset,
-				y_offset = sprite.y_offset
-			}
-			local img = Media.Image(sprite.file, info)
-			local size = #self.pics
-			for j = 1, img.info.frames do
-				self.pics[size + j] = { img, j }
-			end
-		end
-
-		self:setFrame(self.head.default_idle)
-
+		self:super(options)
 		-- created_object.hp = created_object.head.hp
 		-- created_object.mp = created_object.head.mp
 		-- created_object.sp = created_object.head.sp
@@ -132,18 +106,6 @@ local Char = Actor:extend(getBasicChar())
 		-- created_object.statesUpdate = entities.statesUpdate
 		-- created_object.opointsProcessing = entities.opointsProcessing
 		-- created_object.frameProcessing = entities.frameProcessing
-	end
-
-	function Char:update(dt)
-		if self.frame then
-			self:setFrame(self.next_frame)
-		end
-	end
-
-	function Char:draw()
-		if not self.frame then return end
-		local pic = self.pics[self.frame.pic]
-		pic[1]:draw(self.x, self.y, pic[2])
 	end
 
 return Char

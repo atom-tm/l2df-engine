@@ -5,6 +5,9 @@ local Entity = core.import "core.entities.entity"
 
 local Effect = Entity:extend()
 
-
+	function Effect:init(options)
+		self.super(options)
+		self.kinematic = true
+	end
 
 return Effect
