@@ -9,10 +9,22 @@ local EventSystem = core.import "systems.event"
 local InputSystem = core.import "systems.input"
 local PhysixSystem = core.import "systems.physix"
 local RenderSystem = core.import "systems.render"
+local PhysixComponent = core.import "components.physix"
+local Actor = core.import "entities.actor"
 
 local hook = helper.hook
 
-local stack = {}
+local has_component_cache = { }
+local function hasComponent(component)
+	if has_component_cache[component] == nil then
+		has_component_cache[component] = function (entity)
+			return entity:hasComponent(component)
+		end
+	end
+	return has_component_cache[component]
+end
+
+local stack = { }
 
 local rooms = { list = { } }
 
@@ -29,11 +41,11 @@ local rooms = { list = { } }
 
 		self.entityManager = EntityManager {
 			groups = {
-				physical = { "x", "y" },
+				physical = hasComponent(PhysixComponent),
+				objects = Actor,
 				ui = UI,
 				background = {"wtf"},
 				foreground = {"wtf"},
-				objects = {"wtf"}
 			},
 			systems = self.systems
 		}

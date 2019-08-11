@@ -4,12 +4,16 @@ assert(type(love) == "table", "PhysixSystem works only under love2d environment"
 
 local System = core.import "core.entities.system"
 local settings = core.import "settings"
-local UI = core.import "ui"
 
-local BACKGROUND = 1
-local GAME_OBJECTS = 2
-local FOREGROUND = 3
-local UI = 4
+local loveDraw = love.graphics.draw
+local loveClear = love.graphics.clear
+local loveSetCanvas = love.graphics.setCanvas
+local loveNewCanvas = love.graphics.newCanvas
+
+local LAYER_BACKGROUND = 1
+local LAYER_GAME_OBJECTS = 2
+local LAYER_FOREGROUND = 3
+local LAYER_UI = 4
 
 local RenderSystem = System:extend()
 
@@ -20,10 +24,10 @@ local RenderSystem = System:extend()
 
 	function RenderSystem:settingsupdated()
 		self.layers = {
-			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
-			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
-			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight),
-			love.graphics.newCanvas(settings.gameWidth, settings.gameHeight)
+			loveNewCanvas(settings.gameWidth, settings.gameHeight),
+			loveNewCanvas(settings.gameWidth, settings.gameHeight),
+			loveNewCanvas(settings.gameWidth, settings.gameHeight),
+			loveNewCanvas(settings.gameWidth, settings.gameHeight)
 		}
 	end
 
@@ -35,22 +39,23 @@ local RenderSystem = System:extend()
 	function RenderSystem:draw()
 		if not self.layers then return end
 
-		self:drawEntities(BACKGROUND, self.groups.background.entities)
-		self:drawEntities(GAME_OBJECTS, self.groups.objects.entities)
-		self:drawEntities(FOREGROUND, self.groups.foreground.entities)
-		self:drawEntities(UI, self.groups.ui.entities)
+		self:drawEntities(LAYER_BACKGROUND, self.groups.background.entities)
+		self:drawEntities(LAYER_GAME_OBJECTS, self.groups.objects.entities)
+		self:drawEntities(LAYER_FOREGROUND, self.groups.foreground.entities)
+		self:drawEntities(LAYER_UI, self.groups.ui.entities)
+		loveSetCanvas()
 
 		-- Draw all canvases
 		for i = 1, #self.layers do
-			love.graphics.draw(self.layers[i], 0, 0, 0, self.scalex, self.scaley)
+			loveDraw(self.layers[i], 0, 0, 0, self.scalex, self.scaley)
 		end
 	end
 
 	function RenderSystem:drawEntities(layer, entities)
 		if not self.layers then return end
 
-		love.graphics.setCanvas(self.layers[layer])
-		love.graphics.clear()
+		loveSetCanvas(self.layers[layer])
+		loveClear()
 		local enumeration = { {entities, 1, #entities} }
 		local current = enumeration[1]
 		local node = nil
@@ -77,7 +82,6 @@ local RenderSystem = System:extend()
 				i = current[2]
 			end
 		end
-		love.graphics.setCanvas()
 	end
 
 return RenderSystem

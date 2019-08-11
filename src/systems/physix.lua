@@ -33,6 +33,10 @@ local PhysixSystem = System:extend()
 		if not self.loaded then return end
 
 		self.time = self.time + dt
+		for _, obj in pairs(self.groups.physical.entities) do
+			obj:applyGravity(dt)
+			-- obj:applyMotions(dt)
+		end
 	end
 
 return PhysixSystem
