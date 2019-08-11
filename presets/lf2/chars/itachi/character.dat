@@ -15,18 +15,20 @@ start_standing: {
 	centerx: 45 centery: 88 wait: 4
 }
 
-sprite: {
-	file: "chars/itachi/sprites/main.png"
-	w: 100 h: 100 row: 10 col: 10
-}
-sprite: {
-	file: "chars/itachi/sprites/attacks.png"
-	w: 100 h: 100 row: 10 col: 10
-}
-sprite: {
-	file: "chars/itachi/sprites/damages.png"
-	w: 100 h: 100 row: 10 col: 10
-}
+sprites: [
+	{
+		file: "chars/itachi/sprites/main.png"
+		w: 100 h: 100 row: 10 col: 10
+	}
+	{
+		file: "chars/itachi/sprites/attacks.png"
+		w: 100 h: 100 row: 10 col: 10
+	}
+	{
+		file: "chars/itachi/sprites/damages.png"
+		w: 100 h: 100 row: 10 col: 10
+	}
+]
 
 ai: "chars/itachi/ai.lua"
 gravity: true
@@ -37,7 +39,7 @@ hp_regeneration: 1
 
 shadow: true
 
-states: { 9 }
+states: [ 9 ]
 </head>
 
 <frames_list>
@@ -204,12 +206,12 @@ body: { x: 32  y: 28  w: 30  h: 68  z: -5  l: 10 }
 state: 4 { attack: 360 }
 </frame>
 
-<frame> 75 air_standing
+<frame> 75 air_idle
 pic: 76  next: 76  wait: 3  centerx: 55 centery: 98
 body: { x: 32  y: 38  w: 35  h: 57  z: -5  l: 10 }
 state: 5 { }
 </frame>
-<frame> 76 air_standing
+<frame> 76 air_idle
 pic: 77  next: 0  wait: 1  centerx: 55 centery: 98
 body: { x: 32  y: 38  w: 35  h: 57  z: -5  l: 10 }
 state: 5 { }

@@ -1,4 +1,4 @@
-standing: 1
+idle: 1
 walking: { 10, 11, 12, 13, 14, 15 }
 running: { 20, 21, 22, 23, 24, 25 }
 stop_running: 30
@@ -10,7 +10,7 @@ shunshin_up: 55
 shunshin_up_forward: 60
 shunshin_up_back: 65
 shunshin_down: 70
-air_standing: 75
+air_idle: 75
 landing: 80
 shunshin_forward: 85
 shunshin_back: 90

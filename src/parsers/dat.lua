@@ -14,7 +14,7 @@ local DatParser = BaseParser:extend()
 	DatParser.ARRAY_RBRACKET = "}"
 	DatParser.BLOCK_LBRACKET = "["
 	DatParser.BLOCK_RBRACKET = "]"
-	DatParser.VALUE_END_PATTERN = "[%];,%s]"
+	DatParser.VALUE_END_PATTERN = "[;,%s]"
 
 	--- Method for parsing dat formatted string
 	-- You can extend existing object by passing it as second parameter.
@@ -90,6 +90,7 @@ local DatParser = BaseParser:extend()
 
 		local result = obj or { }
 		local stack = { result }
+		local is_array = { false }
 		local head = 1
 		local param = nil
 		local char = nil
@@ -98,16 +99,24 @@ local DatParser = BaseParser:extend()
 		local bpos = 1
 		local len = #str
 
-		while true do
-			bpos = pos
-			from, pos, param = strfind(str, "([%w_]+)%s*:%s*", pos)
-			if not param then break end
-			param = tonumber(param) or param
+		while pos < len do
+			if is_array[head] then
+				param = #stack[head] + 1
+			else
+				bpos = pos
+				from, pos, param = strfind(str, "([%w_]+)%s*:%s*", pos)
+				if not param then break end
+				param = tonumber(param) or param
 
-			if head > 1 then
-				bpos = strfind(str, self.BLOCK_RBRACKET, bpos)
-				if bpos and bpos < from then
-					head = head - 1
+				if head > 1 then
+					bpos = strfind(str, self.BLOCK_RBRACKET, bpos)
+					if bpos and bpos < from then
+						head = head - 1
+						if is_array[head] then
+							pos = bpos
+							param = #stack[head] + 1
+						end
+					end
 				end
 			end
 
@@ -119,25 +128,41 @@ local DatParser = BaseParser:extend()
 				char = strsub(str, pos, pos)
 
 				if char == self.BLOCK_LBRACKET then
-					stack[head][param] = stack[head][param] or { }
-					stack[head + 1] = stack[head][param]
 					head = head + 1
+					is_array[head] = false
+					if is_array[head - 1] then
+						stack[head] = { }
+					else
+						stack[head] = stack[head - 1][param] or { }
+					end
+					stack[head - 1][param] = stack[head]
 					break
 
 				elseif char == self.ARRAY_LBRACKET then
-					stack[head][param] = { }
+					head = head + 1
+					is_array[head] = true
+					stack[head] = { }
+					stack[head - 1][param] = stack[head]
+					param = 1
 
 				elseif char == self.ARRAY_RBRACKET then
+					if is_array[head] then
+						if value ~= "" then
+							stack[head][param] = self:parseScalar(value)
+						end
+						is_array[head] = false
+						head = head - 1
+					end
 					break
 
 				elseif char == "\"" and not is_quoted then
 					is_quoted = true
 
 				elseif strmatch(char, self.VALUE_END_PATTERN) and not is_quoted or char == "\"" then
-					local x = stack[head][param]
-					if x and type(x) == "table" then
+					if is_array[head] then
 						if value ~= "" then
-							x[#x + 1] = self:parseScalar(value)
+							stack[head][param] = self:parseScalar(value)
+							param = param + 1
 						end
 					else
 						stack[head][param] = self:parseScalar(value)
