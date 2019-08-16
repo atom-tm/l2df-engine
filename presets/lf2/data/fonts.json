@@ -1,46 +1,46 @@
 {
 	"default": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 14
 	},
 	"character_select_menu": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 20
 	},
 	"character_select_menu_bots": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 18
 	},
 	"character_select_menu_time": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 72
 	},
 	"character_select_mode_select": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 26
 	},
 	"setting_header": {
-		"file": "sprites/UI/fonts/Settings.otf",
+		"file": "sprites/UI/Fonts/Settings.otf",
 		"size": 42
 	},
 	"setting_comment": {
-		"file": "sprites/UI/fonts/Settings.otf",
+		"file": "sprites/UI/Fonts/Settings.otf",
 		"size": 24
 	},
 	"setting_element": {
-		"file": "sprites/UI/fonts/Settings.otf",
+		"file": "sprites/UI/Fonts/Settings.otf",
 		"size": 34
 	},
 	"menu_element": {
-		"file": "sprites/UI/fonts/Settings.otf",
+		"file": "sprites/UI/Fonts/Settings.otf",
 		"size": 48
 	},
 	"timer": {
-		"file": "sprites/UI/fonts/Time.ttf",
+		"file": "sprites/UI/Fonts/Time.ttf",
 		"size": 36
 	},
 	"stats": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 10
 	},
 	"main_menu": {
@@ -52,7 +52,7 @@
 		"size": 34
 	},
 	"press_anykey": {
-		"file": "sprites/UI/fonts/Default.ttf",
+		"file": "sprites/UI/Fonts/Default.ttf",
 		"size": 20
 	}
 }
