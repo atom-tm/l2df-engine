@@ -3,9 +3,10 @@ assert(type(core) == "table" and core.version >= 1.0, "Entities works only with 
 
 local Entity = core.import "core.class.entity"
 
-local Room = Entity:extend(scenes = {})
+local Room = Entity:extend({ scenes = {} })
 
-	function Room:init()
+	function Room:init(int)
+		self.x = int
 		-- body
 	end
 

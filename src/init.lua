@@ -1,32 +1,28 @@
-local __DIR__ = (...) .. "."
-gamera		= require(__DIR__ .. "external.gamera")
-json 		= require(__DIR__ .. "external.json")
-helper 		= require(__DIR__ .. "helper")
+local __DIR__ = (...) .. '.'
+gamera		= require(__DIR__ .. 'external.gamera')
+json 		= require(__DIR__ .. 'external.json')
+helper 		= require(__DIR__ .. 'helper')
 ---------------------------------------------
-l2df = require(__DIR__ .. "core")
+l2df = require(__DIR__ .. 'core')
 local core = l2df
 
-
-
-	local object = core.import "core.class"
-	local Reader = core.import "core.class.reader"
+	local EntityManager = core.import 'core.manager.entity'
+	local Room = core.import 'core.class.entity.room'
 
 	function core:init()
-		local room = object:new()
-		room.nodes = {
-			object:new(15),
-			object:new(25)
-		}
-
-		local reader = Reader(room.nodes)
-		while (reader:next()) do
-			print(reader.current.x)
+		local MainRoom = Room(0)
+		for i = 1, 5 do
+			MainRoom:attach(Room(i))
+		end
+		for i in EntityManager:enum(MainRoom) do
+			--print(i.x)
 		end
 	end
 
+
 	--[[local min_dt, next_time
 
-	core.settings	= core.import "settings"
+	core.settings	= core.import 'settings'
 
 	core.scalex = 1
 	core.scaley = 1
@@ -43,10 +39,10 @@ local core = l2df
 		self.input:init()
 		self.rooms:init()
 
-		helper.hook(self.i18n, "setLocale", self.localechanged, self)
-		helper.hook(love, "update", self.update, self)
-		helper.hook(love, "draw", self.draw, self)
-		helper.hook(love, "resize", self.resize, self)
+		helper.hook(self.i18n, 'setLocale', self.localechanged, self)
+		helper.hook(love, 'update', self.update, self)
+		helper.hook(love, 'draw', self.draw, self)
+		helper.hook(love, 'resize', self.resize, self)
 	end
 
 	function core:update()

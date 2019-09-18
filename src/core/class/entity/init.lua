@@ -3,37 +3,59 @@ assert(type(core) == "table" and core.version >= 1.0, "Entities works only with 
 
 local Class = core.import "core.class"
 local Component = core.import "core.class.component"
+local Storage = core.import "core.class.storage"
 
 local tableRemove = table.remove
 
-local Entity = Class:extend({ ___groups = { }, components = { }, has_components = { }, nodes = { }})
+local Entity = Class:extend({ ___groups = { }, components = { }, has_components = { }, nodes = Storage:new(), id = nil, parent = nil })
 
-	function Entity:isParent(object)
-		assert(object:isInstanceOf(Entity), "not a subclass of Entities")
-		for i = 1, #self.nodes do
-			if self.nodes[i] == object then return true end
+	--- Adding an inheritor to an object
+	function Entity:attach(entity)
+		assert(entity:isInstanceOf(Entity), "not a subclass of Entity")
+		if entity.parent then entity.parent:removeChild(entity) end
+		local id = self.nodes:add(entity)
+		entity.parent = self
+	end
+
+	--- Adding some inheritors to an object
+	function Entity:attachMulti(array)
+		for i = 1, #array do
+			if array[i]:isInstanceOf(Entity) then
+				self:addChild(array[i])
+			end
 		end
-		return false
 	end
 
-	nodes = {
-		1 kjhj,
-		2 hkj,
-		3
-		4 lkjlkj,
-		5kljlkj,
-		6 llkhkj
-	}
-
-	function Entity:addChild(object)
-		assert(object:isInstanceOf(Entity), "not a subclass of Entities")
-		if self:isParent(object) then return end
+	--- Removing an inheritor from object
+	function Entity:detach(entity)
+		assert(entity:isInstanceOf(Entity), "not a subclass of Entity")
+		self.nodes:remove(entity)
+		entity.parent = nil
 	end
 
+	--- Removing object from inheritors list of his parent
+	function Entity:detachParent()
+		self.parent:detach(self)
+	end
 
-	function Entity:removeNode(id)
+	--- Getting a list of object inheritors
+	function Entity:getNodes()
+		local list = {}
+		for id, key in self.nodes:enum() do
+			list[#list + 1] = key
+		end
+		return list
+	end
 
+	function Entity:getParent()
+		return self.parent
+	end
 
+	function Entity:showNodes()
+		for id, key in self.nodes:enum() do
+			print(id .. " " .. tostring(key))
+		end
+	end
 
 	--- Add component to entity
 	-- @param component, Component
