@@ -7,16 +7,18 @@ l2df = require(__DIR__ .. 'core')
 local core = l2df
 
 	local EntityManager = core.import 'core.manager.entity'
-	local Room = core.import 'core.class.entity.room'
+	local EventManager = core.import 'core.manager.event'
+
+	local Entity = core.import "core.class.entity"
 
 	function core:init()
-		local MainRoom = Room(0)
-		for i = 1, 5 do
-			MainRoom:attach(Room(i))
-		end
-		for i in EntityManager:enum(MainRoom) do
-			--print(i.x)
-		end
+
+		local fun = function() end
+
+		local id = EventManager:subscribe("load", fun)
+		EventManager:getSubscribes()
+		EventManager:unsubscribeById("load", id)
+		EventManager:getSubscribes()
 	end
 
 

@@ -4,50 +4,49 @@ assert(type(core) == "table" and core.version >= 1.0, "EntityManager works only 
 local Entity = core.import "core.class.entity"
 local Storage = core.import "core.class.storage"
 
-local Manager = { root = nil, list = Storage:new() }
+local list = Storage:new()
 
+local Manager = { root = nil, list = list }
+
+	--- Setting an entity as a root node (to "tree" enum)
 	function Manager:setRoot(entity)
 		assert(entity and entity:isInstanceOf(Entity), "To use the Entity Manager, you must specify the root entity")
 		self.root = entity
 	end
 
+
+	--- Brute force entities on the tree of heredity
 	function Manager:enum(beginer, options)
 		assert(beginer and beginer:isInstanceOf(Entity), "Entity Manager works only with representatives of the Entity class")
-		local root
-		if options and options.childsOnly then
-			root = { beginer and beginer:getNodes(), 0, #beginer:getNodes() }
-		else
-			root = { { beginer }, 0, 1 }
-		end
-		local list = { root }
+		options = type(options) == "table" and options or {}
+		beginer = beginer and { beginer } or { self.root }
+		if options.skipRoot then beginer = beginer[1]:getNodes() end
+		local tasks = { { beginer, 0, #beginer } }
 		local depth = 1
 		local i = 0
-		local current = list[depth]
+		local current = tasks[depth]
 		return function ()
-			if i < current[3] or depth > 1 then
+			while i < current[3] or depth > 1 do
 				i = i + 1
 				local returned = current[1][i]
-				local nodes = current[1][i] and current[1][i]:getNodes()
+				local nodes = returned and returned:getNodes()
 				if nodes and next(nodes) then
 					current[2] = i
+					current = { nodes, 0, #nodes }
+					tasks[#tasks + 1] = current
 					depth = depth + 1
-					list[depth] = { nodes, 0, #nodes }
-					current = list[depth]
 					i = 0
 				elseif i >= current[3] and depth > 1 then
 					depth = depth - 1
-					current = list[depth]
+					current = tasks[depth]
 					i = current[2]
 				end
-				print("i: " .. i)
-				print("depth: " .. depth)
-				print("current: " .. tostring(current))
-				print("nodes: " .. #nodes)
-				print("--------------")
 				return returned
-			else return nil end
+			end
+			return nil
 		end
 	end
+
 
 	--- Add new entity to manager
 	--  @param entity, Entity
@@ -55,10 +54,12 @@ local Manager = { root = nil, list = Storage:new() }
 		assert(entity and entity:isInstanceOf(Entity), "Entity Manager works only with representatives of the Entity class")
 		local id = self.list:add(entity)
 		entity.id = id
-		return id
+		return id, entity
 	end
 
 
+	--- Create new entity and add to manager
+	-- @param class, Class
 	function Manager:create(class, ...)
 		return Manager:add(class:new(...))
 	end
@@ -78,14 +79,6 @@ local Manager = { root = nil, list = Storage:new() }
 	end
 
 
-	--- showList test function
-	function Manager:showList()
-		for id, element in self.list:enum() do
-			print("[" .. id .. "] " .. tostring(element))
-		end
-	end
-
-
 	--- Add new entities to manager
 	--  @param entities, array
 	function Manager:addMulti(entities)
@@ -97,10 +90,12 @@ local Manager = { root = nil, list = Storage:new() }
 		return list
 	end
 
+
 	--- Checks for entity in storage
 	function Manager:has(entity)
 		return self.list:has(entity) or false
 	end
+
 
 	--- Return entity from storage by Id
 	function Manager:getById(id)

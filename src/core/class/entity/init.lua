@@ -7,21 +7,35 @@ local Storage = core.import "core.class.storage"
 
 local tableRemove = table.remove
 
-local Entity = Class:extend({ ___groups = { }, components = { }, has_components = { }, nodes = Storage:new(), id = nil, parent = nil })
+local Entity = Class:extend({})
+
+	--- Creating a entity instance
+	function Entity:new(...)
+		local obj = self:___getInstance()
+		obj.nodes = Storage:new()
+		obj.components = Storage:new()
+		obj.components.class = { }
+		obj.id = nil
+		obj.parent = nil
+		obj.active = true
+		obj:init(...)
+		return obj
+	end
 
 	--- Adding an inheritor to an object
 	function Entity:attach(entity)
 		assert(entity:isInstanceOf(Entity), "not a subclass of Entity")
-		if entity.parent then entity.parent:removeChild(entity) end
-		local id = self.nodes:add(entity)
+		if self:isAncestor(entity) then return false end
+		if entity.parent then entity.parent:detach(entity) end
 		entity.parent = self
+		return self.nodes:add(entity)
 	end
 
 	--- Adding some inheritors to an object
 	function Entity:attachMulti(array)
 		for i = 1, #array do
 			if array[i]:isInstanceOf(Entity) then
-				self:addChild(array[i])
+				self:attach(array[i])
 			end
 		end
 	end
@@ -47,47 +61,43 @@ local Entity = Class:extend({ ___groups = { }, components = { }, has_components 
 		return list
 	end
 
+	--- Option to obtain a parent using the function
 	function Entity:getParent()
 		return self.parent
 	end
 
-	function Entity:showNodes()
-		for id, key in self.nodes:enum() do
-			print(id .. " " .. tostring(key))
+	--- Check for inheritance from an object
+	function Entity:isAncestor(entity)
+		local object = self
+		while object do
+			if object == entity then return true end
+			object = object.parent
 		end
+		return false
 	end
 
 	--- Add component to entity
 	-- @param component, Component
-	function Entity:addComponent(component)
+	function Entity:addComponent(component, ...)
 		assert(component:isInstanceOf(Component), "not a subclass of Component")
-		if self.has_components[component] then return end
+		if self:hasComponent(component) then return false end
+		if component.unique and self:hasComponentClass(component.___class) then return false end
+		self.components.class[component.___class] = self.components.class[component.___class] and self.components.class[component.___class] + 1 or 1
+		return self.components:add(component), component, component.added and component:added(self, ...)
+	end
 
-		rawset(self.components, #self.components + 1, component(self))
-		self.has_components[component] = true
+	--- Create new component and add to manager
+	function Entity:createComponent(class, ...)
+		return self:addComponent(class:new(...),...)
 	end
 
 	--- Remove component from entity
 	-- @param component, Component
-	function Entity:removeComponent(component)
-		if not self.has_components[component] then return end
-		for i = #self.component, 1, -1 do
-			if self.components[i] == component then
-				tableRemove(self.components, i)
-				break
-			end
-		end
-		self.has_components[component] = nil
-	end
-
-	--- Get component from entity
-	-- @param component, Component
-	function Entity:getComponent(component)
-		if not self.has_components[component] then return false end
-		for i = #self.components, 1, -1 do
-			if self.components[i] == component then
-				return self.components[i]
-			end
+	function Entity:removeComponent(component, ...)
+		assert(component:isInstanceOf(Component), "not a subclass of Component")
+		if self.components:remove(component) then
+			self.components.class[component.___class] = self.components.class[component.___class] - 1
+			return component:removed(self, ...)
 		end
 		return false
 	end
@@ -95,7 +105,28 @@ local Entity = Class:extend({ ___groups = { }, components = { }, has_components 
 	--- Check if component exists on entity
 	-- @param component, Component|function
 	function Entity:hasComponent(component)
-		return self.has_components[component] and true or false
+		return self.components:has(component)
+	end
+
+	--- Check if component exists on entity
+	-- @param component, Component|function
+	function Entity:hasComponentClass(componentClass)
+		return self.components.class[componentClass] and self.components.class[componentClass] > 0 or false
+	end
+
+	function Entity:getComponentById(id)
+		return self.components:getById(id)
+	end
+
+	--- Getting a list of components
+	function Entity:getComponents(componentClass)
+		local list = {}
+		for id, key in self.components:enum() do
+			if not componentClass or  key.___class == componentClass then
+				list[#list + 1] = key
+			end
+		end
+		return list
 	end
 
 

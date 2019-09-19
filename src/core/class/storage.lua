@@ -65,15 +65,16 @@ local Storage = Class:extend()
 		return self.map[object] or false
 	end
 
-	function Storage:enum()
+	function Storage:enum(skipNil)
 		local id = 0
 		return function ()
-			if id < self.length then
+			while id < self.length do
 				id = id + 1
-				return id, self.list[id]
-			else
-				return nil
+				if not skipNil or self.list[id] ~= nil then
+					return id, self.list[id]
+				end
 			end
+			return nil
 		end
 	end
 
