@@ -85,14 +85,15 @@ local Manager = { }
 
 	function Manager:set(str, val)
 		str = type(str) == 'string' and str or ''
-		local key = str:gsub('[^%.]+%.', '')
-		local result = settings
-		for k in string.gmatch(str, '[^%.]+%.') do
-			k = k:sub(1,-2)
-			result[k] = result[k] or {}
-			result = result[k]
+		local lastKey, result = nil, settings
+		for k in string.gmatch(str, '[^%.]+') do
+			if lastKey then
+				result[lastKey] = type(result[lastKey]) == 'table' and result[lastKey] or {}
+				result = result[lastKey]
+			end
+			lastKey = k
 		end
-		result[key] = val
+		result[lastKey] = val
 	end
 
 	function Manager:load(filepath)
