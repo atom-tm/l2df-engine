@@ -11,14 +11,14 @@ local core = l2df
 	local ResourseManager = core.import 'core.manager.resourse'
 	local GroupManager = core.import 'core.manager.group'
 	local SettingsManager = core.import 'core.manager.settings'
+	local RenderManager = core.import 'core.manager.render'
 
 	local Entity = core.import "core.class.entity"
 	local Room = core.import "core.class.entity.room"
 
 	function core:init()
-		SettingsManager:load(settingsFile)
-		print(SettingsManager.global.resolution)
-		SettingsManager:save()
+		EventManager:monitoring(love, love.handlers)
+		RenderManager:init()
 	end
 
 
