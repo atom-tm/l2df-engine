@@ -42,7 +42,6 @@ local resourses = {}
 				return true
 			end
 		end
-
 		local object = {
 			id = Id,
 			data = love.filesystem.read(data_sourse[Id]),
@@ -559,6 +558,7 @@ function resourses.MapLoading() -- Поэтапная загрузка карт�
 		if resourses.pointer == nil or resourses.pointer == 0 then
 			resourses.pointer = 1
 		elseif resourses.pointer > #resourses.loading_list.maps then
+			resourses.pointer = 0
 			return true
 		end
 
@@ -620,6 +620,12 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 			head.shadow_direction 			= get.PNumber(data, "shadow_direction")
 			head.shadow_shear 				= get.PNumber(data, "shadow_shear")
 			head.shadow_size 				= get.PNumber(data, "shadow_size")
+
+
+			head.effects 					= get.PNumber(data, "effects",-1)
+			if head.effects ~= -1 then
+				resourses.AddToLoading(head.effects, "entity")
+			end
 
 			head.start_anim 				= get.PBool(data, "start_anim")
 

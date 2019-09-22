@@ -22,6 +22,7 @@ friction: 0.7
 gravity: 0.9
 
 start_anim: true
+effects: 900
 
 spawn_point: { x: 1300  y: 0  z: 110  rx: 500 rz: 90 ry: 0 facing: 0 }
 

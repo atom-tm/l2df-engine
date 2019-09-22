@@ -1,4 +1,4 @@
-local state = { variables = {} } -- | 50 | -- Таймер с переходом в кадр
+local state = { variables = {} } -- | 51 | -- 
 -- 
 ---------------------------------------------------------------------
 function state:Processing(object,s)

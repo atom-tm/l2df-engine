@@ -10,7 +10,11 @@ function state:Processing(object,s)
 		end
 		if s.retry ~= nil then
 			if math.random(0,100) <= s.retry then
-				object.wait = object.frame.wait
+				if s.frame ~= nil then
+					object:setFrame(s.frame)
+				else
+					object.wait = object.frame.wait
+				end
 			end
 		end
 	end

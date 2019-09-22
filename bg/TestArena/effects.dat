@@ -1,0 +1,161 @@
+<head>
+name: Effects
+type: effect
+
+
+sprite: {
+	file: "sprites/effects/dust/01.png"
+	w: 150 h: 150 row: 3 col: 7
+}
+sprite: {
+	file: "sprites/effects/ground/03.png"
+	w: 250 h: 50 row: 1 col: 1
+}
+sprite: {
+	file: "sprites/effects/dust/04.png"
+	w: 64 h: 52 row: 5 col: 3
+}
+
+
+physic: false
+collision: false
+shadow: false
+</head>
+
+<frames_list>
+	landing: 10
+	slammed: 40
+</frames_list>
+
+<frame> 10 landing
+pic: 1  next: 11  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 11 landing
+pic: 2  next: 12  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 12 landing
+pic: 3  next: 13  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 13 landing
+pic: 4  next: 14  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 14 landing
+pic: 5  next: 15  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 15 landing
+pic: 6  next: 16  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 16 landing
+pic: 7  next: 17  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 17 landing
+pic: 8  next: 18  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 18 landing
+pic: 9  next: 19  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 19 landing
+pic: 10  next: 20  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 20 landing
+pic: 11  next: 21  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 21 landing
+pic: 12  next: 22  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 22 landing
+pic: 13  next: 23  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 23 landing
+pic: 14  next: 24  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 24 landing
+pic: 15  next: 25  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 25 landing
+pic: 16  next: 26  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 26 landing
+pic: 17  next: 27  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 27 landing
+pic: 18  next: 28  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 28 landing
+pic: 19  next: 29  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 29 landing
+pic: 20  next: 30  wait: 0  centerx: 75  centery: 135
+</frame>
+<frame> 30 landing
+pic: 21  next: 0  wait: 0  centerx: 75  centery: 135
+state: 1000 {}
+</frame>
+
+
+<frame> 40 slammed
+pic: 22  next: 41  wait: 3  centerx: 125  centery: 25
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+opoint: { id: 900 action: 50 x: 125 y: 25 z: 2 rx: 35 rz: 9  dvx: -1 rdvx: 2 }
+state: 610 { start: 0 finish: 1 }
+</frame>
+<frame> 41 slammed
+pic: 22  next: 42  wait: 350  centerx: 125  centery: 25
+state: 612 { wait: 750 }
+</frame>
+<frame> 42 slammed
+pic: 22  next: 0  wait: 85  centerx: 125  centery: 25
+state: 1000 {}
+state: 610 { start: 1 finish: 0 }
+</frame>
+
+<frame> 50 dust
+pic: 23  next: 51  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 51 dust
+pic: 24  next: 52  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 52 dust
+pic: 25  next: 53  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 53 dust
+pic: 26  next: 54  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 54 dust
+pic: 27  next: 55  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 55 dust
+pic: 28  next: 56  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 56 dust
+pic: 29  next: 57  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 57 dust
+pic: 30  next: 58  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 58 dust
+pic: 31  next: 59  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 59 dust
+pic: 32  next: 60  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 60 dust
+pic: 33  next: 61  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 61 dust
+pic: 34  next: 62  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 62 dust
+pic: 35  next: 63  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 63 dust
+pic: 36  next: 64  wait: 0  centerx: 32  centery: 34
+</frame>
+<frame> 64 dust
+pic: 37  next: 0  wait: 0  centerx: 32  centery: 34
+state: 1000 {}
+</frame>

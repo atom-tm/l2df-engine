@@ -141,15 +141,41 @@ pic: 40  next: 1  wait: 1  centerx: 83  centery: 95
 <frame> 50 fire
 pic: 1  next: 1  wait: 0  centerx: 83  centery: 95
 state: 611 { start: 0 finish: 1 timer: 25 }
-state: 50 { timer: 450 frame: 51 }
+state: 50 { timer: 35 frame: 60 }
 </frame>
 <frame> 51 fire
 pic: 1  next: 0  wait: 0  centerx: 83  centery: 95
-state: 611 { start: 1 finish: 0 timer: 35 }
-state: 50 { timer: 35 frame: 52 }
+state: 611 { start: 1 finish: 0 timer: 30 }
+state: 50 { timer: 30 frame: 52 }
 state: 51 { }
 </frame>
 <frame> 52 fire
 pic: 0  next: 0  wait: 0  centerx: 83  centery: 95
 state: 1000 { }
+</frame>
+<frame> 53 fire
+pic: 1  next: 1  wait: 0  centerx: 83  centery: 95
+state: 611 { start: 0 finish: 1 timer: 25 }
+state: 50 { timer: 300 frame: 51 }
+</frame>
+
+
+
+<frame> 60 fire
+pic: 1  next: 51  wait: 0  centerx: 83  centery: 95
+state: 600 { retry: 80 frame: 50 }
+</frame>
+
+
+
+<frame> 50 fire_start
+pic: 0  next: 1  wait: 0  centerx: 83  centery: 95
+state: 611 { start: 0 finish: 1 timer: 15 }
+state: 50 { timer: 35 frame: 51 }
+</frame>
+
+<frame> 51 fire
+pic: 1  next: 0  wait: 0  centerx: 83  centery: 95
+state: 50 { timer: 30 frame: 52 }
+state: 51 { }
 </frame>

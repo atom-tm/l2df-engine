@@ -84,6 +84,7 @@ function battle:DrawInterface()
 	camera:draw(function(l,t,w,h)
 		font.print(#self.collision.list.itr, 10, 10)
 		font.print(#self.collision.list.body, 10, 30)
+		font.print(self.entities.list[1].vel_y, 10, 50)
 	end)
 end
 

@@ -452,16 +452,19 @@ itr: { kind: 8 x: 131  y: 58  w: 118  h: 95  z: -20  l: 40 attacker_frame: 80 }
 
 <frame> 80 goukakyuu
 pic: 0  next: 81  wait: 3 dvx: 0 dvy: 0 centerx: 195 centery: 100
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
-opoint: { id: 220 action: 50 x: 250 y: 150 z: 0 rx: 45 rz: 50 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
+opoint: { id: 220 action: 53 x: 250 y: 150 z: 0 rx: 55 rz: 55 }
 opoint: { id: 221 action: 1 x: 240 y: 105 z: 5 rx: 50 ry: 40 rz: 3 }
 opoint: { id: 221 action: 1 x: 240 y: 105 z: 5 rx: 50 ry: 40 rz: 3 }
 opoint: { id: 221 action: 1 x: 240 y: 105 z: 5 rx: 50 ry: 40 rz: 3 }

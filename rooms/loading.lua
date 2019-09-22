@@ -49,11 +49,11 @@ local room = {}
 			end
 			self.mode = 2
 		elseif self.mode == 2 then
-			if resourses.EntityLoading() then
+			if resourses.MapLoading() then
 				self.mode = 3
 			end
 		elseif self.mode == 3 then
-			if resourses.MapLoading() then
+			if resourses.EntityLoading() then
 				self.mode = 4
 			end
 		elseif self.mode == 4 then

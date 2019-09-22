@@ -25,12 +25,10 @@ local physix = {}
 
 	function physix:applyMotions()
 		
-		if not self.fixed_x then
-			self.x = self.x + self.vel_x
-		else
-			self.fixed_x = false
-		end
-		
+		self.landing = false
+		self.slammed = false
+
+		self.x = self.x + self.vel_x
 		self.y = self.y + self.vel_y
 		self.z = self.z + self.vel_z
 
@@ -45,11 +43,17 @@ local physix = {}
 				self.destroy = true
 			end
 		end
+		
 
-		self.grounded = false
+		self.grounded = false		
 		if self.y <= 0 then
 			self.y = 0
 			self.grounded = true
+			if self.vel_y < -20 then
+				self.slammed = true
+			elseif self.vel_y < -10 then
+				self.landing = true
+			end
 		elseif self.y >= battle.map.head.height then
 			self.y = battle.map.head.height
 		end

@@ -26,7 +26,7 @@ sprite: {
 gravity: true
 collision: true
 
-states: { 5, 8 }
+states: { 5, 8, 620 }
 
 bdefend: 10
 fall: 60
@@ -180,6 +180,7 @@ pic: 28  next: 35  wait: 5 dsy: 2.5 dy: 25 centerx: 24  centery: 80 hit_a: 450
 <frame> 50 grounded
 pic: 26  next: 51  wait: 3 centerx: 30  centery: 82
 body: { x: 23  y: 38  w: 36  h: 41 }
+state: 620 { }
 </frame>
 <frame> 51 grounded
 pic: 22  next: 52  wait: 3 centerx: 27  centery: 82  hit_j: 34

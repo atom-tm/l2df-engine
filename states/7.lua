@@ -18,7 +18,6 @@ function state:Processing(object,s)
 			else object:setFrame("lying") end
 		end
 	end
-	state.variables.lying_status = true
 	object.lying = true
 end
 ---------------------------------------------------------------------

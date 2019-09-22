@@ -34,57 +34,74 @@ fall: 60
 
 
 <frame> 1 idle
-pic: 1  next: 2  wait: 5  centerx: 27 centery: 83
-body: { x: 12  y: 16  w: 28  h: 64 }
+pic: 1  next: 2  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 2 idle
-pic: 2  next: 3  wait: 5  centerx: 27  centery: 83
-body: { x: 12  y: 16  w: 28  h: 64 }
+pic: 2  next: 3  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 3 idle
-pic: 3  next: 4  wait: 5  centerx: 27  centery: 83
-body: { x: 12  y: 16  w: 28  h: 64 }
+pic: 3  next: 4  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
 state: 0 {}
 </frame>
 <frame> 4 idle
-pic: 4  next: 0  wait: 5  centerx: 27  centery: 83
-body: { x: 12  y: 16  w: 28  h: 64 }
+pic: 4  next: 5  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 5 idle
+pic: 5  next: 6  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 6 idle
+pic: 6  next: 7  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
+state: 0 {}
+</frame>
+<frame> 7 idle
+pic: 7  next: 0  wait: 5  centerx: 23 centery: 83
+body: { x: 6  y: 6  w: 29  h: 76  z: -5  l: 10 }
 state: 0 {}
 </frame>
 
 
 <frame> 10 walking
-pic: 15  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 8  next: 0  wait: 7 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1  speed_z: 1 }
 </frame>
 <frame> 11 walking
-pic: 16  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 9  next: 0  wait: 8 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 12 walking
-pic: 17  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 10  next: 0  wait: 7 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1  speed_z: 1 }
 </frame>
 <frame> 13 walking
-pic: 18  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 11  next: 0  wait: 7 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1  speed_z: 1 }
 </frame>
 <frame> 14 walking
-pic: 19  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 13  y: 27  w: 58  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 12  next: 0  wait: 8 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1.5  speed_z: 1 }
 </frame>
 <frame> 15 walking
-pic: 20  next: 0  wait: 6 centerx: 27  centery: 83
-body: { x: 21  y: 27  w: 50  h: 49  z: -5  l: 10 }
-state: 1 { speed_x: 4  speed_z: 2 }
+pic: 13  next: 0  wait: 7 centerx: 23  centery: 83
+body: { x: 8  y: 5  w: 29  h: 75  z: -5  l: 10 }
+state: 1 { speed_x: 1  speed_z: 1 }
 </frame>
+
+
 
 <frame> 20 running
 pic: 15  next: 0  wait: 5 centerx: 27  centery: 83

@@ -5,7 +5,6 @@ local room = {}
 	function room:Load()
 		self.opacity = 0.1
 		self.opacity_change = 0.001
-
 		self.background_image = image.Load("sprites/UI/background.png", nil, "linear")
 		self.logotype_image = image.Load("sprites/UI/logotype.png", nil, "linear")
 		self.scenes = {
