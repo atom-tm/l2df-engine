@@ -3,17 +3,23 @@ name: TestMap
 width: 2500
 height: 1633
 
-border_up: 1310
-border_down: 1560
+border_up: 1350
+border_down: 1550
+
+reflection: true
+reflection_opacity: 0.3
 
 shadow: true
-shadow_opacity: 0.95
-shadow_center: 1000
+shadow_opacity: 0.4
+shadow_centerx: 1150
+shadow_direction: 1
+shadow_shear: 35
+shadow_size: 0.4
 
-friction: 15
+friction: 13
 gravity: 150
 
-spawn_point: { x: 1300  y: 0  z: 110  rx: 700 rz: 30 ry: 0 facing: 0 }
+spawn_point: { x: 1300  y: 0  z: 110  rx: 1500 rz: 90 ry: 0 facing: 0 }
 
 layer: { file: "sprites/BG_1.png"  x: 0  y: 0 fsaa: true }
 filter: { file: "sprites/FG_1.png"  x: 0  y: 0 fsaa: true }

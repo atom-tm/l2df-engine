@@ -15,7 +15,7 @@ function CameraSet(w,h) -- задаёт положение камеры, раз�
 	camera:setWorld(0,0,w,h)
 	camera:setPosition(w/2,h/2)
 	camera_x = w/2
-	camera_y = w/2
+	camera_y = h/2
 end
 
 
@@ -82,10 +82,10 @@ function CameraBinding () -- функция отвечает за поведен
 
 	elseif players_count == 2 then -- если игроков двое
 
-		local en1 = entity_list[players.player1]
+		local en1 = entity_list[players[1]]
 		local frame1 = GetFrame(en1)
 		
-		local en2 = entity_list[players.player2]
+		local en2 = entity_list[players[2]]
 		local frame2 = GetFrame(en2)
 
 		local camera_x, camera_y = camera:getPosition()
@@ -135,55 +135,11 @@ end
 
 
 
-
---[[function DrawEntity(en) -- функция рисует объект или персонажа
--------------------------------------
-	
-	local facing = en.facing
-	local frame = en.frames[tostring(en.frame)]
-
-	if not (frame == nil) then
-
-		local x = en.x - Get(frame.centerx) * facing
-		local y = en.y - Get(frame.centery)
-
-		local sizex = 1 * facing
-		local sizey = 1
-
-		local pic = tonumber(Get(frame.pic))
-
-
-		if not (pic == 0) then 
-
-		local list
-		local sprite
-			
-			for s = 1, #en.sprites do
-				if pic > #en.sprites[s].pics then
-					pic = pic - #en.sprites[s].pics
-				else
-					list = en.sprites[s].file
-					sprite = en.sprites[s].pics[pic]
-					break
-				end
-			end
-
-		love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
-		love.graphics.print(en.dynamic_id, en.x + 20, en.y - 65)
-		love.graphics.print(en.real_id, en.x + 20, en.y - 50)
-		end
-	end
-end]]
-
-
-
-
-
 function BackgroundDraw ()
 	if map ~= nil then
 		for layer_id = 1, #map.layers do
 			layer = map.layers[layer_id]
-			love.graphics.draw(layer.image, layer.x, layer.y)
+			love.graphics.draw( layer.image, layer.x, layer.y)
 		end
 	end
 end
@@ -215,79 +171,131 @@ function ObjectsDraw()
 		end
 		DrawEntity(objects_for_drawing[i].id)
 	end
-
-	for key, val in pairs(players) do
-		en = entity_list[val]
-		frame = GetFrame(en)
-		love.graphics.print("V", en.x, map.border_up - en.y - frame.centery + en.z)
-	end
 end
 
 
 function DrawEntity (en_id)
 
-	local en = entity_list[en_id]
-	local frame = GetFrame(en)
+	if entity_list[en_id] ~= "nil" and entity_list[en_id] ~= nil then -- если объект существует
+		local en = entity_list[en_id]
+		local frame = GetFrame(en)
 
-	for i = 1, #frame.bodys do
-		local c = CollaiderCords(frame.bodys[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
-		love.graphics.setColor(.11, .8, .45, 1)
-		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
-		love.graphics.setColor(1, 1, 1, 1)
-	end
-	for i = 1, #frame.itrs do
-		local c = CollaiderCords(frame.itrs[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
-		love.graphics.setColor(.11, .8, .45, 1)
-		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
-		love.graphics.setColor(1, 1, 1, 1)
-	end
-	for i = 1, #frame.platforms do
-		local c = CollaiderCords(frame.platforms[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
-		love.graphics.setColor(.11, .8, .45, 1)
-		love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
-		love.graphics.setColor(1, 1, 1, 1)
-	end
+		if frame ~= nil then
 
-	if frame ~= nil then
+			local x = en.x - frame.centerx * en.facing
+			local y = map.border_up - en.y - frame.centery + en.z
 
-		local x = en.x - frame.centerx * en.facing
-		local y = map.border_up - en.y - frame.centery + en.z
+			local sizex = en.scale * en.facing
+			local sizey = en.scale
 
-		local sizex = 1 * en.facing
-		local sizey = 1
+			local pic = frame.pic + 1
 
-		local pic = frame.pic + 1
+			if not (pic == 0) then 
 
-		if not (pic == 0) then 
-
-			local list
-			local sprite
-				
+				local list
+				local sprite
+				local w
+					
 				for s = 1, #en.sprites do
 					if pic > #en.sprites[s].pics then
 						pic = pic - #en.sprites[s].pics
 					else
 						list = en.sprites[s].file
 						sprite = en.sprites[s].pics[pic]
+						w = en.sprites[s].w
 						break
 					end
 				end
 
+				if map.reflection then
+
+					local reflection_sizex
+					local reflection_sizey
+					local reflection_opacity
+					local reflection_x
+					local reflection_y
+				
+					reflection_sizex = en.scale * en.facing
+					reflection_sizey = -en.scale * 0.9
+					reflection_x = en.x - frame.centerx * en.facing
+					reflection_y = map.border_up + en.y * 0.25 + en.z - frame.centery * reflection_sizey
+					reflection_opacity = map.reflection_opacity - en.y * 0.0005
+					
+					love.graphics.setColor(1,1,1, reflection_opacity)
+					love.graphics.draw(list, sprite, reflection_x, reflection_y, 0, reflection_sizex, reflection_sizey, 0,-1,0,0)
+					love.graphics.setColor(1,1,1,1)
+				end
+
+				if map.shadow then
+					if en.shadow then
+						if not frame.shadow then
+
+							local shadow_sizex
+							local shadow_sizey
+							local shadow_opacity
+							local shadow_x
+							local shadow_y
+							local shadow_shear
+
+							shadow_shear = -(en.x - map.shadow_centerx) * (map.shadow_shear * 0.00001)
+							shadow_sizex = en.scale * en.facing
+							shadow_x = en.x - frame.centerx * en.facing - w * shadow_shear
+							
+							if map.shadow_direction > 0 then
+								shadow_sizey = en.scale * map.shadow_size + en.y * 0.001 + ((map.area - en.z) * 0.001) + math.abs(shadow_shear) * 0.1
+								if shadow_sizey < 0.1 then shadow_sizey = 0.1 end
+								shadow_y = map.border_up - en.y * 0.3 + en.z - frame.centery * shadow_sizey
+							else
+								shadow_sizey = -(en.scale * map.shadow_size + en.y * 0.001 + (en.z * 0.001)) + math.abs(shadow_shear) * 0.1
+								if shadow_sizey > -0.1 then shadow_sizey = -0.1 end
+								shadow_y = map.border_up + en.y * 0.3 + en.z - frame.centery * shadow_sizey
+							end
+							
+							shadow_opacity = map.shadow_opacity - en.y * 0.0005 - math.abs(en.x - map.shadow_centerx) * 0.00005
+
+							love.graphics.setColor(0,0,0, shadow_opacity)
+							love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, -1, shadow_shear * en.facing, 0)
+							love.graphics.setColor(1,1,1,1)
+						end
+					end
+				end
+
 				love.graphics.draw(list, sprite, x, y, 0, sizex, sizey)
+				
+				if debug_info then
+					love.graphics.rectangle("fill", en.x, map.border_up + en.y + en.z, 3, 3)
+					for i = 1, #frame.bodys do
+						local c = CollaiderCords(frame.bodys[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+						love.graphics.setColor(.11, .8, .45, 1)
+						love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+						love.graphics.setColor(1, 1, 1, 1)
+					end
+					for i = 1, #frame.itrs do
+						local c = CollaiderCords(frame.itrs[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+						love.graphics.setColor(.11, .8, .45, 1)
+						love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+						love.graphics.setColor(1, 1, 1, 1)
+					end
+					for i = 1, #frame.platforms do
+						local c = CollaiderCords(frame.platforms[i], en.x , en.y, en.z , frame.centerx , frame.centery , en.facing)
+						love.graphics.setColor(.11, .8, .45, 1)
+						love.graphics.rectangle("line", c.x, c.y, c.w, c.h)
+						love.graphics.setColor(1, 1, 1, 1)
+					end
+				end
 
-			if map.shadow then
+					--[[local shadow_x = en.x - frame.centerx * en.facing
+					local shadow_y = map.border_up + frame.centery * 0.5 + en.z + en.y * 0.01
 
-				local shadow_x = en.x - frame.centerx * en.facing
-				local shadow_y = map.border_up + en.y + frame.centery + en.z
+					local shadow_sizex = en.scale * en.facing
+					local shadow_sizey = -en.scale + en.y * 0.01 + 0.5
 
-				local shadow_sizex = 1 * en.facing
-				local shadow_sizey = -1
+					local shadow_opacity = map.shadow_opacity - en.y * 0.0056 - 0.5
 
-				local shadow_opacity = map.shadow_opacity - en.y * 0.005
-
-				love.graphics.setColor(0, 0, 0, shadow_opacity)
-				love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, 0, 0, 0)
-				love.graphics.setColor(1, 1, 1, 1)
+					love.graphics.setColor(255, 255, 255, shadow_opacity)
+					love.graphics.draw(list, sprite, shadow_x, shadow_y, 0, shadow_sizex, shadow_sizey, 0, 0, 0, 0)
+					love.graphics.setColor(1, 1, 1, 1)
+				end]]
 			end
 		end
 	end

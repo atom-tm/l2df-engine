@@ -5,7 +5,6 @@ function StatesCheck(en_id)
 
 	for i = 1, #frame.states do
 		local state = frame.states[i]
-		t1 = state.num
 		
 
 		if state.num == "1" then -- стойка

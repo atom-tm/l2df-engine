@@ -1,15 +1,15 @@
 players = {
-	player1 = nil,
-	player2 = nil
+	nil,
+	nil
 } -- массив в котором будут храниться ссылки на привязанных к игрокам персонажей
 
 players_flags = {
-	player1 = true,
-	player2 = false
+	true,
+	false
 } -- массив в котором будут лежать флаги, отвечающие за то, какие игроки выбраны
 
 key_pressed = {
-	player1 = {
+	{
 		up = 0,
 		down = 0,
 		left = 0,
@@ -19,7 +19,7 @@ key_pressed = {
 		defend = 0,
 		jutsu = 0
 	},
-	player2 = {
+	{
 		up = 0,
 		down = 0,
 		left = 0,
@@ -32,7 +32,7 @@ key_pressed = {
 } -- если была нажата какая-то из кнопок управления
 
 control_settings = {
-	player1 = {
+	{
 		up = "w",
 		down = "s",
 		left = "a",
@@ -42,7 +42,7 @@ control_settings = {
 		defend = "h",
 		jutsu = "j"
 	},
-	player2 = {
+	{
 		up = "o",
 		down = "l",
 		left = "k",
@@ -54,6 +54,9 @@ control_settings = {
 	}
 } -- тут лежат все настройки управления
 
+key_timer = 13
+key_double_timer_reverse = -15
+key_double_timer = 26
 
 function ControlCheck()
 	for player, en_id in pairs(players) do
@@ -68,11 +71,11 @@ function ControlCheck()
 			end
 			for key, val in pairs(key_pressed[player]) do
 				if (val == 1) and (en.key_timer[key] == 0) then
-					en.key_timer[key] = 13
+					en.key_timer[key] = key_timer
 					if en.double_key_timer[key] == 0 then
-						en.double_key_timer[key] = -15
+						en.double_key_timer[key] = key_double_timer_reverse
 					elseif en.double_key_timer[key] < 0 then
-						en.double_key_timer[key] = 26
+						en.double_key_timer[key] = key_double_timer
 					end
 				elseif en.key_timer[key] > 0 then
 					en.key_timer[key] = en.key_timer[key] - 1
@@ -103,16 +106,86 @@ function ControlCheck()
 end
 
 
-function hit_Check(en, frame)
+function HitCheck(en_id)
+	local en = entity_list[en_id]
+	if en ~= nil then
+		local frame = GetFrame(en)
 
-	if (en.double_key_timer.left > 0) and (frame.double_left ~= 0) then
-		SetFrame(en, frame.double_left)
-		en.facing = -1
+		local timer = 40
+
+		if en.hit_code ~= 0 then
+			en.hit_timer = en.hit_timer - 1
+			if en.hit_timer == 0 then
+				en.hit_code = 0
+			end
+		end
+
+		if en.key_timer["defend"] >= key_timer then
+			en.hit_code = 1
+			en.hit_timer = timer
+		end
+		if en.key_timer["attack"] >= key_timer then
+			en.hit_code = en.hit_code .. 2
+			en.hit_timer = timer
+		end
+		if en.key_timer["jump"] >= key_timer then
+			en.hit_code = en.hit_code .. 3
+			en.hit_timer = timer
+		end
+		if en.key_timer["jutsu"] >= key_timer then
+			en.hit_code = en.hit_code .. 4
+			en.hit_timer = timer
+		end
+		if en.key_timer["up"] >= key_timer then
+			en.hit_code = en.hit_code .. 5
+			en.hit_timer = timer
+		end
+		if en.key_timer["down"] >= key_timer then
+			en.hit_code = en.hit_code .. 6
+			en.hit_timer = timer
+		end
+		if en.key_timer["left"] >= key_timer then
+			en.hit_code = en.hit_code .. 7
+			en.hit_timer = timer
+		end
+		if en.key_timer["right"] >= key_timer then
+			en.hit_code = en.hit_code .. 7
+			en.hit_timer = timer
+		end
+
+		local f_num = 0
+		if en.hit_code == "152" then
+			f_num = frame.hit_Ua
+		elseif en.hit_code == "153" then
+			f_num = frame.hit_Uj
+		elseif en.hit_code == "162" then
+			f_num = frame.hit_Da
+		elseif en.hit_code == "163" then
+			f_num = frame.hit_Dj
+		elseif en.hit_code == "172" then
+			f_num = frame.hit_Fa
+		elseif en.hit_code == "173" then
+			f_num = frame.hit_Fj
+		elseif en.key_timer["attack"] > 0 then
+			f_num = frame.hit_a
+		elseif en.key_timer["jump"] > 0 then
+			f_num = frame.hit_j
+		elseif en.key_timer["defend"] > 0 then
+			f_num = frame.hit_d
+		end
+
+
+		
+		if f_num ~= 0 then
+			SetFrame(en, f_num)
+			en.hit_code = 0
+
+			for key in pairs(en.key_timer) do
+				en.key_timer[key] = 0
+			end
+
+		end
+
+
 	end
-
-	if (en.key_pressed.left == 1) and (frame.hold_left ~= 0) then
-		en.next_frame = frame.hold_left
-	end
-
-
 end

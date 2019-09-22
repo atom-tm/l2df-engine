@@ -3,17 +3,23 @@ function BattleProcessing()
 	ControlCheck() -- функция проверки управления для всех игроков
 	objects_for_drawing = {} -- обнуление массива объектов на отрисовку
 
+
 	local remove_list = {} -- список объектов для удаления
 	local creating_list = {} -- список объектов для создания
 
-	for en_id = 1, #entity_list do -- для каждого из объектов в игре
+	objects = 0
+
+	for en_id in pairs(entity_list) do -- для каждого из объектов в игре
 		
 		if entity_list[en_id] ~= "nil" and entity_list[en_id] ~= nil then -- если объект существует
+
+			objects = objects + 1
 
 			local en = entity_list[en_id] -- получаем объект
 			local frame = GetFrame(en) -- получаем фрейм объекта
 
 			Accelerations(en_id) -- проверка ускорений
+			HitCheck(en_id) -- проверка нажатий клавиш
 			StatesCheck(en_id) -- проверка стейтов
 
 			Gravity(en_id) -- гравитация
@@ -52,12 +58,18 @@ function BattleProcessing()
 			end
 
 			if en.wait <= 0 then -- если вайт подошёл к концу, переходим в указанный кадр
-				SetFrame(en, en.next_frame)
+				if en.next_frame == 1000 then
+					en.destroy_flag = true
+				else
+					SetFrame(en, en.next_frame)
+				end
 			else
 				en.wait = en.wait - 1 * delta_time * 100
 			end
 
-
+			if en.destroy_flag == true then
+				RemoveEntity(en_id)
+			end
 		end
 	end
 
@@ -83,7 +95,6 @@ function RemoveProcessing (list) -- функция предназначена д
 	for object = 1, #list do
 		RemoveEntity(list[object])
 	end
-	collectgarbage()
 end
 
 

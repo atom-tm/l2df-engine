@@ -19,7 +19,7 @@ map = {} -- таблица с информацией о текущей карт�
 function CreateDataList() -- вызываемая при запуске игры, функция перебирает файл data.txt, составляя список доступных к загрузке объектов в формате [id] - [путь к файлу]
 -------------------------------------
 
-	local data = love.filesystem.read("data.txt") -- получаем содержимое файла data.txt
+	local data = love.filesystem.read("data/data.txt") -- получаем содержимое файла data.txt
 
 	local characters = string.match(data, "%[characters%]([^%[%]]+)") -- берём всех из списка [characters]
 	local objects = string.match(data, "%[objects%]([^%[%]]+)") -- берём всех из списка [objects]
@@ -76,6 +76,8 @@ function LoadingBeforeBattle() -- функция вызывается перед
 
 	map = LoadMap(loading_list.map)
 	CameraSet(map.width, map.height)
+
+	MainCanvas = love.graphics.newCanvas(map.width, map.height)
 
 	Spawner() -- функция отвечающая за спавн всех игроков на карте
 
@@ -142,8 +144,18 @@ function LoadMap(map_id) -- функция загружает, путём пар
 		map.friction = PNumber(dat, "friction")
 		map.gravity = PNumber(dat, "gravity")
 
+		map.reflection = PBool(dat, "reflection")
+		map.reflection_opacity = PNumber(dat, "reflection_opacity")
+
 		map.shadow = PBool(dat, "shadow")
+		map.shadow_centerx = PNumber(dat, "shadow_centerx")
 		map.shadow_opacity = PNumber(dat, "shadow_opacity")
+		map.shadow_direction = PNumber(dat, "shadow_direction")
+		map.shadow_shear = PNumber(dat, "shadow_shear")
+		map.shadow_size = PNumber(dat, "shadow_size")
+		
+
+
 		map.start_anim = PNumber(dat, "start_anim")
 
 		map.border_up = PNumber(dat, "border_up")
@@ -238,9 +250,11 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 				en.name = string.match(head, "name: ([%w_% ]+)")
 				en.type = PString(head, "type")
-				en.weight = PNumber(head, "weight")
+
 				en.physic = PBool(head, "physic")
 				en.collision = PBool(head, "collision")
+
+				en.shadow = PNumber(head, "shadow")
 
 				en.max_defend = PNumber(head, "defend")
 				en.max_fall = PNumber(head, "fall")
@@ -339,7 +353,8 @@ function LoadEntity(id) -- функция загружает, путём пар�
 
 					local sprites = {
 						file = image,
-						pics = pics
+						pics = pics,
+						w = w
 					} -- объект спрайт-сетки
 
 					table.insert(en.sprites,sprites) -- добавляем объект в массив
@@ -368,7 +383,7 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.centerx = PNumber(f,"centerx")
 				frame.centery = PNumber(f,"centery")
 
-				frame.shadow = PNumber(f,"shadow")
+				frame.shadow = PBool(f,"shadow")
 				frame.zoom = PNumber(f,"zoom")
 
 				frame.dvx = PNumber(f,"dvx")
@@ -383,8 +398,16 @@ function LoadEntity(id) -- функция загружает, путём пар�
 				frame.dsz = PNumber(f,"dsz")
 				frame.dz = PNumber(f,"dz")
 				
-				frame.hold_left = PNumber(f,"hold_left")
-				frame.double_left = PNumber(f,"double_left")
+				frame.hit_Ua = PNumber(f,"hit_Ua")
+				frame.hit_Uj = PNumber(f,"hit_Uj")
+				frame.hit_Da = PNumber(f,"hit_Da")
+				frame.hit_Dj = PNumber(f,"hit_Dj")
+				frame.hit_Fa = PNumber(f,"hit_Fa")
+				frame.hit_Fj = PNumber(f,"hit_Fj")
+
+				frame.hit_a = PNumber(f,"hit_a")
+				frame.hit_j = PNumber(f,"hit_j")
+				frame.hit_d = PNumber(f,"hit_d")
 
 				frame.bodys = {} -- массив с коллайдерами body персонажа
 				local r = {} -- переменная для нахождения радиуса хитбоксов
@@ -502,6 +525,8 @@ function CreateEntity(id) -- функция создания экземпляр�
 
 	if created_object ~= nil then -- если мы нашли этот объект, выставляем ему начальные значения и добавляем
 
+		created_object.destroy_flag = false
+
 		created_object.x = 0
 		created_object.y = 0
 		created_object.z = 0
@@ -525,18 +550,17 @@ function CreateEntity(id) -- функция создания экземпляр�
 		created_object.walking_frame = 1
 		created_object.running_frame = 1
 
-
-
 		created_object.scale = 1
 		created_object.facing = 1
 
-
 		created_object.on_platform = false
-
 
 		created_object.frame = 1
 		created_object.next_frame = 1
 		created_object.wait = 0
+
+		created_object.hit_code = 0
+		created_object.hit_timer = 0
 
 		created_object.fall = created_object.max_fall
 		created_object.fall_timer = 0
@@ -608,10 +632,15 @@ end
 
 
 function RemoveEntity(en_id)
-	if (entity_list[en_id] ~= "nil") and (entity_list[en_id] ~= nil) then
+	if entity_list[en_id] ~= nil then
 		for key in pairs(entity_list[en_id]) do
 			entity_list[en_id][key] = nil
 		end
-		entity_list[en_id] = "nil"
+		entity_list[en_id] = nil
+		for key in pairs(players) do
+			if en_id == players[key] then
+				players[key] = nil
+			end
+		end
 	end
 end

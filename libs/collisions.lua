@@ -10,62 +10,66 @@ function CollisionersProcessing()
 	collisions_list = {}
 
 	for i = 1, #collisioners.itr do
-		local entity = entity_list[collisioners.itr[i]]
-		local entity_frame = GetFrame(entity)
-		
-		for j = 1, #collisioners.body do
-			if collisioners.itr[i] ~= collisioners.body[j] then
-				local target = entity_list[collisioners.body[j]]
-				local target_frame = GetFrame(target)
-				local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
-				if distantion < (entity_frame.itr_radius + target_frame.body_radius) then
-					for itr_id = 1, #entity_frame.itrs do
-						local itr = CollaiderCords(entity_frame.itrs[itr_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
-						for body_id = 1, #target_frame.bodys do
-							local body = CollaiderCords(target_frame.bodys[body_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
-							
-							if entity.z + itr.z * 0.5 > target.z and entity.z - itr.z * 0.5 < target.z then
-								if (CheckCollision(itr, body)) then
-									local collision = {
-										type = "itr_to_body",
-										entity_id = collisioners.itr[i],
-										target_id = collisioners.body[j],
-										entity_frame = entity.frame,
-										target_frame = target.frame,
-										itr_id = itr_id,
-										body_id = body_id
-									}
-									table.insert(collisions_list, collision)
+		if entity_list[collisioners.itr[i]] ~= nil then
+			local entity = entity_list[collisioners.itr[i]]
+			local entity_frame = GetFrame(entity)
+			
+			for j = 1, #collisioners.body do
+				if collisioners.itr[i] ~= collisioners.body[j] and entity_list[collisioners.body[j]] ~= nil then
+					local target = entity_list[collisioners.body[j]]
+					local target_frame = GetFrame(target)
+					local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
+					if distantion < (entity_frame.itr_radius + target_frame.body_radius) then
+						for itr_id = 1, #entity_frame.itrs do
+							local itr = CollaiderCords(entity_frame.itrs[itr_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
+							for body_id = 1, #target_frame.bodys do
+								local body = CollaiderCords(target_frame.bodys[body_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
+								
+								if entity.z + itr.z * 0.5 > target.z and entity.z - itr.z * 0.5 < target.z then
+									if (CheckCollision(itr, body)) then
+										local collision = {
+											type = "itr_to_body",
+											entity_id = collisioners.itr[i],
+											target_id = collisioners.body[j],
+											entity_frame = entity.frame,
+											target_frame = target.frame,
+											itr_id = itr_id,
+											body_id = body_id
+										}
+										table.insert(collisions_list, collision)
+									end
 								end
 							end
 						end
 					end
 				end
 			end
-		end
-		
-		for j = i + 1, #collisioners.itr do
-			local target = entity_list[collisioners.itr[j]]
-			local target_frame = GetFrame(target)
-			local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
-			if distantion < (entity_frame.itr_radius + target_frame.itr_radius) then
-				for itr1_id = 1, #entity_frame.itrs do
-					local itr1 = CollaiderCords(entity_frame.itrs[itr1_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
-					for itr2_id = 1, #target_frame.itrs do
-						local itr2 = CollaiderCords(target_frame.itrs[itr2_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
-						
-						if (entity.z + itr1.z * 0.5 > target.z and entity.z - itr1.z * 0.5 < target.z) or (target.z + itr2.z * 0.5 > entity.z and target.z - itr2.z * 0.5 < entity.z) then
-							if (CheckCollision(itr1, itr2)) then
-								local collision = {
-									type = "itr_to_itr",
-									entity_id = collisioners.itr[i],
-									target_id = collisioners.itr[j],
-									entity_frame = entity.frame,
-									target_frame = target.frame,
-									itr1_id = itr1_id,
-									itr2_id = itr2_id
-								}
-								table.insert(collisions_list, collision)
+			
+			for j = i + 1, #collisioners.itr do
+				if entity_list[collisioners.itr[j]] ~= nil then
+					local target = entity_list[collisioners.itr[j]]
+					local target_frame = GetFrame(target)
+					local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
+					if distantion < (entity_frame.itr_radius + target_frame.itr_radius) then
+						for itr1_id = 1, #entity_frame.itrs do
+							local itr1 = CollaiderCords(entity_frame.itrs[itr1_id], entity.x, entity.y, entity.z, entity_frame.centerx, entity_frame.centery, entity.facing)
+							for itr2_id = 1, #target_frame.itrs do
+								local itr2 = CollaiderCords(target_frame.itrs[itr2_id], target.x, target.y, entity.z, target_frame.centerx, target_frame.centery, target.facing)
+								
+								if (entity.z + itr1.z * 0.5 > target.z and entity.z - itr1.z * 0.5 < target.z) or (target.z + itr2.z * 0.5 > entity.z and target.z - itr2.z * 0.5 < entity.z) then
+									if (CheckCollision(itr1, itr2)) then
+										local collision = {
+											type = "itr_to_itr",
+											entity_id = collisioners.itr[i],
+											target_id = collisioners.itr[j],
+											entity_frame = entity.frame,
+											target_frame = target.frame,
+											itr1_id = itr1_id,
+											itr2_id = itr2_id
+										}
+										table.insert(collisions_list, collision)
+									end
+								end
 							end
 						end
 					end
@@ -77,26 +81,28 @@ function CollisionersProcessing()
 
 	if #collisioners.platform > 0 then
 		for en_id = 1, #entity_list do
-			local entity = entity_list[en_id]
-			local entity_frame = GetFrame(entity)
-			for j = 1, #collisioners.platform do
-				if en_id ~= collisioners.platform[j] then
-					local target = entity_list[collisioners.platform[j]]
-					local target_frame = GetFrame(target)
-					local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
-					if distantion < target_frame.platform_radius then
-						for p_id = 1, #target_frame.platforms do
+			if entity_list[en_id] ~= nil then
+				local entity = entity_list[en_id]
+				local entity_frame = GetFrame(entity)
+				for j = 1, #collisioners.platform do
+					if en_id ~= collisioners.platform[j] and entity_list[collisioners.platform[j]] ~= nil then
+						local target = entity_list[collisioners.platform[j]]
+						local target_frame = GetFrame(target)
+						local distantion = GetDistance(entity.x, entity.y, target.x, target.y)
+						if distantion < target_frame.platform_radius then
+							for p_id = 1, #target_frame.platforms do
 
-							local platform = CollaiderCords(target_frame.platforms[p_id], target.x, target.y, target.z, target_frame.centerx, target_frame.centery, target.facing)
+								local platform = CollaiderCords(target_frame.platforms[p_id], target.x, target.y, target.z, target_frame.centerx, target_frame.centery, target.facing)
 
-							if (entity.x < platform.x + platform.w and entity.x > platform.x and entity.z < target.z + (platform.z * 0.5) and entity.z > target.z - (platform.z * 0.5) and map.border_up - entity.y < platform.y and map.border_up - entity.y > platform.y - platform.h) then
-								local collision = {
-									type = "unit_to_platform",
-									entity_id = collisioners.platform[j],
-									target_id = en_id,
-									platform_id = p_id
-								}
-								table.insert(collisions_list, collision)
+								if (entity.x < platform.x + platform.w and entity.x > platform.x and entity.z < target.z + (platform.z * 0.5) and entity.z > target.z - (platform.z * 0.5) and map.border_up - entity.y < platform.y and map.border_up - entity.y > platform.y - platform.h) then
+									local collision = {
+										type = "unit_to_platform",
+										entity_id = collisioners.platform[j],
+										target_id = en_id,
+										platform_id = p_id
+									}
+									table.insert(collisions_list, collision)
+								end
 							end
 						end
 					end

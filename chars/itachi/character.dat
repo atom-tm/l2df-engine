@@ -11,15 +11,15 @@ defend: 10
 fall: 70
 
 sprite: {
-	file: "chars/itachi/sprites/1.png"
-	w: 115 h: 115
-	row: 10 col: 6
+	file: "chars/itachi/sprites/main.png"
+	w: 85 h: 85
+	row: 7 col: 18
 	border: true
 }
 sprite: {
-	file: "chars/itachi/sprites/2.png"
-	w: 115 h: 115
-	row: 10 col: 7
+	file: "chars/itachi/sprites/attack_up.png"
+	w: 105 h: 105
+	row: 7 col: 1
 	border: true
 }
 
@@ -27,11 +27,11 @@ idle_frame: 1
 starting_frame: 1
 
 walking_frames: { 5, 6 ,7, 8, 9, 10 }
-walking_speed_x: 9
-walking_speed_z: 6
+walking_speed_x: 35
+walking_speed_z: 15
 
 running_frames: { 11, 12, 13, 14, 15, 16 }
-running_speed_x: 52
+running_speed_x: 72
 running_speed_z: 7
 running_stop: 18
 
@@ -54,126 +54,124 @@ jump_attack_frame: 0
 dash_attack_frame: 0
 
 injury_frames: { 50,51,52 }
-injury_backward_frame: 50
-injury_forward_frame: 52
 
 
 </head>
 
 
 <frame> 1 idle
-pic: 0  next: 2  wait: 9 centerx: 18  centery: 113
-body: { x: 2 w: 28 y: 38 h: 70}
+pic: 0  next: 2  wait: 9 centerx: 22  centery: 83 hit_Fj: 42
+body: { x: 9 w: 25 y: 8 h: 72 }
 state: 1 {  }
 </frame>
 <frame> 2 idle
-pic: 1  next: 3  wait: 9  centerx: 18  centery: 113
-body: { x: 2 w: 28 y: 38 h: 70}
+pic: 1  next: 3  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+body: { x: 9 w: 25 y: 8 h: 72 }
 state: 1 {  }
 </frame>
 <frame> 3 idle
-pic: 2  next: 4  wait: 9  centerx: 16  centery: 113
-body: { x: 0 w: 28 y: 38 h: 70}
+pic: 2  next: 4  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+body: { x: 9 w: 25 y: 8 h: 72 }
 state: 1 {  }
 </frame>
 <frame> 4 idle
-pic: 3  next: 1  wait: 9  centerx: 18  centery: 113
-body: { x: 2 w: 28 y: 38 h: 70}
+pic: 3  next: 1  wait: 9  centerx: 22  centery: 83 hit_Fj: 42
+body: { x: 9 w: 25 y: 8 h: 72 }
 state: 1 {  }
 </frame>
 
 <frame> 5 walking
-pic: 120  next: 0  wait: 10  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 7  next: 0  wait: 10  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 {  }
 </frame>
 <frame> 6 walking
-pic: 121  next: 0  wait: 9  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 8  next: 0  wait: 9  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 { x: 3 }
 </frame>
 <frame> 7 walking
-pic: 122  next: 0  wait: 8  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 9  next: 0  wait: 8  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 {  }
 </frame>
 <frame> 8 walking
-pic: 123  next: 0  wait: 13  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 10  next: 0  wait: 13  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 {  }
 </frame>
 <frame> 9 walking
-pic: 124  next: 0  wait: 9  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 11  next: 0  wait: 9  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 { x: 3 }
 </frame>
 <frame> 10 walking
-pic: 125  next: 0  wait: 8  centerx: 18  centery: 113
-body: { x: 8 w: 28 y: 38 h: 70}
+pic: 12  next: 0  wait: 8  centerx: 20  centery: 83 hit_Fj: 42
+body: { x: 11 w: 23 y: 8 h: 72 }
 state: 2 {  }
 </frame>
 
 <frame> 11 running
-pic: 4  next: 0  wait: 8  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 14  next: 0  wait: 8  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 <frame> 12 running
-pic: 5  next: 0  wait: 7  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 15  next: 0  wait: 7  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 <frame> 13 running
-pic: 6  next: 0  wait: 6  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 16  next: 0  wait: 6  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 <frame> 14 running
-pic: 7  next: 0  wait: 8  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 17  next: 0  wait: 8  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 <frame> 15 running
-pic: 8  next: 0  wait: 7  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 18  next: 0  wait: 7  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 <frame> 16 running
-pic: 9  next: 0  wait: 6  centerx: 18  centery: 113
-body: { x: 4 w: 58 y: 65 h: 45}
+pic: 19  next: 0  wait: 6  centerx: 26  centery: 83
+body: { x: 4 w: 58 y: 32 h: 49 }
 state: 3 {  }
 </frame>
 
 <frame> 18 stop_running
-pic: 15  next: 0  wait: 11  centerx: 16  centery: 113
-body: { x: 1 w: 28 y: 44 h: 70}
+pic: 51  next: 0  wait: 7 centerx: 13  centery: 83
+body: { x: 6 w: 23 y: 8 h: 72 }
 </frame>
 
 <frame> 20 jump
-pic: 10  next: 21  wait: 13  centerx: 16  centery: 113
+pic: 21  next: 21  wait: 13  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 state: 10 { }
 </frame>
 <frame> 21 jump
-pic: 11  next: 0  wait: 11  centerx: 16  centery: 113
+pic: 22  next: 0  wait: 11  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 state: 4 { }
 state: 10 { }
 </frame>
 
 <frame> 22 air_idle
-pic: 12  next: 0  wait: 11  centerx: 16  centery: 113
+pic: 23  next: 0  wait: 11  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 state: 5 { }
 state: 10 { }
 </frame>
 
 <frame> 25 landing
-pic: 10  next: 26  wait: 9  centerx: 16  centery: 113
+pic: 21  next: 26  wait: 9  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 26 langing
-pic: 15  next: 0  wait: 7  centerx: 16  centery: 113
+pic: 51  next: 0  wait: 7  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
@@ -202,7 +200,7 @@ pic: 32  next: 33  wait: 12  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 33 dash
-pic: 33  next: 999  wait: 9  centerx: 16  centery: 113
+pic: 33  next: 999  wait: 9  centerx: 16  centery: 113 hit_a: 35
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
@@ -229,7 +227,7 @@ pic: 38  next: 40  wait: 9  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 40 dash
-pic: 39  next: 999  wait: 13  centerx: 16  centery: 113
+pic: 39  next: 999  wait: 13  centerx: 16  centery: 113 hit_a: 42
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 
@@ -269,6 +267,6 @@ pic: 20  next: 999  wait: 55  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
 <frame> 52 injury
-pic: 21  next: 999  wait: 55  centerx: 16  centery: 113
+pic: 21  next: 1000  wait: 55  centerx: 16  centery: 113
 body: { x: 1 w: 28 y: 44 h: 70}
 </frame>
