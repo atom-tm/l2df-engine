@@ -10,15 +10,11 @@ local core = l2df
 	local EventManager = core.import 'core.manager.event'
 
 	local Entity = core.import "core.class.entity"
+	local Room = core.import "core.class.entity.room"
 
 	function core:init()
 
-		local fun = function() end
 
-		local id = EventManager:subscribe("load", fun)
-		EventManager:getSubscribes()
-		EventManager:unsubscribeById("load", id)
-		EventManager:getSubscribes()
 	end
 
 
