@@ -8,13 +8,17 @@ local core = l2df
 
 	local EntityManager = core.import 'core.manager.entity'
 	local EventManager = core.import 'core.manager.event'
+	local ResourseManager = core.import 'core.manager.resourse'
+	local GroupManager = core.import 'core.manager.group'
+	local SettingsManager = core.import 'core.manager.settings'
 
 	local Entity = core.import "core.class.entity"
 	local Room = core.import "core.class.entity.room"
 
 	function core:init()
-
-
+		SettingsManager:load(settingsFile)
+		print(SettingsManager.global.resolution)
+		SettingsManager:save()
 	end
 
 

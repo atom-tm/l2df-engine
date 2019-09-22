@@ -15,9 +15,9 @@ local Storage = Class:extend()
 
 	--- Add new object to storage
 	--  @param object
-	function Storage:add(object)
+	function Storage:add(object, reload)
 		local id = self:has(object)
-		if id then return id end
+		if id and not reload then return id end
 
 		if #self.free > 0 then
 			id = self.free[#self.free]
@@ -29,7 +29,17 @@ local Storage = Class:extend()
 
 		self.list[id] = object
 		self.map[object] = id
-		return id
+		return id, object
+	end
+
+	function Storage:addById(object, id, reload)
+		local obj = self:getById(id)
+		if obj and not reload then return obj, id end
+
+		self.list[id] = object
+		self.map[object] = id
+
+		return id, object
 	end
 
 
@@ -75,6 +85,14 @@ local Storage = Class:extend()
 				end
 			end
 			return nil
+		end
+	end
+
+	function Storage:pairs()
+		local index, object
+		return function ()
+			index, object = next(self.list, index)
+			return index, object
 		end
 	end
 
