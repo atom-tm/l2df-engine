@@ -1,6 +1,10 @@
-local Object = { }
+local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
+assert(type(core) == "table" and core.version >= 1.0, "Classes works only with l2df v1.0 and higher")
 
-	function Object:___getInstance()
+local Class = { }
+
+	--- David blaine's fucking street magic
+	function Class:___getInstance()
 		local obj = setmetatable({
 				___class = self
 			}, self)
@@ -9,7 +13,8 @@ local Object = { }
 		return obj
 	end
 
-	function Object:extend(...)
+	--- Inheritance
+	function Class:extend(...)
 		local cls = self:___getInstance()
 		cls.super = setmetatable({ }, {
 				__index = self,
@@ -29,22 +34,25 @@ local Object = { }
 		return cls
 	end
 
-	function Object:new(...)
+	--- Creating a class instance
+	function Class:new(...)
 		local obj = self:___getInstance()
 		obj:init(...)
 		return obj
 	end
 
-	function Object:init()
+	--- Class initialization
+	function Class:init(int)
+		self.x = int
 		-- pass
 	end
 
-	function Object.isTypeOf(obj, cls)
+	function Class.isTypeOf(obj, cls)
 		return obj and (obj.___class == cls)
 	end
 
-	function Object.isInstanceOf(obj, cls)
-		return obj and (obj.___class == cls or Object.isInstanceOf(obj.___class, cls))
+	function Class.isInstanceOf(obj, cls)
+		return obj and (obj.___class == cls or Class.isInstanceOf(obj.___class, cls))
 	end
 
-return Object
+return Class

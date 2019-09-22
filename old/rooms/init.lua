@@ -9,8 +9,10 @@ local EventSystem = core.import "systems.event"
 local InputSystem = core.import "systems.input"
 local PhysixSystem = core.import "systems.physix"
 local RenderSystem = core.import "systems.render"
+local SoundSystem = core.import "systems.sounds"
 local PhysixComponent = core.import "components.physix"
 local Actor = core.import "entities.actor"
+local Media = core.import "media"
 
 local hook = helper.hook
 
@@ -36,7 +38,8 @@ local rooms = { list = { } }
 				except = { "draw", "keypressed", "keyreleased" }
 			},
 			PhysixSystem(),
-			RenderSystem()
+			RenderSystem(),
+			SoundSystem()
 		}
 
 		self.entityManager = EntityManager {
@@ -44,6 +47,7 @@ local rooms = { list = { } }
 				physical = hasComponent(PhysixComponent),
 				objects = Actor,
 				ui = UI,
+				music = Media.Music,
 				background = {"wtf"},
 				foreground = {"wtf"},
 			},
@@ -85,7 +89,8 @@ local rooms = { list = { } }
 		rooms:set(...)
 	end
 
-	function rooms:pop()
+	function rooms:pop(options)
+		options = options or { }
 		if stack[#stack] then
 			if self.current then
 				local _ = self.current.exit and self.current:exit()
@@ -118,8 +123,9 @@ local rooms = { list = { } }
 		self:emit("roomloaded", self.current)
 	end
 
-	function rooms:reload(input)
-		local _ = self.current.load and self.current:load(input)
+	function rooms:reload(options)
+		options = options or { }
+		local _ = self.current.load and self.current:load(options)
 		self:emit("roomloaded", self.current)
 	end
 

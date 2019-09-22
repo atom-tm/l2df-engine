@@ -2,30 +2,31 @@ local __DIR__ = (...) .. "."
 gamera		= require(__DIR__ .. "external.gamera")
 json 		= require(__DIR__ .. "external.json")
 helper 		= require(__DIR__ .. "helper")
-
 ---------------------------------------------
-camera = nil
-locale = nil
----------------------------------------------
-
 l2df = require(__DIR__ .. "core")
 local core = l2df
 
-	local min_dt, next_time
+
+
+	local object = core.import "core.class"
+	local Reader = core.import "core.class.reader"
+
+	function core:init()
+		local room = object:new()
+		room.nodes = {
+			object:new(15),
+			object:new(25)
+		}
+
+		local reader = Reader(room.nodes)
+		while (reader:next()) do
+			print(reader.current.x)
+		end
+	end
+
+	--[[local min_dt, next_time
 
 	core.settings	= core.import "settings"
-	-- core.resources	= core.import "resources"
-	core.data		= core.import "data"
-	core.i18n		= core.import "i18n"
-
-	core.font		= core.import "fonts"
-	core.sound		= core.import "sounds"
-	core.image		= core.import "images"
-	core.video		= core.import "videos"
-	core.input		= core.import "input"
-	core.ui			= core.import "ui"
-	core.rooms		= core.import "rooms"
-	core.battle		= core.import "battle"
 
 	core.scalex = 1
 	core.scaley = 1
@@ -94,6 +95,6 @@ local core = l2df
 
 		self.scalex = w / self.settings.gameWidth
 		self.scaley = h / self.settings.gameHeight
-	end
+	end]]
 
 return core

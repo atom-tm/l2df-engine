@@ -2,7 +2,7 @@ local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "UI works only with l2df v1.0 and higher")
 
 local helper = core.import("helper")
-local object = core.import("core.object")
+local Entity = core.import "core.entities.entity"
 
 local fs = love and love.filesystem
 local notNil = helper.notNil
@@ -31,7 +31,6 @@ local function getResourse(index)
 	return media_list.permanent[index] or media_list.temporary[index] or nil
 end
 
-
 local function addResourse(filepath, arguments, temporary)
 
 	local index = filepath and fs.getRealDirectory(filepath)..filepath
@@ -56,8 +55,10 @@ local function addResourse(filepath, arguments, temporary)
 	elseif extensions.sound[extension] then
 		if arguments.static then
 			location[index] = love.audio.newSource(filepath, "static")
+			resource = location[index]
 		else
 			location[index] = love.audio.newSource(filepath, "stream")
+			resource = location[index]
 		end
 	end
 
@@ -85,17 +86,32 @@ end
 local function pause(self)
 	self.resource:pause()
 end
+local function stop(self)
+	self.resource:stop()
+end
 local function rewind(self)
 	self.resource:rewind()
 end
+local function volume(self, number)
+	self.info.volume = number
+	self.resource:setVolume(number * 0.01)
+end
+local function soundInit(self)
+	self.play = play
+	self.pause = pause
+	self.stop = stop
+	self.rewind = rewind
+	self.volume = volume
+	self:volume(self.info.volume)
+end
 
-local Media = { }
+local Media = Entity:extend()
 
 	Media.clear = clearTemp
-	Media.Image = object:extend()
-	Media.Video = object:extend()
-	Media.Sound = object:extend()
-	Media.Music = object:extend()
+	Media.Image = Entity:extend()
+	Media.Video = Entity:extend()
+	Media.Sound = Entity:extend()
+	Media.Music = Entity:extend()
 
 	function Media.draw(object, ...)
 		object:draw(...)
@@ -233,19 +249,26 @@ local Media = { }
 
 
 	function Media.Sound:init(filepath, privacy, properties)
+		properties = properties or {}
 		properties.static = true
 		self.resource = addResourse(filepath, properties, privacy)
-		self.play = play
-		self.pause = pause
-		self.rewind = rewind
+		self.info = { volume = properties.volume or 100 }
+		soundInit(self)
 	end
 
 	function Media.Music:init(filepath, privacy, properties)
+		properties = properties or {}
 		properties.static = false
 		self.resource = addResourse(filepath, properties, privacy)
-		self.play = play
-		self.pause = pause
-		self.rewind = rewind
+		self.info = { volume = properties.volume or 100 }
+		soundInit(self)
+	end
+
+	function Media.Music:change(filepath)
+		self:stop()
+		self.resource = addResourse(filepath, {static = false})
+		self:volume(self.info.volume)
+		self:play()
 	end
 
 
