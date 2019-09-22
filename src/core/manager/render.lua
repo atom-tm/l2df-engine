@@ -12,17 +12,17 @@ local drawables = { }
 local Manager = { canvas, scalex, scaley }
 
 	function Manager:init()
-
 		EventManager:subscribe("resize", self.resize, nil, self)
 		EventManager:subscribe("draw", self.draw, nil, self)
 
-		self.resX, self.resY = 1280, 720
+		self.resX, self.resY = 640, 360
 		self.gameW, self.gameH = love.window.getMode()
 		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
 
 		self.canvas = love.graphics.newCanvas(self.resX, self.resY)
 		self:setMaxIndex(10)
 	end
+
 
 	function Manager:setMaxIndex(int)
 		drawables = { }
@@ -46,7 +46,14 @@ local Manager = { canvas, scalex, scaley }
 		print(self.scaleY)
 	end
 
+	function Manager:layersClear()
+		love.graphics.setCanvas(self.canvas)
+		love.graphics.clear()
+		love.graphics.setCanvas()
+	end
+
 	function Manager:draw()
+		self:layersClear()
 		love.graphics.setCanvas(self.canvas)
 
 		for i = 1, #drawables do
@@ -54,6 +61,7 @@ local Manager = { canvas, scalex, scaley }
 				local e = drawables[i][j]
 				love.graphics.draw(e[1], e[2], e[3])
 			end
+			drawables[i] = { }
 		end
 
 		love.graphics.setCanvas()

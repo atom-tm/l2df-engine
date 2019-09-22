@@ -8,8 +8,6 @@ local Draw = core.import "core.class.component.draw"
 local UI = Entity:extend()
 
     function UI:init(res, x, y)
-        self.x = x
-        self.y = y
         self:addComponent(Draw, res)
     end
 

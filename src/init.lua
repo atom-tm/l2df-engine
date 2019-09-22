@@ -18,17 +18,18 @@ local core = l2df
 	local UI = core.import "core.class.entity.ui"
 
 	function core:init()
+		love.keyboard.setKeyRepeat(true)
 		EventManager:monitoring(love, love.handlers)
 		EventManager:monitoring(love, "update")
 		EventManager:monitoring(love, "draw")
 		RenderManager:init()
 
-		RenderManager:add(love.graphics.newImage("sprites/UI/logotype.png"), 10, 10, 1)
+		--RenderManager:add(love.graphics.newImage("sprites/UI/logotype.png"), 10, 10, 1)
 		RenderManager:add(love.graphics.newImage("sprites/UI/Frame.png"), 50, 50)
 
 		local ui = UI("sprites/UI/Frame.png", 135,90)
 
-		local f = function (key)
+		local f = function (self, key)
 			print(key)
 			ui.y = key == 'w' and ui.y - 5 or ui.y
 			ui.y = key == 's' and ui.y + 5 or ui.y

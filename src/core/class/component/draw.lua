@@ -10,12 +10,22 @@ local Draw = Component:extend({ unique = true })
 
     function Draw:init()
         self.entity = nil
-        self.resourse = nil
-        self.hidden = false
     end
 
     function Draw:added(entity, resourse)
+        if not entity then return false end
         self.entity = entity
+
+        entity.x = entity.x or 0
+        entity.y = entity.y or 0
+        entity.r = entity.r or 0
+
+        entity.scalex = entity.scalex or 1
+        entity.scaley = entity.scaley or 1
+
+        entity.hidden = entity.hidden or 0
+        entity.pic = entity.pic or 0
+
         self.resourse = love.graphics.newImage(resourse)
         Event:subscribe("update", self.update, nil, self)
     end
