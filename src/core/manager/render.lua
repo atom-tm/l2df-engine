@@ -3,28 +3,61 @@ assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only 
 
 local EventManager = core.import 'core.manager.event'
 
+local layers = {
+	UI = {}
+}
+
+local drawables = { }
+
 local Manager = { canvas, scalex, scaley }
 
 	function Manager:init()
 
 		EventManager:subscribe("resize", self.resize, nil, self)
-		EventManager:subscribe("draw", self.resize, nil, self)
+		EventManager:subscribe("draw", self.draw, nil, self)
 
-		self.resX = 1280
-		self.resY = 720
+		self.resX, self.resY = 1280, 720
 		self.gameW, self.gameH = love.window.getMode()
+		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
 
-		print(self.gameW)
+		self.canvas = love.graphics.newCanvas(self.resX, self.resY)
+		self:setMaxIndex(10)
+	end
+
+	function Manager:setMaxIndex(int)
+		drawables = { }
+		for i = 1, int do
+			drawables[i] = { }
+		end
+	end
+
+	function Manager:add(resourse, x, y, index, options)
+		if not (resourse and resourse.typeOf and resourse:typeOf("Drawable")) then return end
+		index = index or 1
+		x = x or 0
+		y = y or 0
+		drawables[index][#drawables[index] + 1] = { resourse, x, y }
 	end
 
 	function Manager:resize(w,h)
 		self.gameW, self.gameH = w, h
-		print(self.gameW)
+		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
+		print(self.scaleX)
+		print(self.scaleY)
 	end
 
 	function Manager:draw()
-		love.graphics.rectangle("fill", 10, 10, 100, 30)
-		-- body
+		love.graphics.setCanvas(self.canvas)
+
+		for i = 1, #drawables do
+			for j = 1, #drawables[i] do
+				local e = drawables[i][j]
+				love.graphics.draw(e[1], e[2], e[3])
+			end
+		end
+
+		love.graphics.setCanvas()
+		love.graphics.draw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
 	end
 
 return Manager

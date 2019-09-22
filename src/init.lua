@@ -15,10 +15,28 @@ local core = l2df
 
 	local Entity = core.import "core.class.entity"
 	local Room = core.import "core.class.entity.room"
+	local UI = core.import "core.class.entity.ui"
 
 	function core:init()
 		EventManager:monitoring(love, love.handlers)
+		EventManager:monitoring(love, "update")
+		EventManager:monitoring(love, "draw")
 		RenderManager:init()
+
+		RenderManager:add(love.graphics.newImage("sprites/UI/logotype.png"), 10, 10, 1)
+		RenderManager:add(love.graphics.newImage("sprites/UI/Frame.png"), 50, 50)
+
+		local ui = UI("sprites/UI/Frame.png", 135,90)
+
+		local f = function (key)
+			print(key)
+			ui.y = key == 'w' and ui.y - 5 or ui.y
+			ui.y = key == 's' and ui.y + 5 or ui.y
+			ui.x = key == 'a' and ui.x - 5 or ui.x
+			ui.x = key == 'd' and ui.x + 5 or ui.x
+		end
+
+		EventManager:subscribe("keypressed", f)
 	end
 
 
