@@ -31,13 +31,16 @@ local Manager = { canvas, scalex, scaley }
 		end
 	end
 
-	function Manager:add(resourse, x, y, index, options)
-		if not (resourse and resourse.typeOf and resourse:typeOf("Drawable")) then return end
+
+	function Manager:add(sprite, x, y, index)
+		if not sprite then return end
+		if not (sprite[1].typeOf and sprite[1]:typeOf("Drawable")) then return end
 		index = index or 1
 		x = x or 0
 		y = y or 0
-		drawables[index][#drawables[index] + 1] = { resourse, x, y }
+		drawables[index][#drawables[index] + 1] = { sprite, x, y }
 	end
+
 
 	function Manager:resize(w,h)
 		self.gameW, self.gameH = w, h
@@ -46,11 +49,13 @@ local Manager = { canvas, scalex, scaley }
 		print(self.scaleY)
 	end
 
+
 	function Manager:layersClear()
 		love.graphics.setCanvas(self.canvas)
 		love.graphics.clear()
 		love.graphics.setCanvas()
 	end
+
 
 	function Manager:draw()
 		self:layersClear()
@@ -59,7 +64,11 @@ local Manager = { canvas, scalex, scaley }
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
 				local e = drawables[i][j]
-				love.graphics.draw(e[1], e[2], e[3])
+				if e[1][2] then
+					love.graphics.draw(e[1][1], e[1][2], e[2], e[3])
+				else
+					love.graphics.draw(e[1][1], e[2], e[3])
+				end
 			end
 			drawables[i] = { }
 		end
@@ -67,6 +76,13 @@ local Manager = { canvas, scalex, scaley }
 		love.graphics.setCanvas()
 		love.graphics.draw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
 	end
+
+
+	function Manager:generateQuad(resourse, x, y, w, h)
+		if not (resourse and resourse.typeOf and resourse:typeOf("Drawable")) then return end
+		return { resourse, love.graphics.newQuad(x,y,w,h,resourse:getDimensions()) }
+	end
+
 
 return Manager
 

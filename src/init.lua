@@ -24,17 +24,20 @@ local core = l2df
 		EventManager:monitoring(love, "draw")
 		RenderManager:init()
 
-		--RenderManager:add(love.graphics.newImage("sprites/UI/logotype.png"), 10, 10, 1)
-		RenderManager:add(love.graphics.newImage("sprites/UI/Frame.png"), 50, 50)
+		local ui
 
-		local ui = UI("sprites/UI/Frame.png", 135,90)
+		ui = UI({{ "sprites/UI/loading.png", 4, 3, 140, 140 }}, 135, 90)
 
-		local f = function (self, key)
-			print(key)
+
+		local f = function (_, key)
+		print(key)
 			ui.y = key == 'w' and ui.y - 5 or ui.y
 			ui.y = key == 's' and ui.y + 5 or ui.y
 			ui.x = key == 'a' and ui.x - 5 or ui.x
 			ui.x = key == 'd' and ui.x + 5 or ui.x
+			ui.pic = key == '=' and ui.pic + 1 or ui.pic
+			ui.pic = key == '-' and ui.pic - 1 or ui.pic
+			print(ui.pic)
 		end
 
 		EventManager:subscribe("keypressed", f)

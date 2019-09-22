@@ -3,10 +3,28 @@ assert(type(core) == "table" and core.version >= 1.0, "EntityManager works only 
 
 local Class = core.import "core.class"
 local Storage = core.import "core.class.storage"
+local fs = love and love.filesystem
 
 local list = {
 	temp = Storage:new(),
 	global = Storage:new()
+}
+
+local extensions = {
+	image = {
+		[".png"] = true,
+		[".bmp"] = true,
+		[".gif"] = true,
+	},
+	sound = {
+		[".ogg"] = true,
+		[".wav"] = true,
+		[".mp3"] = true,
+
+	},
+	video = {
+		[".ogv"] = true,
+	},
 }
 
 local Manager = { list = list }
@@ -52,25 +70,24 @@ local Manager = { list = list }
 		return res, self.list.temp:has(res)
 	end
 
-	function Manager:resoursesEnum( )
-		for k, v in self.list.global:enum(true) do
-			if self.list.temp:has(v) then
-				print(k .. " - " .. tostring(v) .. " [temp]")
-			else
-				print(k .. " - " .. tostring(v))
-			end
-		end
+	function Manager:has(id)
+		return self.list.global:getById(id) and true or false
 	end
 
-	function Manager:resoursesList()
-		for k, v in self.list.global:pairs() do
-			if self.list.temp:has(v) then
-				print(k .. " - " .. tostring(v) .. " [temp]")
-			else
-				print(k .. " - " .. tostring(v))
-			end
+	function Manager:load(filepath, reload)
+		if not reload and self:get(filepath) then return self:get(filepath) end
+		local extension = filepath:match("^.+(%..+)$")
+		local id, resourse
+		if extensions.image[extension] then
+			id, resourse = self:addById(filepath, love.graphics.newImage(filepath))
+		elseif extensions.video[extension] then
+			id, resourse = self:addById(filepath, love.graphics.newVideo(filepath))
+		elseif extensions.sound[extension] then
+			id, resourse = self:addById(filepath, love.audio.newSource(filepath))
+		else
+			print("Unsupported format")
 		end
-		-- body
+		return resourse
 	end
 
 

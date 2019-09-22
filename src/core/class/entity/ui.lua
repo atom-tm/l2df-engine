@@ -2,13 +2,15 @@ local core = l2df or require((...):match("(.-)core.+$") or "" .. "core")
 assert(type(core) == "table" and core.version >= 1.0, "Entities works only with l2df v1.0 and higher")
 
 local Entity = core.import "core.class.entity"
-
-local Draw = core.import "core.class.component.draw"
+local Render = core.import "core.class.component.render"
 
 local UI = Entity:extend()
 
-    function UI:init(res, x, y)
-        self:addComponent(Draw, res)
+    function UI:init(sprites, x, y)
+    	self.x = x
+    	self.y = y
+
+        self:addComponent(Render(), sprites)
     end
 
 return UI
