@@ -20,7 +20,7 @@ function state:Processing(object,s)
 			state.variables.code = state.variables.code .. "f"
 		end
 		if object.wait == 0 then
-			object.wait = object.wait + 1
+			object.wait = object.frame.wait
 		end
 	else
 		if object.wait == 0 then

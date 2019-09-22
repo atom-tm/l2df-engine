@@ -34,9 +34,16 @@ local physix = {}
 		self.y = self.y + self.vel_y
 		self.z = self.z + self.vel_z
 
-		if self.x <= 0 then self.x = 0
-		elseif self.x >= battle.map.head.width then
-			self.x = battle.map.head.width
+		if self.head.type == "character" then
+			if self.x <= 0 then self.x = 0
+			elseif self.x >= battle.map.head.width then
+				self.x = battle.map.head.width
+			end
+		else
+			if self.x <= -300 then self.destroy = true
+			elseif self.x >= battle.map.head.width + 300 then
+				self.destroy = true
+			end
 		end
 
 		self.grounded = false
@@ -47,9 +54,16 @@ local physix = {}
 			self.y = battle.map.head.height
 		end
 
-		if self.z <= 0 then self.z = 0
-		elseif self.z >= battle.map.head.area then
-			self.z = battle.map.head.area
+		if self.head.type == "character" then
+			if self.z <= 0 then self.z = 0
+			elseif self.z >= battle.map.head.area then
+				self.z = battle.map.head.area
+			end
+		else
+			if self.z <= 0 - battle.map.head.objects_stock then self.z = 0 - battle.map.head.objects_stock
+			elseif self.z >= battle.map.head.area + battle.map.head.objects_stock then
+				self.z = battle.map.head.area + battle.map.head.objects_stock
+			end
 		end
 
 	end

@@ -18,3 +18,16 @@
 	fall_spark: 60
 	object_fall_spark: 60
 ]
+
+100: [
+	injury_forward: 201
+	injury_backward: 200
+	bdefend_forward: 202
+	bdefend_backward: 203
+	falling_backward: 220
+	falling_forward: 220
+	
+	block_spark: 10
+	bblock_spark: 30
+	bdefend_spark: 60
+]

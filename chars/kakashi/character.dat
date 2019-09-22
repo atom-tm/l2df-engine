@@ -34,6 +34,7 @@ fall: 60
 
 <frames_list>
 	dfd: 520
+	udfu: 530
 </frames_list>
 
 
@@ -271,6 +272,7 @@ body: { x: 12  y: 21  w: 34  h: 60  z: -5  l: 10 }
 <frame> 300 attack_1
 pic: 29  next: 301  wait: 3 centerx: 25  centery: 83
 state: 10 {}
+state: 15 { j: 340 }
 body: { x: 10  y: 14  w: 33  h: 65 }
 </frame>
 <frame> 301 attack_1
@@ -501,6 +503,7 @@ itr: { kind: 8  attacker_frame: 373  x: 10  y: 13  w: 45  h: 103  z: -5  l: 10  
 <frame> 373 attack_6
 pic: 134  next: 374  wait: 1 centerx: 32  centery: 115
 opoint: { id: 210 action: 1 x: 32 y: 115 z: 2}
+opoint: { id: 1001 action: 30 raction: 4  x: 32 y: 115 z: 0 dvx: -3 rdvx: 6 dvy: 7 rdvy: 4 dvz: -1 rdvz: 2 count: 4 rcount: 5 facing: 1 }
 </frame>
 <frame> 374 attack_6
 pic: 135  next: 375  wait: 2 centerx: 32  centery: 115
@@ -643,9 +646,27 @@ body: { x: 18  y: 33  w: 38  h: 48  z: -5  l: 10 }
 <frame> 523 doton_wall
 pic: 67  next: 524  wait: 35 centerx: 20  centery: 82
 body: { x: 23  y: 38  w: 39  h: 43  z: -5  l: 10 }
-opoint: { id: 110 action: 1 x: 120 y: 82 z: 0 facing: -1 }
+opoint: { id: 110 action: 1 x: 130 y: 82 z: 3 facing: -1 }
 </frame>
 <frame> 524 doton_wall
 pic: 27  next: 0  wait: 5 centerx: 20  centery: 83
 body: { x: 14  y: 17  w: 33  h: 64  z: -5  l: 10 }
+</frame>
+
+<frame> 530 doton_wall
+pic: 120  next: 531  wait: 9 centerx: 20  centery: 83
+body: { x: 5  y: 4  w: 25  h: 77  z: -5  l: 10 }
+</frame>
+<frame> 531 doton_wall
+pic: 121  next: 532  wait: 2 centerx: 25  centery: 83
+body: { x: 10  y: 21  w: 53  h: 60  z: -5  l: 10 }
+</frame>
+<frame> 532 doton_wall
+pic: 122  next: 533  wait: 27 centerx: 25  centery: 83
+body: { x: 10  y: 21  w: 53  h: 60  z: -5  l: 10 }
+opoint: { id: 111  action: 1  x: 70  y: 35 z: 0 }
+</frame>
+<frame> 533 doton_wall
+pic: 123  next: 0  wait: 4 centerx: 25  centery: 83
+body: { x: 19  y: 14  w: 35  h: 67  z: -5  l: 10 }
 </frame>

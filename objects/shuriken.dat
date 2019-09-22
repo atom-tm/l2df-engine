@@ -17,36 +17,44 @@ shadow: true
 <frame> 1 fly
 pic: 6  next: 2  wait: 2 dvx: 33 dvy: 0 centerx: 14  centery: 35 grounded: 5
 itr: { kind: 0  dtype: 0      x: 5  y: 26  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50 }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 state: 570 { time: 10 frame: 10 }
 </frame>
 <frame> 2 fly
 pic: 4  next: 3  wait: 1 dvx: 33 dvy: 0 centerx: 11  centery: 38 grounded: 5
 itr: { kind: 0  dtype: 0      x: 2  y: 29  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 <frame> 3 fly
 pic: 7  next: 4  wait: 2 dvx: 33 dvy: 0 centerx: 12  centery: 35 grounded: 5
 itr: { kind: 0  dtype: 0      x: 3  y: 26  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 <frame> 4 fly
 pic: 5  next: 1  wait: 1 dvx: 33 dvy: 0 centerx: 12  centery: 38 grounded: 5
 itr: { kind: 0  dtype: 0      x: 3  y: 29  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 
 <frame> 10 fly
 pic: 6  next: 11  wait: 2 dvx: 27 dsy: -0.07 centerx: 14  centery: 35 grounded: 5
 itr: { kind: 0  dtype: 0      x: 5  y: 26  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 <frame> 11 fly
 pic: 4  next: 12  wait: 1 dvx: 27 dsy: -0.07 centerx: 11  centery: 38 grounded: 5
 itr: { kind: 0  dtype: 0      x: 2  y: 29  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 <frame> 12 fly
 pic: 7  next: 13  wait: 2 dvx: 27 dsy: -0.07 centerx: 12  centery: 35 grounded: 5
 itr: { kind: 0  dtype: 0      x: 3  y: 26  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 <frame> 13 fly
 pic: 5  next: 10  wait: 1 dvx: 27 dsy: -0.07 centerx: 12  centery: 38 grounded: 5
 itr: { kind: 0  dtype: 0      x: 3  y: 29  w: 17  h: 17  z: -5  l: 10      fall: 5  bdefend: 20  not_knocking_down: true   dvx: 5  attacker_frame: 50  }
+body: { x: 5  y: 26  w: 17  h: 17  z: -5  l: 10 damaged_frame: 50 }
 </frame>
 
 

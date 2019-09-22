@@ -9,6 +9,11 @@ local entities = {}
 			created_object.destroy = false
 			created_object.first_tick = true
 
+			created_object.r = 1
+			created_object.g = 1
+			created_object.b = 1
+			created_object.o = 1
+
 			created_object.x = 0
 			created_object.y = 0
 			created_object.z = 0
@@ -153,6 +158,9 @@ local entities = {}
 				f = -f
 			end
 			if self.frames[f] ~= nil then
+				if self.frame ~= nil then
+					self.previous_frame = self.frame.number
+				end
 				self.frame = self.frames[f]
 				self.wait = self.frame.wait
 				self.next_frame = self.frame.next
@@ -239,9 +247,18 @@ local entities = {}
 				local x = self.x - self.frame.centerx * self.facing + (opoint.x + math.random(-opoint.x_random, opoint.x_random)) * self.facing
 				local y = self.y + self.frame.centery - opoint.y + math.random(-opoint.y_random, opoint.y_random)
 				local z = self.z + opoint.z + math.random(-opoint.z_random, opoint.z_random)
-				local object = entities.spawnObject(opoint.id,x,y,z,opoint.facing * self.facing,opoint.action + math.random(0,opoint.action_random),self.owner)
-				if object ~= nil then
-
+				local count = opoint.count + math.random(0,opoint.count_random)
+				local facing = opoint.facing
+				if facing == 3 then facing = math.random(-1,1) end
+				if facing == 0 then facing = 1 end
+				for j = 1, count do
+					local action = opoint.action + math.random(0,opoint.action_random)
+					local object = entities.spawnObject(opoint.id, x, y, z, facing * self.facing, action, self.owner)
+					if object ~= nil then
+						object:setMotion_X((opoint.dvx + math.random(0,opoint.dvx_random * 100) * 0.01) * object.facing)
+						object:setMotion_Y((opoint.dvy + math.random(0,opoint.dvy_random * 100) * 0.01))
+						object:setMotion_Z((opoint.dvz + math.random(0,opoint.dvz_random * 100) * 0.01))
+					end
 				end
 			end
 		end

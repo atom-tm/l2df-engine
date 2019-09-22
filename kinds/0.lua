@@ -5,6 +5,7 @@ function kind:Start(attacker, itr, damaged, body)
 	if attacker.arest == 0 and damaged.vrest == 0 then
 		
 		if (itr.purpose == 1 and ((attacker.team ~= damaged.team) or attacker.team == -1 or damaged.team == -1) and attacker.owner ~= damaged.owner)
+		or (body.participle)
 		or (itr.purpose == 0)
 		or (itr.purpose == -1 and (attacker.team == damaged.team) and (attacker.team ~= -1 or damaged.team ~= -1)) then
 

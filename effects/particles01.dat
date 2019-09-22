@@ -1,0 +1,217 @@
+<head>
+name: Particles01
+type: effect
+
+sprite: {
+	file: "sprites/effects/particles/earth01.png"
+	w: 50 h: 50 row: 5 col: 2
+}
+
+sprite: {
+	file: "sprites/effects/particles/earth02.png"
+	w: 9 h: 9 row: 5 col: 1
+}
+
+
+
+physic: false
+collision: false
+shadow: false
+nextZero: true
+</head>
+
+<frame> 1 earth01
+pic: 1  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 11
+</frame>
+<frame> 2 earth01
+pic: 2  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 12
+</frame>
+<frame> 3 earth01
+pic: 3  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 13
+</frame>
+<frame> 4 earth01
+pic: 4  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 14
+</frame>
+<frame> 5 earth01
+pic: 5  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 15
+</frame>
+<frame> 6 earth01
+pic: 6  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 16
+</frame>
+<frame> 7 earth01
+pic: 7  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 17
+</frame>
+<frame> 8 earth01
+pic: 8  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 18
+</frame>
+<frame> 9 earth01
+pic: 9  next: 0  wait: 1  dsy: -0.85  centerx: 25  centery: 30 grounded: 19
+</frame>
+
+
+
+<frame> 11 earth01
+pic: 1  next: 21  wait: 35  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 12 earth01
+pic: 2  next: 22  wait: 30  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 13 earth01
+pic: 3  next: 23  wait: 35  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 14 earth01
+pic: 4  next: 24  wait: 30  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 15 earth01
+pic: 5  next: 25  wait: 25  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 16 earth01
+pic: 6  next: 26  wait: 25  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 17 earth01
+pic: 7  next: 27  wait: 35  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 18 earth01
+pic: 8  next: 28  wait: 30  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 19 earth01
+pic: 9  next: 29  wait: 30  centerx: 25  centery: 30
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+
+
+
+
+<frame> 21 earth01
+pic: 1  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 22 earth01
+pic: 2  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 23 earth01
+pic: 3  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 24 earth01
+pic: 4  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 25 earth01
+pic: 5  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 26 earth01
+pic: 6  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 27 earth01
+pic: 7  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 28 earth01
+pic: 8  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 29 earth01
+pic: 9  next: 0  wait: 45  centerx: 25  centery: 30
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+
+
+<frame> 30 earth02
+pic: 11  next: 0  wait: 1  dsy: -0.75  centerx: 5  centery: 6 grounded: 35
+</frame>
+<frame> 31 earth02
+pic: 12  next: 0  wait: 1  dsy: -0.75  centerx: 5  centery: 6 grounded: 36
+</frame>
+<frame> 32 earth02
+pic: 13  next: 0  wait: 1  dsy: -0.75  centerx: 5  centery: 6 grounded: 37
+</frame>
+<frame> 33 earth02
+pic: 14  next: 0  wait: 1  dsy: -0.75  centerx: 5  centery: 6 grounded: 38
+</frame>
+<frame> 34 earth02
+pic: 15  next: 0  wait: 1  dsy: -0.75  centerx: 5  centery: 6 grounded: 39
+</frame>
+
+
+<frame> 35 earth02
+pic: 11  next: 40  wait: 15  centerx: 5  centery: 6
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 36 earth02
+pic: 12  next: 41  wait: 15  centerx: 5  centery: 6
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 37 earth02
+pic: 13  next: 42  wait: 15  centerx: 5  centery: 6
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 38 earth02
+pic: 14  next: 43  wait: 15  centerx: 5  centery: 6
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+<frame> 39 earth02
+pic: 15  next: 44  wait: 15  centerx: 5  centery: 6
+state: 550 { x: true y: true z: true }
+state: 600 { retry: 95 }
+</frame>
+
+
+<frame> 40 earth02
+pic: 11  next: 0  wait: 25  centerx: 5  centery: 6
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 41 earth02
+pic: 12  next: 0  wait: 25  centerx: 5  centery: 6
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 42 earth02
+pic: 13  next: 0  wait: 25  centerx: 5  centery: 6
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 43 earth02
+pic: 14  next: 0  wait: 25  centerx: 5  centery: 6
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>
+<frame> 44 earth02
+pic: 15  next: 0  wait: 25  centerx: 5  centery: 6
+state: 610 { start: 1  finish: 0 }
+state: 1000 { }
+</frame>

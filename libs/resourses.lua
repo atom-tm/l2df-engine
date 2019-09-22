@@ -398,6 +398,7 @@ local resourses = {}
 
 
 			body.static 					= get.PBool(body_data,"static")
+			body.participle 				= get.PBool(body_data,"participle")
 			body.damaged_frame 				= get.PNumber(body_data,"damaged_frame")
 
 			body.x_rad 						= get.Biggest(math.abs(body.x),math.abs(body.x + body.w))
@@ -491,21 +492,26 @@ local resourses = {}
 
 			opoint.id 						= get.PNumber(opoint_data, "id")
 			opoint.action 					= get.PNumber(opoint_data, "action")
-			opoint.action_random 			= get.PNumber(opoint_data, "action_random")
+			opoint.action_random 			= get.PNumber(opoint_data, "raction")
 			
-			opoint.count 					= get.PNumber(opoint_data, "count")
+			opoint.count 					= get.PNumber(opoint_data, "count",1)
+			opoint.count_random				= get.PNumber(opoint_data, "rcount")
 
 			opoint.x 						= get.PNumber(opoint_data, "x")
 			opoint.y 						= get.PNumber(opoint_data, "y")
 			opoint.z 						= get.PNumber(opoint_data, "z")
 
-			opoint.x_random 				= get.PNumber(opoint_data, "xr")
-			opoint.y_random 				= get.PNumber(opoint_data, "yr")
-			opoint.z_random 				= get.PNumber(opoint_data, "zr")
+			opoint.x_random 				= get.PNumber(opoint_data, "rx")
+			opoint.y_random 				= get.PNumber(opoint_data, "ry")
+			opoint.z_random 				= get.PNumber(opoint_data, "rz")
 
 			opoint.dvx						= get.PNumber(opoint_data, "dvx")
 			opoint.dvy						= get.PNumber(opoint_data, "dvy")
 			opoint.dvz						= get.PNumber(opoint_data, "dvz")
+
+			opoint.dvx_random				= get.PNumber(opoint_data, "rdvx")
+			opoint.dvy_random				= get.PNumber(opoint_data, "rdvy")
+			opoint.dvz_random				= get.PNumber(opoint_data, "rdvz")
 
 			opoint.facing 					= get.PNumber(opoint_data, "facing",1)
 			
@@ -619,6 +625,8 @@ function resourses.MapLoadingHeader(object) -- Загрузка шапки ка�
 
 			head.border_up 					= get.PNumber(data, "border_up")
 			head.border_down 				= get.PNumber(data, "border_down")
+
+			head.objects_stock				= get.PNumber(data, "objects_stock", 15)
 
 			head.area 						= math.abs(head.border_down - head.border_up)
 			head.z_center 					= (head.border_up + head.border_down) * 0.5

@@ -5,10 +5,12 @@ function kind:Start(attacker, itr, damaged, body)
 	or (body.participle)
 	or (itr.purpose == 0)
 	or (itr.purpose == -1 and (attacker.team == damaged.team) and (attacker.team ~= -1 or damaged.team ~= -1)) then
-
-		if itr.attacker_frame ~= 0 then attacker:setFrame(itr.attacker_frame) end
-		if itr.damaged_frame ~= 0 then damaged:setFrame(itr.damaged_frame) end
 		
+		if not body.static then
+			damaged:setMotion_X(attacker.vel_x)
+			damaged:setMotion_Y(attacker.vel_y)
+			damaged:setMotion_Z(attacker.vel_z)
+		end
 	end
 end
 

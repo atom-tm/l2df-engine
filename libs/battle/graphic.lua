@@ -179,7 +179,7 @@ local graphic = {}
 								x = x - 2
 							end
 						end
-						image.draw(object.sprites[i].file,pic,x,y,object.facing)
+						image.draw(object.sprites[i].file,pic,x,y,object.facing,nil,object.r,object.g,object.b,object.o)
 						--battle.collision.DrawBack(object)
 						return true
 					else
