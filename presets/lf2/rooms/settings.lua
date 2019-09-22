@@ -8,11 +8,10 @@ local fnt_button = l2df.font.list.setting_element
 
 local room = { }
 
-	local _ = nil
-
 	local list = ui.List(512, 32, {
 			ui.Button(ui.Text("settings.language", fnt_button), 0, 0):useMouse(true)
-				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
+				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end)
+				:on("click", function () i18n:setLocale() end),
 
 			ui.Button(ui.Text("settings.music", fnt_button), 0, 64):useMouse(true)
 				:on("update", function (self) self.text.color[1] = self.hover and 1 or 0 end),
@@ -27,7 +26,7 @@ local room = { }
 
 	room.nodes = {
 		ui.Text("settings.caption", fnt_caption, 250, 20, { 0, 0, 0, 1 }):show(),
-		ui.Image("sprites/UI/background.png", 0, 0, _, "linear"),
+		ui.Image("sprites/UI/background.png", 0, 0, nil, "linear"),
 		list,
 	}
 

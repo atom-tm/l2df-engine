@@ -37,10 +37,10 @@ local rooms = { list = { } }
 			while head > 1 or i <= current[3] do
 				node = current[1][i]
 				i = i + 1
-				if not node.hidden and type(node[key]) == "function" then node[key](node, ...) end
-				if node.childs and next(node.childs) then
+				if node and not node.hidden and type(node[key]) == "function" then node[key](node, ...) end
+				if node and node.childs and next(node.childs) then
 					current[2] = i
-					containers[head + 1] = { node.childs, 1, node.size }
+					containers[head + 1] = { node.childs, 1, #node.childs }
 					head = head + 1
 					current = containers[head]
 					i = 1
@@ -61,10 +61,8 @@ local rooms = { list = { } }
 		local _ = self.current.load and self.current:load(input)
 	end
 
-
 	function rooms:reload(input)
 		local _ = self.current.load and self.current:load(input)
 	end
-	
-	
+
 return rooms

@@ -1,0 +1,53 @@
+width: 120
+kinds_path: "/data/kinds/"
+langs_path: "/data/langs"
+rooms_path: "/rooms/"
+dtypes_path: "data/dtypes.dat"
+resolution: 3
+difficulty: 2
+sound_volume: 100
+startRoom: "game_start"
+ui_path: "/sprites/UI/"
+combos_path: "data/combos.dat"
+states_path: "/data/states/"
+frames_path: "data/frames.dat"
+data_path: "data/data.txt"
+height: 1
+debug: true
+system_path: "data/system.dat"
+music_volume: 50
+lang: "ru"
+
+[graphic]
+vsync: false
+details: true
+fullscreen: false
+shadows: true
+fpsLimit: 60
+reflections: true
+smoothing: true
+effects: true
+
+[controls]
+1: [
+	right: "d"
+	attack: "f"
+	up: "w"
+	defend: "h"
+	left: "a"
+	special1: "j"
+	down: "s"
+	name: "Player 1"
+	jump: "g"
+]
+2: [
+	right: ";"
+	attack: "p"
+	up: "o"
+	defend: "]"
+	left: "k"
+	special1: "\"
+	down: "l"
+	name: "Player 2"
+	jump: "["
+]

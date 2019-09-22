@@ -27,8 +27,12 @@ local module = { }
 		self:setLocale(default)
 	end
 
+	function module:next()
+		return next(self.locales, self.current) or next(self.locales)
+	end
+
 	function module:setLocale(key)
-		key = key or next(self.locales)
+		key = key or self:next()
 		self.current = key
 		self.locale = self.locales[key] or { }
 	end

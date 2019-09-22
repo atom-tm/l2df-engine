@@ -164,43 +164,45 @@ local UI = Object:extend()
 
 
 	UI.Text = UI:extend()
-	function UI.Text:init(text, fnt, x, y, color, align, stroke, width)
+	function UI.Text:init(text, fnt, x, y, color, align, stroke)
 		self:super(x, y)
 		self.align = align
 		self.stroke = stroke
-		self.width = width
 		self.font = fnt or fonts.list.default
 		self.color = color or { 0, 0, 0, 1 }
 
-		self.text = text or ""
-		self.token = text
+		self:setText(text, text or "")
+	end
+
+	function UI.Text:update()
+		local text = i18n(self.token)
+		if text and text ~= "" and self.text ~= text then
+			self:setText(nil, text)
+		end
+	end
+
+	function UI.Text:setText(token, raw_text)
+		self.token = token or self.token
+		if type(raw_text) == "string" then
+			self.text = raw_text
+			self.width = self.font:getWidth(raw_text)
+			self.height = self.font:getHeight(raw_text)
+		end
 	end
 
 	function UI.Text:draw()
-		local text = i18n(self.token)
-		if text and text ~= "" then
-			self.text = text
-		end
 		fonts.print(self.text, self.x, self.y, self.align, self.font, self.stroke, self.width, self.color)
-	end
-
-	function UI.Text:getWidth()
-		return self.font:getWidth(self.text)
-	end
-
-	function UI.Text:getHeight()
-		return self.font:getHeight(self.text)
 	end
 
 
 	UI.Button = UI:extend()
 	function UI.Button:init(text, x, y, w, h, ox, oy, bg, use_mouse)
-		self:super(x, y)
+		self:setText( type(text) == "string" and UI.Text:new(text) or text )
+		self:super(x, y, { self.text })
 		self.ox = ox or 0
 		self.oy = oy or 0
-		self.text = type(text) == "string" and UI.Text:new(text) or text
-		self.w = w or (self.text and self.text:getWidth()) or 1
-		self.h = h or (self.text and self.text:getHeight()) or 1
+		self.w = w or self.text.width or 1
+		self.h = h or self.text.height or 1
 		self.background = type(bg) == "string" and images.Load(bg) or bg
 		self.use_mouse = use_mouse and true or false
 		self.hover = false
@@ -230,13 +232,13 @@ local UI = Object:extend()
 
 	function UI.Button:setText(newText)
 		if type(newText) == "string" then
-			self.text.text = newText
-			self.text.token = newText
-		else
-			self.text = newText
+			self.text:setText(newText)
+		elseif not self.text and newText:isTypeOf(UI.Text) then
+			self.text = newText:on("setText", function (text)
+				self.w = text.width or 1
+				self.h = text.height or 1
+			end)
 		end
-		self.w = self.text:getWidth()
-		self.h = self.text:getHeight()
 	end
 
 	function UI.Button:mousepressed(x, y, button, istouch, presses)
@@ -256,7 +258,7 @@ local UI = Object:extend()
 		if self.text then
 			self.text.x = self.x + self.ox
 			self.text.y = self.y + self.oy
-			self.text:draw()
+			-- self.text:draw()
 		end
 	end
 
@@ -265,20 +267,21 @@ local UI = Object:extend()
 	function UI.List:init(x, y, childs)
 		self:super(x, y, childs)
 		self.cursor = 1
-		self.size = #childs
  	end
 
  	function UI.List:keypressed(key)
+ 		local size = #self.childs
+
  		local controls = settings.controls
  		for i = 1, #controls do
  			if key == controls[i].up then
  				local old = self.childs[self.cursor]
- 				self.cursor = self.cursor > 1 and self.cursor - 1 or self.size
+ 				self.cursor = self.cursor > 1 and self.cursor - 1 or size
  				return self:change(self.childs[self.cursor], old)
 
  			elseif key == controls[i].down then
  				local old = self.childs[self.cursor]
- 				self.cursor = self.cursor < self.size and self.cursor + 1 or 1
+ 				self.cursor = self.cursor < size and self.cursor + 1 or 1
  				return self:change(self.childs[self.cursor], old)
 
  			elseif key == controls[i].attack and self.childs[self.cursor].click then
