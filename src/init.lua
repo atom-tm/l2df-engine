@@ -26,7 +26,7 @@ local core = l2df
 
 		local ui
 
-		ui = UI({{ "sprites/UI/loading.png", 4, 3, 140, 140 }}, 135, 90)
+		ui = UI.Animation({{ "sprites/UI/loading.png" }}, 135, 90)
 
 
 		local f = function (_, key)
