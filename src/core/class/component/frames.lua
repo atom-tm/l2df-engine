@@ -10,43 +10,49 @@ local Frames = Component:extend({ unique = true })
         self.entity = nil
     end
 
-    function Frames:added(entity, starting, frameList)
+    function Frames:added(entity, vars, starting, frameList)
         if not entity then return false end
+        self.entity = entity
         starting = starting or 1
         frameList = frameList or { }
 
+        self.frame = nil
+        self.wait = 0
+        self.next = starting
         self.counter = 0
-        self.frame = 0
 
         self.list = { }
         for i = 1, #frameList do
-            self:addFrame(i, frameList[i])
+            self:add(frameList[i])
         end
 
-        print(#self.list)
-
-        self:set(starting)
-        --Event:subscribe("update", self.update, nil, self)
+        Event:subscribe("update", self.update, nil, self)
     end
 
-    function Frames:addFrame(num, frame)
-        self.list[num] = frame
+    function Frames:add(frame)
+        if not frame.id then return end
+        self.list[frame.id] = frame
     end
 
-    function Frames:set(num)
-        num = num or 0
-        if self.list[num] then
-            self.frame = num
-            self.counter = 0
-            print("Set frame: " .. num)
+    function Frames:set(n, sw)
+        local nFrame = self.list[n] or self.list[next(self.list)]
+        if not nFrame then return end
+        self.frame = nFrame
+        self.next = nFrame.next
+        self.wait = nFrame.wait
+        self.counter = sw or 0
+    end
+
+    function Frames:update(dt)
+        if self.counter >= self.wait then
+            self.counter = self.counter - self.wait
+            self:set(self.next, self.counter)
         end
-    end
-
-
-    function Frames:update()
-        for key, val in pairs(self.list[self.frame]) do
-            print(key)
+        if not self.frame then return end
+        for k, v in pairs(self.frame) do
+            self.entity.vars[k] = v
         end
+        self.counter = self.wait > 0 and self.counter + dt * 1000 or 0
     end
 
 return Frames

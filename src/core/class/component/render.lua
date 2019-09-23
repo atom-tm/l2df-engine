@@ -13,27 +13,28 @@ local Render = Component:extend({ unique = true })
         self.entity = nil
     end
 
-    function Render:added(entity, sprites)
+    function Render:added(entity, vars, sprites)
         if not entity then return false end
+        self.entity = entity
+        self.vars = vars
         sprites = sprites or { }
         if type(sprites) == 'string' then
             sprites = { { ResourseManager:load(sprites) } }
         end
-        self.entity = entity
 
-        entity.x = entity.x or 0
-        entity.y = entity.y or 0
-        entity.z = entity.z or 0
-        entity.r = entity.r or 0
+        vars.x = vars.x or 0
+        vars.y = vars.y or 0
+        vars.z = vars.z or 0
+        vars.r = vars.r or 0
 
-        entity.scalex = entity.scalex or 1
-        entity.scaley = entity.scaley or 1
+        vars.scalex = vars.scalex or 1
+        vars.scaley = vars.scaley or 1
 
-        entity.offsetx = entity.offsetx or 0
-        entity.offsety = entity.offsety or 0
+        vars.offsetx = vars.offsetx or 0
+        vars.offsety = vars.offsety or 0
 
-        entity.hidden = entity.hidden or false
-        entity.pic = entity.pic or 1
+        vars.hidden = vars.hidden or false
+        vars.pic = vars.pic or 1
 
         self.pics = { }
         local s = nil
@@ -83,7 +84,7 @@ local Render = Component:extend({ unique = true })
 
     function Render:update()
         if not self.hidden then
-            RenderManager:add(self.pics[self.entity.pic], self.entity.x, self.entity.y)
+            RenderManager:add(self.pics[self.vars.pic], self.vars.x, self.vars.y)
         end
     end
 

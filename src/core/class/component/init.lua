@@ -10,11 +10,11 @@ local Component = Class:extend()
 		-- pass
 	end
 
-	function Component:added(entity)
+	function Component:added(entity, vars)
 		-- pass
 	end
 
-	function Component:removed(entity)
+	function Component:removed(entity, vars)
 		-- pass
 	end
 

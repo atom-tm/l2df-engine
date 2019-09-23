@@ -16,28 +16,42 @@ local core = l2df
 	local Entity = core.import "core.class.entity"
 	local Room = core.import "core.class.entity.room"
 	local UI = core.import "core.class.entity.ui"
+	local Frames = core.import "core.class.component.frames"
 
 	function core:init()
 		love.keyboard.setKeyRepeat(true)
 		EventManager:monitoring(love, love.handlers)
-		EventManager:monitoring(love, "update")
+		EventManager:monitoring(love, "update", dt)
 		EventManager:monitoring(love, "draw")
 		RenderManager:init()
 
 		local ui
 
-		ui = UI.Animation({{ "sprites/UI/loading.png" }}, 135, 90)
+		ui = UI.Animation({{ "sprites/UI/loading.png", 4, 3, 140, 140 }}, 135, 90, {
+			{ pic = 1, id = 1, next = 2, wait = 30, x = 135 },
+			{ pic = 2, id = 2, next = 3, wait = 30, x = 139 },
+			{ pic = 3, id = 3, next = 4, wait = 30, x = 143 },
+			{ pic = 4, id = 4, next = 5, wait = 30, x = 147 },
+			{ pic = 5, id = 5, next = 6, wait = 30, x = 151 },
+			{ pic = 6, id = 6, next = 7, wait = 30, x = 155 },
+			{ pic = 7, id = 7, next = 8, wait = 30, x = 155 },
+			{ pic = 8, id = 8, next = 9, wait = 30, x = 151 },
+			{ pic = 9, id = 9, next = 10, wait = 30, x = 147 },
+			{ pic = 10, id = 10, next = 11, wait = 30, x = 143 },
+			{ pic = 11, id = 11, next = 12, wait = 30, x = 139 },
+			{ pic = 12, id = 12, next = 1, wait = 30, x = 135 },
+		})
 
 
 		local f = function (_, key)
 		print(key)
-			ui.y = key == 'w' and ui.y - 5 or ui.y
-			ui.y = key == 's' and ui.y + 5 or ui.y
-			ui.x = key == 'a' and ui.x - 5 or ui.x
-			ui.x = key == 'd' and ui.x + 5 or ui.x
-			ui.pic = key == '=' and ui.pic + 1 or ui.pic
-			ui.pic = key == '-' and ui.pic - 1 or ui.pic
-			print(ui.pic)
+			ui.vars.y = key == 'w' and ui.vars.y - 5 or ui.vars.y
+			ui.vars.y = key == 's' and ui.vars.y + 5 or ui.vars.y
+			ui.vars.x = key == 'a' and ui.vars.x - 5 or ui.vars.x
+			ui.vars.x = key == 'd' and ui.vars.x + 5 or ui.vars.x
+			ui.vars.pic = key == '=' and ui.vars.pic + 1 or ui.vars.pic
+			ui.vars.pic = key == '-' and ui.vars.pic - 1 or ui.vars.pic
+			print(ui.vars.pic)
 		end
 
 		EventManager:subscribe("keypressed", f)

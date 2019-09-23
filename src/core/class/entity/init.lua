@@ -18,6 +18,7 @@ local Entity = Class:extend({})
 		obj.id = nil
 		obj.parent = nil
 		obj.active = true
+		obj.vars = { }
 		obj:init(...)
 		return obj
 	end
@@ -83,7 +84,7 @@ local Entity = Class:extend({})
 		if self:hasComponent(component) then return false end
 		if component.unique and self:hasComponentClass(component.___class) then return false end
 		self.components.class[component.___class] = self.components.class[component.___class] and self.components.class[component.___class] + 1 or 1
-		return self.components:add(component), component, component.added and component:added(self, ...)
+		return self.components:add(component), component, component.added and component:added(self, self.vars, ...)
 	end
 
 	--- Create new component and add to manager
@@ -97,7 +98,7 @@ local Entity = Class:extend({})
 		assert(component:isInstanceOf(Component), "not a subclass of Component")
 		if self.components:remove(component) then
 			self.components.class[component.___class] = self.components.class[component.___class] - 1
-			return component:removed(self, ...)
+			return component:removed(self, self.vars, ...)
 		end
 		return false
 	end
