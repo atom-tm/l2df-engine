@@ -8,6 +8,7 @@ local layers = {
 }
 
 local drawables = { }
+local prints = { }
 
 local Manager = { canvas, scalex, scaley }
 
@@ -26,19 +27,27 @@ local Manager = { canvas, scalex, scaley }
 
 	function Manager:setMaxIndex(int)
 		drawables = { }
+		prints = { }
 		for i = 1, int do
 			drawables[i] = { }
+			prints[i] = { }
 		end
 	end
 
 
-	function Manager:add(sprite, x, y, index)
-		if not sprite then return end
-		if not (sprite[1].typeOf and sprite[1]:typeOf("Drawable")) then return end
+	function Manager:add(object, x, y, index)
+		if not object then return end
+		local target = nil
+
+		if object[1].typeOf and object[1]:typeOf("Drawable") then target = drawables
+		elseif type(object[1]) == "string" then target = prints
+		else return end
+
 		index = index or 1
 		x = x or 0
 		y = y or 0
-		drawables[index][#drawables[index] + 1] = { sprite, x, y }
+		target[index][#target[index] + 1] = { object, x, y }
+
 	end
 
 
@@ -61,6 +70,13 @@ local Manager = { canvas, scalex, scaley }
 		self:layersClear()
 		love.graphics.setCanvas(self.canvas)
 
+		self:render()
+
+		love.graphics.setCanvas()
+		love.graphics.draw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
+	end
+
+	function Manager:render()
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
 				local e = drawables[i][j]
@@ -71,10 +87,12 @@ local Manager = { canvas, scalex, scaley }
 				end
 			end
 			drawables[i] = { }
+			for j = 1, #prints[i] do
+				local t = prints[i][j]
+				love.graphics.printf(t[1], t[2], t[3], 100)
+			end
+			prints[i] = { }
 		end
-
-		love.graphics.setCanvas()
-		love.graphics.draw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
 	end
 
 

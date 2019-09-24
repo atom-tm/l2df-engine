@@ -18,6 +18,7 @@ local core = l2df
 	local Room = core.import "core.class.entity.room"
 	local UI = core.import "core.class.entity.ui"
 	local Frames = core.import "core.class.component.frames"
+	local Text = core.import 'core.class.component.print'
 
 	function core:init()
 		love.keyboard.setKeyRepeat(true)
@@ -43,6 +44,7 @@ local core = l2df
 			{ pic = 11, id = 11, next = 12, wait = 30 },
 			{ pic = 12, id = 12, next = 1, wait = 30, states = {{ 229, { speed = 0.1 }}} },
 		})
+		ui:addComponent(Text("Hello world"))
 		ui.vars.persistentStates[1] = { 229, { speed = 0.5 }}
 
 
