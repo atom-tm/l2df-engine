@@ -44,6 +44,7 @@ local Frames = Component:extend({ unique = true })
     end
 
     function Frames:update(dt)
+        if not self.entity.active then return end
         if self.counter >= self.wait then
             self.counter = self.counter - self.wait
             self:set(self.next, self.counter)

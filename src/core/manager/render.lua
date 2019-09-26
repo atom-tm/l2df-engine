@@ -3,12 +3,16 @@ assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only 
 
 local EventManager = core.import 'core.manager.event'
 
+----█---█-███-████----
+----█-█-█--█--████----
+----█████--█--█-------
+----─█-█--███-█-------
+
 local layers = {
 	UI = {}
 }
 
 local drawables = { }
-local prints = { }
 
 local Manager = { canvas, scalex, scaley }
 
@@ -27,35 +31,23 @@ local Manager = { canvas, scalex, scaley }
 
 	function Manager:setMaxIndex(int)
 		drawables = { }
-		prints = { }
 		for i = 1, int do
 			drawables[i] = { }
-			prints[i] = { }
 		end
 	end
 
 
-	function Manager:add(object, x, y, index)
-		if not object then return end
-		local target = nil
+	function Manager:add(input)
+		if not (input or input.object) then return end
+		local index = input.index > 0 and input.index < #drawables and input.index or 1
 
-		if object[1].typeOf and object[1]:typeOf("Drawable") then target = drawables
-		elseif type(object[1]) == "string" then target = prints
-		else return end
-
-		index = index or 1
-		x = x or 0
-		y = y or 0
-		target[index][#target[index] + 1] = { object, x, y }
-
+		drawables[index][#drawables[index] + 1] = input
 	end
 
 
 	function Manager:resize(w,h)
 		self.gameW, self.gameH = w, h
 		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
-		print(self.scaleX)
-		print(self.scaleY)
 	end
 
 
@@ -79,85 +71,29 @@ local Manager = { canvas, scalex, scaley }
 	function Manager:render()
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
-				local e = drawables[i][j]
-				if e[1][2] then
-					love.graphics.draw(e[1][1], e[1][2], e[2], e[3])
-				else
-					love.graphics.draw(e[1][1], e[2], e[3])
+				local input = drawables[i][j]
+				local r,g,b,a = love.graphics.getColor()
+				love.graphics.setColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1 )
+				if type(input.object) == 'string' then
+					love.graphics.printf( input.object, input.font, input.x, input.y, input.limit, input.align, input.r, input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
+				elseif input.object.typeOf and input.object:typeOf('Drawable') then
+					love.graphics.draw( input.object, input.quad, input.x, input.y, input.r, input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
 				end
+				love.graphics.setColor( r,g,b,a )
 			end
 			drawables[i] = { }
-			for j = 1, #prints[i] do
-				local t = prints[i][j]
-				love.graphics.printf(t[1], t[2], t[3], 100)
-			end
-			prints[i] = { }
 		end
 	end
 
 
 	function Manager:generateQuad(resourse, x, y, w, h)
 		if not (resourse and resourse.typeOf and resourse:typeOf("Drawable")) then return end
+		x = x or 0
+		y = y or 0
+		w = w or resourse:getWidth()
+		h = h or resourse:getHeight()
 		return { resourse, love.graphics.newQuad(x,y,w,h,resourse:getDimensions()) }
 	end
 
 
 return Manager
-
-
-	--[[function Manager:reloadLayers(w, h)
-		layers_map = {}
-		self.canvas = loveNewCanvas(w, h)
-		for i = 1, #layers do
-			layers_map[layers[i] = loveNewCanvas(w, h)
-		end
-	end]]
-
-	--[[function Manager:reloadGraphics( ... )
-		math.randomseed(love.timer.getTime())
-		love.graphics.setDefaultFilter("nearest", "nearest")
-
-		settings.gameWidth = settings.private.resolutions[settings.global.resolution].width
-		settings.gameHeight = settings.private.resolutions[settings.global.resolution].height
-
-		love.window.setMode(settings.gameWidth, settings.gameHeight, {
-			fullscreen = settings.graphic.fullscreen,
-			vsync = settings.graphic.vsync,
-			msaa = 0,
-			depth = 0,
-			minwidth = settings.private.resolutions[1].width,
-			minheight = settings.private.resolutions[1].height,
-			resizable = true
-		})
-
-		if settings.graphic.fullscreen then
-			settings.global.width, settings.global.height = love.window.getMode()
-		else
-			settings.global.width, settings.global.height = settings.gameWidth, settings.gameHeight
-			self:resize(settings.gameWidth, settings.gameHeight)
-		end
-	end]]
-
-
-	--[[function Manager:resize(w, h)
-		settings.global.width = w
-		settings.global.height = h
-		self.scalex = w / settings.gameWidth
-		self.scaley = h / settings.gameHeight
-	end]]
-
-	--[[function Manager:clearZIndex(n)
-		for i = 1, n do
-			z_index[i] = {}
-		end
-	end
-
-
-
-
-
-
-
-	function Manager:unsubscribeById(event, id)
-		return event and id and subscribers[event]:removeById(id)
-	end]]

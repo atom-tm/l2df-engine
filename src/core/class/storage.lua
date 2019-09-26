@@ -88,11 +88,13 @@ local Storage = Class:extend()
 		end
 	end
 
-	function Storage:pairs()
+	function Storage:pairs(skipNil)
 		local index, object
 		return function ()
 			index, object = next(self.list, index)
-			return index, object
+			if not skipNil or object ~= nil then
+				return index, object
+			end
 		end
 	end
 

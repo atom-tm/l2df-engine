@@ -1,7 +1,6 @@
 local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
-local Entity = core.import 'core.class.entity'
 local Storage = core.import 'core.class.storage'
 
 local objects = {}
@@ -13,11 +12,10 @@ local Manager = { }
 	--- Embed references to Manager methods in the entity instance that you create
 	--  @tparam Entity entity
 	function Manager:classInit(entity)
-		if not entity:isInstanceOf(Entity) then return end
-
-		classes[entity.___class] = classes[entity.___class] or Storage:new()
-		classes[entity.___class]:add(entity)
-
+		if entity.___class then
+			classes[entity.___class] = classes[entity.___class] or Storage:new()
+			classes[entity.___class]:add(entity)
+		end
 		entity.addTags = self.addTags
 		entity.removeTags = self.removeTags
 		entity.hasTags = self.hasTags
@@ -134,7 +132,7 @@ local Manager = { }
 			return e:hasTags(tags)
 		end
 
-		local matches, result = { } , { }
+		local matches, result = { } , { } -- it looks like a face, I decided to save it
 
 		for i = 1, #tags do
 			for k, v in groups[tags[i]]:enum(true) do

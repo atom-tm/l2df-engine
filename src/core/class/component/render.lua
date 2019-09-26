@@ -11,6 +11,12 @@ local Render = Component:extend({ unique = true })
 
     function Render:init()
         self.entity = nil
+
+        self.ox = 0
+        self.oy = 0
+        self.kx = 0
+        self.ky = 0
+        self.color = { 1,1,1,1 }
     end
 
     function Render:added(entity, vars, sprites)
@@ -30,9 +36,6 @@ local Render = Component:extend({ unique = true })
         vars.scalex = vars.scalex or 1
         vars.scaley = vars.scaley or 1
 
-        vars.offsetx = vars.offsetx or 0
-        vars.offsety = vars.offsety or 0
-
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
 
@@ -44,7 +47,7 @@ local Render = Component:extend({ unique = true })
             self:addPics(s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9])
         end
 
-        Event:subscribe("update", self.update, nil, self)
+        self.entity:subscribe('update', self.update, nil, self)
     end
 
 
@@ -69,7 +72,7 @@ local Render = Component:extend({ unique = true })
             f = f or (x - xo) * (y - yo)
             for yo = yo, y - 1 do
                 for xo = xo, x - 1 do
-                    --f = f - 1
+                    f = f - 1
                     s = s + 1
                     self.pics[s] = RenderManager:generateQuad(spritelist, xo * w, yo * h, w, h)
                     if f <= 0 then return end
@@ -77,14 +80,28 @@ local Render = Component:extend({ unique = true })
             end
         else
             s = x and x <= #self.pics and x or #self.pics + 1
-            self.pics[s] = { spritelist }
+            self.pics[s] = RenderManager:generateQuad(spritelist)
         end
     end
 
 
     function Render:update()
         if not self.hidden then
-            RenderManager:add(self.pics[self.vars.pic], self.vars.x, self.vars.y)
+            RenderManager:add({
+                object = self.pics[self.vars.pic][1],
+                quad = self.pics[self.vars.pic][2],
+                index = self.vars.z,
+                x = self.vars.x,
+                y = self.vars.y,
+                r = self.vars.r,
+                sx = self.vars.scalex,
+                sy = self.vars.scaley,
+                ox = self.ox,
+                oy = self.oy,
+                kx = self.kx,
+                ky = self.ky,
+                color = self.color
+            })
         end
     end
 
