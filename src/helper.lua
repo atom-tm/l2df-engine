@@ -11,17 +11,25 @@ local helper = { }
 		local old = obj[key]
 		if caller and old then
 			obj[key] = function (...)
-				old(...)
+				local r = old(...)
 				callback(caller, ...)
+				return r
 			end
 		elseif caller then
 			obj[key] = function (...)
 				callback(caller, ...)
 			end
+		elseif caller == false and old then
+			obj[key] = function (...)
+				local r = old(...)
+				callback(r, ...)
+				return r
+			end
 		elseif old then
 			obj[key] = function (...)
-				old(...)
+				local r = old(...)
 				callback(...)
+				return r
 			end
 		else
 			obj[key] = callback
@@ -50,6 +58,10 @@ local helper = { }
 		return r
 	end
 
+	--- Require a script from file
+	--  @tparam string filepath
+	--  @treturn table required file
+	--  @treturn string filename
 	function helper.requireFile(filepath)
 		local fs = love and love.filesystem
 		if not (filepath and fs and fs.getInfo(filepath, 'file') and filepath:find('.lua$')) then return end

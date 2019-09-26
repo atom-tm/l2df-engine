@@ -2,62 +2,74 @@ local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
 local Storage = core.import 'core.class.storage'
-
 local hook = helper.hook
+
 local subscribers = { }
-local objects = { }
+local handlers = { }
 
-local Manager = { }
+local Manager = { active = true }
 
-	function Manager:subscribe(event, func, source, ...)
-		if type(event) == 'string' then
-			subscribers[event] = subscribers[event] or Storage:new()
-			local id = subscribers[event]:add({ func, source, ... })
-			objects[func] = objects[func] or { }
-			objects[func][#objects[func] + 1] = { event, id }
-			return id
-		end
-		--[[elseif type(event) == 'table' then
-			local ids = {}
-			for key, val in pairs(event) do
-				subscribers[key] = subscribers[key] or Storage:new()
-				local id = subscribers[key]:add({ event[key] })
-				objects[event[key] = objects[event[key] or { }
-				objects[event[key][#objects[event[key] + 1] = id
-				ids[key]
-			end
-			return ids
-		end]]
+	--- Embed references to Manager methods in the entity instance that you create
+	--  @tparam Entity entity
+	function Manager:classInit(entity)
+		if not entity:isInstanceOf(Entity) then return end
+		entity.subscribe = self.subscribe
+		entity.unsubscribe = self.unsubscribe
+		entity.unsubscribeById = self.unsubscribeById
 	end
 
-	function Manager:unsubscribe(func)
-		if not objects[func] then return true end
-		for i = 1, #objects[func] do
-			self:unsubscribeById(objects[func][i][1], objects[func][i][2])
-		end
-		return true
+	--- Allows the object to listen events sent to the Manager
+	--  @tparam Entity subscriber
+	--  @tparam string event
+	--  @tparam function handler
+	--  @tparam Entity source
+	function Manager.subscribe(subscriber, event, handler, source, ...)
+		if not (type(event) == 'string' and subscriber and handler) then return end
+		subscribers[event] = subscribers[event] or Storage:new()
+		local id = subscribers[event]:add({ subscriber = subscriber, handler = handler, source = source, params = ... })
+		handlers[event] = handlers[event] or { }
+		handlers[event][handler] = id
+		return id
 	end
 
+	--- Disables event tracking by objects using handler
+	--  @tparam string event
+	--  @tparam function handler
+	function Manager:unsubscribe(event, handler)
+		local id = handlers[event][handler]
+		return self:unsubscribeById(event, id)
+	end
+
+	--- Disables event tracking by objects using Id
+	--  @tparam string event
+	--  @tparam number id
 	function Manager:unsubscribeById(event, id)
-		return event and id and subscribers[event]:removeById(id)
+		return (event and id and subscribers[event]:removeById(id)) or false
 	end
 
+	--- Invoke an event for all active subscribers
+	--  @tparam string string
+	--  @tparam Entity source
 	function Manager:invoke(event, source, ...)
-		if subscribers[event] then
-			for key, val in subscribers[event]:enum(true) do
-				if val and (not val[2] or val[2] == source) then
-					val[1](val[3], ...)
-				end
+		if not subscribers[event] then return end
+		for key, val in subscribers[event]:enum(true) do
+			if val.subscriber.active and (not val.source or val.source == source) then
+				val.handler(val.params, ...)
 			end
 		end
 	end
 
-	function Manager:monitoring(object, events)
+	--- Monitors whether an object calls certain functions
+	--  @tparam Entity sourse
+	--  @tparam table|string events
+	--  @tparam boolean save_result whether to save the result of the function execution
+	function Manager:monitoring(source, events, save_result)
+		save_result = save_result and false
 		if type(events) == 'string' then
-			hook(object, events, function (...) Manager:invoke(events, object, ...) end)
+			hook(source, events, function (...) Manager:invoke(events, source, ...) end, save_result)
 		elseif type(events) == 'table' then
 			for key in pairs(events) do
-				hook(object, key, function (...) Manager:invoke(key, object, ...) end)
+				hook(source, key, function (...) Manager:invoke(key, source, ...) end, save_result)
 			end
 		end
 	end
