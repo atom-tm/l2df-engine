@@ -1,0 +1,29 @@
+<scene>
+
+	background: "UI/bg.png"
+	music: "MUSIC/main.mp3"
+
+	<image>
+		src: "UI/logo.png"
+		x: 100  y: 150
+	</image>
+
+	<animation>
+		src: { file: "UI/load.png"  x: 4  y: 3  w: 140  h: 140 }
+		x: 250  y: 55
+		<frame> 1
+			pic: 1 wait: 5 next: 2
+		</frame>
+		<frame> 2
+			pic: 2 wait: 5 next: 3
+		</frame>
+		<frame> 3
+			pic: 3 wait: 5 next: 1
+		</frame>
+	</animation>
+
+</scene>
+
+
+local scene = Scene:ext()
+

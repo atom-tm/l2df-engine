@@ -6,60 +6,38 @@ helper 		= require(__DIR__ .. 'helper')
 l2df = require(__DIR__ .. 'core')
 local core = l2df
 
-	local EntityManager = core.import 'core.manager.entity'
 	local EventManager = core.import 'core.manager.event'
-	local ResourseManager = core.import 'core.manager.resourse'
 	local GroupManager = core.import 'core.manager.group'
-	local SettingsManager = core.import 'core.manager.settings'
 	local RenderManager = core.import 'core.manager.render'
 	local StatesManager = core.import 'core.manager.states'
+	local SceneManager = core.import 'core.manager.scene'
 
-	local Entity = core.import "core.class.entity"
-	local Room = core.import "core.class.entity.room"
-	local UI = core.import "core.class.entity.ui"
-	local Frames = core.import "core.class.component.frames"
-	local Text = core.import 'core.class.component.print'
+	local Entity = core.import 'core.class.entity'
+	local Scene = core.import 'core.class.entity.scene'
 
 	function core:init()
-		love.keyboard.setKeyRepeat(true)
+
 		EventManager:monitoring(love, love.handlers)
-		EventManager:monitoring(love, "update", dt)
-		EventManager:monitoring(love, "draw")
+		EventManager:monitoring(love, 'update')
+		EventManager:monitoring(love, 'draw')
+		EventManager:monitoring(Entity, 'new', true)
+		EventManager:monitoring(Scene, 'new', true)
+
+		EventManager:subscribe('new', EventManager.classInit, Entity, EventManager)
+		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
+		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
+
 		RenderManager:init()
+		StatesManager:load('data/states')
 
-		StatesManager:load("data/states")
+		SceneManager:add(Scene:new("Hello world"), "TEST01")
+		SceneManager:add(Scene:new("BYE BYE WORLD"), "TEST02")
+		SceneManager:add(Scene:new("AHAHAHAAHAHAAHAHAHAA"), "ROOOOOOM")
+		--SceneManager:removeById("TEST01")
+		SceneManager:set("ROOOOOOM")
+		SceneManager:push("TEST02")
+		SceneManager:set("TEST01")
 
-		local ui
-		ui = UI.Animation({{ "sprites/UI/loading.png", 4, 3, 140, 140 }}, 55, 25, {
-			{ pic = 1, id = 1, next = 2, wait = 30 },
-			{ pic = 2, id = 2, next = 3, wait = 30 },
-			{ pic = 3, id = 3, next = 4, wait = 30 },
-			{ pic = 4, id = 4, next = 5, wait = 30 },
-			{ pic = 5, id = 5, next = 6, wait = 30 },
-			{ pic = 6, id = 6, next = 7, wait = 30 },
-			{ pic = 7, id = 7, next = 8, wait = 30 },
-			{ pic = 8, id = 8, next = 9, wait = 30 },
-			{ pic = 9, id = 9, next = 10, wait = 30 },
-			{ pic = 10, id = 10, next = 11, wait = 30 },
-			{ pic = 11, id = 11, next = 12, wait = 30 },
-			{ pic = 12, id = 12, next = 1, wait = 30, states = {{ 229, { speed = 0.1 }}} },
-		})
-		ui:addComponent(Text("Hello world"))
-		ui.vars.persistentStates[1] = { 229, { speed = 0.5 }}
-
-
-		local f = function (_, key)
-		print(key)
-			ui.vars.y = key == 'w' and ui.vars.y - 5 or ui.vars.y
-			ui.vars.y = key == 's' and ui.vars.y + 5 or ui.vars.y
-			ui.vars.x = key == 'a' and ui.vars.x - 5 or ui.vars.x
-			ui.vars.x = key == 'd' and ui.vars.x + 5 or ui.vars.x
-			ui.vars.pic = key == '=' and ui.vars.pic + 1 or ui.vars.pic
-			ui.vars.pic = key == '-' and ui.vars.pic - 1 or ui.vars.pic
-			print(ui.vars.pic)
-		end
-
-		EventManager:subscribe("keypressed", f)
 	end
 
 

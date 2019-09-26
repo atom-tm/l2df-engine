@@ -1,12 +1,22 @@
-local core = l2df -- core (important)
-local ui = core.ui -- UI module (important)
-local i18n = core.i18n
+local core = l2df
 
-local settings = core.settings.global -- settings module
+local Scene = core.import 'core.class.entity.scene'
 
--- ^ modules \\ librarys --
+local room = Scene:new()
 
-local room = {} -- room object
+	img = UI.Anim:new(sprites, x, y, "
+		<frame> 40 jump_up
+		pic: 41  next: 0  wait: 1  centerx: 39 centery: 98
+		body: { x: 27  y: 27  w: 33  h: 69  z: -5  l: 10 }
+
+		</frame>
+
+		<frame> 45 jump_forward
+		pic: 46  next: 0  wait: 1  centerx: 42 centery: 98
+		body: { x: 27  y: 33  w: 37  h: 65  z: -5  l: 10 }
+		state: [ 4 { dvx: 18  dvy: 14  dvz: 1  attack: 365 } ]
+		</frame>
+	 ")
 
 	love.graphics.setBackgroundColor(1,1,1,1)
 
