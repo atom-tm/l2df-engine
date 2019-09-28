@@ -11,7 +11,6 @@ local Render = Component:extend({ unique = true })
 
     function Render:init()
         self.entity = nil
-
         self.ox = 0
         self.oy = 0
         self.kx = 0
@@ -25,7 +24,7 @@ local Render = Component:extend({ unique = true })
         self.vars = vars
         sprites = sprites or { }
         if type(sprites) == 'string' then
-            sprites = { { ResourseManager:load(sprites) } }
+            sprites = { { res = ResourseManager:load(sprites) } }
         end
 
         vars.x = vars.x or 0
@@ -43,11 +42,9 @@ local Render = Component:extend({ unique = true })
         local s = nil
         for i = 1, #sprites do
             s = sprites[i]
-            s[1] = type(s[1]) == 'string' and ResourseManager:load(s[1])
-            self:addPics(s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9])
+            s.res = type(s.res) == 'string' and ResourseManager:load(s.res) or s.res
+            self:addPics(s.res, s.x, s.y, s.w, s.h, s.s, s.f, s.xo, s.yo)
         end
-
-        self.entity:subscribe('update', self.update, nil, self)
     end
 
 

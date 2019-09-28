@@ -6,6 +6,7 @@ helper 		= require(__DIR__ .. 'helper')
 l2df = require(__DIR__ .. 'core')
 local core = l2df
 
+	local EntityManager = core.import 'core.manager.entity'
 	local EventManager = core.import 'core.manager.event'
 	local GroupManager = core.import 'core.manager.group'
 	local RenderManager = core.import 'core.manager.render'
@@ -14,8 +15,13 @@ local core = l2df
 
 	local Entity = core.import 'core.class.entity'
 	local Scene = core.import 'core.class.entity.scene'
+	local Print = core.import 'core.class.component.print'
+	local UI = core.import 'core.class.entity.ui'
 
 	function core:init()
+
+		RenderManager:init()
+		EntityManager:setRoot(SceneManager.root)
 
 		EventManager:monitoring(love, love.handlers)
 		EventManager:monitoring(love, 'update')
@@ -26,18 +32,34 @@ local core = l2df
 		EventManager:subscribe('new', EventManager.classInit, Entity, EventManager)
 		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
 		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
+		EventManager:subscribe('update', EventManager.update, love, EventManager)
 
-		RenderManager:init()
-		StatesManager:load('data/states')
+		local scene1 = Scene {
+			nodes = {
+				UI.Text {
+					text = 'Hello world',
+					font = love.graphics.newFont(25),
+					x = 10,
+					y = 15
+				},
+				UI.Text {
+					text = 'Minecraft is my life!',
+					font = love.graphics.newFont(18),
+					x = 55,
+					y = 55,
+				},
+				UI.Image {
+					sprites = 'sprites/UI/logotype.png',
+					x = 100,
+					y = 80,
+					scalex = 0.5,
+					scaley = 0.55
+				}
+			}
+		}
 
-		SceneManager:add(Scene:new("Hello world"), "TEST01")
-		SceneManager:add(Scene:new("BYE BYE WORLD"), "TEST02")
-		SceneManager:add(Scene:new("AHAHAHAAHAHAAHAHAHAA"), "ROOOOOOM")
-		--SceneManager:removeById("TEST01")
-		SceneManager:set("ROOOOOOM")
-		SceneManager:push("TEST02")
-		SceneManager:set("TEST01")
-
+		SceneManager:add(scene1, 'MainScene')
+		SceneManager:set('MainScene')
 	end
 
 

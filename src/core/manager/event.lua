@@ -1,6 +1,7 @@
 local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
+local EntityManager = core.import 'core.manager.entity'
 local Storage = core.import 'core.class.storage'
 local hook = helper.hook
 
@@ -71,6 +72,35 @@ local Manager = { active = true }
 			for key in pairs(events) do
 				hook(source, key, function (...) Manager:invoke(key, source, ...) end, save_result)
 			end
+		end
+	end
+
+
+	---
+	function Manager:update()
+		for e in EntityManager:enum(nil, false, true) do
+
+			local components = e:getComponents()
+
+			local f = {
+				pre = { },
+				update = { }
+			}
+
+			for i = 1, #components do
+				local c = components[i]
+				f.pre[#f.pre + 1] = c.preUpdate and c
+				f.update[#f.update + 1] = c.update and c
+			end
+
+			for i = 1, #f.pre do
+				f.pre[i]:preUpdate()
+			end
+
+			for i = 1, #f.update do
+				f.update[i]:update()
+			end
+
 		end
 	end
 

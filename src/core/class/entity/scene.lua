@@ -6,8 +6,10 @@ local Print = core.import "core.class.component.print"
 
 local Scene = Entity:extend()
 
-    function Scene:init(text)
-        self:addComponent(Print(text))
+    function Scene:init(desc)
+    	desc = desc or { }
+    	desc.nodes = desc.nodes or { }
+    	self:attachMulti(desc.nodes)
     end
 
 

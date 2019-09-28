@@ -9,39 +9,36 @@ local ResourseManager = core.import "core.manager.resourse"
 
 local Print = Component:extend({ unique = false })
 
-    function Print:init(text, font, options)
+    function Print:init(desc)
         self.entity = nil
-        self:set(text, font, options)
+        self:set(desc)
     end
 
-    function Print:set(text, font, options)
-        font = font and font.typeOf and font:typeOf('Font') and font or nil
-        options = options or { }
-        self.text = text or self.text or ''
-        self.font =  font or self.font or love.graphics.newFont()
-        self.limit = options.limit or self.font:getWidth(text)
-        self.align = options.align or self.align or 'left'
-        self.ox = options.ox or self.ox or 0
-        self.oy = options.oy or self.oy or 0
-        self.kx = options.kx or self.kx or 0
-        self.ky = options.ky or self.ky or 0
-        self.sx = options.sx or self.sx or 1
-        self.sy = options.sy or self.sy or 1
-        self.color = options.color and { (options.color[1] or 255) / 255, (options.color[2] or 255) / 255, (options.color[3] or 255) / 255, (options.color[4] or 255) / 255 } or { 1,1,1,1 }
+    function Print:set(desc)
+        desc = desc or { }
+        desc.font = desc.font and desc.font.typeOf and desc.font:typeOf('Font') and desc.font or nil
+        self.text = desc.text or self.text or ''
+        self.font =  desc.font or self.font or love.graphics.newFont()
+        self.limit = desc.limit or self.font:getWidth(self.text)
+        self.align = desc.align or self.align or 'left'
+        self.ox = desc.ox or self.ox or 0
+        self.oy = desc.oy or self.oy or 0
+        self.kx = desc.kx or self.kx or 0
+        self.ky = desc.ky or self.ky or 0
+        self.sx = desc.sx or self.sx or 1
+        self.sy = desc.sy or self.sy or 1
+        self.color = desc.color and { (desc.color[1] or 255) / 255, (desc.color[2] or 255) / 255, (desc.color[3] or 255) / 255, (desc.color[4] or 255) / 255 } or { 1,1,1,1 }
     end
 
-    function Print:added(entity, vars, sprites)
+    function Print:added(entity, vars)
         if not entity then return false end
         self.entity = entity
         self.vars = vars
-
         vars.x = vars.x or 0
         vars.y = vars.y or 0
         vars.z = vars.z or 0
         vars.r = vars.r or 0
         vars.hidden = vars.hidden or false
-
-        Event.subscribe(entity, 'update', self.update, nil, self)
     end
 
     function Print:update()
