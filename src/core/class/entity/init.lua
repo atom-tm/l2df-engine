@@ -34,7 +34,7 @@ local Entity = Class:extend()
 	end
 
 	--- Adding some inheritors to an object
-	function Entity:attachMulti(array)
+	function Entity:attachMultiple(array)
 		for i = 1, #array do
 			if array[i]:isInstanceOf(Entity) then
 				self:attach(array[i])
@@ -130,20 +130,31 @@ local Entity = Class:extend()
 		return self.components.class[componentClass] and self.components.class[componentClass] > 0 or false
 	end
 
+	--- Get attached component by id
 	function Entity:getComponentById(id)
 		return self.components:getById(id)
 	end
 
-	--- Getting a list of components
+	--- Get a single attached component of given class
+	function Entity:getComponent(componentClass)
+		assert(componentClass, 'no component specified')
+		for id, value in self.components:enum() do
+			if value:isInstanceOf(componentClass) then
+				return value
+			end
+		end
+		return nil
+	end
+
+	--- Get a list of attached components of given class
 	function Entity:getComponents(componentClass)
 		local list = {}
-		for id, key in self.components:enum() do
-			if not componentClass or  key.___class == componentClass then
-				list[#list + 1] = key
+		for id, value in self.components:enum() do
+			if not componentClass or value:isInstanceOf(componentClass) then
+				list[#list + 1] = value
 			end
 		end
 		return list
 	end
-
 
 return Entity
