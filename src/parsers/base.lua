@@ -1,7 +1,7 @@
-local core = l2df or require((...):match("(.-)[^%.]+%.[^%.]+$") or "" .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "Parsers works only with l2df v1.0 and higher")
+local core = l2df or require((...):match('(.-)[^%.]+%.[^%.]+$') or '' .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'Parsers works only with l2df v1.0 and higher')
 
-local Class = core.import "core.class"
+local Class = core.import 'core.class'
 
 local strmatch = string.match
 local fopen = io.open
@@ -15,13 +15,13 @@ local Parser = Class:extend()
 	-- @param obj, table        Object to extend, optional.
 	-- @return table
 	function Parser:parseFile(filepath, obj)
-		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
+		assert(type(filepath) == 'string', 'Parameter "filepath" must be a string.')
 		if fs and fs.getInfo(filepath) then
 			return self:parse(fs.read(filepath), obj)
 		else
-			local f = fopen(filepath, "r")
+			local f = fopen(filepath, 'r')
 			if f then
-				local str = f:read("*a")
+				local str = f:read('*a')
 				f:close()
 				return self:parse(str, obj)
 			end
@@ -35,7 +35,7 @@ local Parser = Class:extend()
 	-- @param obj, table   Object to extend, optional.
 	-- @return table
 	function Parser:parse(str, obj)
-		assert(type(str) == "string", "Parameter 'str' must be a string.")
+		assert(type(str) == 'string', 'Parameter "str" must be a string.')
 		return obj
 	end
 
@@ -44,12 +44,12 @@ local Parser = Class:extend()
 	-- @return mixed
 	function Parser:parseScalar(str)
 		-- TODO: make stronger regex
-		assert(type(str) == "string", "Parameter 'str' must be a string.")
+		assert(type(str) == 'string', 'Parameter "str" must be a string.')
 		if tonumber(str) then
 			return tonumber(str)
-		elseif strmatch(str, "true") then
+		elseif strmatch(str, 'true') then
 			return true
-		elseif strmatch(str, "false") then
+		elseif strmatch(str, 'false') then
 			return false
 		end
 		return str
@@ -60,10 +60,10 @@ local Parser = Class:extend()
 	-- @return string
 	function Parser:dumpScalar(value)
 		local t = type(value)
-		assert(t ~= "function", "Parameter 'value' can't be a function.")
+		assert(t ~= 'function', 'Parameter "value" can\'t be a function.')
 
-		if t == "string" then
-			return "\"" .. tostring(value) .. "\""
+		if t == 'string' then
+			return '\"' .. tostring(value) .. '\"'
 		end
 		return tostring(value)
 	end
@@ -73,14 +73,14 @@ local Parser = Class:extend()
 	-- @param data, table       Table for dumping
 	-- @return table
 	function Parser:dumpToFile(filepath, data)
-		assert(type(filepath) == "string", "Parameter 'filepath' must be a string.")
+		assert(type(filepath) == 'string', 'Parameter "filepath" must be a string.')
 
 		data = self:dump(data)
 		if fs then
-			filepath = fs.getSource() .. "/" .. filepath
+			filepath = fs.getSource() .. '/' .. filepath
 		end
 
-		local f = fopen(filepath, "w")
+		local f = fopen(filepath, 'w')
 		if f then
 			f:write(data)
 			f:flush()
@@ -93,7 +93,7 @@ local Parser = Class:extend()
 	-- @param data, table  Table for dumping
 	-- @return string
 	function Parser:dump(data)
-		assert(type(data) == "table", "Parameter 'data' must be a table.")
+		assert(type(data) == 'table', 'Parameter "data" must be a table.')
 		return tostring(data)
 	end
 

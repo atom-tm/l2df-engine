@@ -7,27 +7,34 @@ local Event = core.import "core.manager.event"
 local RenderManager = core.import "core.manager.render"
 local ResourseManager = core.import "core.manager.resourse"
 
+local loveNewFont = love.graphics.newFont
+
 local Print = Component:extend({ unique = false })
 
-    function Print:init(desc)
+    function Print:init(kwargs)
         self.entity = nil
-        self:set(desc)
+        self:set(kwargs)
     end
 
-    function Print:set(desc)
-        desc = desc or { }
-        desc.font = desc.font and desc.font.typeOf and desc.font:typeOf('Font') and desc.font or nil
-        self.text = desc.text or self.text or ''
-        self.font =  desc.font or self.font or love.graphics.newFont()
-        self.limit = desc.limit or self.font:getWidth(self.text)
-        self.align = desc.align or self.align or 'left'
-        self.ox = desc.ox or self.ox or 0
-        self.oy = desc.oy or self.oy or 0
-        self.kx = desc.kx or self.kx or 0
-        self.ky = desc.ky or self.ky or 0
-        self.sx = desc.sx or self.sx or 1
-        self.sy = desc.sy or self.sy or 1
-        self.color = desc.color and { (desc.color[1] or 255) / 255, (desc.color[2] or 255) / 255, (desc.color[3] or 255) / 255, (desc.color[4] or 255) / 255 } or { 1,1,1,1 }
+    function Print:set(kwargs)
+        kwargs = kwargs or { }
+        if type(kwargs.font) == 'number' then
+            self.font = loveNewFont(kwargs.font)
+        elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
+            self.font = kwargs.font
+        else
+            self.font = loveNewFont()
+        end
+        self.text = kwargs.text or self.text or ''
+        self.limit = kwargs.limit or self.font:getWidth(self.text)
+        self.align = kwargs.align or self.align or 'left'
+        self.ox = kwargs.ox or self.ox or 0
+        self.oy = kwargs.oy or self.oy or 0
+        self.kx = kwargs.kx or self.kx or 0
+        self.ky = kwargs.ky or self.ky or 0
+        self.sx = kwargs.sx or self.sx or 1
+        self.sy = kwargs.sy or self.sy or 1
+        self.color = kwargs.color and { (kwargs.color[1] or 255) / 255, (kwargs.color[2] or 255) / 255, (kwargs.color[3] or 255) / 255, (kwargs.color[4] or 255) / 255 } or { 1,1,1,1 }
     end
 
     function Print:added(entity, vars)

@@ -4,13 +4,12 @@ assert(type(core) == "table" and core.version >= 1.0, "Entities works only with 
 local Entity = core.import "core.class.entity"
 local Print = core.import "core.class.component.print"
 
-local Scene = Entity:extend()
+local Scene = Entity:extend({ name = 'scene' })
 
-    function Scene:init(desc)
-    	desc = desc or { }
-    	desc.nodes = desc.nodes or { }
-    	self:attachMulti(desc.nodes)
-    end
-
+	function Scene:init(kwargs)
+		kwargs = kwargs or { }
+		kwargs.nodes = kwargs.nodes or { }
+		self:attachMultiple(kwargs.nodes)
+	end
 
 return Scene

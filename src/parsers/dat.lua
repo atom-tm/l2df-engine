@@ -1,4 +1,4 @@
-local __DIR__ = (...):match("(.-)[^%.]+%.[^%.]+$")
+local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
 
 local strfind = string.find
 local strsub = string.sub
@@ -6,26 +6,26 @@ local strmatch = string.match
 local strformat = string.format
 local strjoin = table.concat
 
-local BaseParser = require(__DIR__ .. "parsers.base")
+local BaseParser = require(__DIR__ .. 'parsers.base')
 
 local DatParser = BaseParser:extend()
 
-	DatParser.ARRAY_LBRACKET = "{"
-	DatParser.ARRAY_RBRACKET = "}"
-	DatParser.BLOCK_LBRACKET = "["
-	DatParser.BLOCK_RBRACKET = "]"
-	DatParser.VALUE_END_PATTERN = "[;,%s]"
+	DatParser.ARRAY_LBRACKET = '{'
+	DatParser.ARRAY_RBRACKET = '}'
+	DatParser.BLOCK_LBRACKET = '['
+	DatParser.BLOCK_RBRACKET = ']'
+	DatParser.VALUE_END_PATTERN = '[;,%s]'
 
 	--- Get the plural form of a word
 	-- @param str, string
 	local function plural(str)
-		local last = str:sub(#str, -1)
-		if last == "y" then
-			return str:sub(1, -2) .. "ies"
-		elseif last == "z" or last == "s" or last == "h" then
-			return str .. "es"
+		local last = strsub(str, #str, -1)
+		if last == 'y' then
+			return strsub(str, 1, -2) .. 'ies'
+		elseif last == 'x' or last == 'o' or last == 'z' or last == 's' or last == 'h' then
+			return str .. 'es'
 		end
-		return str .. "s"
+		return str .. 's'
 	end
 
 	--- Method for parsing dat formatted string
@@ -34,18 +34,18 @@ local DatParser = BaseParser:extend()
 	-- @param obj, table   Object to extend, optional.
 	-- @return table
 	function DatParser:parse(str, obj)
-		assert(type(str) == "string", "Parameter 'str' must be a string.")
+		assert(type(str) == 'string', 'Parameter "str" must be a string.')
 
 		local result = obj or { }
 		local key = nil
-		local section = "global"
+		local section = 'global'
 		local len = #str
 		local from = 1
 		local pos = 1
 		local to = 1
 
 		while section do
-			to, pos, key = strfind(str, "%[%s*(%w+)%s*%]", pos)
+			to, pos, key = strfind(str, '%[%s*(%w+)%s*%]', pos)
 			result[section] = self:parseBlock(strsub(str, from, (to or len + 1) - 1), result[section])
 			section = key
 			from = (pos or 0) + 1
@@ -58,12 +58,12 @@ local DatParser = BaseParser:extend()
 	-- @param data, table  Table for dumping
 	-- @return string
 	function DatParser:dump(data)
-		assert(type(data) == "table", "Parameter 'data' must be a table.")
+		assert(type(data) == 'table', 'Parameter "data" must be a table.')
 
-		local result = self:dumpBlock(type(data.global) == "table" and data.global or { })
+		local result = self:dumpBlock(type(data.global) == 'table' and data.global or { })
 		for section, block in pairs(data) do
-			if type(block) == "table" and section ~= "global" and section ~= "private" then
-				result = strformat("%s\n[%s]\n%s", result, section, self:dumpBlock(block))
+			if type(block) == 'table' and section ~= 'global' and section ~= 'private' then
+				result = strformat('%s\n[%s]\n%s', result, section, self:dumpBlock(block))
 			end
 		end
 		return result
@@ -73,20 +73,20 @@ local DatParser = BaseParser:extend()
 	-- @param block, table  Block for dumping.
 	-- @return string
 	function DatParser:dumpBlock(block, tabs)
-		tabs = tabs or ""
+		tabs = tabs or ''
 
-		local result = ""
+		local result = ''
 		for key, param in pairs(block) do
 			local t = type(param)
-			if t == "table" then
+			if t == 'table' then
 				local size = #param
-				if size > 0 and param[size] and type(param[size]) ~= "table" then
-					result = strformat("%s%s%s: { %s }\n", result, tabs, key, strjoin(param))
+				if size > 0 and param[size] and type(param[size]) ~= 'table' then
+					result = strformat('%s%s%s: { %s }\n', result, tabs, key, strjoin(param))
 				else
-					result = strformat("%s%s%s: [\n%s]\n", result, tabs, key, self:dumpBlock(param, tabs .. "\t"), tabs)
+					result = strformat('%s%s%s: [\n%s]\n', result, tabs, key, self:dumpBlock(param, tabs .. "\t"), tabs)
 				end
-			elseif t ~= "function" then
-				result = strformat("%s%s%s: %s\n", result, tabs, key, self:dumpScalar(param))
+			elseif t ~= 'function' then
+				result = strformat('%s%s%s: %s\n', result, tabs, key, self:dumpScalar(param))
 			end
 		end
 		return result
@@ -98,7 +98,7 @@ local DatParser = BaseParser:extend()
 	-- @param obj, table   Object to extend, optional.
 	-- @return table
 	function DatParser:parseBlock(str, obj)
-		str = (str or "") .. " "
+		str = (str or '') .. ' '
 
 		local result = obj or { }
 		local stack = { result }
@@ -116,7 +116,7 @@ local DatParser = BaseParser:extend()
 				param = #stack[head] + 1
 			else
 				bpos = pos
-				from, pos, param = strfind(str, "([%w_]+)%s*:%s*", pos)
+				from, pos, param = strfind(str, '([%w_]+)%s*:%s*', pos)
 				if not param then break end
 				param = tonumber(param) or param
 
@@ -132,7 +132,7 @@ local DatParser = BaseParser:extend()
 				end
 			end
 
-			local value = ""
+			local value = { }
 			local is_quoted = false
 
 			while pos < len do
@@ -159,31 +159,31 @@ local DatParser = BaseParser:extend()
 
 				elseif char == self.ARRAY_RBRACKET then
 					if is_array[head] then
-						if value ~= "" then
-							stack[head][param] = self:parseScalar(value)
+						if next(value) then
+							stack[head][param] = self:parseScalar(strjoin(value))
 						end
 						is_array[head] = false
 						head = head - 1
 					end
 					break
 
-				elseif char == "\"" and not is_quoted then
+				elseif char == '\"' and not is_quoted then
 					is_quoted = true
 
-				elseif strmatch(char, self.VALUE_END_PATTERN) and not is_quoted or char == "\"" then
+				elseif strmatch(char, self.VALUE_END_PATTERN) and not is_quoted or char == '\"' then
 					if is_array[head] then
-						if value ~= "" then
-							stack[head][param] = self:parseScalar(value)
+						if next(value) then
+							stack[head][param] = self:parseScalar(strjoin(value))
 							param = param + 1
 						end
 					else
-						stack[head][param] = self:parseScalar(value)
+						stack[head][param] = self:parseScalar(strjoin(value))
 						break
 					end
-					value = ""
+					value = { }
 
 				else
-					value = value .. char
+					value[#value + 1] = char
 
 				end
 			end -- while

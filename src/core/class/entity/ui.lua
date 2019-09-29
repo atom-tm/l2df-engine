@@ -9,31 +9,31 @@ local Print = core.import 'core.class.component.print'
 
 local UI = Entity:extend()
 
-    function UI:init(desc)
-        self.vars.x = desc.x or 0
-        self.vars.y = desc.y or 0
-        self.vars.z = desc.z or 1
-        self.vars.scalex = desc.scalex or 1
-        self.vars.scaley = desc.scaley or 1
+    function UI:init(kwargs)
+        self.vars.x = kwargs.x or 0
+        self.vars.y = kwargs.y or 0
+        self.vars.z = kwargs.z or 1
+        self.vars.scalex = kwargs.scalex or 1
+        self.vars.scaley = kwargs.scaley or 1
     end
 
-    UI.Image = UI:extend()
-    function UI.Image:init(desc)
-        self:super(desc)
-        self:addComponent(Render(), desc.sprites)
+    UI.Image = UI:extend({ name = 'image' })
+    function UI.Image:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Render(), kwargs.sprites)
     end
 
-    UI.Text = UI:extend()
-    function UI.Text:init(desc)
-        self:super(desc)
-        self:addComponent(Print(desc))
+    UI.Text = UI:extend({ name = 'text' })
+    function UI.Text:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Print(kwargs))
     end
 
-    UI.Animation = UI.Image:extend()
-    function UI.Animation:init(desc)
-        self:super(desc)
+    UI.Animation = UI.Image:extend({ name = 'animation' })
+    function UI.Animation:init(kwargs)
+        self:super(kwargs)
         self:addComponent(Frames(), 1, frames)
         self:addComponent(States())
     end
 
-return UI
+return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })
