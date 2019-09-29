@@ -1,4 +1,4 @@
-local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
 local EventManager = core.import 'core.manager.event'
@@ -17,17 +17,16 @@ local drawables = { }
 local Manager = { canvas, scalex, scaley }
 
 	function Manager:init()
-		EventManager:subscribe("resize", self.resize, nil, self)
-		EventManager:subscribe("draw", self.draw, nil, self)
+		EventManager:subscribe('resize', self.resize, nil, self)
+		EventManager:subscribe('draw', self.draw, nil, self)
 
 		self.resX, self.resY = 640, 360
 		self.gameW, self.gameH = love.window.getMode()
-		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
+		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 
 		self.canvas = love.graphics.newCanvas(self.resX, self.resY)
 		self:setMaxIndex(10)
 	end
-
 
 	function Manager:setMaxIndex(int)
 		drawables = { }
@@ -36,7 +35,6 @@ local Manager = { canvas, scalex, scaley }
 		end
 	end
 
-
 	function Manager:add(input)
 		if not (input or input.object) then return end
 		local index = input.index > 0 and input.index < #drawables and input.index or 1
@@ -44,19 +42,16 @@ local Manager = { canvas, scalex, scaley }
 		drawables[index][#drawables[index] + 1] = input
 	end
 
-
 	function Manager:resize(w,h)
 		self.gameW, self.gameH = w, h
-		self.scaleX, self.scaleY = self.gameW/self.resX, self.gameH/self.resY
+		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 	end
-
 
 	function Manager:layersClear()
 		love.graphics.setCanvas(self.canvas)
 		love.graphics.clear()
 		love.graphics.setCanvas()
 	end
-
 
 	function Manager:draw()
 		self:layersClear()
@@ -85,9 +80,8 @@ local Manager = { canvas, scalex, scaley }
 		end
 	end
 
-
 	function Manager:generateQuad(resourse, x, y, w, h)
-		if not (resourse and resourse.typeOf and resourse:typeOf("Drawable")) then return end
+		if not (resourse and resourse.typeOf and resourse:typeOf('Drawable')) then return end
 		x = x or 0
 		y = y or 0
 		w = w or resourse:getWidth()

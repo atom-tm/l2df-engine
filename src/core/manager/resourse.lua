@@ -1,8 +1,8 @@
-local core = l2df or require((...):match("(.-)core.+$") or "" .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "EntityManager works only with l2df v1.0 and higher")
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
-local Class = core.import "core.class"
-local Storage = core.import "core.class.storage"
+local Class = core.import 'core.class'
+local Storage = core.import 'core.class.storage'
 
 local fs = love and love.filesystem
 
@@ -14,21 +14,21 @@ local list = {
 --- List of extensions for the file download function
 local extensions = {
 	image = {
-		[".png"] = true,
-		[".bmp"] = true,
-		[".gif"] = true,
+		['.png'] = true,
+		['.bmp'] = true,
+		['.gif'] = true,
 	},
 	sound = {
-		[".ogg"] = true,
-		[".wav"] = true,
-		[".mp3"] = true,
+		['.ogg'] = true,
+		['.wav'] = true,
+		['.mp3'] = true,
 	},
 	video = {
-		[".ogv"] = true,
+		['.ogv'] = true,
 	},
 	font = {
-		[".ttf"] = true,
-		[".otf"] = true,
+		['.ttf'] = true,
+		['.otf'] = true,
 	},
 }
 
@@ -116,7 +116,7 @@ local Manager = { }
 		local id = id or filepath
 		if not reload and self:get(id) then return self:get(id) end
 		local resource = nil
-		local extension = filepath:match("^.+(%..+)$")
+		local extension = filepath:match('^.+(%..+)$')
 		if extensions.image[extension] then
 			resource = love.graphics.newImage(filepath)
 		elseif extensions.video[extension] then

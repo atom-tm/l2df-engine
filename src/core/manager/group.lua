@@ -1,4 +1,4 @@
-local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
 local Storage = core.import 'core.class.storage'
@@ -22,7 +22,6 @@ local Manager = { }
 		entity.getTags = self.getTags
 	end
 
-
 	--- Returns all objects that are instances of the class
 	--  @tparam Class class
 	--  @treturn table
@@ -34,7 +33,6 @@ local Manager = { }
 		end
 		return result
 	end
-
 
 	--- Returns all objects that are heirs of the class
 	--  @tparam Class class
@@ -55,7 +53,6 @@ local Manager = { }
 		return result
 	end
 
-
 	--- Add tags to object
 	--  @tparam object self
 	--  @tparam mixed tags
@@ -71,7 +68,6 @@ local Manager = { }
 		end
 	end
 
-
 	--- Remove tags from object
 	--  @tparam object self
 	--  @tparam mixed tags
@@ -83,7 +79,6 @@ local Manager = { }
 		end
 	end
 
-
 	--- Gets a list of object tags
 	--  @tparam mixed self
 	--  @treturn table
@@ -94,7 +89,6 @@ local Manager = { }
 		end
 		return result
 	end
-
 
 	--- Checks if an object has tags
 	--  @tparam object self
@@ -109,7 +103,6 @@ local Manager = { }
 		return true
 	end
 
-
 	--- Returns a list of objects that contain the specified tag
 	--  @tparam mixed tag
 	--  @treturn table
@@ -120,7 +113,6 @@ local Manager = { }
 		end
 		return result
 	end
-
 
 	--- Returns a list of objects that satisfy the filter
 	--  @tparam mixed tags

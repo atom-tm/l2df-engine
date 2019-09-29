@@ -1,5 +1,5 @@
-local core = l2df or require((...):match("(.-)[^%.]+$") .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "Classes works only with l2df v1.0 and higher")
+local core = l2df or require((...):match('(.-)[^%.]+$'))
+assert(type(core) == 'table' and core.version >= 1.0, 'Classes works only with l2df v1.0 and higher')
 
 local Class = { }
 
@@ -23,9 +23,9 @@ local Class = { }
 				end
 			})
 		for _, param in pairs{...} do
-			if type(param) == "function" then
+			if type(param) == 'function' then
 				param(cls, self)
-			elseif type(param) == "table" then
+			elseif type(param) == 'table' then
 				for k, v in pairs(param) do
 					cls[k] = v
 				end
@@ -47,10 +47,12 @@ local Class = { }
 		-- pass
 	end
 
+	---
 	function Class.isTypeOf(obj, cls)
 		return obj and (obj.___class == cls)
 	end
 
+	---
 	function Class.isInstanceOf(obj, cls)
 		return obj and (obj.___class == cls or Class.isInstanceOf(obj.___class, cls))
 	end

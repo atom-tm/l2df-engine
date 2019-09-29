@@ -1,4 +1,4 @@
-local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
 
@@ -16,17 +16,17 @@ local settings = { }
 	settings.global = { }
 	settings.private = { }
 
-	settings.file = "data/settings.dat"					-- Путь файла настроек игры
-	settings.global.data_path = "data/data.txt"			-- Путь до data.txt (список объектов и карт движка)
-	settings.global.frames_path = "data/frames.dat"		-- Путь до frames.dat (список кадров по умолчанию)
-	settings.global.combos_path = "data/combos.dat"		-- Путь до combos.dat (список переходов по комбинациям клавиш)
-	settings.global.dtypes_path = "data/dtypes.dat"		-- Путь до dtypes.dat (список поведения при разных типах урона)
-	settings.global.system_path = "data/system.dat"		-- Путь до system.dat
-	settings.global.rooms_path = "/rooms/"				-- Папка с файлами комнат
-	settings.global.states_path = "/data/states/"		-- Папка с файлами стейтов
-	settings.global.kinds_path = "/data/kinds/"			-- Папка с файлами типов взаимодействий
-	settings.global.langs_path = "/data/langs"			-- Папка с файлами локализаций
-	settings.global.ui_path = "/sprites/UI/"			-- Папка с элементами оформления
+	settings.file = 'data/settings.dat'					-- Путь файла настроек игры
+	settings.global.data_path = 'data/data.txt'			-- Путь до data.txt (список объектов и карт движка)
+	settings.global.frames_path = 'data/frames.dat'		-- Путь до frames.dat (список кадров по умолчанию)
+	settings.global.combos_path = 'data/combos.dat'		-- Путь до combos.dat (список переходов по комбинациям клавиш)
+	settings.global.dtypes_path = 'data/dtypes.dat'		-- Путь до dtypes.dat (список поведения при разных типах урона)
+	settings.global.system_path = 'data/system.dat'		-- Путь до system.dat
+	settings.global.rooms_path = '/rooms/'				-- Папка с файлами комнат
+	settings.global.states_path = '/data/states/'		-- Папка с файлами стейтов
+	settings.global.kinds_path = '/data/kinds/'			-- Папка с файлами типов взаимодействий
+	settings.global.langs_path = '/data/langs'			-- Папка с файлами локализаций
+	settings.global.ui_path = '/sprites/UI/'			-- Папка с элементами оформления
 
 	settings.private.resolutions = {					-- Доступные разрешения холста игры
 		{ width = 854, height = 480 },					-- 854х480
@@ -49,8 +49,8 @@ local settings = { }
 
 	settings.global.difficulty = 2 						-- Сложность игры (от 1 до 3)
 
-	settings.global.lang = "en"							-- Язык локализации
-	settings.global.startRoom = "game_start"			-- Начальная комната
+	settings.global.lang = 'en'							-- Язык локализации
+	settings.global.startRoom = 'game_start'			-- Начальная комната
 	settings.global.debug = true						-- Показ отладочной информации
 
 	settings.graphic = {								-- Настройки графической составляющей игры
@@ -66,16 +66,16 @@ local settings = { }
 
 	settings.controls = {								-- Настройки управления
 		{
-			name = "Player 1",
-			up = "w", down = "s", left = "a", right = "d",
-			attack = "f", jump = "g", defend = "h",
-			special1 = "j"
+			name = 'Player 1',
+			up = 'w', down = 's', left = 'a', right = 'd',
+			attack = 'f', jump = 'g', defend = 'h',
+			special1 = 'j'
 		},
 		{
-			name = "Player 2",
-			up = "o", down = "l", left = "k", right = ";",
-			attack = "p", jump = "[", defend = "]",
-			special1 = "\\"
+			name = 'Player 2',
+			up = 'o', down = 'l', left = 'k', right = ';',
+			attack = 'p', jump = '[', defend = ']',
+			special1 = '\\'
 		}
 	}
 
@@ -110,11 +110,11 @@ local Manager = { }
 
 	function Manager:save()
 		datParser:dumpToFile(settings.file, settings)
-		EventManager:invoke("saveSettings", self)
+		EventManager:invoke('saveSettings', self)
 	end
 
 	function Manager:apply()
-		print("Saved")
+		print('Saved')
 		--[[
 			math.randomseed(love.timer.getTime())
 			love.graphics.setDefaultFilter("nearest", "nearest")
@@ -141,6 +141,6 @@ local Manager = { }
 		]]
 	end
 
-	EventManager:subscribe("saveSettings", Manager.apply, Manager)
+	EventManager:subscribe('saveSettings', Manager.apply, Manager)
 
 return setmetatable(Manager, { __index = settings, __call = function (self, ...) return self:get(...) end })

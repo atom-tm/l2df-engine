@@ -1,4 +1,4 @@
-local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
 local Class = core.import 'core.class'
@@ -49,7 +49,6 @@ local Entity = Class:extend()
 		entity.parent = nil
 	end
 
-
 	--- Removing object from inheritors list of his parent
 	function Entity:detachParent()
 		self.parent:detach(self)
@@ -79,7 +78,7 @@ local Entity = Class:extend()
 		return false
 	end
 
-
+	---
 	function Entity:setActive(bool)
 		local active = bool
 		if bool == nil then active = not self.active end
@@ -90,7 +89,6 @@ local Entity = Class:extend()
 		end
 		return true
 	end
-
 
 	--- Add component to entity
 	-- @param component, Component

@@ -1,7 +1,7 @@
-local core = l2df or require((...):match("(.-)core.+$") or "" .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "Entities works only with l2df v1.0 and higher")
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
-local Class = core.import "core.class"
+local Class = core.import 'core.class'
 
 local Storage = Class:extend()
 
@@ -32,6 +32,7 @@ local Storage = Class:extend()
 		return id, object
 	end
 
+	---
 	function Storage:addById(object, id, reload)
 		local obj = self:getById(id)
 		if obj and not reload then return obj, id end
@@ -41,7 +42,6 @@ local Storage = Class:extend()
 
 		return id, object
 	end
-
 
 	--- Remove object from storage
 	--  @param object
@@ -75,6 +75,7 @@ local Storage = Class:extend()
 		return self.map[object] or false
 	end
 
+	---
 	function Storage:enum(skipNil)
 		local id = 0
 		return function ()
@@ -88,6 +89,7 @@ local Storage = Class:extend()
 		end
 	end
 
+	---
 	function Storage:pairs(skipNil)
 		local index, object
 		return function ()
