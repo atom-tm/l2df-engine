@@ -1,10 +1,66 @@
+local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
+local fs = love and love.filesystem
+
+local strformat = string.format
+local strjoin = table.concat
+local strfind = string.find
+local strgsub = string.gsub
+local strrep = string.rep
+local floor = math.floor
+local sqrt = math.sqrt
+local pow = math.pow
+local tostring = _G.tostring
+local require = _G.require
+local pairs = _G.pairs
+local type = _G.type
+local next = _G.next
+
+local dump
+local mapper = setmetatable({
+	[ 'boolean'  ] = tostring,
+	[ 'function' ] = tostring,
+	[ 'userdata' ] = tostring,
+	[ 'nil'      ] = tostring,
+	[ 'string'   ] = function(v) return strformat('%q', v) end,
+	[ 'number'   ] = function(v)
+		if v ~= v then return '0/0'
+		elseif v == 1 / 0 then return '1/0'
+		elseif v == -1 / 0 then return '-1/0' end
+		return tostring(v)
+	end,
+	[ 'table'    ] = function(t, stack, indent)
+		stack = stack or { }
+		indent = indent or 1
+		if stack[t] then return '{"circular-reference"}' end
+		local margin0 = strrep('  ', indent - 1)
+		local margin1 = strrep('  ', indent)
+		local result = { }
+		stack[t] = true
+		for k, v in pairs(t) do
+			result[#result + 1] = strjoin({
+				margin1,
+				'[',
+				dump(k, stack, indent + 1),
+				'] = ',
+				dump(v, stack, indent + 1)
+			})
+		end
+		stack[t] = nil
+		return strjoin({ '{\n', strjoin(result, ',\n'), '\n', margin0, '}'})
+	end
+}, { __index = function(_, t) return function() return '<' .. t .. '>' end end })
+
+dump = function(x, stack, indent)
+  return mapper[type(x)](x, stack, indent)
+end
+
 local helper = { }
 
-	--- Creates a hook for table's event / function.
-	-- @param obj, table          table to hook
-	-- @param key, string         table's event / function to hook
-	-- @param callback, function  Hook's callback function
-	-- @param caller, table       Optional. First parameter to callback function
+	--- Creates a hook for table's event / function
+	-- @param table obj          table to hook
+	-- @param string key         table's event / function to hook
+	-- @param function callback  Hook's callback function
+	-- @param table caller       Optional. First parameter to callback function
 	function helper.hook(obj, key, callback, caller)
 		assert(type(callback) == "function", "Parameter 'callback' must be a function")
 
@@ -36,35 +92,45 @@ local helper = { }
 		end
 	end
 
-	--- Require all scripts from specified directory. Returns table with them.
-	-- @param folderpath, string     Scripts folderpath
-	-- @param pattern, string  If specified only scripts that match pattern would be loaded
+	--- Require all scripts from specified directory. Returns table with them
+	-- @param string folderpath  Scripts folderpath
+	-- @param boolean keys       Use filenames instead of autoincremental indexes as table's keys
+	-- @param string pattern     If specified only scripts that match pattern would be loaded
 	-- @return table
 	function helper.requireFolder(folderpath, keys, pattern)
-		local fs = love and love.filesystem
-		local r = { }
-		if not fs then return r end
-		if not (folderpath and fs.getInfo(folderpath, 'directory')) then return r end
-		folderpath = folderpath:find('/$') and folderpath or folderpath .. '/'
-		local files = fs.getDirectoryItems(folderpath)
-		folderpath = folderpath:gsub('/', '.')
-		for i = 1, #files do
-			if (not pattern or files[i]:find(pattern)) and files[i]:find('.lua$') then
-				local file = files[i]:gsub('.lua$', '')
-				local id = keys and file or #r + 1
-				r[id] = require(folderpath .. file)
+		local result = { }
+		if fs and folderpath and fs.getInfo(folderpath, 'directory') then
+			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
+
+			local modulepath = core.modulepath(folderpath)
+			local files = fs.getDirectoryItems(folderpath)
+
+			local id, file
+			for i = 1, #files do
+				if (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.lua$') then
+					file = strgsub(files[i], '.lua$', '')
+					id = keys and file or #result + 1
+					result[id] = require(modulepath .. file)
+				end
 			end
 		end
-		return r
+		return result
 	end
 
-	--- Require a script from file
-	--  @tparam string filepath
-	--  @treturn table required file
-	--  @treturn string filename
+	--- Require a script from file. Returns loaded module and its filename
+	-- @param mixed var  Variable to dump
+	-- @return string
+	function helper.dump(var)
+	  return dump(var)
+	end
+
+	--- Require a script from file. Returns loaded module and its filename
+	-- @tparam string filepath
+	-- @return table
+	-- @return string
 	function helper.requireFile(filepath)
 		local fs = love and love.filesystem
-		if not (filepath and fs and fs.getInfo(filepath, 'file') and filepath:find('.lua$')) then return end
+		if not (filepath and fs and fs.getInfo(filepath, 'file') and strfind(filepath, '.lua$')) then return end
 		local file = filepath:gsub(filepath:gsub('[^/]+$', ''), ''):gsub('.lua$', '')
 		return require(filepath:gsub('.lua$', ''):gsub('/', '.')), file
 	end
@@ -91,53 +157,59 @@ local helper = { }
 		return result
 	end
 
+	--- Determine if object is array or not
+	-- @param mixed obj  Object to check
+	-- @return bool
+	function helper.isArray(obj)
+		return type(obj) == "table" and (obj[1] ~= nil or next(obj) == nil)
+	end
+
 	--- Trim spaces at start and end of string
-	-- @param str, string  Given string
+	-- @param string str  Given string
 	-- @return string
 	function helper.trim(str)
 		return str:gsub("^%s*(.-)%s*$", "%1")
 	end
 
 	--- Get sign of value
-	-- @param x, number  Specified value
+	-- @param number x  Specified value
 	-- @return number
 	function helper.sign(x)
 		return x > 0 and 1 or x < 0 and -1 or 0
 	end
 
 	--- Get rounded value with precision
-	-- @param value, number      Specified value
-	-- @param precision, number  Needed precision
+	-- @param number value      Specified value
+	-- @param number precision  Needed precision
 	-- @return number
 	function helper.round(value, precision)
-		local i = math.pow(10, precision)
-		return math.floor(value * i) / i
+		local i = pow(10, precision)
+		return floor(value * i) / i
 	end
 
 	--- Coalesce function for 'non-empty' value
-	-- @param var, mixed      Value to check
-	-- @param default, mixed  Default value. 1 if not setted
+	-- @param mixed var      Value to check
+	-- @param mixed default  Default value. 1 if not setted
 	-- @return mixed
-	function helper.NotZero(var, default)
+	function helper.notZero(var, default)
 		return (var ~= nil and var ~= 0 and var ~= "") and var or default or 1
 	end
 
 	--- Coalesce function for 'non-nil' value
-	-- @param value, mixed    Value to check
-	-- @param default, mixed  Default value. nil if not setted
+	-- @param mixed value    Value to check
+	-- @param mixed default  Default value. nil if not setted
 	-- @return mixed
 	function helper.notNil(var, default)
 		if var ~= nil then
 			return var
-		else
-			return default
 		end
+		return default
 	end
 
 	--- Get maximum of array
 	-- @param arr, array  Array to process
 	-- @return int
-	function helper.Maximum(arr)
+	function helper.maximum(arr)
 		max = 0
 		for i = 1, #arr do
 			if arr[i] > max then max = arr[i] end
@@ -146,8 +218,8 @@ local helper = { }
 	end
 
 	--- Get maximum of two values
-	-- @param x, mixed  First value
-	-- @param y, mixed  Second value
+	-- @param mixed x  First value
+	-- @param mixed y  Second value
 	-- @return mixed
 	function helper.max(x, y)
 		if x > y then
@@ -157,8 +229,8 @@ local helper = { }
 	end
 
 	--- Get minimum of two values
-	-- @param x, mixed  First value
-	-- @param y, mixed  Second value
+	-- @param mixed x  First value
+	-- @param mixed y  Second value
 	-- @return mixed
 	function helper.min(x, y)
 		if x < y then
@@ -168,13 +240,13 @@ local helper = { }
 	end
 
 	--- Get distance between two points
-	-- @param x1, number  First point x
-	-- @param y1, number  First point y
-	-- @param x2, number  Second point x
-	-- @param y2, number  Second point y
+	-- @param number x1  First point x
+	-- @param number y1  First point y
+	-- @param number x2  Second point x
+	-- @param number y2  Second point y
 	-- @return number
-	function helper.Distance(x1, y1, x2, y2)
-		return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
+	function helper.distance(x1, y1, x2, y2)
+		return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
 	end
 
 return helper

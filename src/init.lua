@@ -1,9 +1,10 @@
 local __DIR__ = (...) .. '.'
 gamera		= require(__DIR__ .. 'external.gamera')
 json 		= require(__DIR__ .. 'external.json')
-helper 		= require(__DIR__ .. 'helper')
 ---------------------------------------------
 l2df = require(__DIR__ .. 'core')
+helper = l2df.import 'helper'
+
 local core = l2df
 
 	local EntityManager = core.import 'core.manager.entity'
