@@ -29,7 +29,6 @@ local Entity = Class:extend()
 		if self:isAncestor(entity) then return false end
 		if entity.parent then entity.parent:detach(entity) end
 		entity.parent = self
-		entity:setActive(self.active)
 		return self.nodes:add(entity)
 	end
 

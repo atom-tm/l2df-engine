@@ -96,7 +96,7 @@ local Manager = { }
 	--  @treturn boolean is the resource marked temporary
 	function Manager:get(id)
 		local res = list.global:getById(id)
-		return res, list.temp:has(res)
+		return res, id, list.temp:has(res)
 	end
 
 	--- Checks the availability of the resource in the Manager by the Id
@@ -126,7 +126,8 @@ local Manager = { }
 		elseif extensions.font[extension] then
 			resource = love.graphics.newFont(filepath)
 		else return end
-		return self:addById(id, resource)
+		id, resource = self:addById(id, resource)
+		return resource, id
 	end
 
 return Manager

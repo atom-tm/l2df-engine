@@ -111,6 +111,10 @@ local helper = { }
 					file = strgsub(files[i], '.lua$', '')
 					id = keys and file or #result + 1
 					result[id] = require(modulepath .. file)
+				elseif (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.dat$') then
+					file = files[i]
+					id = keys and file or #result + 1
+					result[id] = parser:parse(fs.read(modulepath .. file))
 				end
 			end
 		end

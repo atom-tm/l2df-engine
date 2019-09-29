@@ -15,6 +15,7 @@ local UI = Entity:extend()
         self.vars.z = kwargs.z or 1
         self.vars.scalex = kwargs.scalex or 1
         self.vars.scaley = kwargs.scaley or 1
+        self.vars.pic = kwargs.pic or 1
     end
 
     UI.Image = UI:extend({ name = 'image' })
