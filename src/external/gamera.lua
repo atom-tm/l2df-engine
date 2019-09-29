@@ -6,15 +6,29 @@
 -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -- Based on YaciCode, from Julien Patte and LuaObject, from Sebastien Rocca-Serra
 
-local gamera = {}
+local gamera = { }
 
 -- Private attributes and methods
 
-local gameraMt = {__index = gamera}
-local abs, min, max = math.abs, math.min, math.max
+local gameraMt = { __index = gamera }
+local abs = math.abs
+local min = math.min
+local max = math.max
+local mcos = math.cos
+local msin = math.sin
+
+local loveSetScissor = love.graphics.setScissor
+local loveGetScissor = love.graphics.getScissor
+local lovePush = love.graphics.push
+local lovePop = love.graphics.pop
+local loveScale = love.graphics.scale
+local loveTranslate = love.graphics.translate
+local loveRotate = love.graphics.rotate
+local loveGetWidth = love.graphics.getWidth
+local loveGetHeight = love.graphics.getHeight
 
 local function clamp(x, minX, maxX)
-  return x < minX and minX or (x>maxX and maxX or x)
+  return x < minX and minX or (x > maxX and maxX or x)
 end
 
 local function checkNumber(value, name)
@@ -24,12 +38,12 @@ local function checkNumber(value, name)
 end
 
 local function checkPositiveNumber(value, name)
-  if type(value) ~= 'number' or value <=0 then
+  if type(value) ~= 'number' or value <= 0 then
     error(name .. " must be a positive number (was: " .. tostring(value) ..")")
   end
 end
 
-local function checkAABB(l,t,w,h)
+local function checkAABB(l, t, w, h)
   checkNumber(l, "l")
   checkNumber(t, "t")
   checkPositiveNumber(w, "w")
@@ -44,7 +58,7 @@ local function getVisibleArea(self, scale)
   return min(w,self.ww), min(h, self.wh)
 end
 
-local function cornerTransform(self, x,y)
+local function cornerTransform(self, x, y)
   local scale, sin, cos = self.scale, self.sin, self.cos
   x,y = x - self.x, y - self.y
   x,y = -cos*x + sin*y, -sin*x - cos*y
@@ -52,9 +66,9 @@ local function cornerTransform(self, x,y)
 end
 
 local function adjustPosition(self)
-  local wl,wt,ww,wh = self.wl, self.wt, self.ww, self.wh
-  local w,h = getVisibleArea(self)
-  local w2,h2 = w*0.5, h*0.5
+  local wl, wt, ww, wh = self.wl, self.wt, self.ww, self.wh
+  local w, h = getVisibleArea(self)
+  local w2, h2 = w*0.5, h*0.5
 
   local left, right  = wl + w2, wl + ww - w2
   local top,  bottom = wt + h2, wt + wh - h2
@@ -63,53 +77,51 @@ local function adjustPosition(self)
 end
 
 local function adjustScale(self)
-  local w,h,ww,wh = self.w, self.h, self.ww, self.wh
-  local rw,rh     = getVisibleArea(self, 1)      -- rotated frame: area around the window, rotated without scaling
-  local sx,sy     = rw/ww, rh/wh                 -- vert/horiz scale: minimun scales that the window needs to occupy the world
-  local rscale    = max(sx,sy)
+  local w, h, ww, wh = self.w, self.h, self.ww, self.wh
+  local rw, rh       = getVisibleArea(self, 1)      -- rotated frame: area around the window, rotated without scaling
+  local sx, sy       = rw / ww, rh / wh             -- vert/horiz scale: minimun scales that the window needs to occupy the world
+  local rscale       = max(sx,sy)
 
   self.scale = max(self.scale, rscale)
 end
 
 -- Public interface
 
-function gamera.new(l,t,w,h)
-
-  local sw,sh = love.graphics.getWidth(), love.graphics.getHeight()
+function gamera.new(l, t, w, h)
+  local sw, sh = loveGetWidth(), loveGetHeight()
 
   local cam = setmetatable({
     x=0, y=0,
     scale=1,
-    angle=0, sin=math.sin(0), cos=math.cos(0),
+    angle=0, sin=msin(0), cos=mcos(0),
     l=0, t=0, w=sw, h=sh, w2=sw*0.5, h2=sh*0.5
   }, gameraMt)
 
-  cam:setWorld(l,t,w,h)
-
+  cam:setWorld(l, t, w, h)
   return cam
 end
 
-function gamera:setWorld(l,t,w,h)
-  checkAABB(l,t,w,h)
+function gamera:setWorld(l, t, w, h)
+  checkAABB(l, t, w, h)
 
-  self.wl, self.wt, self.ww, self.wh = l,t,w,h
-
-  adjustPosition(self)
-end
-
-function gamera:setWindow(l,t,w,h)
-  checkAABB(l,t,w,h)
-
-  self.l, self.t, self.w, self.h, self.w2, self.h2 = l,t,w,h, w*0.5, h*0.5
+  self.wl, self.wt, self.ww, self.wh = l, t, w, h
 
   adjustPosition(self)
 end
 
-function gamera:setPosition(x,y)
+function gamera:setWindow(l, t, w, h)
+  checkAABB(l, t, w, h)
+
+  self.l, self.t, self.w, self.h, self.w2, self.h2 = l, t, w, h, w*0.5, h*0.5
+
+  adjustPosition(self)
+end
+
+function gamera:setPosition(x, y)
   checkNumber(x, "x")
   checkNumber(y, "y")
 
-  self.x, self.y = x,y
+  self.x, self.y = x, y
 
   adjustPosition(self)
 end
@@ -127,7 +139,8 @@ function gamera:setAngle(angle)
   checkNumber(angle, "angle")
 
   self.angle = angle
-  self.cos, self.sin = math.cos(angle), math.sin(angle)
+  self.cos = mcos(angle)
+  self.sin = msin(angle)
 
   adjustScale(self)
   adjustPosition(self)
@@ -154,55 +167,51 @@ function gamera:getAngle()
 end
 
 function gamera:getVisible()
-  local w,h = getVisibleArea(self)
+  local w, h = getVisibleArea(self)
   return self.x - w*0.5, self.y - h*0.5, w, h
 end
 
 function gamera:getVisibleCorners()
-  local x,y,w2,h2 = self.x, self.y, self.w2, self.h2
+  local x, y, w2, h2 = self.x, self.y, self.w2, self.h2
 
-  local x1,y1 = cornerTransform(self, x-w2,y-h2)
-  local x2,y2 = cornerTransform(self, x+w2,y-h2)
-  local x3,y3 = cornerTransform(self, x+w2,y+h2)
-  local x4,y4 = cornerTransform(self, x-w2,y+h2)
+  local x1, y1 = cornerTransform(self, x-w2, y-h2)
+  local x2, y2 = cornerTransform(self, x+w2, y-h2)
+  local x3, y3 = cornerTransform(self, x+w2, y+h2)
+  local x4, y4 = cornerTransform(self, x-w2, y+h2)
 
-  return x1,y1,x2,y2,x3,y3,x4,y4
+  return x1, y1, x2, y2, x3, y3, x4, y4
 end
 
 function gamera:draw(f)
-  love.graphics.setScissor(self:getWindow())
+  local sx, sy, sw, sh = loveGetScissor()
+  loveSetScissor(self:getWindow())
 
-  love.graphics.push()
+  lovePush()
     local scale = self.scale
-    love.graphics.scale(scale)
+    loveScale(scale)
 
-    love.graphics.translate((self.w2 + self.l) / scale, (self.h2+self.t) / scale)
-    love.graphics.rotate(-self.angle)
-    love.graphics.translate(-self.x, -self.y)
+    loveTranslate((self.w2 + self.l) / scale, (self.h2 + self.t) / scale)
+    loveRotate(-self.angle)
+    loveTranslate(-self.x, -self.y)
 
     f(self:getVisible())
+  lovePop()
 
-  love.graphics.pop()
-
-  love.graphics.setScissor()
+  loveSetScissor(sx, sy, sw, sh)
 end
 
-function gamera:toWorld(x,y)
+function gamera:toWorld(x, y)
   local scale, sin, cos = self.scale, self.sin, self.cos
-  x,y = (x - self.w2 - self.l) / scale, (y - self.h2 - self.t) / scale
-  x,y = cos*x - sin*y, sin*x + cos*y
+  x, y = (x - self.w2 - self.l) / scale, (y - self.h2 - self.t) / scale
+  x, y = cos*x - sin*y, sin*x + cos*y
   return x + self.x, y + self.y
 end
 
-function gamera:toScreen(x,y)
+function gamera:toScreen(x, y)
   local scale, sin, cos = self.scale, self.sin, self.cos
-  x,y = x - self.x, y - self.y
-  x,y = cos*x + sin*y, -sin*x + cos*y
+  x, y = x - self.x, y - self.y
+  x, y = cos*x + sin*y, -sin*x + cos*y
   return scale * x + self.w2 + self.l, scale * y + self.h2 + self.t
 end
 
 return gamera
-
-
-
-
