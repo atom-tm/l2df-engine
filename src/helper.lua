@@ -1,6 +1,7 @@
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 local fs = love and love.filesystem
 
+local strgmatch = string.gmatch
 local strformat = string.format
 local strjoin = table.concat
 local strfind = string.find
@@ -168,11 +169,35 @@ local helper = { }
 		return type(obj) == "table" and (obj[1] ~= nil or next(obj) == nil)
 	end
 
+	--- Convert iterator to array
+	-- @return table
+	function helper.array(...)
+		local arr = { }
+		local i = 1
+		for v in ... do
+			arr[1] = v
+			i = i + 1
+		end
+		return arr
+	end
+
+	--- Splitting string to array by separator
+	-- @param string str
+	-- @param string sep
+	-- @return table
+	function helper.split(str, sep)
+		if not sep or sep == '' then
+			return helper.array(strgmatch(str, '([%S]+)'))
+		end
+		local psep = strgsub(sep, '[%(%)%.%%%+%-%*%?%[%]%^%$]', '%%%1')
+		return helper.array(strgmatch(str .. sep, '(.-)(' .. psep .. ')'))
+	end
+
 	--- Trim spaces at start and end of string
 	-- @param string str  Given string
 	-- @return string
 	function helper.trim(str)
-		return str:gsub("^%s*(.-)%s*$", "%1")
+		return strgsub(str, '^%s*(.-)%s*$', '%1')
 	end
 
 	--- Get sign of value
