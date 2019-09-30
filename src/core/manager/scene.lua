@@ -9,70 +9,6 @@ local histrory = { }
 
 local Manager = { root = Scene:new() }
 
-
-
-
-
-
-
-	--- ВРЕМЕННАЯ ФУНКЦИЯ Т.К. КОЕ КТО ОПЯТЬ ЧУДИТ
-	function requireFolder(folderpath, keys, pattern)
-
-		local fs = love and love.filesystem
-		local strformat = string.format
-		local strjoin = table.concat
-		local strfind = string.find
-		local strgsub = string.gsub
-		local strrep = string.rep
-		local floor = math.floor
-		local sqrt = math.sqrt
-		local pow = math.pow
-		local parser = core.import 'parsers.lffs'
-
-
-		local result = { }
-		if fs and folderpath and fs.getInfo(folderpath, 'directory') then
-			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
-
-			local modulepath = core.modulepath(folderpath)
-			local files = fs.getDirectoryItems(folderpath)
-
-
-			local id, file
-			for i = 1, #files do
-				if (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.lua$') then
-					file = strgsub(files[i], '.lua$', '')
-					id = keys and file or #result + 1
-					result[id] = require(modulepath .. file)
-				elseif (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.dat$') then
-
-					file = files[i]
-					id = keys and file or #result + 1
-					id = strgsub(id, '.dat$', '')
-					local s, n = fs.read(folderpath .. file)
-					result[id] = parser:parse(s)
-				end
-			end
-		end
-		return result
-	end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	--- Initialization Scene class
 	--  @tparam Entity entity
 	function Manager:classInit(entity)
@@ -82,7 +18,7 @@ local Manager = { root = Scene:new() }
 	--- Load presset scenes from a specified folder
 	--  @tparam string folderpath
 	function Manager:load(folderpath)
-		local r = requireFolder(folderpath, true)
+		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
 			if v.isInstanceOf and v:isInstanceOf(Scene) then
 				list[k] = v

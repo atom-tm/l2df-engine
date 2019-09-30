@@ -9,12 +9,14 @@ local Frame = Class:extend({ name = 'frame' })
         self.vars = { }
 
         self.vars.pic = kwargs.pic
+        self.vars.states = { kwargs.state }
 
-        self.id = id or kwargs.id
+        self.id = id
         self.next = kwargs.next
         self.wait = kwargs.wait
 
         print(self.id, name)
+        print(helper.dump(self.vars))
 	end
 
 return Frame

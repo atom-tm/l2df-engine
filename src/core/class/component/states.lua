@@ -5,9 +5,7 @@ local Component = core.import "core.class.component"
 local StatesManager = core.import "core.manager.states"
 local EventManager = core.import "core.manager.event"
 
-local States = Component:extend({ unique = false })
-
-	local stateList = { }
+local States = Component:extend({ unique = true })
 
     function States:init()
         self.entity = nil
@@ -21,8 +19,6 @@ local States = Component:extend({ unique = false })
 
         vars.persistentStates = vars.persistentStates or { }
         vars.states = vars.states or { }
-
-        EventManager:subscribe("update", self.update, nil, self)
     end
 
     function States:update()

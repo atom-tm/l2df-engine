@@ -40,6 +40,7 @@ local core = l2df
 		EventManager:subscribe('update', EventManager.update, love, EventManager)
 
 		SceneManager:load('scenes/')
+		StatesManager:load('data/states')
 
 		SceneManager:set('sex')
 		SceneManager:push('myroom')

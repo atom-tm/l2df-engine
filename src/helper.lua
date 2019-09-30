@@ -102,20 +102,23 @@ local helper = { }
 		local result = { }
 		if fs and folderpath and fs.getInfo(folderpath, 'directory') then
 			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
-
 			local modulepath = core.modulepath(folderpath)
 			local files = fs.getDirectoryItems(folderpath)
-
+			local parser = core.import 'parsers.lffs'
 			local id, file
 			for i = 1, #files do
-				if (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.lua$') then
-					file = strgsub(files[i], '.lua$', '')
-					id = keys and file or #result + 1
-					result[id] = require(modulepath .. file)
-				elseif (not pattern or strfind(files[i], pattern)) and strfind(files[i], '.dat$') then
-					file = files[i]
-					id = keys and file or #result + 1
-					result[id] = parser:parse(fs.read(modulepath .. file))
+				if not pattern or strfind(files[i], pattern) then
+					if strfind(files[i], '.lua$') then
+						file = strgsub(files[i], '.lua$', '')
+						id = keys and file or #result + 1
+						result[id] = require(modulepath .. file)
+					elseif strfind(files[i], '.dat$') then
+						file = files[i]
+						id = keys and file or #result + 1
+						id = strgsub(id, '.dat$', '')
+						local s = fs.read(folderpath .. file)
+						result[id] = parser:parse(s)
+					end
 				end
 			end
 		end

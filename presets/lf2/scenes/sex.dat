@@ -20,53 +20,57 @@
 	<animation>
 		sprites: [ { res: "sprites/UI/loading.png" x: 4  y: 5  w: 140  h: 140 } ]
 		x: 50  y: 50
+
 		<frame> 1 test1
-			id: 1  next: 2
-			pic: 1  wait: 100
+			pic: 1  wait: 50 next: 2
+			state: [ Transform { size: 1 } ]
 		</frame>
+
 		<frame> 2 test2
-			id: 2  next: 3
-			pic: 2  wait: 100
+			pic: 2  wait: 50 next: 3
 		</frame>
+
 		<frame> 3 test3
-			id: 3  next: 4
-			pic: 3  wait: 100
+			pic: 3  wait: 50 next: 4
 		</frame>
+
 		<frame> 4 test4
-			id: 4  next: 5
-			pic: 4  wait: 100
+			pic: 4  wait: 50 next: 5
 		</frame>
+
 		<frame> 5 test5
-			id: 5  next: 6
-			pic: 5  wait: 100
+			pic: 5  wait: 50 next: 6
+			state: [ Transform { size: 2 } ]
 		</frame>
+
 		<frame> 6 test6
-			id: 6  next: 7
-			pic: 6  wait: 100
+			pic: 6  wait: 50 next: 7
 		</frame>
+
 		<frame> 7 test7
-			id: 7  next: 8
-			pic: 7  wait: 100
+			pic: 7  wait: 50 next: 8
 		</frame>
+
 		<frame> 8 test8
-			id: 8  next: 9
-			pic: 8  wait: 100
+			pic: 8  wait: 50 next: 9
 		</frame>
+
 		<frame> 9 test9
-			id: 9  next: 10
-			pic: 9  wait: 100
+			pic: 9  wait: 50 next: 10
+			state: [ Transform { size: 2 } ]
 		</frame>
+
 		<frame> 10 test10
-			id: 10  next: 11
-			pic: 10  wait: 100
+			pic: 10  wait: 50 next: 11
 		</frame>
+
 		<frame> 11 test11
-			id: 11  next: 12
-			pic: 11  wait: 100
+			pic: 11  wait: 50 next: 12
 		</frame>
+
 		<frame> 12 test12
-			id: 12  next: 1
-			pic: 12  wait: 100
+			pic: 12  wait: 50 next: 1
 		</frame>
+
 	</animation>
 </scene>

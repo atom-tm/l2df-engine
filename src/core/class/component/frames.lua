@@ -26,8 +26,6 @@ local Frames = Component:extend({ unique = true })
         for i = 1, #frameList do
             self:add(frameList[i])
         end
-
-        Event:subscribe("update", self.update, nil, self)
     end
 
     function Frames:add(frame)
