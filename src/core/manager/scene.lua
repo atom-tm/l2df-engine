@@ -27,7 +27,7 @@ local Manager = { root = Scene:new() }
 		local floor = math.floor
 		local sqrt = math.sqrt
 		local pow = math.pow
-		local parser = core.import 'parsers.lff'
+		local parser = core.import 'parsers.lffs'
 
 
 		local result = { }
@@ -84,7 +84,6 @@ local Manager = { root = Scene:new() }
 	function Manager:load(folderpath)
 		local r = requireFolder(folderpath, true)
 		for k, v in pairs(r) do
-			print(k)
 			if v.isInstanceOf and v:isInstanceOf(Scene) then
 				list[k] = v
 				self.root:attach(v)

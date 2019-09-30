@@ -19,7 +19,7 @@ local core = l2df
 	local Print = core.import 'core.class.component.print'
 	local UI = core.import 'core.class.entity.ui'
 
-	local parser = core.import 'parsers.lff'
+	local parser = core.import 'parsers.lffs'
 
 	function core:init()
 		-- First call to core.root() always should be in core.init

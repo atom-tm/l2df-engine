@@ -1,7 +1,7 @@
 local core = l2df
 local Scene = core.import 'core.class.entity.scene'
 local UI = core.import 'core.class.entity.ui'
-local parser = core.import 'parsers.lff'
+local parser = core.import 'parsers.lffs'
 
 local sometext = UI.Text(parser:parse[[
 	text: "o_O PRESS 'P' TO PAY O_o"  font: 35

@@ -5,14 +5,16 @@ local Class = core.import 'core.class'
 
 local Frame = Class:extend({ name = 'frame' })
 
-	function Frame:init(kwargs)
+	function Frame:init(kwargs, id, name)
         self.vars = { }
 
         self.vars.pic = kwargs.pic
 
-        self.id = kwargs.id
+        self.id = id or kwargs.id
         self.next = kwargs.next
         self.wait = kwargs.wait
+
+        print(self.id, name)
 	end
 
 return Frame
