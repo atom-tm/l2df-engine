@@ -18,27 +18,6 @@ local LffParser = DatParser:extend()
 		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.__call) == 'function'
 	end
 
-	function helper.requireFolder(folderpath, keys, pattern)
-		local result = { }
-		if fs and folderpath and fs.getInfo(folderpath, 'directory') then
-			folderpath = folderpath:find('/$') and folderpath or folderpath .. '/'
-
-			local modulepath = folderpath:gsub('/', '.')
-			local id, file
-			local files = fs.getDirectoryItems(folderpath)
-
-			for i = 1, #files do
-				if (not pattern or files[i]:find(pattern)) and files[i]:find('.lua$') then
-					file = files[i]:gsub('.lua$', '')
-					id = keys and file or #result + 1
-					result[id] = require(modulepath .. file)
-				end
-			end
-		end
-		return result
-	end
-	LffParser.elements = elements
-
 	LffParser.ARRAY_LBRACKET = '['
 	LffParser.ARRAY_RBRACKET = ']'
 	LffParser.BLOCK_LBRACKET = '{'
