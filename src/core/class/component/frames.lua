@@ -3,6 +3,7 @@ assert(type(core) == "table" and core.version >= 1.0, "Components works only wit
 
 local Component = core.import "core.class.component"
 local Event = core.import "core.manager.event"
+local Frame = core.import 'core.class.entity.frame'
 
 local Frames = Component:extend({ unique = true })
 
@@ -30,6 +31,7 @@ local Frames = Component:extend({ unique = true })
     end
 
     function Frames:add(frame)
+        if not (frame.isInstanceOf and frame.isInstanceOf(Frame)) then return end
         if not frame.id then return end
         self.list[frame.id] = frame
     end
@@ -43,17 +45,19 @@ local Frames = Component:extend({ unique = true })
         self.counter = sw or 0
     end
 
-    function Frames:update(dt)
+    function Frames:update()
         if not self.entity.active then return end
+
         if self.counter >= self.wait then
             self.counter = self.counter - self.wait
             self:set(self.next, self.counter)
         end
-        if not self.frame then return end
-        for k, v in pairs(self.frame) do
+
+        if not (self.frame and self.frame.vars) then return end
+        for k, v in pairs(self.frame.vars) do
             self.entity.vars[k] = v
         end
-        self.counter = self.wait > 0 and self.counter + dt * 1000 or 0
+        self.counter = self.wait > 0 and self.counter + love.timer.getDelta() * 1000 or 0
     end
 
 return Frames

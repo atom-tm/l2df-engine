@@ -5,7 +5,7 @@
 	</text>
 	<text>
 		text: "eeeeeeeeeee"
-		font: 22 x: 85 y: 65
+		font: 22 x: 85 y: 65  r: 5  color: [ 255 155 155 255 ]
 	</text>
 	<image>
 		sprites: [ { res: "sprites/sparks/1.png" x: 3  y: 3  w: 75  h: 75 } ]
@@ -17,4 +17,56 @@
 		x: 140  y: 140
 		pic: 5
 	</image>
+	<animation>
+		sprites: [ { res: "sprites/UI/loading.png" x: 4  y: 5  w: 140  h: 140 } ]
+		x: 50  y: 50
+		<frame>
+			id: 1  next: 2
+			pic: 1  wait: 100
+		</frame>
+		<frame>
+			id: 2  next: 3
+			pic: 2  wait: 100
+		</frame>
+		<frame>
+			id: 3  next: 4
+			pic: 3  wait: 100
+		</frame>
+		<frame>
+			id: 4  next: 5
+			pic: 4  wait: 100
+		</frame>
+		<frame>
+			id: 5  next: 6
+			pic: 5  wait: 100
+		</frame>
+		<frame>
+			id: 6  next: 7
+			pic: 6  wait: 100
+		</frame>
+		<frame>
+			id: 7  next: 8
+			pic: 7  wait: 100
+		</frame>
+		<frame>
+			id: 8  next: 9
+			pic: 8  wait: 100
+		</frame>
+		<frame>
+			id: 9  next: 10
+			pic: 9  wait: 100
+		</frame>
+		<frame>
+			id: 10  next: 11
+			pic: 10  wait: 100
+		</frame>
+		<frame>
+			id: 11  next: 12
+			pic: 11  wait: 100
+		</frame>
+		<frame>
+			id: 12  next: 1
+			pic: 12  wait: 100
+		</frame>
+	</animation>
 </scene>

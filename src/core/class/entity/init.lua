@@ -34,6 +34,7 @@ local Entity = Class:extend()
 
 	--- Adding some inheritors to an object
 	function Entity:attachMultiple(array)
+		array = array or { }
 		for i = 1, #array do
 			if array[i]:isInstanceOf(Entity) then
 				self:attach(array[i])

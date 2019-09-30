@@ -12,10 +12,12 @@ local UI = Entity:extend()
     function UI:init(kwargs)
         self.vars.x = kwargs.x or 0
         self.vars.y = kwargs.y or 0
-        self.vars.z = kwargs.z or 1
+        self.vars.z = kwargs.z or 0
+        self.vars.r = math.rad(kwargs.r or 0)
         self.vars.scalex = kwargs.scalex or 1
         self.vars.scaley = kwargs.scaley or 1
         self.vars.pic = kwargs.pic or 1
+        self.vars.hidden = kwargs.hidden or false
     end
 
     UI.Image = UI:extend({ name = 'image' })
@@ -30,11 +32,11 @@ local UI = Entity:extend()
         self:addComponent(Print(kwargs))
     end
 
-    UI.Animation = UI.Image:extend({ name = 'animation' })
+    UI.Animation = UI:extend({ name = 'animation' })
     function UI.Animation:init(kwargs)
         self:super(kwargs)
-        self:addComponent(Frames(), 1, frames)
-        self:addComponent(States())
+        self:addComponent(Render(), kwargs.sprites)
+        self:addComponent(Frames(), 1, kwargs.nodes)
     end
 
 return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })

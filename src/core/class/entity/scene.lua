@@ -8,7 +8,6 @@ local Scene = Entity:extend({ name = 'scene' })
 
 	function Scene:init(kwargs)
 		kwargs = kwargs or { }
-		kwargs.nodes = kwargs.nodes or { }
 		self:attachMultiple(kwargs.nodes)
 	end
 
