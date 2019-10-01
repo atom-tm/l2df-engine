@@ -117,7 +117,7 @@ local Manager = { }
 		print('Saved')
 		--[[
 			math.randomseed(love.timer.getTime())
-			love.graphics.setDefaultFilter("nearest", "nearest")
+			love.graphics.setDefaultFilter('nearest', 'nearest')
 
 			self.gameWidth = self.private.resolutions[self.global.resolution].width
 			self.gameHeight = self.private.resolutions[self.global.resolution].height

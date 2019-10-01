@@ -1,4 +1,4 @@
-local __DIR__ = (...):match("(.-)[^%.]+$")
+local __DIR__ = (...):match('(.-)[^%.]+$')
 
 local fs = love and love.filesystem
 local strmatch = string.match

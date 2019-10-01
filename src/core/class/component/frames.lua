@@ -1,8 +1,8 @@
-local core = l2df or require((...):match("(.-)core.+$") or "" .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "Components works only with l2df v1.0 and higher")
+local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
-local Component = core.import "core.class.component"
-local Event = core.import "core.manager.event"
+local Component = core.import 'core.class.component'
+local Event = core.import 'core.manager.event'
 local Frame = core.import 'core.class.entity.frame'
 
 local Frames = Component:extend({ unique = true })

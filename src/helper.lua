@@ -71,7 +71,7 @@ local helper = { }
 	-- @param function callback  Hook's callback function
 	-- @param table caller       Optional. First parameter to callback function
 	function helper.hook(obj, key, callback, caller)
-		assert(type(callback) == "function", "Parameter 'callback' must be a function")
+		assert(type(callback) == 'function', 'Parameter "callback" must be a function')
 
 		local old = obj[key]
 		if caller and old then
@@ -149,15 +149,15 @@ local helper = { }
 	-- @param result, table
 	function helper.copyTable(table, result)
 		result = result or { }
-		if type(result) ~= "table" then
+		if type(result) ~= 'table' then
 			return result
 		end
-		if type(table) ~= "table" then
+		if type(table) ~= 'table' then
 			return table
 		end
 
 		for key, val in pairs(table) do
-			if type(val) == "table" and val.___class == nil then
+			if type(val) == 'table' and val.___class == nil then
 				result[key] = helper.copyTable(val, result[key])
 			else
 				result[key] = val
@@ -170,7 +170,7 @@ local helper = { }
 	-- @param string str
 	-- @return string
 	function helper.plural(str)
-		if type(str) ~= "string" then
+		if type(str) ~= 'string' then
 			return str
 		end
 		local last = strsub(str, #str, -1)
@@ -186,7 +186,7 @@ local helper = { }
 	-- @param mixed obj  Object to check
 	-- @return bool
 	function helper.isArray(obj)
-		return type(obj) == "table" and (obj[1] ~= nil or next(obj) == nil)
+		return type(obj) == 'table' and (obj[1] ~= nil or next(obj) == nil)
 	end
 
 	--- Convert iterator to array
@@ -241,7 +241,7 @@ local helper = { }
 	-- @param mixed default  Default value. 1 if not setted
 	-- @return mixed
 	function helper.notZero(var, default)
-		return (var ~= nil and var ~= 0 and var ~= "") and var or default or 1
+		return (var ~= nil and var ~= 0 and var ~= '') and var or default or 1
 	end
 
 	--- Coalesce function for 'non-nil' value
