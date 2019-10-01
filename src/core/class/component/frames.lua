@@ -43,7 +43,7 @@ local Frames = Component:extend({ unique = true })
         self.counter = sw or 0
     end
 
-    function Frames:update()
+    function Frames:update(dt)
         if not self.entity.active then return end
 
         if self.counter >= self.wait then
@@ -55,7 +55,7 @@ local Frames = Component:extend({ unique = true })
         for k, v in pairs(self.frame.vars) do
             self.entity.vars[k] = v
         end
-        self.counter = self.wait > 0 and self.counter + love.timer.getDelta() * 1000 or 0
+        self.counter = self.wait > 0 and self.counter + dt * 1000 or 0
     end
 
 return Frames

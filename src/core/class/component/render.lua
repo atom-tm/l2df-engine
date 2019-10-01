@@ -82,7 +82,7 @@ local Render = Component:extend({ unique = true })
     end
 
 
-    function Render:update()
+    function Render:postUpdate()
         if not self.hidden then
             RenderManager:add({
                 object = self.pics[self.vars.pic][1],

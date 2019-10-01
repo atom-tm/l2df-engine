@@ -48,7 +48,7 @@ local Print = Component:extend({ unique = false })
         vars.hidden = vars.hidden or false
     end
 
-    function Print:update()
+    function Print:postUpdate()
         if not self.vars.hidden then
             RenderManager:add({
                 object = self.text,
@@ -68,6 +68,13 @@ local Print = Component:extend({ unique = false })
                 color = self.color,
             })
         end
+    end
+
+    function Print:push()
+        print('push')
+    end
+    function Print:pop()
+        print('pop')
     end
 
 return Print

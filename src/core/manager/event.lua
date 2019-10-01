@@ -76,30 +76,56 @@ local Manager = { active = true }
 	end
 
 	---
-	function Manager:update()
-		for e in EntityManager:enum(nil, false, true) do
-
-			local components = e:getComponents()
-
-			local f = {
-				pre = { },
-				update = { }
-			}
-
-			for i = 1, #components do
-				local c = components[i]
-				f.pre[#f.pre + 1] = c.preUpdate and c
-				f.update[#f.update + 1] = c.update and c
+	function Manager:update(...)
+		local beginer = { EntityManager.root }
+		local tasks = { { beginer, 0, #beginer } }
+		local depth = 1
+		local i = 0
+		local current = tasks[depth]
+		while i < current[3] or depth > 1 do
+			i = i + 1
+			local object = current[1][i]
+			local nodes = nil
+			if object and object.active then
+				nodes = object:getNodes()
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].preUpdate and c[j]:preUpdate(...)
+				end
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].update and c[j]:update(...)
+				end
 			end
-
-			for i = 1, #f.pre do
-				f.pre[i]:preUpdate()
+			if nodes and next(nodes) then
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].push and c[j]:push(...)
+				end
+				current[2] = i
+				current = { nodes, 0, #nodes }
+				tasks[#tasks + 1] = current
+				depth = depth + 1
+				i = 0
+			elseif i >= current[3] and depth > 1 then
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].postUpdate and c[j]:postUpdate(...)
+				end
+				depth = depth - 1
+				current = tasks[depth]
+				i = current[2]
+				object = current[1][i]
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].pop and c[j]:pop(...)
+				end
+			else
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].postUpdate and c[j]:postUpdate(...)
+				end
 			end
-
-			for i = 1, #f.update do
-				f.update[i]:update()
-			end
-
 		end
 	end
 

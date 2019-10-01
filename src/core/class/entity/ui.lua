@@ -6,6 +6,7 @@ local Render = core.import 'core.class.component.render'
 local Frames = core.import 'core.class.component.frames'
 local States = core.import 'core.class.component.states'
 local Print = core.import 'core.class.component.print'
+local Transform = core.import 'core.class.component.transform'
 
 local UI = Entity:extend()
 
@@ -38,6 +39,7 @@ local UI = Entity:extend()
         self:addComponent(Render(), kwargs.sprites)
         self:addComponent(Frames(), 1, kwargs.nodes)
         self:addComponent(States())
+        self:addComponent(Transform())
     end
 
 return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })

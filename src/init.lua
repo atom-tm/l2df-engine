@@ -39,6 +39,7 @@ local core = l2df
 		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
 		EventManager:subscribe('update', EventManager.update, love, EventManager)
 
+
 		SceneManager:load('scenes/')
 		StatesManager:load('data/states')
 
