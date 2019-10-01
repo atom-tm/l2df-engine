@@ -9,7 +9,7 @@ local Frame = Class:extend({ name = 'frame' })
         self.vars = { }
 
         self.vars.pic = kwargs.pic
-        self.vars.states = { kwargs.state }
+        self.vars.states = kwargs.states or { kwargs.state }
 
         self.id = id
         self.next = kwargs.next

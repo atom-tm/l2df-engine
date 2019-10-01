@@ -6,6 +6,7 @@ local strformat = string.format
 local strjoin = table.concat
 local strfind = string.find
 local strgsub = string.gsub
+local strsub = string.sub
 local strrep = string.rep
 local floor = math.floor
 local sqrt = math.sqrt
@@ -56,6 +57,13 @@ dump = function(x, stack, indent)
 end
 
 local helper = { }
+
+	--- Require a script from file. Returns loaded module and its filename
+	-- @param mixed var  Variable to dump
+	-- @return string
+	function helper.dump(var)
+	  return dump(var)
+	end
 
 	--- Creates a hook for table's event / function
 	-- @param table obj          table to hook
@@ -126,13 +134,6 @@ local helper = { }
 	end
 
 	--- Require a script from file. Returns loaded module and its filename
-	-- @param mixed var  Variable to dump
-	-- @return string
-	function helper.dump(var)
-	  return dump(var)
-	end
-
-	--- Require a script from file. Returns loaded module and its filename
 	-- @tparam string filepath
 	-- @return table
 	-- @return string
@@ -163,6 +164,22 @@ local helper = { }
 			end
 		end
 		return result
+	end
+
+	--- Get the plural form of a word
+	-- @param string str
+	-- @return string
+	function helper.plural(str)
+		if type(str) ~= "string" then
+			return str
+		end
+		local last = strsub(str, #str, -1)
+		if last == 'y' then
+			return strsub(str, 1, -2) .. 'ies'
+		elseif last == 'x' or last == 'o' or last == 'z' or last == 's' or last == 'h' then
+			return str .. 'es'
+		end
+		return str .. 's'
 	end
 
 	--- Determine if object is array or not

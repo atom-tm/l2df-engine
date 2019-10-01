@@ -1,10 +1,13 @@
 local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
 
-local strfind = string.find
+local helper = require(__DIR__ .. 'helper')
+
 local strsub = string.sub
+local strfind = string.find
 local strmatch = string.match
 local strformat = string.format
 local strjoin = table.concat
+local plural = helper.plural
 
 local BaseParser = require(__DIR__ .. 'parsers.base')
 
@@ -15,18 +18,6 @@ local DatParser = BaseParser:extend()
 	DatParser.BLOCK_LBRACKET = '['
 	DatParser.BLOCK_RBRACKET = ']'
 	DatParser.VALUE_END_PATTERN = '[;,%s]'
-
-	--- Get the plural form of a word
-	-- @param str, string
-	local function plural(str)
-		local last = strsub(str, #str, -1)
-		if last == 'y' then
-			return strsub(str, 1, -2) .. 'ies'
-		elseif last == 'x' or last == 'o' or last == 'z' or last == 's' or last == 'h' then
-			return str .. 'es'
-		end
-		return str .. 's'
-	end
 
 	--- Method for parsing dat formatted string
 	-- You can extend existing object by passing it as second parameter.
@@ -105,6 +96,8 @@ local DatParser = BaseParser:extend()
 		local is_array = { false }
 		local head = 1
 		local param = nil
+		local plural_param = nil
+		local parent = nil
 		local char = nil
 		local from = 1
 		local pos = 1
@@ -140,21 +133,39 @@ local DatParser = BaseParser:extend()
 				char = strsub(str, pos, pos)
 
 				if char == self.BLOCK_LBRACKET then
+					parent = stack[head]
 					head = head + 1
 					is_array[head] = false
 					if is_array[head - 1] then
 						stack[head] = { }
 					else
-						stack[head] = stack[head - 1][param] or { }
+						stack[head] = parent[param] or { }
 					end
-					stack[head - 1][param] = stack[head]
+					plural_param = plural(param)
+					if parent[plural_param] then
+						parent[plural_param][#parent[plural_param] + 1] = stack[head]
+					elseif parent[param] then
+						parent[plural_param] = { parent[param], stack[head] }
+						parent[param] = nil
+					else
+						parent[param] = stack[head]
+					end
 					break
 
 				elseif char == self.ARRAY_LBRACKET then
+					parent = stack[head]
 					head = head + 1
 					is_array[head] = true
 					stack[head] = { }
-					stack[head - 1][param] = stack[head]
+					plural_param = plural(param)
+					if parent[plural_param] then
+						parent[plural_param][#parent[plural_param] + 1] = stack[head]
+					elseif parent[param] then
+						parent[plural_param] = { parent[param], stack[head] }
+						parent[param] = nil
+					else
+						parent[param] = stack[head]
+					end
 					param = 1
 
 				elseif char == self.ARRAY_RBRACKET then
@@ -177,7 +188,16 @@ local DatParser = BaseParser:extend()
 							param = param + 1
 						end
 					else
-						stack[head][param] = self:parseScalar(strjoin(value))
+						parent = stack[head]
+						plural_param = plural(param)
+						if parent[plural_param] then
+							parent[plural_param][#parent[plural_param] + 1] = self:parseScalar(strjoin(value))
+						elseif parent[param] then
+							parent[plural_param] = { parent[param], self:parseScalar(strjoin(value)) }
+							parent[param] = nil
+						else
+							parent[param] = self:parseScalar(strjoin(value))
+						end
 						break
 					end
 					value = { }
