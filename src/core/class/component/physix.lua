@@ -105,8 +105,6 @@ local Physix = Component:extend({ unique = true })
         self.velocityY = p and self.velocityY > 0 and self.velocityY * -(self.bounce + p.bounce) or self.velocityY
         self.velocityY = abs(self.velocityY) < 0.001 and 0 or self.velocityY
 
-        print(self.velocityY)
-
         vars.dsy, vars.dvy = 0, 0
 
         vars.dx = vars.dx + self.velocityX

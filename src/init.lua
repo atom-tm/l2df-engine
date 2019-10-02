@@ -11,6 +11,7 @@ l2df = require(__DIR__ .. 'core')
 helper = l2df.import 'helper'
 
 local love = _G.love
+local math = _G.math
 
 local core = l2df
 
@@ -34,6 +35,8 @@ local core = l2df
 	function core:init()
 		-- First call to core.root() always should be in core.init
 		parser:scan(core.root() .. 'core/class/entity')
+
+		if love.timer then math.randomseed(love.timer.getTime()) end
 
 		RenderManager:init()
 		EntityManager:setRoot(SceneManager.root)
