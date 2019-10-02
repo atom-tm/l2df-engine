@@ -1,5 +1,5 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
-assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
+assert(type(core) == 'table' and core.version >= 1.0, 'EventManager works only with l2df v1.0 and higher')
 
 local EntityManager = core.import 'core.manager.entity'
 local Storage = core.import 'core.class.storage'

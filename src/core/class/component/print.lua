@@ -5,7 +5,7 @@ local Component = core.import 'core.class.component'
 
 local Event = core.import 'core.manager.event'
 local RenderManager = core.import 'core.manager.render'
-local ResourseManager = core.import 'core.manager.resourse'
+local ResourceManager = core.import 'core.manager.resource'
 
 local loveNewFont = love.graphics.newFont
 

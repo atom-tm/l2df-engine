@@ -1,5 +1,5 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
-assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
+assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
 local EventManager = core.import 'core.manager.event'
 
@@ -80,13 +80,13 @@ local Manager = { canvas, scalex, scaley }
 		end
 	end
 
-	function Manager:generateQuad(resourse, x, y, w, h)
-		if not (resourse and resourse.typeOf and resourse:typeOf('Drawable')) then return end
+	function Manager:generateQuad(resource, x, y, w, h)
+		if not (resource and resource.typeOf and resource:typeOf('Drawable')) then return end
 		x = x or 0
 		y = y or 0
-		w = w or resourse:getWidth()
-		h = h or resourse:getHeight()
-		return { resourse, love.graphics.newQuad(x,y,w,h,resourse:getDimensions()) }
+		w = w or resource:getWidth()
+		h = h or resource:getHeight()
+		return { resource, love.graphics.newQuad(x,y,w,h,resource:getDimensions()) }
 	end
 
 

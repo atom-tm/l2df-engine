@@ -5,7 +5,7 @@ local Component = core.import 'core.class.component'
 
 local Event = core.import 'core.manager.event'
 local RenderManager = core.import 'core.manager.render'
-local ResourseManager = core.import 'core.manager.resourse'
+local ResourceManager = core.import 'core.manager.resource'
 
 local Render = Component:extend({ unique = true })
 
@@ -24,7 +24,7 @@ local Render = Component:extend({ unique = true })
         self.vars = vars
         sprites = sprites or { }
         if type(sprites) == 'string' then
-            sprites = { { res = ResourseManager:load(sprites) } }
+            sprites = { { res = ResourceManager:load(sprites) } }
         end
 
         vars.x = vars.x or 0
@@ -42,7 +42,7 @@ local Render = Component:extend({ unique = true })
         local s = nil
         for i = 1, #sprites do
             s = sprites[i]
-            s.res = type(s.res) == 'string' and ResourseManager:load(s.res) or s.res
+            s.res = type(s.res) == 'string' and ResourceManager:load(s.res) or s.res
             self:addPics(s.res, s.x, s.y, s.w, s.h, s.s, s.f, s.xo, s.yo)
         end
     end
