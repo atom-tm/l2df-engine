@@ -2,8 +2,7 @@ local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
 local Component = core.import 'core.class.component'
-local StatesManager = core.import 'core.manager.states'
-local EventManager = core.import 'core.manager.event'
+local CTransform = core.import 'core.class.transform'
 
 local stack = { }
 
@@ -12,7 +11,10 @@ local Transform = Component:extend({ unique = true })
     function Transform:init()
         self.entity = nil
         self.vars = nil
-        self.transform = love.math.newTransform()
+
+        self.x = 0
+        self.y = 0
+        self.z = 0
     end
 
     function Transform:added(entity, vars)
@@ -33,20 +35,15 @@ local Transform = Component:extend({ unique = true })
         vars.dz = vars.dz or 0
         vars.dr = vars.dr or 0
 
-        self.transform:setTransformation(vars.x, vars.y, vars.r)
+        vars.transform = CTransform:new()
     end
 
     function Transform:update()
-        self.transform:translate( self.vars.dx, self.vars.dy, self.vars.dx )
-        if self.vars.dx > 0 or self.vars.dy > 0 then
-            self.vars.dx = 0
-            self.vars.dy = 0
-            print( self.transform:getMatrix( ))
-        end
+
     end
 
     function Transform:push()
-        stack[#stack + 1] = self.transform
+        stack[#stack + 1] = vars.transform
     end
 
     function Transform:pop()
