@@ -298,4 +298,18 @@ local helper = { }
 		return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
 	end
 
+	function helper.mulMatrix(m1, m2)
+	    local r = {}
+	    for n = 1, #m1 do
+	        r[n] = {}
+	        for i = 1, #m2[1] do
+	            r[n][i] = 0
+	            for j = 1, #m1[1] do
+	                r[n][i] = r[n][i] + (m1[n][j] * m2[j][i])
+	            end
+	        end
+	    end
+	    return r
+	end
+
 return helper
