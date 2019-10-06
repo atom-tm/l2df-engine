@@ -4,6 +4,10 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with 
 local Class = core.import 'core.class'
 local helper = core.import 'helper'
 
+local sin = math.sin
+local cos = math.cos
+local rad = math.rad
+
 local Transform = Class:extend()
 
 	function Transform:init()
@@ -16,8 +20,19 @@ local Transform = Class:extend()
 	end
 
 	function Transform:append(transform)
-	if not transform:isInstanceOf(Transform) then return end
+	if not transform:isInstanceOf(Transform) then return false end
 		self.matrix = helper.mulMatrix(transform.matrix, self.matrix)
+		return true
+	end
+
+	function Transform:vector(x, y, z)
+		m = {
+			{ x },
+			{ y },
+			{ z },
+			{ 1 }
+		}
+		return helper.mulMatrix(self.matrix, m)
 	end
 
 	function Transform:scale( sx, sy, sz )
@@ -41,6 +56,17 @@ local Transform = Class:extend()
 			{ 1, 0, 0, dx },
 			{ 0, 1, 0, dy },
 			{ 0, 0, 1, dz },
+			{ 0, 0, 0, 1 },
+		}
+		self.matrix = helper.mulMatrix(m, self.matrix)
+	end
+
+	function Transform:rotate(a)
+		a = a and rad(a) or 0
+		local m = {
+			{ cos(a), -sin(a), 0, 0 },
+			{ sin(a), cos(a), 0, 0 },
+			{ 0, 0, 1, 0 },
 			{ 0, 0, 0, 1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)

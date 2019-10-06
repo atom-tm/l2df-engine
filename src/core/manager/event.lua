@@ -97,15 +97,15 @@ local Manager = { active = true }
 					local _ = c[j].update and c[j]:update(...)
 				end
 			end
-			if nodes and next(nodes) then
+			if nodes and #nodes > 0 then
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
 					local _ = c[j].push and c[j]:push(...)
 				end
 				current[2] = i
 				current = { nodes, 0, #nodes }
-				tasks[#tasks + 1] = current
 				depth = depth + 1
+				tasks[depth] = current
 				i = 0
 			elseif i >= current[3] and depth > 1 then
 				c = object and object:getComponents() or { }

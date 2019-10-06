@@ -70,11 +70,4 @@ local Print = Component:extend({ unique = false })
         end
     end
 
-    function Print:push()
-        print('push')
-    end
-    function Print:pop()
-        print('pop')
-    end
-
 return Print
