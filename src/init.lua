@@ -21,6 +21,9 @@ local core = l2df
 
 	local parser = core.import 'parsers.lffs'
 
+	love.graphics.setDefaultFilter("nearest", "nearest")
+	love.keyboard.setKeyRepeat(true)
+
 	function core:init()
 		-- First call to core.root() always should be in core.init
 		parser:scan(core.root() .. 'core/class/entity')
@@ -43,7 +46,7 @@ local core = l2df
 		SceneManager:load('scenes/')
 		StatesManager:load('data/states')
 
-		SceneManager:set('sex')
+		--SceneManager:set('sex')
 		SceneManager:push('myroom')
 
 	end

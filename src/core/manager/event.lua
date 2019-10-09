@@ -120,6 +120,10 @@ local Manager = { active = true }
 				for j = 1, #c do
 					local _ = c[j].pop and c[j]:pop(...)
 				end
+				c = object and object:getComponents() or { }
+				for j = 1, #c do
+					local _ = c[j].postUpdate and c[j]:postUpdate(...)
+				end
 			else
 				c = object and object:getComponents() or { }
 				for j = 1, #c do

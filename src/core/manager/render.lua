@@ -2,6 +2,7 @@ local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
 local EventManager = core.import 'core.manager.event'
+local rad = math.rad
 
 ----█---█-███-████----
 ----█-█-█--█--████----
@@ -70,9 +71,9 @@ local Manager = { canvas, scalex, scaley }
 				local r,g,b,a = love.graphics.getColor()
 				love.graphics.setColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1 )
 				if type(input.object) == 'string' then
-					love.graphics.printf( input.object, input.font, input.x, input.y, input.limit, input.align, input.r, input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
+					love.graphics.printf( input.object, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
 				elseif input.object.typeOf and input.object:typeOf('Drawable') then
-					love.graphics.draw( input.object, input.quad, input.x, input.y, input.r, input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
+					love.graphics.draw( input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky )
 				end
 				love.graphics.setColor( r,g,b,a )
 			end

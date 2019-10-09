@@ -22,51 +22,51 @@
 		x: 66  y: 55
 
 		<frame> 1 test1
-			pic: 1  wait: 1 next: 2 dx: 1 dr: 1 dy: 1
+			pic: 1  wait: 45 next: 2 dx: 1
 		</frame>
 
 		<frame> 2 test2
-			pic: 2  wait: 45 next: 3
+			pic: 2  wait: 45 next: 3 dx: 1
 		</frame>
 
 		<frame> 3 test3
-			pic: 3  wait: 45 next: 4
+			pic: 3  wait: 45 next: 4 dx: 1
 		</frame>
 
 		<frame> 4 test4
-			pic: 4  wait: 45 next: 5
+			pic: 4  wait: 45 next: 5 dx: 1
 		</frame>
 
 		<frame> 5 test5
-			pic: 5  wait: 45 next: 6
+			pic: 5  wait: 45 next: 6 dx: 1
 		</frame>
 
 		<frame> 6 test6
-			pic: 6  wait: 45 next: 7
+			pic: 6  wait: 45 next: 7 dx: 1
 		</frame>
 
 		<frame> 7 test7
-			pic: 7  wait: 45 next: 8
+			pic: 7  wait: 45 next: 8 dx: -1
 		</frame>
 
 		<frame> 8 test8
-			pic: 8  wait: 45 next: 9
+			pic: 8  wait: 45 next: 9 dx: -1
 		</frame>
 
 		<frame> 9 test9
-			pic: 9  wait: 45 next: 10
+			pic: 9  wait: 45 next: 10 dx: -1
 		</frame>
 
 		<frame> 10 test10
-			pic: 10  wait: 45 next: 11
+			pic: 10  wait: 45 next: 11 dx: -1
 		</frame>
 
 		<frame> 11 test11
-			pic: 11  wait: 45 next: 12
+			pic: 11  wait: 45 next: 12 dx: -1
 		</frame>
 
 		<frame> 12 test12
-			pic: 12  wait: 45 next: 1
+			pic: 12  wait: 45 next: 1 dx: -1
 		</frame>
 
 	</animation>

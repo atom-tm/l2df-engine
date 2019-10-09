@@ -7,32 +7,73 @@ local helper = core.import 'helper'
 local sin = math.sin
 local cos = math.cos
 local rad = math.rad
+local acos = math.acos
 
 local Transform = Class:extend()
 
-	function Transform:init()
+	function Transform:init(...)
 		self.matrix = {
 			{ 1, 0, 0, 0 },
 			{ 0, 1, 0, 0 },
 			{ 0, 0, 1, 0 },
 			{ 0, 0, 0, 1 },
 		}
+		self.sx = 1
+		self.sy = 1
+		self.sz = 1
+		self.r = 0
+		self:set(...)
+	end
+
+	function Transform:set(x, y, z, sx, sy, sz, r, ox, oy)
+		x = x or 0
+		y = y or 0
+		z = z or 0
+		sx = sx or 1
+		sy = sy or 1
+		sz = sz or 1
+		ox = ox or 0
+		oy = oy or 0
+		r = r or 0
+		local ca = cos(rad(r))
+		local sa = sin(rad(r))
+		local m = {
+			{ ca*sx, -sa*sy,  0, x + ca*(-ox*sx) - sa*(-oy*sy)},
+			{ sa*sx,  ca*sy,  0, y + ca*(-oy*sy) + sa*(-ox*sx)},
+			{     0,      0, sz,                             z},
+			{     0,      0,  0,                             1},
+		}
+		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.sx = sx
+		self.sy = sy
+		self.sz = sz
+		self.r = r
 	end
 
 	function Transform:append(transform)
 	if not transform:isInstanceOf(Transform) then return false end
 		self.matrix = helper.mulMatrix(transform.matrix, self.matrix)
+		self.sx = self.sx * transform.sx
+		self.sy = self.sy * transform.sy
+		self.sz = self.sz * transform.sz
+		self.r = self.r + transform.r
 		return true
 	end
 
 	function Transform:vector(x, y, z)
-		m = {
+		local m = {
 			{ x },
 			{ y },
 			{ z },
-			{ 1 }
+			{ 1 },
 		}
 		return helper.mulMatrix(self.matrix, m)
+	end
+
+	function Transform:copy()
+		local t = Transform:new()
+		t:append(self)
+		return t
 	end
 
 	function Transform:scale( sx, sy, sz )
@@ -46,9 +87,10 @@ local Transform = Class:extend()
 			{ 0, 0, 0, 1  },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.scale = { sx, sy, sz }
 	end
 
-	function Transform:translate(dx, dy, dz)
+	function Transform:translate(dx, dy, dz, ox, oy)
 		dx = dx or 0
 		dy = dy or 0
 		dz = dz or 0
@@ -61,28 +103,20 @@ local Transform = Class:extend()
 		self.matrix = helper.mulMatrix(m, self.matrix)
 	end
 
-	function Transform:rotate(a)
+	function Transform:rotate(a, x, y, dx, dy)
 		a = a and rad(a) or 0
 		local m = {
-			{ cos(a), -sin(a), 0, 0 },
-			{ sin(a), cos(a), 0, 0 },
-			{ 0, 0, 1, 0 },
-			{ 0, 0, 0, 1 },
+			{ cos(a), -sin(a), 0, -x * cos(a) + y * sin(a) + x},
+			{ sin(a), cos(a),  0, -x * sin(a) - y * cos(a) + y},
+			{ 0,       0,      1, 0 },
+			{ 0,       0,      0, 1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
 	end
 
-	function Transform:print()
-		local m = ''
-		local r = ''
-		for i = 1, 4 do
-			local r = ''
-			for j = 1, 4 do
-				r = r .. self.matrix[i][j] .. ' '
-			end
-			m = m .. r .. '\n'
-		end
-		print(m)
+	function Transform:getAngle()
+		local trace = m[1][1] + m[2][2] + m[3][3]
+		return acos((trace - 1) * 0.5)
 	end
 
 return Transform

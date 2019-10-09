@@ -32,8 +32,11 @@ local Render = Component:extend({ unique = true })
         vars.z = vars.z or 0
         vars.r = vars.r or 0
 
-        vars.scalex = vars.scalex or 1
-        vars.scaley = vars.scaley or 1
+        vars.scaleX = vars.scaleX or 1
+        vars.scaleY = vars.scaleY or 1
+
+        vars.centerX = vars.centerX or 0
+        vars.centerY = vars.centerY or 0
 
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
@@ -83,18 +86,19 @@ local Render = Component:extend({ unique = true })
 
 
     function Render:postUpdate()
-        if not self.hidden then
+        local vars = self.vars
+        if not vars.hidden then
             RenderManager:add({
                 object = self.pics[self.vars.pic][1],
                 quad = self.pics[self.vars.pic][2],
-                index = self.vars.z,
-                x = self.vars.x,
-                y = self.vars.y,
-                r = self.vars.r,
-                sx = self.vars.scalex,
-                sy = self.vars.scaley,
-                ox = self.ox,
-                oy = self.oy,
+                index = vars.globalZ or vars.z,
+                x = vars.globalX or vars.x,
+                y = vars.globalY or vars.y,
+                r = vars.globalR or vars.r,
+                sx = vars.globalScaleX or vars.scaleX,
+                sy = vars.globalScaleY or vars.scaleY,
+                ox = self.ox + vars.centerX,
+                oy = self.oy + vars.centerY,
                 kx = self.kx,
                 ky = self.ky,
                 color = self.color

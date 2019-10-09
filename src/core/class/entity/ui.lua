@@ -19,6 +19,7 @@ local UI = Entity:extend()
         self.vars.scaley = kwargs.scaley or 1
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
+        self:addComponent(Transform())
     end
 
     UI.Image = UI:extend({ name = 'image' })
@@ -39,7 +40,6 @@ local UI = Entity:extend()
         self:addComponent(Render(), kwargs.sprites)
         self:addComponent(Frames(), 1, kwargs.nodes)
         self:addComponent(States())
-        self:addComponent(Transform())
     end
 
 return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })
