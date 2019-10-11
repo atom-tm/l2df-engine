@@ -75,10 +75,8 @@ local Transform = Component:extend({ unique = true })
     end
 
     function Transform:push()
-        local vars = self.vars
-        local transform = CTransform:new()
-        transform:set(vars.x, vars.y, vars.z, vars.scaleX * vars.facing, vars.scaleY, vars.scaleZ, vars.r, vars.centerX, vars.centerY)
-        --transform:rotate(vars.r, vars.x, vars.y, vars.centerX, vars.centerY)
+        local v = self.vars
+        local transform = CTransform:new(v.x, v.y, v.z, v.scaleX * v.facing, v.scaleY, v.scaleZ, v.r, v.centerX, v.centerY)
         transform:append(stack[#stack])
         stack[#stack + 1] = transform
     end

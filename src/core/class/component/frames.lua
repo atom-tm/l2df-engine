@@ -43,7 +43,7 @@ local Frames = Component:extend({ unique = true })
         self.counter = sw or 0
     end
 
-    function Frames:update(dt)
+    function Frames:preUpdate(dt)
         if not self.entity.active then return end
 
         if self.counter >= self.wait then

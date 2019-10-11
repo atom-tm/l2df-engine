@@ -15,6 +15,16 @@ local Frame = Class:extend({ name = 'frame' })
         self.vars.dz = kwargs.dz
         self.vars.dr = kwargs.dr
 
+        self.vars.dvx = kwargs.dvx
+        self.vars.dvy = kwargs.dvy
+        self.vars.dvz = kwargs.dvz
+
+        self.vars.dsx = kwargs.dsx
+        self.vars.dsy = kwargs.dsy
+        self.vars.dsz = kwargs.dsz
+
+
+
         self.id = id
         self.next = kwargs.next
         self.wait = kwargs.wait

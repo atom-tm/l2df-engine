@@ -227,6 +227,15 @@ local helper = { }
 		return x > 0 and 1 or x < 0 and -1 or 0
 	end
 
+	--- Find out if the object is within the specified values
+	-- @tparam number val
+	-- @tparam number min
+	-- @tparam number max
+	-- @treturn bool
+	function helper.bound (val, min, max)
+		return type(val) == 'number' and val > min and val < max and true or false
+	end
+
 	--- Get rounded value with precision
 	-- @param number value      Specified value
 	-- @param number precision  Needed precision

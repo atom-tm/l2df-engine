@@ -38,10 +38,10 @@ local Transform = Class:extend()
 		local ca = cos(rad(r))
 		local sa = sin(rad(r))
 		local m = {
-			{ ca*sx, -sa*sy,  0, x + ca*(-ox*sx) - sa*(-oy*sy)},
-			{ sa*sx,  ca*sy,  0, y + ca*(-oy*sy) + sa*(-ox*sx)},
-			{     0,      0, sz,                             z},
-			{     0,      0,  0,                             1},
+			{ ca*sx, -sa*sy,  0, x + ca*(-ox*sx) - sa*(-oy*sy) },
+			{ sa*sx,  ca*sy,  0, y + ca*(-oy*sy) + sa*(-ox*sx) },
+			{     0,      0, sz,                             z },
+			{     0,      0,  0,                             1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
 		self.sx = sx
@@ -76,18 +76,20 @@ local Transform = Class:extend()
 		return t
 	end
 
-	function Transform:scale( sx, sy, sz )
+	function Transform:scale( sx, sy, sz, ox, oy )
 		sy = sy or sx or 1
 		sz = sz or sx or 1
 		sx = sx or 1
 		local m = {
-			{ sx, 0, 0, 0 },
-			{ 0, sy, 0, 0 },
-			{ 0, 0, sz, 0 },
-			{ 0, 0, 0, 1  },
+			{ sx,  0,  0, 0 },
+			{  0, sy,  0, 0 },
+			{  0,  0, sz, 0 },
+			{  0,  0,  0, 1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
-		self.scale = { sx, sy, sz }
+		self.sx = self.sx * sx
+		self.sy = self.sy * sy
+		self.sz = self.sz * sz
 	end
 
 	function Transform:translate(dx, dy, dz, ox, oy)
@@ -95,28 +97,26 @@ local Transform = Class:extend()
 		dy = dy or 0
 		dz = dz or 0
 		local m = {
-			{ 1, 0, 0, dx },
-			{ 0, 1, 0, dy },
+			{ 1, 0, 0, dx - ox },
+			{ 0, 1, 0, dy - oy },
 			{ 0, 0, 1, dz },
 			{ 0, 0, 0, 1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
 	end
 
-	function Transform:rotate(a, x, y, dx, dy)
-		a = a and rad(a) or 0
+	function Transform:rotate(a, x, y)
+		a = a or 0
+		local ca = cos(rad(a))
+		local sa = sin(rad(a))
 		local m = {
-			{ cos(a), -sin(a), 0, -x * cos(a) + y * sin(a) + x},
-			{ sin(a), cos(a),  0, -x * sin(a) - y * cos(a) + y},
+			{ ca, -sa, 0, -x * ca + y * sa + x},
+			{ sa, ca,  0, -x * sa - y * ca + y},
 			{ 0,       0,      1, 0 },
 			{ 0,       0,      0, 1 },
 		}
 		self.matrix = helper.mulMatrix(m, self.matrix)
-	end
-
-	function Transform:getAngle()
-		local trace = m[1][1] + m[2][2] + m[3][3]
-		return acos((trace - 1) * 0.5)
+		self.r = a
 	end
 
 return Transform

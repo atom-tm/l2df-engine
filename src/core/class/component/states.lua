@@ -22,7 +22,6 @@ local States = Component:extend({ unique = true })
     end
 
     function States:update()
-        if not self.entity.active then return end
     	for i = 1, #self.vars.persistentStates do
     		StatesManager:get(tostring(self.vars.persistentStates[i][1])):persistentUpdate(self.vars, self.vars.persistentStates[i][2])
     	end

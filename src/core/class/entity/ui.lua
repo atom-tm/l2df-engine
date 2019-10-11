@@ -7,6 +7,7 @@ local Frames = core.import 'core.class.component.frames'
 local States = core.import 'core.class.component.states'
 local Print = core.import 'core.class.component.print'
 local Transform = core.import 'core.class.component.transform'
+local Physix = core.import 'core.class.component.physix'
 
 local UI = Entity:extend()
 
@@ -20,6 +21,7 @@ local UI = Entity:extend()
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
         self:addComponent(Transform())
+        self:addComponent(Physix())
     end
 
     UI.Image = UI:extend({ name = 'image' })
