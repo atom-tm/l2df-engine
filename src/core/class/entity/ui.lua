@@ -21,7 +21,6 @@ local UI = Entity:extend()
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
         self:addComponent(Transform())
-        self:addComponent(Physix())
     end
 
     UI.Image = UI:extend({ name = 'image' })
@@ -41,7 +40,6 @@ local UI = Entity:extend()
         self:super(kwargs)
         self:addComponent(Render(), kwargs.sprites)
         self:addComponent(Frames(), 1, kwargs.nodes)
-        self:addComponent(States())
     end
 
 return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })

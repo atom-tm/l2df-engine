@@ -6,69 +6,31 @@ local parser = core.import 'parsers.lffs'
 local Physix = core.import 'core.class.component.physix'
 local event = core.import 'core.manager.event'
 
+local Object = core.import 'core.class.entity.object'
+
+local ball = Object {
+	sprites = 'sprites/test/ball.png',
+	x = 250,
+	y = 250,
+}
+ball.vars.centerX = 25
+ball.vars.centerY = 25
+
 local room = Scene {
 	nodes = {
-		UI.Image {
-			sprites = 'sprites/test/1.png',
-			x = 20,
-			y = 150,
-		},
-		parser:parse [[
-			<text>
-				text: "PRESS F TO PAY RESPECT"  font: 18
-				x: 0 y: 0
-			</text>
-		]]
+		ball
 	}
 }
 
-local m = UI.Image {
-	sprites = 'sprites/test/2.png',
-	x = 0,
-	y = 0,
-}
-m.vars.centerX = 8
-m.vars.centerY = 5
-
-
-local n = UI.Image {
-	sprites = 'sprites/test/3.png',
-	x = 27,
-	y = 3,
-}
-n.vars.centerX = 10
-n.vars.centerY = 10
-n.vars.z = 2
-n.vars.hidden = true
-
-room.nodes.list[1]:attach(m)
-room.nodes.list[1]:attach(n)
-
-room.nodes.list[1].vars.centerX = 30
-room.nodes.list[1].vars.centerY = 28
-
-room:addComponent(Physix.Controller {
-	wind = 0,
-	maxSpeed = 10
-})
-
-
-
 f = function (_, key)
 	if key == 'w' then
-		room.nodes.list[1].vars.dvy = -1
+		ball.vars.dvy = -1
 	elseif key == 's' then
-		room.nodes.list[1].vars.dvy = 1
-	elseif key == 'a' then
-		room.nodes.list[1].vars.dvx = -5
-	elseif key == 'd' then
-		room.nodes.list[1].vars.dvx = 5
-	elseif key == 'f3' then
-		room.nodes.list[1]:getComponent(Physix).through = not room.nodes.list[1]:getComponent(Physix).through
+		ball.vars.dvy = 1
 	elseif key == 'f2' then
-		room.nodes.list[1]:getComponent(Physix).gravity = not room.nodes.list[1]:getComponent(Physix).gravity
+		ball:getComponent(Physix).gravity = not ball:getComponent(Physix).gravity
 	elseif key == 'f1' then
-		n.vars.hidden = not n.vars.hidden
+		ball:getComponent(Physix).platform = Physix:new({ bounce = 0.5 })
 	end
 end
 
