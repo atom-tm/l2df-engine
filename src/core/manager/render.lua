@@ -21,7 +21,7 @@ local Manager = { canvas, scalex, scaley }
 		EventManager:subscribe('resize', self.resize, nil, self)
 		EventManager:subscribe('draw', self.draw, nil, self)
 
-		self.resX, self.resY = 1280, 720
+		self.resX, self.resY = 640, 360
 		self.gameW, self.gameH = love.window.getMode()
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 

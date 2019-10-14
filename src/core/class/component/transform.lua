@@ -49,7 +49,7 @@ local Transform = Component:extend({ unique = true })
     end
 
     function Transform:update(dt)
-        self:set(dt * 1000)
+        self:set(1)
     end
 
 

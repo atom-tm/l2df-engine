@@ -25,7 +25,7 @@ local Manager = { active = true }
 	--  @tparam function handler
 	--  @tparam Entity source
 	function Manager.subscribe(subscriber, event, handler, source, ...)
-		if not (type(event) == 'string' and subscriber and handler) then return end
+		if not (type(event) == 'string' and subscriber and type(handler) == 'function') then return end
 		subscribers[event] = subscribers[event] or Storage:new()
 		local id = subscribers[event]:add({ subscriber = subscriber, handler = handler, source = source, params = ... })
 		handlers[event] = handlers[event] or { }

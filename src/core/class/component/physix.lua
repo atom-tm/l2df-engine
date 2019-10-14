@@ -17,8 +17,8 @@ local Physix = Component:extend({ unique = true })
 
     function Physix.Controller:set(kwargs)
         kwargs = kwargs or { }
-        self.gravity = kwargs.gravity or 0.0005
-        self.maxSpeed = kwargs.maxSpeed or 10
+        self.gravity = kwargs.gravity or 0.98
+        self.maxSpeed = kwargs.maxSpeed or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.99
     end
 
@@ -48,9 +48,9 @@ local Physix = Component:extend({ unique = true })
         self.gravity = kwargs.gravity or false
         self.through = kwargs.through or true
         self.static = kwargs.static or false
-        self.weight = helper.bound(kwargs.weight, 0, 1000) and kwargs.weight * 0.001 or 0.001
+        self.weight = helper.bound(kwargs.weight, 0, 10) and kwargs.weight or 1
         self.bounce = helper.bound(kwargs.bounce, 0, 1) and kwargs.bounce or 0
-        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.500
+        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.9
 
         EventManager:subscribe('collide', self.collide, nil, self)
     end
@@ -71,7 +71,7 @@ local Physix = Component:extend({ unique = true })
         vars.dsz = vars.dsz or 0
     end
 
-    function Physix:update()
+    function Physix:update(dt)
         local vars = self.vars
         local c = stack[#stack]
         local p = self.platform
@@ -90,14 +90,17 @@ local Physix = Component:extend({ unique = true })
 
         self.velocityY = vars.dvy ~= 0 and vars.dvy
         or vars.dsy ~= 0 and self.velocityY + vars.dsy
-        or self.gravity and self.velocityY + c.gravity + self.weight
-        or self.velocityY * c.friction
+        or self.gravity and self.velocityY + (c.gravity * self.weight)
+        or self.velocityY
+        self.velocityY = self.velocityY * c.friction
 
-        self.velocityY = self.velocityY < c.maxSpeed and self.velocityY or c.maxSpeed
-        self.velocityY = self.velocityY > -c.maxSpeed and self.velocityY or -c.maxSpeed
+        self.velocityY = c.maxSpeed ~= 0 and (self.velocityY < c.maxSpeed and self.velocityY or c.maxSpeed) or self.velocityY
+        self.velocityY = c.maxSpeed ~= 0 and (self.velocityY > -c.maxSpeed and self.velocityY or -c.maxSpeed) or self.velocityY
 
         self.velocityY = p and self.velocityY > 0 and self.velocityY * -(self.bounce + p.bounce) or self.velocityY
         self.velocityY = abs(self.velocityY) < 0.001 and 0 or self.velocityY
+
+        print(self.velocityY)
 
         vars.dsy, vars.dvy = 0, 0
 
@@ -106,7 +109,10 @@ local Physix = Component:extend({ unique = true })
         vars.dz = vars.dz + self.velocityZ
 
         self.platform = nil
-
+        if vars.globalY >= 600 then
+            self.platform = Physix:new()
+            vars.y = 600
+        end
     end
 
 return Physix
