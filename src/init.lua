@@ -5,6 +5,8 @@ json 		= require(__DIR__ .. 'external.json')
 l2df = require(__DIR__ .. 'core')
 helper = l2df.import 'helper'
 
+local love = _G.love
+
 local core = l2df
 
 	local EntityManager = core.import 'core.manager.entity'
@@ -48,80 +50,57 @@ local core = l2df
 
 		SceneManager:set('sex')
 		SceneManager:push('myroom')
-
+		self.framelimit = 60
 	end
 
-	--[[local min_dt, next_time
+	function core:gameloop()
+		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
+		if love.timer then love.timer.step() end
 
-	core.settings	= core.import 'settings'
+		local dt = 1 / self.framelimit
+		local accumulate = 0
+		return function()
+			-- Events
+			if love.event then
+				love.event.pump()
+				for name, a,b,c,d,e,f in love.event.poll() do
+					if name == "quit" then
+						if not love.quit or not love.quit() then
+							return a or 0
+						end
+					end
+					love.handlers[name](a,b,c,d,e,f)
+				end
+			end
 
-	core.scalex = 1
-	core.scaley = 1
+			-- Update
+			accumulate = accumulate + (love.timer and love.timer.step() or dt)
+			if love.update then
+				while accumulate >= dt do
+					love.update(dt)
+					accumulate = accumulate - dt
+				end
+			else
+				accumulate = accumulate % dt
+			end
 
-	function core:init(filepath)
-		local _ = filepath and self.settings:load(filepath)
-		self.sound:setConfig(self.settings.global)
+			-- Draw
+			if love.graphics and love.graphics.isActive() then
+				love.graphics.origin()
+				love.graphics.clear(love.graphics.getBackgroundColor())
 
-		-- FPS Limiter initialize --
-		min_dt = 1 / self.settings.graphic.fpsLimit
-		next_time = love.timer.getTime()
+				if love.draw then love.draw() end
 
-		-- I've moved it above, but it can be bad, needs testing
-		self.input:init()
-		self.rooms:init()
+				love.graphics.present()
+			end
 
-		helper.hook(self.i18n, 'setLocale', self.localechanged, self)
-		helper.hook(love, 'update', self.update, self)
-		helper.hook(love, 'draw', self.draw, self)
-		helper.hook(love, 'resize', self.resize, self)
-	end
-
-	function core:update()
-		-- Mouse position calculation --
-		-- local x, y = love.mouse.getPosition( )
-		-- settings.mouseX = x * (settings.gameWidth / settings.global.width)
-		-- settings.mouseY = y * (settings.gameHeight / settings.global.height)
-
-		-- FPS Limiter --
-		next_time = next_time + min_dt
-	end
-
-	function core:localechanged()
-		self.settings.global.lang = self.i18n.current
-	end
-
-	function core:draw()
-		if self.canvas then
-			-- love.graphics.draw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
-		end
-
-		-- FPS Limiter working --
-		local cur_time = love.timer.getTime()
-		if next_time <= cur_time then
-			next_time = cur_time
-			return
-		end
-		love.timer.sleep(next_time - cur_time)
-
-		if self.camera then
-			self.camera:draw(function(l, t, w, h)
-				-- if rooms.current.Draw ~= nil then
-				-- 	rooms.current:Draw()
-				-- end
-			end)
-		end
-
-		if self.settings.debug then
-			-- debug drawings
+			if love.timer then love.timer.sleep(dt - accumulate) end
+			-- if love.timer then love.timer.sleep(0.01) end
 		end
 	end
 
-	function core:resize(w, h)
-		self.settings.global.width = w
-		self.settings.global.height = h
-
-		self.scalex = w / self.settings.gameWidth
-		self.scaley = h / self.settings.gameHeight
-	end]]
+	-- function core:localechanged()
+	-- 	self.settings.global.lang = self.i18n.current
+	-- end
 
 return core

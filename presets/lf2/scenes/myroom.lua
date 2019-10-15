@@ -24,9 +24,9 @@ local room = Scene {
 
 f = function (_, key)
 	if key == 'w' then
-		ball.vars.dvy = -20
+		ball.vars.dvy = -4
 	elseif key == 's' then
-		ball.vars.dvy = 20
+		ball.vars.dvy = 4
 	elseif key == 'f2' then
 		ball:getComponent(Physix).gravity = not ball:getComponent(Physix).gravity
 	elseif key == 'f1' then
