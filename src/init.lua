@@ -50,14 +50,13 @@ local core = l2df
 
 		SceneManager:set('sex')
 		SceneManager:push('myroom')
-		self.framelimit = 60
+		self.tickrate = 1 / 60
 	end
 
 	function core:gameloop()
 		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
 		if love.timer then love.timer.step() end
 
-		local dt = 1 / self.framelimit
 		local accumulate = 0
 		return function()
 			-- Events
@@ -74,14 +73,14 @@ local core = l2df
 			end
 
 			-- Update
-			accumulate = accumulate + (love.timer and love.timer.step() or dt)
+			accumulate = accumulate + (love.timer and love.timer.step() or self.tickrate)
 			if love.update then
-				while accumulate >= dt do
-					love.update(dt)
-					accumulate = accumulate - dt
+				while accumulate >= self.tickrate do
+					love.update(self.tickrate)
+					accumulate = accumulate - self.tickrate
 				end
 			else
-				accumulate = accumulate % dt
+				accumulate = accumulate % self.tickrate
 			end
 
 			-- Draw
@@ -94,8 +93,8 @@ local core = l2df
 				love.graphics.present()
 			end
 
-			if love.timer then love.timer.sleep(dt - accumulate) end
-			-- if love.timer then love.timer.sleep(0.01) end
+			if love.timer then love.timer.sleep(0.001) end
+			-- if love.timer then love.timer.sleep(self.tickrate - accumulate) end
 		end
 	end
 
