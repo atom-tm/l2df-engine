@@ -227,12 +227,21 @@ local helper = { }
 		return x > 0 and 1 or x < 0 and -1 or 0
 	end
 
+	--- Clamp variable between two edges
+	-- @param number val
+	-- @param number min
+	-- @param number max
+	-- @return number
+	function helper.clamp(val, min, max)
+		return val < min and min or (val > max and max or val)
+	end
+
 	--- Find out if the object is within the specified values
 	-- @tparam number val
 	-- @tparam number min
 	-- @tparam number max
 	-- @treturn bool
-	function helper.bound (val, min, max)
+	function helper.bound(val, min, max)
 		return type(val) == 'number' and val > min and val < max and true or false
 	end
 
