@@ -1,3 +1,8 @@
+--- Transform component
+-- @classmod l2df.core.class.component.transform
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
@@ -85,7 +90,7 @@ local Transform = Component:extend({ unique = true })
         stack[#stack] = nil
     end
 
-    function Component:removed(entity, vars)
+    function Transform:removed(entity, vars)
         vars.globalScaleX = nil
         vars.globalScaleY = nil
         vars.globalScaleZ = nil

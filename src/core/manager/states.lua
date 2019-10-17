@@ -1,3 +1,8 @@
+--- States manager
+-- @classmod l2df.core.manager.states
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'StatesManager works only with l2df v1.0 and higher')
 
@@ -9,14 +14,14 @@ local list = { }
 local Manager = { }
 
 	--- Adds the state file to the list
-	--  @tparam string filepath
+	--  @param string filepath
 	function Manager:add(filepath)
 		local req, key = helper.requireFile(filepath)
 		list[key] = req
 	end
 
 	--- Loads state files from the specified folder
-	--  @tparam string folderpath
+	--  @param string folderpath
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -27,8 +32,8 @@ local Manager = { }
 	end
 
 	--- Gets a state from the list by its number
-	--  @tparam number state
-	--  @treturn State
+	--  @param number state
+	--  @return State
 	function Manager:get(state)
 		return list[state] or nil
 	end

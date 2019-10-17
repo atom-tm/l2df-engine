@@ -1,3 +1,8 @@
+--- Parser for DAT syntax
+-- @classmod l2df.parsers.dat
+-- @author Abelidze
+-- @copyright Atom-TM 2019
+
 local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
 
 local helper = require(__DIR__ .. 'helper')
@@ -21,8 +26,8 @@ local DatParser = BaseParser:extend()
 
 	--- Method for parsing dat formatted string
 	-- You can extend existing object by passing it as second parameter.
-	-- @param str, string  String for parsing
-	-- @param obj, table   Object to extend, optional.
+	-- @param string str  String for parsing
+	-- @param table obj  Object to extend, optional.
 	-- @return table
 	function DatParser:parse(str, obj)
 		assert(type(str) == 'string', 'Parameter "str" must be a string.')
@@ -46,7 +51,7 @@ local DatParser = BaseParser:extend()
 	end
 
 	--- Method for dumping table to dat format
-	-- @param data, table  Table for dumping
+	-- @param table data  Table for dumping
 	-- @return string
 	function DatParser:dump(data)
 		assert(type(data) == 'table', 'Parameter "data" must be a table.')
@@ -61,7 +66,8 @@ local DatParser = BaseParser:extend()
 	end
 
 	--- Method for dumping dat-file's block
-	-- @param block, table  Block for dumping.
+	-- @param table block  Block for dumping
+	-- @param[opt] string tabs
 	-- @return string
 	function DatParser:dumpBlock(block, tabs)
 		tabs = tabs or ''
@@ -85,8 +91,8 @@ local DatParser = BaseParser:extend()
 
 	--- Method for parsing dat-file's section string
 	-- You can extend existing object by passing it as second parameter.
-	-- @param str, string  String for parsing
-	-- @param obj, table   Object to extend, optional.
+	-- @param string str  String for parsing
+	-- @param table obj  Object to extend, optional.
 	-- @return table
 	function DatParser:parseBlock(str, obj)
 		str = (str or '') .. ' '

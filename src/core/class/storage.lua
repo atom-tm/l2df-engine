@@ -1,3 +1,8 @@
+--- Storage class
+-- @classmod l2df.core.class.storage
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Storage works only with l2df v1.0 and higher')
 
@@ -14,7 +19,8 @@ local Storage = Class:extend()
 	end
 
 	--- Add new object to storage
-	--  @param object
+	--  @param table object
+	--  @param[opt] boolean reload
 	function Storage:add(object, reload)
 		local id = self:has(object)
 		if id and not reload then return id end
@@ -44,7 +50,7 @@ local Storage = Class:extend()
 	end
 
 	--- Remove object from storage
-	--  @param object
+	--  @param table object
 	function Storage:remove(object)
 		local id = self.map[object]
 		if not id then return false end
@@ -56,7 +62,7 @@ local Storage = Class:extend()
 	end
 
 	--- Remove object from storage by Id
-	--  @param id, number
+	--  @param number id
 	function Storage:removeById(id)
 		if not self.list[id] then return false end
 		self.map[self.list[id]] = nil

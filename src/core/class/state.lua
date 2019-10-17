@@ -1,3 +1,8 @@
+--- State class
+-- @classmod l2df.core.class.state
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'State works only with l2df v1.0 and higher')
 

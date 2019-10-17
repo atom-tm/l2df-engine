@@ -1,3 +1,8 @@
+--- L2DF engine
+-- @module l2df
+-- @author Abelidze, Kasai
+-- @copyright Atom-TM 2019
+
 local __DIR__ = (...) .. '.'
 gamera		= require(__DIR__ .. 'external.gamera')
 json 		= require(__DIR__ .. 'external.json')

@@ -1,3 +1,8 @@
+--- Parser for LittleFighterForever syntax
+-- @classmod l2df.parsers.lffs
+-- @author Abelidze
+-- @copyright Atom-TM 2019
+
 local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
 
 local helper = require(__DIR__ .. 'helper')

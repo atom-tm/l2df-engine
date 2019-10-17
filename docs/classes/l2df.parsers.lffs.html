@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>L2DF documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>L2DF</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></li>
+  <li><a href="../classes/l2df.core.class.component.html">l2df.core.class.component</a></li>
+  <li><a href="../classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></li>
+  <li><a href="../classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></li>
+  <li><a href="../classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></li>
+  <li><a href="../classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></li>
+  <li><a href="../classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></li>
+  <li><a href="../classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></li>
+  <li><a href="../classes/l2df.core.class.entity.html">l2df.core.class.entity</a></li>
+  <li><a href="../classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></li>
+  <li><a href="../classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></li>
+  <li><a href="../classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></li>
+  <li><a href="../classes/l2df.core.class.html">l2df.core.class</a></li>
+  <li><a href="../classes/l2df.core.class.state.html">l2df.core.class.state</a></li>
+  <li><a href="../classes/l2df.core.class.storage.html">l2df.core.class.storage</a></li>
+  <li><a href="../classes/l2df.core.class.timer.html">l2df.core.class.timer</a></li>
+  <li><a href="../classes/l2df.core.class.transform.html">l2df.core.class.transform</a></li>
+  <li><a href="../classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></li>
+  <li><a href="../classes/l2df.core.manager.event.html">l2df.core.manager.event</a></li>
+  <li><a href="../classes/l2df.core.manager.group.html">l2df.core.manager.group</a></li>
+  <li><a href="../classes/l2df.core.manager.render.html">l2df.core.manager.render</a></li>
+  <li><a href="../classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></li>
+  <li><a href="../classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></li>
+  <li><a href="../classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></li>
+  <li><a href="../classes/l2df.core.manager.states.html">l2df.core.manager.states</a></li>
+  <li><a href="../classes/l2df.parsers.base.html">l2df.parsers.base</a></li>
+  <li><a href="../classes/l2df.parsers.dat.html">l2df.parsers.dat</a></li>
+  <li><a href="../classes/l2df.parsers.json.html">l2df.parsers.json</a></li>
+  <li><strong>l2df.parsers.lffs</strong></li>
+</ul>
+<h2>Reference</h2>
+<ul class="nowrap">
+  <li><a href="../reference/l2df.core.html">l2df.core</a></li>
+  <li><a href="../reference/l2df.helper.html">l2df.helper</a></li>
+  <li><a href="../reference/l2df.html">l2df</a></li>
+</ul>
+<h2>Manual</h2>
+<ul class="nowrap">
+  <li><a href="../manual/readme.md.html">Love2D Fighting Engine</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>l2df.parsers.lffs</code></h1>
+<p>Parser for LittleFighterForever syntax</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: Atom-TM 2019</li>
+        <li><strong>Author</strong>: Abelidze</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+    <tr>
+    <td class="name" nowrap><a href="#LffsParser:parse">LffsParser:parse(str, obj)</a></td>
+    <td class="summary">Method for parsing lffs formatted string
+ You can extend existing object by passing it as second parameter</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#LffsParser:parseArguments">LffsParser:parseArguments(str, from, to)</a></td>
+    <td class="summary">Method for parsing arguments from string on defined range</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#LffsParser:scan">LffsParser:scan(path)</a></td>
+    <td class="summary">Method for loading markup elements' classes</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#LffsParser:add">LffsParser:add(element)</a></td>
+    <td class="summary">Method for adding new element to parser's engine</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#LffsParser:dump">LffsParser:dump(data)</a></td>
+    <td class="summary">Method for dumping table to lffs format</td>
+    </tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    Methods
+    <dl class="function">
+    <dt>
+    <a name = "LffsParser:parse"></a>
+    <strong>LffsParser:parse(str, obj)</strong>
+    </dt>
+    <dd>
+    Method for parsing lffs formatted string
+ You can extend existing object by passing it as second parameter
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+          String for parsing
+        </li>
+        <li><span class="parameter">obj</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+           Object to extend, optional
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LffsParser:parseArguments"></a>
+    <strong>LffsParser:parseArguments(str, from, to)</strong>
+    </dt>
+    <dd>
+    Method for parsing arguments from string on defined range
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">from</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">to</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+
+
+</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LffsParser:scan"></a>
+    <strong>LffsParser:scan(path)</strong>
+    </dt>
+    <dd>
+    Method for loading markup elements' classes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+          Path
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LffsParser:add"></a>
+    <strong>LffsParser:add(element)</strong>
+    </dt>
+    <dd>
+    Method for adding new element to parser's engine
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">element</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "LffsParser:dump"></a>
+    <strong>LffsParser:dump(data)</strong>
+    </dt>
+    <dd>
+    Method for dumping table to lffs format
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+          Table for dumping
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i style="float:right;">Last updated 2019-10-17 12:47:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

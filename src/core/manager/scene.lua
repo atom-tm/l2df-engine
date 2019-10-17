@@ -1,3 +1,8 @@
+--- Scene manager
+-- @classmod l2df.core.manager.scene
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'SceneManager works only with l2df v1.0 and higher')
 
@@ -10,13 +15,13 @@ local histrory = { }
 local Manager = { root = Scene:new() }
 
 	--- Initialization Scene class
-	--  @tparam Entity entity
+	--  @param Entity entity
 	function Manager:classInit(entity)
 		entity:setActive(false)
 	end
 
 	--- Load presset scenes from a specified folder
-	--  @tparam string folderpath
+	--  @param string folderpath
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -28,9 +33,9 @@ local Manager = { root = Scene:new() }
 	end
 
 	--- Load presset scene from file or scene object preserving the id
-	--  @tparam string|Scene filepath
-	--  @tparam mixed id
-	--  @treturn boolean
+	--  @param string|Scene filepath
+	--  @param mixed id
+	--  @return boolean
 	function Manager:add(filepath, id)
 		assert(filepath, 'You must specify the path to the file or pass the scene object')
 		if filepath.isInstanceOf and filepath:isInstanceOf(Scene) and id then
@@ -49,8 +54,8 @@ local Manager = { root = Scene:new() }
 	end
 
 	--- Deleting a scene from the Manager by Id
-	--  @tparam mixed id
-	--  @treturn boolean
+	--  @param mixed id
+	--  @return boolean
 	function Manager:remove(id)
 		if not id then return false end
 		self.root:detach(list[id])
@@ -59,8 +64,8 @@ local Manager = { root = Scene:new() }
 	end
 
 	--- Setting the current scene
-	--  @tparam mixed id
-	--  @treturn boolean
+	--  @param mixed id
+	--  @return boolean
 	function Manager:set(id)
 		for i = 1, #histrory do
 			histrory[i]:setActive(false)
@@ -70,8 +75,8 @@ local Manager = { root = Scene:new() }
 	end
 
 	--- Adding scene to current list
-	--  @tparam mixed id
-	--  @treturn boolean
+	--  @param mixed id
+	--  @return boolean
 	function Manager:push(id)
 		local set = list[id]
 		assert(set, 'Room by current Id does not exist')
@@ -80,7 +85,7 @@ local Manager = { root = Scene:new() }
 	end
 
 	--- Removing last scene from current list
-	--  @treturn boolean
+	--  @return boolean
 	function Manager:pop()
 		if not (#histrory > 1) then return false end
 		histrory[#histrory]:setActive(false)

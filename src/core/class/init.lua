@@ -1,9 +1,14 @@
+--- Basic class for OOP
+-- @classmod l2df.core.class
+-- @author Abelidze
+-- @copyright Atom-TM 2019
+
 local core = l2df or require((...):match('(.-)[^%.]+$'))
 assert(type(core) == 'table' and core.version >= 1.0, 'Classes works only with l2df v1.0 and higher')
 
 local Class = { }
 
-	--- David blaine's fucking street magic
+	-- David blaine's fucking street magic
 	function Class:___getInstance()
 		local obj = setmetatable({
 				___class = self

@@ -1,3 +1,8 @@
+--- Entity class
+-- @classmod l2df.core.class.entity
+-- @author Abelidze, Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
@@ -91,7 +96,7 @@ local Entity = Class:extend()
 	end
 
 	--- Add component to entity
-	-- @param component, Component
+	-- @param Component component
 	function Entity:addComponent(component, ...)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self:hasComponent(component) then return false end
@@ -106,7 +111,7 @@ local Entity = Class:extend()
 	end
 
 	--- Remove component from entity
-	-- @param component, Component
+	-- @param Component component
 	function Entity:removeComponent(component, ...)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self.components:remove(component) then
@@ -117,13 +122,13 @@ local Entity = Class:extend()
 	end
 
 	--- Check if component exists on entity
-	-- @param component, Component|function
+	-- @param Component component
 	function Entity:hasComponent(component)
 		return self.components:has(component)
 	end
 
 	--- Check if component exists on entity
-	-- @param component, Component|function
+	-- @param Component componentClass
 	function Entity:hasComponentClass(componentClass)
 		return self.components.class[componentClass] and self.components.class[componentClass] > 0 or false
 	end

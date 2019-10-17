@@ -1,12 +1,10 @@
+--- Settings manager
+-- @classmod l2df.core.manager.settings
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'SettingsManager works only with l2df v1.0 and higher')
-
-
-----█---█-███-████----
-----█-█-█--█--████----
-----█████--█--█-------
-----─█-█--███-█-------
-
 
 local EventManager = core.import 'core.manager.event'
 local datParser = core.import 'parsers.dat'

@@ -1,3 +1,8 @@
+--- Entity manager
+-- @classmod l2df.core.manager.entity
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EntityManager works only with l2df v1.0 and higher')
 
@@ -9,9 +14,10 @@ local Manager = { root = nil }
 	end
 
 	--- Enumeration entities on the tree of heredity
-	--  @tparam mixed beginer the starting point of the enumeration
-	--  @tparam boolean skipped skip starting point when enumeration
-	--  @trerurn mixed object
+	--  @param mixed beginer  the starting point of the enumeration
+	--  @param boolean skipped  skip starting point when enumeration
+	--  @param boolean active
+	--  @return mixed object
 	function Manager:enum(beginer, skipped, active)
 		beginer = beginer or self.root
 		if not (beginer and (beginer.nodes or beginer.getNodes)) then return function () return nil end end

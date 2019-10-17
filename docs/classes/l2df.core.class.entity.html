@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>L2DF documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>L2DF</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></li>
+  <li><a href="../classes/l2df.core.class.component.html">l2df.core.class.component</a></li>
+  <li><a href="../classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></li>
+  <li><a href="../classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></li>
+  <li><a href="../classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></li>
+  <li><a href="../classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></li>
+  <li><a href="../classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></li>
+  <li><a href="../classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></li>
+  <li><strong>l2df.core.class.entity</strong></li>
+  <li><a href="../classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></li>
+  <li><a href="../classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></li>
+  <li><a href="../classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></li>
+  <li><a href="../classes/l2df.core.class.html">l2df.core.class</a></li>
+  <li><a href="../classes/l2df.core.class.state.html">l2df.core.class.state</a></li>
+  <li><a href="../classes/l2df.core.class.storage.html">l2df.core.class.storage</a></li>
+  <li><a href="../classes/l2df.core.class.timer.html">l2df.core.class.timer</a></li>
+  <li><a href="../classes/l2df.core.class.transform.html">l2df.core.class.transform</a></li>
+  <li><a href="../classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></li>
+  <li><a href="../classes/l2df.core.manager.event.html">l2df.core.manager.event</a></li>
+  <li><a href="../classes/l2df.core.manager.group.html">l2df.core.manager.group</a></li>
+  <li><a href="../classes/l2df.core.manager.render.html">l2df.core.manager.render</a></li>
+  <li><a href="../classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></li>
+  <li><a href="../classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></li>
+  <li><a href="../classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></li>
+  <li><a href="../classes/l2df.core.manager.states.html">l2df.core.manager.states</a></li>
+  <li><a href="../classes/l2df.parsers.base.html">l2df.parsers.base</a></li>
+  <li><a href="../classes/l2df.parsers.dat.html">l2df.parsers.dat</a></li>
+  <li><a href="../classes/l2df.parsers.json.html">l2df.parsers.json</a></li>
+  <li><a href="../classes/l2df.parsers.lffs.html">l2df.parsers.lffs</a></li>
+</ul>
+<h2>Reference</h2>
+<ul class="nowrap">
+  <li><a href="../reference/l2df.core.html">l2df.core</a></li>
+  <li><a href="../reference/l2df.helper.html">l2df.helper</a></li>
+  <li><a href="../reference/l2df.html">l2df</a></li>
+</ul>
+<h2>Manual</h2>
+<ul class="nowrap">
+  <li><a href="../manual/readme.md.html">Love2D Fighting Engine</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>l2df.core.class.entity</code></h1>
+<p>Entity class</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: Atom-TM 2019</li>
+        <li><strong>Author</strong>: Abelidze, Kasai</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+    <tr>
+    <td class="name" nowrap><a href="#Entity:new">Entity:new(...)</a></td>
+    <td class="summary">Creating a entity instance</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:attach">Entity:attach(entity)</a></td>
+    <td class="summary">Adding an inheritor to an object</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:attachMultiple">Entity:attachMultiple(array)</a></td>
+    <td class="summary">Adding some inheritors to an object</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:detach">Entity:detach(entity)</a></td>
+    <td class="summary">Removing an inheritor from object</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:detachParent">Entity:detachParent()</a></td>
+    <td class="summary">Removing object from inheritors list of his parent</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:getNodes">Entity:getNodes()</a></td>
+    <td class="summary">Getting a list of object inheritors</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:getParent">Entity:getParent()</a></td>
+    <td class="summary">Option to obtain a parent using the function</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:isAncestor">Entity:isAncestor(entity)</a></td>
+    <td class="summary">Check for inheritance from an object</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:addComponent">Entity:addComponent(component)</a></td>
+    <td class="summary">Add component to entity</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:createComponent">Entity:createComponent(class, ...)</a></td>
+    <td class="summary">Create new component and add to manager</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:removeComponent">Entity:removeComponent(component)</a></td>
+    <td class="summary">Remove component from entity</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:hasComponent">Entity:hasComponent(component)</a></td>
+    <td class="summary">Check if component exists on entity</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:hasComponentClass">Entity:hasComponentClass(componentClass)</a></td>
+    <td class="summary">Check if component exists on entity</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:getComponentById">Entity:getComponentById(id)</a></td>
+    <td class="summary">Get attached component by id</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:getComponent">Entity:getComponent(componentClass)</a></td>
+    <td class="summary">Get a single attached component of given class</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Entity:getComponents">Entity:getComponents(componentClass)</a></td>
+    <td class="summary">Get a list of attached components of given class</td>
+    </tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    Methods
+    <dl class="function">
+    <dt>
+    <a name = "Entity:new"></a>
+    <strong>Entity:new(...)</strong>
+    </dt>
+    <dd>
+    Creating a entity instance
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:attach"></a>
+    <strong>Entity:attach(entity)</strong>
+    </dt>
+    <dd>
+    Adding an inheritor to an object
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">entity</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:attachMultiple"></a>
+    <strong>Entity:attachMultiple(array)</strong>
+    </dt>
+    <dd>
+    Adding some inheritors to an object
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">array</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:detach"></a>
+    <strong>Entity:detach(entity)</strong>
+    </dt>
+    <dd>
+    Removing an inheritor from object
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">entity</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:detachParent"></a>
+    <strong>Entity:detachParent()</strong>
+    </dt>
+    <dd>
+    Removing object from inheritors list of his parent
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:getNodes"></a>
+    <strong>Entity:getNodes()</strong>
+    </dt>
+    <dd>
+    Getting a list of object inheritors
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:getParent"></a>
+    <strong>Entity:getParent()</strong>
+    </dt>
+    <dd>
+    Option to obtain a parent using the function
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:isAncestor"></a>
+    <strong>Entity:isAncestor(entity)</strong>
+    </dt>
+    <dd>
+    Check for inheritance from an object
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">entity</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:addComponent"></a>
+    <strong>Entity:addComponent(component)</strong>
+    </dt>
+    <dd>
+    Add component to entity
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">component</span>
+            <span class="types"><span class="type">Component</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:createComponent"></a>
+    <strong>Entity:createComponent(class, ...)</strong>
+    </dt>
+    <dd>
+    Create new component and add to manager
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">class</span>
+
+
+
+        </li>
+        <li><span class="parameter">...</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:removeComponent"></a>
+    <strong>Entity:removeComponent(component)</strong>
+    </dt>
+    <dd>
+    Remove component from entity
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">component</span>
+            <span class="types"><span class="type">Component</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:hasComponent"></a>
+    <strong>Entity:hasComponent(component)</strong>
+    </dt>
+    <dd>
+    Check if component exists on entity
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">component</span>
+            <span class="types"><span class="type">Component</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:hasComponentClass"></a>
+    <strong>Entity:hasComponentClass(componentClass)</strong>
+    </dt>
+    <dd>
+    Check if component exists on entity
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">componentClass</span>
+            <span class="types"><span class="type">Component</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:getComponentById"></a>
+    <strong>Entity:getComponentById(id)</strong>
+    </dt>
+    <dd>
+    Get attached component by id
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:getComponent"></a>
+    <strong>Entity:getComponent(componentClass)</strong>
+    </dt>
+    <dd>
+    Get a single attached component of given class
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">componentClass</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Entity:getComponents"></a>
+    <strong>Entity:getComponents(componentClass)</strong>
+    </dt>
+    <dd>
+    Get a list of attached components of given class
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">componentClass</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i style="float:right;">Last updated 2019-10-17 12:47:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

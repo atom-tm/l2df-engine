@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>L2DF documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>L2DF</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></li>
+  <li><a href="../classes/l2df.core.class.component.html">l2df.core.class.component</a></li>
+  <li><a href="../classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></li>
+  <li><a href="../classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></li>
+  <li><a href="../classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></li>
+  <li><a href="../classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></li>
+  <li><a href="../classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></li>
+  <li><a href="../classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></li>
+  <li><a href="../classes/l2df.core.class.entity.html">l2df.core.class.entity</a></li>
+  <li><a href="../classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></li>
+  <li><a href="../classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></li>
+  <li><a href="../classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></li>
+  <li><a href="../classes/l2df.core.class.html">l2df.core.class</a></li>
+  <li><a href="../classes/l2df.core.class.state.html">l2df.core.class.state</a></li>
+  <li><a href="../classes/l2df.core.class.storage.html">l2df.core.class.storage</a></li>
+  <li><a href="../classes/l2df.core.class.timer.html">l2df.core.class.timer</a></li>
+  <li><a href="../classes/l2df.core.class.transform.html">l2df.core.class.transform</a></li>
+  <li><a href="../classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></li>
+  <li><strong>l2df.core.manager.event</strong></li>
+  <li><a href="../classes/l2df.core.manager.group.html">l2df.core.manager.group</a></li>
+  <li><a href="../classes/l2df.core.manager.render.html">l2df.core.manager.render</a></li>
+  <li><a href="../classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></li>
+  <li><a href="../classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></li>
+  <li><a href="../classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></li>
+  <li><a href="../classes/l2df.core.manager.states.html">l2df.core.manager.states</a></li>
+  <li><a href="../classes/l2df.parsers.base.html">l2df.parsers.base</a></li>
+  <li><a href="../classes/l2df.parsers.dat.html">l2df.parsers.dat</a></li>
+  <li><a href="../classes/l2df.parsers.json.html">l2df.parsers.json</a></li>
+  <li><a href="../classes/l2df.parsers.lffs.html">l2df.parsers.lffs</a></li>
+</ul>
+<h2>Reference</h2>
+<ul class="nowrap">
+  <li><a href="../reference/l2df.core.html">l2df.core</a></li>
+  <li><a href="../reference/l2df.helper.html">l2df.helper</a></li>
+  <li><a href="../reference/l2df.html">l2df</a></li>
+</ul>
+<h2>Manual</h2>
+<ul class="nowrap">
+  <li><a href="../manual/readme.md.html">Love2D Fighting Engine</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>l2df.core.manager.event</code></h1>
+<p>Event manager</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: Atom-TM 2019</li>
+        <li><strong>Author</strong>: Kasai</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+    <tr>
+    <td class="name" nowrap><a href="#Manager:classInit">Manager:classInit(entity)</a></td>
+    <td class="summary">Embed references to Manager methods in the entity instance that you create</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Manager.subscribe">Manager.subscribe(subscriber, event, handler, source)</a></td>
+    <td class="summary">Allows the object to listen events sent to the Manager</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Manager:unsubscribe">Manager:unsubscribe(event, handler)</a></td>
+    <td class="summary">Disables event tracking by objects using handler</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Manager:unsubscribeById">Manager:unsubscribeById(event, id)</a></td>
+    <td class="summary">Disables event tracking by objects using Id</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Manager:invoke">Manager:invoke(event, source)</a></td>
+    <td class="summary">Invoke an event for all active subscribers</td>
+    </tr>
+    <tr>
+    <td class="name" nowrap><a href="#Manager:monitoring">Manager:monitoring(source, events, save_result)</a></td>
+    <td class="summary">Monitors whether an object calls certain functions</td>
+    </tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    Methods
+    <dl class="function">
+    <dt>
+    <a name = "Manager:classInit"></a>
+    <strong>Manager:classInit(entity)</strong>
+    </dt>
+    <dd>
+    Embed references to Manager methods in the entity instance that you create
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">entity</span>
+            <span class="types"><span class="type">Entity</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Manager.subscribe"></a>
+    <strong>Manager.subscribe(subscriber, event, handler, source)</strong>
+    </dt>
+    <dd>
+    Allows the object to listen events sent to the Manager
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">subscriber</span>
+            <span class="types"><span class="type">Entity</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">event</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">handler</span>
+            <span class="types"><span class="type">function</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">source</span>
+            <span class="types"><span class="type">Entity</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Manager:unsubscribe"></a>
+    <strong>Manager:unsubscribe(event, handler)</strong>
+    </dt>
+    <dd>
+    Disables event tracking by objects using handler
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">handler</span>
+            <span class="types"><span class="type">function</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Manager:unsubscribeById"></a>
+    <strong>Manager:unsubscribeById(event, id)</strong>
+    </dt>
+    <dd>
+    Disables event tracking by objects using Id
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">number</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Manager:invoke"></a>
+    <strong>Manager:invoke(event, source)</strong>
+    </dt>
+    <dd>
+    Invoke an event for all active subscribers
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">event</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">source</span>
+            <span class="types"><span class="type">Entity</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Manager:monitoring"></a>
+    <strong>Manager:monitoring(source, events, save_result)</strong>
+    </dt>
+    <dd>
+    Monitors whether an object calls certain functions
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">source</span>
+            <span class="types"><span class="type">Entity</span></span>
+
+
+
+        </li>
+        <li><span class="parameter">events</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a> or <a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">save_result</span>
+            <span class="types"><span class="type">boolean</span></span>
+          Whether to save the result of the function execution
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i style="float:right;">Last updated 2019-10-17 12:47:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

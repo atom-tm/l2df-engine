@@ -1,3 +1,8 @@
+--- Resource manager
+-- @classmod l2df.core.manager.resource
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'ResourceManager works only with l2df v1.0 and higher')
 
@@ -35,10 +40,10 @@ local extensions = {
 local Manager = { }
 
 	--- Saves the resource to the Manager
-	--  @tparam mixed resource
-	--  @tparam boolean temp
-	--  @treturn number id
-	--  @tretutn mixed resource
+	--  @param mixed resource
+	--  @param boolean temp
+	--  @return number id
+	--  @return mixed resource
 	function Manager:add(resource, temp)
 		if not resource then return false end
 		if temp then list.temp:add(resource, true) end
@@ -46,11 +51,11 @@ local Manager = { }
 	end
 
 	--- Stores the resource in the Manager using a unique identifier
-	--  @tparam mixed id
-	--  @tparam mixed resource
-	--  @tparam boolean temp
-	--  @treturn mixed id
-	--  @tretutn mixed resource
+	--  @param mixed id
+	--  @param mixed resource
+	--  @param boolean temp
+	--  @return mixed id
+	--  @return mixed resource
 	function Manager:addById(id, resource, temp)
 		if not id then return self:add(resource, temp) end
 		if temp then list.temp:add(resource, true) end
@@ -58,16 +63,16 @@ local Manager = { }
 	end
 
 	--- Removes the specified resource from the Manager
-	--  @tparam mixed resource
-	--  @treturn boolean success
+	--  @param mixed resource
+	--  @return boolean success
 	function Manager:remove(resource)
 		list.temp:remove(resource)
 		return list.global:remove(resource)
 	end
 
 	--- Removes the specified resource from the Manager by Id
-	--  @tparam mixed id
-	--  @treturn boolean success
+	--  @param mixed id
+	--  @return boolean success
 	function Manager:removeById(id)
 		local res = list.global:getById(id)
 		if not res then return true end
@@ -84,34 +89,34 @@ local Manager = { }
 	end
 
 	--- Gets the resource Id from the Manager
-	--  @tparam mixed resource
-	--  @treturn mixed id
+	--  @param mixed resource
+	--  @return mixed id
 	function Manager:getId(resource)
 		return list.global:has(resource)
 	end
 
 	--- Returns a resource from the Manager by Id
-	--  @tparam mixed id
-	--  @trerurn mixed resource
-	--  @treturn boolean is the resource marked temporary
+	--  @param mixed id
+	--  @return mixed resource
+	--  @return boolean is the resource marked temporary
 	function Manager:get(id)
 		local res = list.global:getById(id)
 		return res, id, list.temp:has(res)
 	end
 
 	--- Checks the availability of the resource in the Manager by the Id
-	--  @tparam mixed id
-	--  @treturn boolean
+	--  @param mixed id
+	--  @return boolean
 	function Manager:has(id)
 		return list.global:getById(id) and true or false
 	end
 
 	--- Adds a supported file type to the Manager by loading it from a path
-	--  @tparam string filepath
-	--  @tparam boolean reload
-	--  @tparam mixed id
-	--  @treturn mixed id
-	--  @treturn mixed resource
+	--  @param string filepath
+	--  @param boolean reload
+	--  @param mixed id
+	--  @return mixed id
+	--  @return mixed resource
 	function Manager:load(filepath, reload, id)
 		local id = id or filepath
 		if not reload and self:get(id) then return self:get(id) end

@@ -1,3 +1,8 @@
+--- Core module
+-- @module l2df.core
+-- @author Abelidze, Kasai
+-- @copyright Atom-TM 2019
+
 local __DIR__ = (...):match('(.-)[^%.]+$')
 
 local fs = love and love.filesystem

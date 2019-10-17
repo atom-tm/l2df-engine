@@ -1,3 +1,8 @@
+--- Helper functions
+-- @module l2df.helper
+-- @author Abelidze, Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 local fs = love and love.filesystem
 
@@ -19,7 +24,7 @@ local next = _G.next
 
 local dump
 local mapper = setmetatable({
-	[ 'boolean'  ] = tostring,
+	[ 'booleanean'  ] = tostring,
 	[ 'function' ] = tostring,
 	[ 'userdata' ] = tostring,
 	[ 'nil'      ] = tostring,
@@ -66,10 +71,10 @@ local helper = { }
 	end
 
 	--- Creates a hook for table's event / function
-	-- @param table obj          table to hook
-	-- @param string key         table's event / function to hook
+	-- @param table obj  table to hook
+	-- @param string key  table's event / function to hook
 	-- @param function callback  Hook's callback function
-	-- @param table caller       Optional. First parameter to callback function
+	-- @param[opt] table caller  First parameter to callback function
 	function helper.hook(obj, key, callback, caller)
 		assert(type(callback) == 'function', 'Parameter "callback" must be a function')
 
@@ -103,8 +108,8 @@ local helper = { }
 
 	--- Require all scripts from specified directory. Returns table with them
 	-- @param string folderpath  Scripts folderpath
-	-- @param boolean keys       Use filenames instead of autoincremental indexes as table's keys
-	-- @param string pattern     If specified only scripts that match pattern would be loaded
+	-- @param boolean keys  Use filenames instead of autoincremental indexes as table's keys
+	-- @param string pattern  If specified only scripts that match pattern would be loaded
 	-- @return table
 	function helper.requireFolder(folderpath, keys, pattern)
 		local result = { }
@@ -134,7 +139,7 @@ local helper = { }
 	end
 
 	--- Require a script from file. Returns loaded module and its filename
-	-- @tparam string filepath
+	-- @param string filepath
 	-- @return table
 	-- @return string
 	function helper.requireFile(filepath)
@@ -145,8 +150,8 @@ local helper = { }
 	end
 
 	--- Deep-copy of table
-	-- @param table, table  Given table
-	-- @param result, table
+	-- @param table table  Given table
+	-- @param table result
 	function helper.copyTable(table, result)
 		result = result or { }
 		if type(result) ~= 'table' then
@@ -184,7 +189,7 @@ local helper = { }
 
 	--- Determine if object is array or not
 	-- @param mixed obj  Object to check
-	-- @return bool
+	-- @return boolean
 	function helper.isArray(obj)
 		return type(obj) == 'table' and (obj[1] ~= nil or next(obj) == nil)
 	end
@@ -237,16 +242,16 @@ local helper = { }
 	end
 
 	--- Find out if the object is within the specified values
-	-- @tparam number val
-	-- @tparam number min
-	-- @tparam number max
-	-- @treturn bool
+	-- @param number val
+	-- @param number min
+	-- @param number max
+	-- @return boolean
 	function helper.bound(val, min, max)
 		return type(val) == 'number' and val > min and val < max and true or false
 	end
 
 	--- Get rounded value with precision
-	-- @param number value      Specified value
+	-- @param number value  Specified value
 	-- @param number precision  Needed precision
 	-- @return number
 	function helper.round(value, precision)
@@ -255,7 +260,7 @@ local helper = { }
 	end
 
 	--- Coalesce function for 'non-empty' value
-	-- @param mixed var      Value to check
+	-- @param mixed var  Value to check
 	-- @param mixed default  Default value. 1 if not setted
 	-- @return mixed
 	function helper.notZero(var, default)
@@ -263,18 +268,18 @@ local helper = { }
 	end
 
 	--- Coalesce function for 'non-nil' value
-	-- @param mixed value    Value to check
+	-- @param mixed value  Value to check
 	-- @param mixed default  Default value. nil if not setted
 	-- @return mixed
-	function helper.notNil(var, default)
-		if var ~= nil then
-			return var
+	function helper.notNil(value, default)
+		if value ~= nil then
+			return value
 		end
 		return default
 	end
 
 	--- Get maximum of array
-	-- @param arr, array  Array to process
+	-- @param table arr  Array to process
 	-- @return int
 	function helper.maximum(arr)
 		max = 0

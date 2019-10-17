@@ -1,3 +1,8 @@
+--- Render component
+-- @classmod l2df.core.class.component.render
+-- @author Kasai
+-- @copyright Atom-TM 2019
+
 local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
@@ -52,15 +57,15 @@ local Render = Component:extend({ unique = true })
 
 
     --- This function adds 'sprites' to the entity using a sprite list or a whole image
-    --  @tparam Drawable spritelist
-    --  @tparam number x the number of cells in a sheet horizontally
-    --  @tparam number y number of vertical sheet cells
-    --  @tparam number w width of one sheet cell
-    --  @tparam number h height of one sheet cell
-    --  @tparam number s starting point of recording in the sprite array
-    --  @tparam number f number of frames entered
-    --  @tparam number xo x offset
-    --  @tparam number yo y offset
+    --  @param Drawable spritelist
+    --  @param number x the number of cells in a sheet horizontally
+    --  @param number y number of vertical sheet cells
+    --  @param number w width of one sheet cell
+    --  @param number h height of one sheet cell
+    --  @param number s starting point of recording in the sprite array
+    --  @param number f number of frames entered
+    --  @param number xo x offset
+    --  @param number yo y offset
     function Render:addPics(spritelist, x, y, w, h, s, f, xo, yo)
         if not spritelist then return end
         if x and y then
