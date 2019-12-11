@@ -53,7 +53,7 @@ local core = l2df
 		SceneManager:load('scenes/')
 		StatesManager:load('data/states')
 
-		SceneManager:set('sex')
+		--SceneManager:set('sex')
 		SceneManager:push('myroom')
 		self.tickrate = 1 / 60
 	end

@@ -135,4 +135,24 @@ local Manager = { }
 		return resource, id
 	end
 
+	local assync_loading = [[
+		local listtoupload, ResourceManager = ...
+		local progress = love.thread.getChannel("assychLoad")
+		for i = 1, #listtoupload do
+			local filepath = listtoupload.path
+			ResourceManager:load(filepath)
+			local percent = #listtoupload * 0.01 * i
+			progress:push({ false, percent })
+		end
+		progress:push({ true, 100 })
+	]]
+	local assychLoad = love.thread.newThread(assync_loading)
+	function Manager:assychLoad(list)
+		local result = love.thread.getChannel("assychLoad"):pop()
+		if result and result[1] then return true
+		elseif result then return false
+		else assychLoad:start(list) end
+		return false
+	end
+
 return Manager

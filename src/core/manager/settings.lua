@@ -62,6 +62,10 @@ local settings = { }
 		details = true,									-- Показ необязательных элементов
 	}
 
+	settings.physics = {
+		gravity = 1
+	}
+
 	settings.controls = {								-- Настройки управления
 		{
 			name = 'Player 1',

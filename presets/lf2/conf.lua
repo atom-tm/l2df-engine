@@ -3,7 +3,7 @@ function love.conf(configuration)
 	configuration.window.icon = nil
 	configuration.window.width = 600
 	configuration.window.height = 300
-	configuration.window.vsync = 0
+	configuration.window.vsync = 1
 	configuration.window.msaa = 0
 	configuration.window.depth = nil
 	configuration.window.resizable = true

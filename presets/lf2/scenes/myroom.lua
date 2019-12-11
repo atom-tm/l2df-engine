@@ -6,31 +6,43 @@ local parser = core.import 'parsers.lffs'
 local Physix = core.import 'core.class.component.physix'
 local event = core.import 'core.manager.event'
 
+local RM = core.import 'core.manager.resource'
+
 local Object = core.import 'core.class.entity.object'
 
 local ball = Object {
 	sprites = 'sprites/test/ball.png',
-	x = 250,
-	y = 250,
+	x = 100,
+	y = 200,
 }
 ball.vars.centerX = 25
 ball.vars.centerY = 25
 
+local wall = Object {
+	sprites = "sprites/test/5.png",
+	x = 100,
+	y = 200,
+}
+
+local wall2 = Object {
+	sprites = "sprites/test/5.png",
+	x = 550,
+	y = 200,
+}
+
 local room = Scene {
 	nodes = {
-		ball
+		ball,
+		wall,
+		wall2
 	}
 }
 
 f = function (_, key)
-	if key == 'w' then
-		ball.vars.dvy = -4
-	elseif key == 's' then
-		ball.vars.dvy = 4
-	elseif key == 'f2' then
-		ball:getComponent(Physix).gravity = not ball:getComponent(Physix).gravity
-	elseif key == 'f1' then
-		ball:getComponent(Physix).platform = Physix:new({ bounce = 0.5 })
+	if key == 'a' then
+		ball.vars.dvx = -45
+	elseif key == 'd' then
+		ball.vars.dvx = 45
 	end
 end
 

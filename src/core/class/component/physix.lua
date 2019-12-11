@@ -8,6 +8,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Components works only wit
 
 local Component = core.import 'core.class.component'
 local EventManager = core.import 'core.manager.event'
+local Settings = core.import 'core.manager.settings'
 local helper = core.import 'helper'
 local abs = math.abs
 
@@ -22,8 +23,8 @@ local Physix = Component:extend({ unique = true })
 
     function Physix.Controller:set(kwargs)
         kwargs = kwargs or { }
-        self.gravity = kwargs.gravity or 0.98
-        self.maxSpeed = kwargs.maxSpeed or 0
+        self.gravity = kwargs.gravity or Settings.physics.gravity or 0
+        self.maxSpeed = kwargs.maxSpeed or Settings.physics.maxSpeed or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.99
     end
 
@@ -78,8 +79,20 @@ local Physix = Component:extend({ unique = true })
 
     function Physix:update(dt)
         local vars = self.vars
-        local c = stack[#stack]
-        local p = self.platform
+        local world = stack[#stack]
+
+        self.velocityX = vars.dvx ~= 0 and convert(vars.dvx)
+        or self.velocityX - convert(self.velocityX * 0.1) * dt
+
+        vars.dvx = 0
+
+        vars.dx = vars.dx + self.velocityX
+
+
+
+
+
+
 
         --[[self.velocityX = self.velocityX * (self.platform and self.platform.friction or 1) * c.friction
         self.velocityX = vars.dvx ~= 0 and vars.dvx or self.velocityX + vars.dsx + c.wind
@@ -93,7 +106,7 @@ local Physix = Component:extend({ unique = true })
         self.velocityZ = self.velocityZ > -c.maxSpeed and self.velocityZ or -c.maxSpeed
         vars.dsz, vars.dvz = 0, 0]]
 
-        self.velocityY = vars.dvy ~= 0 and vars.dvy
+        --[[self.velocityY = vars.dvy ~= 0 and vars.dvy
         or vars.dsy ~= 0 and self.velocityY + vars.dsy
         or self.gravity and self.velocityY + (c.gravity * self.weight)
         or self.velocityY
@@ -117,7 +130,11 @@ local Physix = Component:extend({ unique = true })
         if vars.globalY >= 600 then
             self.platform = Physix:new()
             vars.y = 600
-        end
+        end]]
+    end
+
+    function convert(x)
+        return x * 60
     end
 
 return Physix
