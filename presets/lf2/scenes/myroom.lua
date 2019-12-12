@@ -43,6 +43,9 @@ f = function (_, key)
 		ball.vars.dvx = -45
 	elseif key == 'd' then
 		ball.vars.dvx = 45
+	elseif key == 'y' then
+		RM:loadAsync("sprites/UI/big.png", true)
+		RM:loadAsync("sprites/UI/big2.png")
 	end
 end
 

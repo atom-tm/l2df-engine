@@ -20,6 +20,7 @@ local core = l2df
 	local RenderManager = core.import 'core.manager.render'
 	local StatesManager = core.import 'core.manager.states'
 	local SceneManager = core.import 'core.manager.scene'
+	local ResourceManager = core.import 'core.manager.resource'
 
 	local Entity = core.import 'core.class.entity'
 	local Scene = core.import 'core.class.entity.scene'
@@ -48,6 +49,7 @@ local core = l2df
 		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
 		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
 		EventManager:subscribe('update', EventManager.update, love, EventManager)
+		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 
 
 		SceneManager:load('scenes/')

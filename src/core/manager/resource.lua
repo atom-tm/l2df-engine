@@ -37,8 +37,46 @@ local extensions = {
 	},
 }
 
-local Manager = { }
 
+local asyncList = Storage:new()
+local current_file = nil
+local asyncLoader = function ()
+
+	if not current_file then
+
+		local object = asyncList:first()
+		if not object then return end
+
+		local id = object[1]
+		local file = object[2]
+		local extension = object[3]
+
+		current_file = {
+			id = id,
+			file = file,
+			extension = extension,
+			size = file:getSize(),
+			data = ""
+		}
+
+		print(current_file.size)
+
+		asyncList:remove(object)
+
+	else
+
+		local data, size = current_file.file:read(5024)
+		current_file.data = current_file.data .. data
+		print(size)
+
+	end
+
+	--
+
+end
+
+
+local Manager = { }
 	--- Saves the resource to the Manager
 	--  @param mixed resource
 	--  @param boolean temp
@@ -135,24 +173,21 @@ local Manager = { }
 		return resource, id
 	end
 
-	local assync_loading = [[
-		local listtoupload, ResourceManager = ...
-		local progress = love.thread.getChannel("assychLoad")
-		for i = 1, #listtoupload do
-			local filepath = listtoupload.path
-			ResourceManager:load(filepath)
-			local percent = #listtoupload * 0.01 * i
-			progress:push({ false, percent })
-		end
-		progress:push({ true, 100 })
-	]]
-	local assychLoad = love.thread.newThread(assync_loading)
-	function Manager:assychLoad(list)
-		local result = love.thread.getChannel("assychLoad"):pop()
-		if result and result[1] then return true
-		elseif result then return false
-		else assychLoad:start(list) end
-		return false
+
+	function Manager:update()
+		asyncLoader()
+	end
+
+	--- Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
+	function Manager:loadAsync(filepath, reload, id)
+		local id = id or filepath
+		if not reload and self:get(id) then return self:get(id) end
+		local resource = { }
+		local extension = filepath:match('^.+(%..+)$')
+		local file = { id, love.filesystem.newFile(filepath), extension }
+		asyncList:add(file, true)
+		id, resource = self:addById(id, resource)
+		return resource, id
 	end
 
 return Manager

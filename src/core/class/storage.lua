@@ -106,4 +106,15 @@ local Storage = Class:extend()
 		end
 	end
 
+	function Storage:first()
+		for i = 1, self.length do
+			if self.list[i] then return self.list[i] end
+		end
+		return false
+	end
+
+	function Storage:last()
+		return self.list[self.length] or false
+	end
+
 return Storage
