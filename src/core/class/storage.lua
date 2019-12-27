@@ -16,6 +16,7 @@ local Storage = Class:extend()
 		self.map = {}
 		self.free = {}
 		self.length = 0
+		self.count = 0
 	end
 
 	--- Add new object to storage
@@ -35,17 +36,21 @@ local Storage = Class:extend()
 
 		self.list[id] = object
 		self.map[object] = id
+		self.count = self.count + 1
 		return id, object
 	end
 
 	---
 	function Storage:addById(object, id, reload)
+
 		local obj = self:getById(id)
-		if obj and not reload then return obj, id end
+		if obj and not reload then return obj, id
+		elseif obj then self:remove(obj) end
 
 		self.list[id] = object
 		self.map[object] = id
 
+		self.count = self.count + 1
 		return id, object
 	end
 
@@ -57,7 +62,8 @@ local Storage = Class:extend()
 		self.list[id] = nil
 		self.map[object] = nil
 		self.free[#self.free + 1] = id
-		self.length = id == self.length and self.length - 1 or self.length
+		self.length = type(id) == "number" and id < self.length and self.length - 1 or self.length
+		self.count = self.count - 1
 		return true
 	end
 
@@ -68,6 +74,7 @@ local Storage = Class:extend()
 		self.map[self.list[id]] = nil
 		self.list[id] = nil
 		self.free[#self.free + 1] = id
+		self.count = self.count - 1
 		return true
 	end
 

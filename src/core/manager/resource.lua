@@ -8,8 +8,42 @@ assert(type(core) == 'table' and core.version >= 1.0, 'ResourceManager works onl
 
 local Class = core.import 'core.class'
 local Storage = core.import 'core.class.storage'
+local helper = core.import 'helper'
+local notNil = helper.notNil
 
 local fs = love and love.filesystem
+local min = math.min
+
+local asyncList = {}
+local asyncChannel = love.thread.getChannel("asyncChannel")
+local asyncReturn = love.thread.getChannel("asyncReturn")
+local asyncLoader = love.thread.newThread([[
+	require "love.image"
+	local extensions = ...
+	local asyncChannel = love.thread.getChannel("asyncChannel")
+	local asyncReturn = love.thread.getChannel("asyncReturn")
+	local continuation = true
+	while continuation do
+		local task = asyncChannel:pop()
+		if task then
+			local id = task[1]
+			local file = task[2]
+			local extension = task[3]
+			local temp = task[4]
+			local resource = nil
+			if extensions.image[extension] then
+				resource = love.image.newImageData(file)
+			else print("error extensions") end
+			if resource then
+				for i = 1, 10000000 do
+
+				end
+				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
+			end
+		else continuation = false end
+		collectgarbage()
+	end
+]])
 
 local list = {
 	temp = Storage:new(),
@@ -37,45 +71,6 @@ local extensions = {
 	},
 }
 
-
-local asyncList = Storage:new()
-local current_file = nil
-local asyncLoader = function ()
-
-	if not current_file then
-
-		local object = asyncList:first()
-		if not object then return end
-
-		local id = object[1]
-		local file = object[2]
-		local extension = object[3]
-
-		current_file = {
-			id = id,
-			file = file,
-			extension = extension,
-			size = file:getSize(),
-			data = ""
-		}
-
-		print(current_file.size)
-
-		asyncList:remove(object)
-
-	else
-
-		local data, size = current_file.file:read(5024)
-		current_file.data = current_file.data .. data
-		print(size)
-
-	end
-
-	--
-
-end
-
-
 local Manager = { }
 	--- Saves the resource to the Manager
 	--  @param mixed resource
@@ -83,9 +78,11 @@ local Manager = { }
 	--  @return number id
 	--  @return mixed resource
 	function Manager:add(resource, temp)
-		if not resource then return false end
-		if temp then list.temp:add(resource, true) end
-		return list.global:add(resource, true)
+		if resourse == nil then return false end
+		local id = nil
+		if temp then id = list.temp:add(resource, true)
+		else id = list.global:add(resource, true) end
+		return id
 	end
 
 	--- Stores the resource in the Manager using a unique identifier
@@ -96,8 +93,10 @@ local Manager = { }
 	--  @return mixed resource
 	function Manager:addById(id, resource, temp)
 		if not id then return self:add(resource, temp) end
-		if temp then list.temp:add(resource, true) end
-		return list.global:addById(resource, id, true)
+		if resource == nil then return false end
+		if temp then list.temp:addById(resource, id, true)
+		else list.global:addById(resource, id, true) end
+		return id
 	end
 
 	--- Removes the specified resource from the Manager
@@ -138,15 +137,7 @@ local Manager = { }
 	--  @return mixed resource
 	--  @return boolean is the resource marked temporary
 	function Manager:get(id)
-		local res = list.global:getById(id)
-		return res, id, list.temp:has(res)
-	end
-
-	--- Checks the availability of the resource in the Manager by the Id
-	--  @param mixed id
-	--  @return boolean
-	function Manager:has(id)
-		return list.global:getById(id) and true or false
+		return list.global:getById(id) or list.temp:getById(id) or false
 	end
 
 	--- Adds a supported file type to the Manager by loading it from a path
@@ -155,9 +146,10 @@ local Manager = { }
 	--  @param mixed id
 	--  @return mixed id
 	--  @return mixed resource
-	function Manager:load(filepath, reload, id)
+	function Manager:load(filepath, reload, id, temp)
 		local id = id or filepath
-		if not reload and self:get(id) then return self:get(id) end
+		if not reload and self:get(id) then return id end
+		if not fs.getInfo(filepath) then return false end
 		local resource = nil
 		local extension = filepath:match('^.+(%..+)$')
 		if extensions.image[extension] then
@@ -168,26 +160,105 @@ local Manager = { }
 			resource = love.audio.newSource(filepath)
 		elseif extensions.font[extension] then
 			resource = love.graphics.newFont(filepath)
-		else return end
-		id, resource = self:addById(id, resource)
-		return resource, id
+		else return false end
+		id = self:addById(id, resource, temp)
+		return id
 	end
 
 
 	function Manager:update()
-		asyncLoader()
+		if #asyncList > 0 then
+			for i = 1, #asyncList do
+				asyncChannel:push(asyncList[i])
+			end
+			asyncList = {}
+			if not asyncLoader:isRunning() then asyncLoader:start(extensions) end
+		end
+		if asyncReturn:getCount() > 0 then
+			local returned = asyncReturn:pop()
+			if extensions.image[returned.extension] then
+				returned.resource = love.graphics.newImage(returned.resource)
+			end
+			self:addById(returned.id, returned.resource, returned.temp)
+			print("loaded:", returned.id)
+		else asyncReturn:clear() end
 	end
 
 	--- Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
-	function Manager:loadAsync(filepath, reload, id)
+	function Manager:loadAsync(filepath, reload, id, temp)
 		local id = id or filepath
-		if not reload and self:get(id) then return self:get(id) end
-		local resource = { }
+		if not reload and self:get(id) then return id end
+		if not fs.getInfo(filepath) then return false end
 		local extension = filepath:match('^.+(%..+)$')
-		local file = { id, love.filesystem.newFile(filepath), extension }
-		asyncList:add(file, true)
-		id, resource = self:addById(id, resource)
-		return resource, id
+		asyncList[#asyncList+1] = { id, filepath, extension, temp }
+		id = self:addById(id, { }, temp)
+		return id
 	end
 
 return Manager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--[[
+
+
+local asyncLoader = function (self)
+
+	if not current_file then
+
+		local object = asyncList:first()
+		if not object then return end
+
+		local id = object[1]
+		local file = object[2]
+		local extension = object[3]
+
+		if file:open("r") then
+			current_file = {
+				id = id,
+				file = file,
+				extension = extension,
+				size = file:getSize(),
+				data = "",
+				object = object
+			}
+		else asyncList:remove(object) end
+	else
+		local quantity = min(1024000,current_file.size)
+		local data, size = current_file.file:read(quantity)
+		current_file.size = current_file.size - size
+		current_file.data = current_file.data .. data
+		if current_file.size <= 0 then
+
+
+			current_file.file:close()
+			asyncList:remove(current_file.object)
+
+
+			local filedata = love.filesystem.newFileData(current_file.data,current_file.id)
+			local imagedata = love.image.newImageData(filedata)
+			local resource = love.graphics.newImage(imagedata)
+
+
+			self:addById(current_file.id, resource, true)
+			current_file = nil
+			print("end")
+		end
+	end
+end
+
+
+]]

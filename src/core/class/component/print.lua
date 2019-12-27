@@ -56,7 +56,7 @@ local Print = Component:extend({ unique = false })
     function Print:postUpdate()
         if not self.vars.hidden then
             RenderManager:add({
-                object = self.text,
+                text = self.text,
                 font = self.font,
                 index = self.vars.globalZ or self.vars.z,
                 x = self.vars.globalX or self.vars.x,

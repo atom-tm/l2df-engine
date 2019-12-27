@@ -7,6 +7,7 @@ local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
 local EventManager = core.import 'core.manager.event'
+local ResourceManager = core.import 'core.manager.resource'
 local rad = math.rad
 
 local layers = {
@@ -40,7 +41,6 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	function Manager:add(input)
 		if not (input or input.object) then return end
 		local index = input.index > 0 and input.index < #drawables and input.index or 1
-
 		drawables[index][#drawables[index] + 1] = input
 	end
 
@@ -72,28 +72,31 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	end
 
 	function Manager:render()
+		local input, r,g,b,a
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
-				local input = drawables[i][j]
-				local r, g, b, a = love.graphics.getColor()
+				input = drawables[i][j]
+				r, g, b, a = love.graphics.getColor()
 				love.graphics.setColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
-				if type(input.object) == 'string' then
-					love.graphics.printf(input.object, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
-				elseif input.object.typeOf and input.object:typeOf('Drawable') then
-					love.graphics.draw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+				if input.object then
+					input.object = ResourceManager:get(input.object)
+					if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
+						print(input.object)
+						love.graphics.draw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+					end
+				elseif input.text and type(input.text) == "string" then
+					love.graphics.printf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
 				love.graphics.setColor(r, g, b, a)
 			end
 		end
 	end
 
-	function Manager:generateQuad(resource, x, y, w, h)
-		if not (resource and resource.typeOf and resource:typeOf('Drawable')) then return end
-		x = x or 0
-		y = y or 0
-		w = w or resource:getWidth()
-		h = h or resource:getHeight()
-		return { resource, love.graphics.newQuad(x,y,w,h,resource:getDimensions()) }
+	function Manager:generateQuad(x, y, w, h)
+		if not (w and h) then return end
+		x = x or 1
+		y = y or 1
+		return love.graphics.newQuad(x,y,w,h,x*w,y*h)
 	end
 
 return Manager

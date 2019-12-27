@@ -11,6 +11,7 @@ local Component = core.import 'core.class.component'
 local Event = core.import 'core.manager.event'
 local RenderManager = core.import 'core.manager.render'
 local ResourceManager = core.import 'core.manager.resource'
+local ceil = math.ceil
 
 local Render = Component:extend({ unique = true })
 
@@ -27,10 +28,8 @@ local Render = Component:extend({ unique = true })
         if not entity then return false end
         self.entity = entity
         self.vars = vars
-        sprites = sprites or { }
-        if type(sprites) == 'string' then
-            sprites = { { res = ResourceManager:load(sprites) } }
-        end
+        assert(sprites and type(sprites) == "table", "Data entry error")
+        sprites = sprites[1] and type(sprites[1]) == "table" and sprites or { sprites }
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -47,52 +46,55 @@ local Render = Component:extend({ unique = true })
         vars.pic = vars.pic or 1
 
         self.pics = { }
-        local s = nil
         for i = 1, #sprites do
-            s = sprites[i]
-            s.res = type(s.res) == 'string' and ResourceManager:load(s.res) or s.res
-            self:addPics(s.res, s.x, s.y, s.w, s.h, s.s, s.f, s.xo, s.yo)
+            self:addSprite(sprites[i])
         end
+        print("Sprites: ", #self.pics)
     end
 
 
-    --- This function adds 'sprites' to the entity using a sprite list or a whole image
-    --  @param Drawable spritelist
-    --  @param number x the number of cells in a sheet horizontally
-    --  @param number y number of vertical sheet cells
-    --  @param number w width of one sheet cell
-    --  @param number h height of one sheet cell
-    --  @param number s starting point of recording in the sprite array
-    --  @param number f number of frames entered
-    --  @param number xo x offset
-    --  @param number yo y offset
-    function Render:addPics(spritelist, x, y, w, h, s, f, xo, yo)
-        if not spritelist then return end
-        if x and y then
-            xo = xo or 0
-            yo = yo or 0
-            w = w or 0
-            h = h or 0
-            s = s and s <= #self.pics and s or #self.pics
-            f = f or (x - xo) * (y - yo)
-            for yo = yo, y - 1 do
-                for xo = xo, x - 1 do
-                    f = f - 1
-                    s = s + 1
-                    self.pics[s] = RenderManager:generateQuad(spritelist, xo * w, yo * h, w, h)
-                    if f <= 0 then return end
-                end
+    --- Функция добавляет новый спрайт лист объекту
+    -- @param mixed Информация о спрайте
+    function Render:addSprite(sprite)
+
+        sprite.res = sprite.res or sprite[1] or nil
+        sprite.w = sprite.w or sprite[2] or nil
+        sprite.h = sprite.h or sprite[3] or nil
+
+        if not (sprite.w and sprite.h) then
+            print("[Ex] It does not specify the width and height of the file", sprite.res)
+            return
+        end
+
+        if not ResourceManager:loadAsync(sprite.res) then
+            print("[Ex] Data error", sprite.res)
+            return
+        end
+
+        sprite.x = sprite.x or sprite[4] or 1
+        sprite.y = sprite.y or sprite[5] or 1
+
+        local count = sprite.x * sprite.y
+        if (count) == 0 then return end
+
+        sprite.s = sprite.s or sprite[6] or 1
+        sprite.f = sprite.f or sprite[7] or count
+
+        sprite.xo = sprite.xo or sprite[8] or 0
+        sprite.yo = sprite.yo or sprite[9] or 0
+
+        local quad = nil
+        for y = 1, sprite.y do
+            for x = 1, sprite.x do
+                quad = RenderManager:generateQuad((x-1)*sprite.w, (y-1)*sprite.h, sprite.w, sprite.h)
+                self.pics[#self.pics + 1] = { sprite.res, quad }
             end
-        else
-            s = x and x <= #self.pics and x or #self.pics + 1
-            self.pics[s] = RenderManager:generateQuad(spritelist)
         end
     end
-
 
     function Render:postUpdate()
         local vars = self.vars
-        if not vars.hidden then
+        if not vars.hidden and #self.pics > 0 then
             RenderManager:add({
                 object = self.pics[self.vars.pic][1],
                 quad = self.pics[self.vars.pic][2],
