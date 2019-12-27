@@ -49,13 +49,21 @@ local Render = Component:extend({ unique = true })
         for i = 1, #sprites do
             self:addSprite(sprites[i])
         end
-        print("Sprites: ", #self.pics)
     end
 
 
     --- Функция добавляет новый спрайт лист объекту
-    -- @param mixed Информация о спрайте
+    -- @param mixed sprite
     function Render:addSprite(sprite)
+
+        --[[
+            res - ссылка на ресурс спрайт-листа
+            w,h - ширина и высота одной ячейки
+            x,y - количество ячеек в спрай-листе
+            s - ячейка с которой начнётся считывание спрайтов
+            f - ячейка на которой закончится считывание спрайтов
+            xo, yo - смещение ячеек в листе
+        ]]
 
         sprite.res = sprite.res or sprite[1] or nil
         sprite.w = sprite.w or sprite[2] or nil
@@ -83,11 +91,17 @@ local Render = Component:extend({ unique = true })
         sprite.xo = sprite.xo or sprite[8] or 0
         sprite.yo = sprite.yo or sprite[9] or 0
 
+        sprite.ord = sprite.ord or sprite[10] or #self.pics
+
         local quad = nil
+        local num = 0
         for y = 1, sprite.y do
             for x = 1, sprite.x do
-                quad = RenderManager:generateQuad((x-1)*sprite.w, (y-1)*sprite.h, sprite.w, sprite.h)
-                self.pics[#self.pics + 1] = { sprite.res, quad }
+                num = num + 1
+                if (sprite.s <= num) and (num <= sprite.f) then
+                    quad = RenderManager:generateQuad((x-1)*sprite.w+sprite.xo, (y-1)*sprite.h+sprite.yo, sprite.w, sprite.h)
+                    self.pics[sprite.ord + (num - sprite.s) + 1] = { sprite.res, quad }
+                end
             end
         end
     end

@@ -49,22 +49,22 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 	end
 
-	function Manager:clear()
-		for i = 1, #drawables do
-			for j = #drawables[i], 1, -1 do
-				drawables[i][j] = nil
-			end
-		end
-	end
-
 	function Manager:layersClear()
 		love.graphics.setCanvas(self.canvas)
 		love.graphics.clear()
 		love.graphics.setCanvas()
 	end
 
-	function Manager:draw()
+	function Manager:clear()
+		for i = 1, #drawables do
+			for j = #drawables[i], 1, -1 do
+				drawables[i][j] = nil
+			end
+		end
 		self:layersClear()
+	end
+
+	function Manager:draw()
 		love.graphics.setCanvas(self.canvas)
 		self:render()
 		love.graphics.setCanvas()
@@ -81,7 +81,6 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 				if input.object then
 					input.object = ResourceManager:get(input.object)
 					if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
-						print(input.object)
 						love.graphics.draw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					end
 				elseif input.text and type(input.text) == "string" then
@@ -96,7 +95,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 		if not (w and h) then return end
 		x = x or 1
 		y = y or 1
-		return love.graphics.newQuad(x,y,w,h,x*w,y*h)
+		return love.graphics.newQuad(x,y,w,h,w,h)
 	end
 
 return Manager

@@ -35,9 +35,6 @@ local asyncLoader = love.thread.newThread([[
 				resource = love.image.newImageData(file)
 			else print("error extensions") end
 			if resource then
-				for i = 1, 10000000 do
-
-				end
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
 			end
 		else continuation = false end
@@ -180,7 +177,7 @@ local Manager = { }
 				returned.resource = love.graphics.newImage(returned.resource)
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
-			print("loaded:", returned.id)
+			print("Async loaded:", self:get(returned.id), returned.id)
 		else asyncReturn:clear() end
 	end
 

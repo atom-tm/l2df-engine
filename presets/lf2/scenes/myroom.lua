@@ -11,12 +11,10 @@ local RM = core.import 'core.manager.resource'
 local Object = core.import 'core.class.entity.object'
 
 local ball = Object {
-	sprites = { 'sprites/test/ball.png', 100, 100, 3, 2 },
+	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
 	x = 100,
 	y = 200,
 }
-ball.vars.centerX = 25
-ball.vars.centerY = 25
 
 local wall = Object {
 	sprites = { "sprites/test/5.png" },
