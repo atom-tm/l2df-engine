@@ -10,6 +10,7 @@ local Class = core.import 'core.class'
 local Storage = core.import 'core.class.storage'
 local helper = core.import 'helper'
 local notNil = helper.notNil
+local Plug = core.import 'core.class.plug'
 
 local fs = love and love.filesystem
 local min = math.min
@@ -134,7 +135,7 @@ local Manager = { }
 	--  @return mixed resource
 	--  @return boolean is the resource marked temporary
 	function Manager:get(id)
-		return list.global:getById(id) or list.temp:getById(id) or false
+		return list.global:getById(id) or list.temp:getById(id) or nil
 	end
 
 	--- Adds a supported file type to the Manager by loading it from a path
@@ -188,8 +189,23 @@ local Manager = { }
 		if not fs.getInfo(filepath) then return false end
 		local extension = filepath:match('^.+(%..+)$')
 		asyncList[#asyncList+1] = { id, filepath, extension, temp }
-		id = self:addById(id, { }, temp)
+		id = self:addById(id, Plug:new(), temp)
 		return id
+	end
+
+
+	--- Загрузка списка файлов с проверкой завершенности
+	function Manager:loadListAsync(files)
+		local result = #files
+		local temp
+		for i = 1, #files do
+			temp = self:get(files[i])
+			if temp == nil then self:loadAsync(files[i])
+			elseif not (type(temp) == table and temp.isInstanceOf and temp.isInstanceOf(Plug)) then
+				result = result - 1
+			end
+		end
+		return result == 0, result
 	end
 
 return Manager

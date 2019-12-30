@@ -43,13 +43,13 @@ f = function (_, key)
 	elseif key == 'd' then
 		ball.vars.dvx = 45
 	elseif key == 'y' then
-		RM:loadAsync("sprites/UI/big.png", true)
-	elseif key == 'u' then
-		local object_without_sprite = Object:new {
-			x = 0,
-			y = 0
-		}
-		room:attach(object_without_sprite)
+		print(RM:loadListAsync({
+			"sprites/test/1.png",
+			"sprites/test/2.png",
+			"sprites/test/3.png",
+			"sprites/test/5.png",
+			"sprites/test/ball.png"
+		}))
 	end
 end
 
