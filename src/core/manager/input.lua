@@ -31,8 +31,8 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 		self.keys = { }
 		self.keymap = { }
 		for i = 1, #keys do
-			self.keys[i] = { k, bit(i) }
-			self.keymap[k] = i
+			self.keys[i] = { keys[i], bit(i) }
+			self.keymap[keys[i]] = i
 		end
 	end
 
@@ -44,7 +44,9 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 			inputs[p] = { data = 0, time = 0 }
 			self.buttons[p] = { }
 			for k, v in pairs(self.controls[p]) do
-				self.mapping[v] = { k, p }
+				if self.keymap[k] then
+					self.mapping[v] = { k, p }
+				end
 			end
 		end
 	end
@@ -54,8 +56,12 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 	-- @param number player  Player to check
 	-- @return boolean
 	function Manager:pressed(button, player)
-		local controls = self.buttons[player or 1]
-		return controls[button] and controls[button] > 0
+		local index = self.keymap[button]
+		local input = inputs[player or 1]
+		if not index or not input then
+			return false
+		end
+		return hasbit(input.data, self.keys[index][2])
 	end
 
 	--- Persist input
@@ -91,15 +97,15 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 
 	--- Get input for local player
 	function Manager:getinput(player)
-		player = player or 1
-		local buttons = self.buttons[player]
+		local buttons = self.buttons[player or 1]
 		if not buttons then return 0 end
 
-		local input, key, code = 0
+		local input, kc = 0
 		for i = 1, #self.keys do
-			key, code = self.keys[i]
-			if buttons[key] then
-				setbit(input, code)
+			kc = self.keys[i]
+			if buttons[kc[1]] then
+				print(kc[1], kc[2])
+				input = setbit(input, kc[2])
 			end
 		end
 		return input

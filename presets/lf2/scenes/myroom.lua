@@ -7,6 +7,7 @@ local helper = core.import 'helper'
 
 local Physix = core.import 'core.class.component.physix'
 local EventManager = core.import 'core.manager.event'
+local input = core.import 'core.manager.input'
 local NetworkManager = core.import 'core.manager.network'
 
 local RM = core.import 'core.manager.resource'
@@ -68,13 +69,13 @@ local f = function (_, key)
 	elseif key == 'backspace' then
 		data = ''
 	elseif key == 'up' then
-		ball.vars.dvy = -4
+		ball.vars.dvy = -64
 	elseif key == 'down' then
-		ball.vars.dvy = 4
+		ball.vars.dvy = 64
 	elseif key == 'left' then
-		ball.vars.dvx = -4
+		ball.vars.dvx = -64
 	elseif key == 'right' then
-		ball.vars.dvx = 4
+		ball.vars.dvx = 64
 	elseif key == 'f2' then
 		ball:getComponent(Physix).gravity = not ball:getComponent(Physix).gravity
 	elseif key == 'f1' then
@@ -84,8 +85,8 @@ local f = function (_, key)
 			"sprites/test/1.png",
 			"sprites/test/2.png",
 			"sprites/test/3.png",
-			"sprites/test/ball.png"
 			"sprites/test/5.png",
+			"sprites/test/ball.png",
 		}))
 	else
 		data = data .. key

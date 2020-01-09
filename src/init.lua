@@ -15,6 +15,7 @@ local math = _G.math
 
 local core = l2df
 
+	local config = core.import 'config'
 	local EntityManager = core.import 'core.manager.entity'
 	local EventManager = core.import 'core.manager.event'
 	local GroupManager = core.import 'core.manager.group'
@@ -23,6 +24,7 @@ local core = l2df
 	local SceneManager = core.import 'core.manager.scene'
 	local ResourceManager = core.import 'core.manager.resource'
 	local SnapshotManager = core.import 'core.manager.snapshot'
+	local InputManager = core.import 'core.manager.input'
 	local NetworkManager = core.import 'core.manager.network'
 
 	local Entity = core.import 'core.class.entity'
@@ -31,7 +33,7 @@ local core = l2df
 	local parser = core.import 'parsers.lffs'
 
 	love.graphics.setDefaultFilter("nearest", "nearest")
-	love.keyboard.setKeyRepeat(true)
+	love.keyboard.setKeyRepeat(false)
 
 	function core:init()
 		-- First call to core.root() always should be in core.init
