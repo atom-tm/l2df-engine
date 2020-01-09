@@ -10,9 +10,9 @@ local Scene = core.import 'core.class.entity.scene'
 local Storage = core.import 'core.class.storage'
 
 local list = { }
-local histrory = { }
+local history = { }
 
-local Manager = { root = Scene:new() }
+local Manager = { root = Scene() }
 
 	--- Initialization Scene class
 	--  @param Entity entity
@@ -67,10 +67,10 @@ local Manager = { root = Scene:new() }
 	--  @param mixed id
 	--  @return boolean
 	function Manager:set(id)
-		for i = 1, #histrory do
-			histrory[i]:setActive(false)
+		for i = #history, 1 do
+			history[i]:setActive(false)
+			history[i] = nil
 		end
-		histrory = { }
 		return self:push(id)
 	end
 
@@ -78,18 +78,17 @@ local Manager = { root = Scene:new() }
 	--  @param mixed id
 	--  @return boolean
 	function Manager:push(id)
-		local set = list[id]
-		assert(set, 'Room by current Id does not exist')
-		histrory[#histrory + 1] = set
+		local set = assert(list[id], 'Room with provided id does not exist')
+		history[#history + 1] = set
 		return set:setActive(true)
 	end
 
 	--- Removing last scene from current list
 	--  @return boolean
 	function Manager:pop()
-		if not (#histrory > 1) then return false end
-		histrory[#histrory]:setActive(false)
-		histrory[#histrory] = nil
+		if not (#history > 1) then return false end
+		history[#history]:setActive(false)
+		history[#history] = nil
 		return true
 	end
 

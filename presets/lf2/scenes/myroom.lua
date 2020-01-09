@@ -3,6 +3,8 @@ local Scene = core.import 'core.class.entity.scene'
 local UI = core.import 'core.class.entity.ui'
 local parser = core.import 'parsers.lffs'
 
+local helper = core.import 'helper'
+
 local Physix = core.import 'core.class.component.physix'
 local EventManager = core.import 'core.manager.event'
 local NetworkManager = core.import 'core.manager.network'
@@ -25,6 +27,7 @@ local room = Scene {
 
 local state = 0
 local data = ''
+local pcopy, dcopy
 local f = function (_, key)
 	if key == 'f12' then
 		NetworkManager:destroy()
@@ -44,14 +47,20 @@ local f = function (_, key)
 		end
 		NetworkManager:broadcast(data)
 	elseif key == 'f5' then
-		data = string.char(0)
-		print(data)
+		pcopy, dcopy = ball:sync()
+		-- print( helper.dump(ball) )
+	elseif key == 'f6' then
+		ball:sync(pcopy, dcopy)
 	elseif key == 'backspace' then
 		data = ''
-	-- elseif key == 'w' then
-	-- 	ball.vars.dvy = -4
-	-- elseif key == 's' then
-	-- 	ball.vars.dvy = 4
+	elseif key == 'up' then
+		ball.vars.dvy = -4
+	elseif key == 'down' then
+		ball.vars.dvy = 4
+	elseif key == 'left' then
+		ball.vars.dvx = -4
+	elseif key == 'right' then
+		ball.vars.dvx = 4
 	elseif key == 'f2' then
 		ball:getComponent(Physix).gravity = not ball:getComponent(Physix).gravity
 	elseif key == 'f1' then
@@ -64,7 +73,6 @@ end
 
 NetworkManager:register('127.0.0.1:12565')
 
-EventManager:subscribe('update', NetworkManager.update, nil, NetworkManager)
 EventManager:subscribe('keypressed', f)
 
 return room

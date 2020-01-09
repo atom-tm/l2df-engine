@@ -8,7 +8,6 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Components works only wit
 
 local Component = core.import 'core.class.component'
 
-local Event = core.import 'core.manager.event'
 local RenderManager = core.import 'core.manager.render'
 local ResourceManager = core.import 'core.manager.resource'
 

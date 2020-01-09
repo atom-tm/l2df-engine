@@ -6,7 +6,6 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
-local EventManager = core.import 'core.manager.event'
 local rad = math.rad
 
 local layers = {
@@ -18,10 +17,6 @@ local drawables = { }
 local Manager = { canvas = nil, scalex = nil, scaley = nil }
 
 	function Manager:init()
-		EventManager:subscribe('resize', self.resize, nil, self)
-		EventManager:subscribe('update', self.clear, nil, self)
-		EventManager:subscribe('draw', self.draw, nil, self)
-
 		self.resX, self.resY = 640, 360
 		self.gameW, self.gameH = love.window.getMode()
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
@@ -44,7 +39,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 		drawables[index][#drawables[index] + 1] = input
 	end
 
-	function Manager:resize(w,h)
+	function Manager:resize(w, h)
 		self.gameW, self.gameH = w, h
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 	end

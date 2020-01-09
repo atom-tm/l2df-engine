@@ -6,11 +6,12 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
+local helper = core.import 'helper'
 local Class = core.import 'core.class'
 local Component = core.import 'core.class.component'
 local Storage = core.import 'core.class.storage'
 
-local tableRemove = table.remove
+local copyTable = helper.copyTable
 
 local Entity = Class:extend()
 
@@ -20,7 +21,6 @@ local Entity = Class:extend()
 		obj.nodes = Storage:new()
 		obj.components = Storage:new()
 		obj.components.class = { }
-		obj.id = nil
 		obj.parent = nil
 		obj.active = true
 		obj.vars = { }
@@ -31,7 +31,7 @@ local Entity = Class:extend()
 	--- Adding an inheritor to an object
 	function Entity:attach(entity)
 		assert(entity:isInstanceOf(Entity), 'not a subclass of Entity')
-		if self:isAncestor(entity) then return false end
+		if entity.parent == self or self:isDescendant(entity) then return false end
 		if entity.parent then entity.parent:detach(entity) end
 		entity.parent = self
 		return self.nodes:add(entity)
@@ -56,7 +56,9 @@ local Entity = Class:extend()
 
 	--- Removing object from inheritors list of his parent
 	function Entity:detachParent()
-		self.parent:detach(self)
+		if self.parent then
+			self.parent:detach(self)
+		end
 	end
 
 	--- Getting a list of object inheritors
@@ -73,8 +75,21 @@ local Entity = Class:extend()
 		return self.parent
 	end
 
+	--- Backup / restore entity
+	function Entity:sync(data)
+		if not data then
+			return {
+				active = self.active,
+				parent = self.parent,
+				vars = copyTable(self.vars)
+			}
+		end
+		data.parent:attach(self)
+		copyTable(data, self)
+	end
+
 	--- Check for inheritance from an object
-	function Entity:isAncestor(entity)
+	function Entity:isDescendant(entity)
 		local object = self
 		while object do
 			if object == entity then return true end
