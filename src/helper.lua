@@ -24,7 +24,7 @@ local next = _G.next
 
 local dump
 local mapper = setmetatable({
-	[ 'booleanean'  ] = tostring,
+	[ 'boolean'  ] = tostring,
 	[ 'function' ] = tostring,
 	[ 'userdata' ] = tostring,
 	[ 'nil'      ] = tostring,
@@ -38,7 +38,7 @@ local mapper = setmetatable({
 	[ 'table'    ] = function(t, stack, indent)
 		stack = stack or { }
 		indent = indent or 1
-		if stack[t] then return '{"circular-reference"}' end
+		if stack[t] then return '{"cycle:' .. tostring(t) .. '"}' end
 		local margin0 = strrep('  ', indent - 1)
 		local margin1 = strrep('  ', indent)
 		local result = { }
@@ -152,6 +152,7 @@ local helper = { }
 	--- Deep-copy of table
 	-- @param table table  Given table
 	-- @param table result
+	-- @return table
 	function helper.copyTable(table, result)
 		result = result or { }
 		if type(result) ~= 'table' then
