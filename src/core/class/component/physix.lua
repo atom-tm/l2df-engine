@@ -8,7 +8,6 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Components works only wit
 
 local Component = core.import 'core.class.component'
 local EventManager = core.import 'core.manager.event'
-local Settings = core.import 'core.manager.settings'
 local helper = core.import 'helper'
 local abs = math.abs
 
@@ -23,8 +22,8 @@ local Physix = Component:extend({ unique = true })
 
     function Physix.Controller:set(kwargs)
         kwargs = kwargs or { }
-        self.gravity = kwargs.gravity or Settings.physics.gravity or 0
-        self.maxSpeed = kwargs.maxSpeed or Settings.physics.maxSpeed or 0
+        self.gravity = kwargs.gravity or 0.98
+        self.maxSpeed = kwargs.maxSpeed or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.99
     end
 
@@ -41,10 +40,6 @@ local Physix = Component:extend({ unique = true })
 
     function Physix:init(...)
         self.entity = nil
-        self.vars = nil
-        self.velocityX = 0
-        self.velocityY = 0
-        self.velocityZ = 0
         self.platform = nil
         self:set(...)
     end
@@ -57,15 +52,16 @@ local Physix = Component:extend({ unique = true })
         self.weight = helper.bound(kwargs.weight, 0, 10) and kwargs.weight or 1
         self.bounce = helper.bound(kwargs.bounce, 0, 1) and kwargs.bounce or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.9
-
-        EventManager:subscribe('collide', self.collide, nil, self)
     end
 
-    function Physix:added(entity, vars)
+    function Physix:added(entity)
         if not entity then return false end
-        self.entity = entity
-        self.vars = vars
 
+        self.entity = entity
+        local vars = entity.vars
+        vars.vx = vars.vx or 0
+        vars.vy = vars.vy or 0
+        vars.vz = vars.vz or 0
         vars.dx = vars.dx or 0
         vars.dy = vars.dy or 0
         vars.dz = vars.dz or 0
@@ -75,66 +71,51 @@ local Physix = Component:extend({ unique = true })
         vars.dsx = vars.dsx or 0
         vars.dsy = vars.dsy or 0
         vars.dsz = vars.dsz or 0
+        return true
     end
 
     function Physix:update(dt)
-        local vars = self.vars
-        local world = stack[#stack]
+        if not self.entity then return end
 
-        self.velocityX = vars.dvx ~= 0 and convert(vars.dvx)
-        or self.velocityX - convert(self.velocityX * 0.1) * dt
+        local vars = self.entity.vars
+        local c = stack[#stack]
+        local p = self.platform
 
-        vars.dvx = 0
+        -- vars.vx = vars.vx * (self.platform and self.platform.friction or 1) * c.friction
+        -- vars.vx = vars.dvx ~= 0 and vars.dvx or vars.vx + vars.dsx + c.wind
+        -- vars.vx = vars.vx < c.maxSpeed and vars.vx or c.maxSpeed
+        -- vars.vx = vars.vx > -c.maxSpeed and vars.vx or -c.maxSpeed
+        -- vars.dsx, vars.dvx = 0, 0
 
-        vars.dx = vars.dx + self.velocityX
+        -- vars.vz = vars.vz * (self.platform and self.platform.friction or c.friction)
+        -- vars.vz = vars.dvz ~= 0 and vars.dvz or vars.vz + vars.dsz
+        -- vars.vz = vars.vz < c.maxSpeed and vars.vz or c.maxSpeed
+        -- vars.vz = vars.vz > -c.maxSpeed and vars.vz or -c.maxSpeed
+        -- vars.dsz, vars.dvz = 0, 0
 
+        vars.vy = vars.dvy ~= 0 and vars.dvy
+        or vars.dsy ~= 0 and vars.vy + vars.dsy
+        or self.gravity and vars.vy + (c.gravity * self.weight)
+        or vars.vy
+        vars.vy = vars.vy * c.friction
 
+        vars.vy = c.maxSpeed ~= 0 and (vars.vy < c.maxSpeed and vars.vy or c.maxSpeed) or vars.vy
+        vars.vy = c.maxSpeed ~= 0 and (vars.vy > -c.maxSpeed and vars.vy or -c.maxSpeed) or vars.vy
 
-
-
-
-
-        --[[self.velocityX = self.velocityX * (self.platform and self.platform.friction or 1) * c.friction
-        self.velocityX = vars.dvx ~= 0 and vars.dvx or self.velocityX + vars.dsx + c.wind
-        self.velocityX = self.velocityX < c.maxSpeed and self.velocityX or c.maxSpeed
-        self.velocityX = self.velocityX > -c.maxSpeed and self.velocityX or -c.maxSpeed
-        vars.dsx, vars.dvx = 0, 0
-
-        self.velocityZ = self.velocityZ * (self.platform and self.platform.friction or c.friction)
-        self.velocityZ = vars.dvz ~= 0 and vars.dvz or self.velocityZ + vars.dsz
-        self.velocityZ = self.velocityZ < c.maxSpeed and self.velocityZ or c.maxSpeed
-        self.velocityZ = self.velocityZ > -c.maxSpeed and self.velocityZ or -c.maxSpeed
-        vars.dsz, vars.dvz = 0, 0]]
-
-        --[[self.velocityY = vars.dvy ~= 0 and vars.dvy
-        or vars.dsy ~= 0 and self.velocityY + vars.dsy
-        or self.gravity and self.velocityY + (c.gravity * self.weight)
-        or self.velocityY
-        self.velocityY = self.velocityY * c.friction
-
-        self.velocityY = c.maxSpeed ~= 0 and (self.velocityY < c.maxSpeed and self.velocityY or c.maxSpeed) or self.velocityY
-        self.velocityY = c.maxSpeed ~= 0 and (self.velocityY > -c.maxSpeed and self.velocityY or -c.maxSpeed) or self.velocityY
-
-        self.velocityY = p and self.velocityY > 0 and self.velocityY * -(self.bounce + p.bounce) or self.velocityY
-        self.velocityY = abs(self.velocityY) < 0.001 and 0 or self.velocityY
-
-        print(self.velocityY)
+        vars.vy = p and vars.vy > 0 and vars.vy * -(self.bounce + p.bounce) or vars.vy
+        vars.vy = abs(vars.vy) < 0.001 and 0 or vars.vy
 
         vars.dsy, vars.dvy = 0, 0
 
-        vars.dx = vars.dx + self.velocityX
-        vars.dy = vars.dy + self.velocityY
-        vars.dz = vars.dz + self.velocityZ
+        vars.dx = vars.dx + vars.vx
+        vars.dy = vars.dy + vars.vy
+        vars.dz = vars.dz + vars.vz
 
         self.platform = nil
         if vars.globalY >= 600 then
             self.platform = Physix:new()
             vars.y = 600
-        end]]
-    end
-
-    function convert(x)
-        return x * 60
+        end
     end
 
 return Physix

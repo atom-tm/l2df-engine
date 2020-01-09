@@ -61,9 +61,11 @@ local Storage = Class:extend()
 		if not id then return false end
 		self.list[id] = nil
 		self.map[object] = nil
-		self.free[#self.free + 1] = id
-		self.length = type(id) == "number" and id < self.length and self.length - 1 or self.length
-		self.count = self.count - 1
+		if id == self.length then
+			self.length = self.length - 1
+		else
+			self.free[#self.free + 1] = id
+		end
 		return true
 	end
 
@@ -73,8 +75,11 @@ local Storage = Class:extend()
 		if not self.list[id] then return false end
 		self.map[self.list[id]] = nil
 		self.list[id] = nil
-		self.free[#self.free + 1] = id
-		self.count = self.count - 1
+		if id == self.length then
+			self.length = self.length - 1
+		else
+			self.free[#self.free + 1] = id
+		end
 		return true
 	end
 

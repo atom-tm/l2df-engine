@@ -4,13 +4,14 @@
 -- @copyright Atom-TM 2019
 
 local __DIR__ = (...) .. '.'
-gamera		= require(__DIR__ .. 'external.gamera')
-json 		= require(__DIR__ .. 'external.json')
+gamera = require(__DIR__ .. 'external.gamera')
+json = require(__DIR__ .. 'external.json')
 ---------------------------------------------
 l2df = require(__DIR__ .. 'core')
 helper = l2df.import 'helper'
 
 local love = _G.love
+local math = _G.math
 
 local core = l2df
 
@@ -21,11 +22,11 @@ local core = l2df
 	local StatesManager = core.import 'core.manager.states'
 	local SceneManager = core.import 'core.manager.scene'
 	local ResourceManager = core.import 'core.manager.resource'
+	local SnapshotManager = core.import 'core.manager.snapshot'
+	local NetworkManager = core.import 'core.manager.network'
 
 	local Entity = core.import 'core.class.entity'
 	local Scene = core.import 'core.class.entity.scene'
-	local Print = core.import 'core.class.component.print'
-	local UI = core.import 'core.class.entity.ui'
 
 	local parser = core.import 'parsers.lffs'
 
@@ -36,8 +37,7 @@ local core = l2df
 		-- First call to core.root() always should be in core.init
 		parser:scan(core.root() .. 'core/class/entity')
 
-		RenderManager:init()
-		EntityManager:setRoot(SceneManager.root)
+		if love.timer then math.randomseed(love.timer.getTime()) end
 
 		EventManager:monitoring(love, love.handlers)
 		EventManager:monitoring(love, 'update')
@@ -48,10 +48,19 @@ local core = l2df
 		EventManager:subscribe('new', EventManager.classInit, Entity, EventManager)
 		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
 		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
-		EventManager:subscribe('update', EventManager.update, love, EventManager)
+		EventManager:subscribe('resize', RenderManager.resize, love, RenderManager)
+		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
+		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
+		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
+		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
+		EventManager:subscribe('update', InputManager.update, love, InputManager)
+		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
+		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
 		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 
-
+		RenderManager:init()
+		InputManager:init(config.keys)
+		InputManager:updateMappings(config.controls)
 		SceneManager:load('scenes/')
 		StatesManager:load('data/states')
 
@@ -65,26 +74,35 @@ local core = l2df
 		if love.timer then love.timer.step() end
 
 		local accumulate = 0
+		local delta = 0
 		return function()
 			-- Events
 			if love.event then
 				love.event.pump()
-				for name, a,b,c,d,e,f in love.event.poll() do
+				for name, a, b, c, d, e, f in love.event.poll() do
 					if name == "quit" then
 						if not love.quit or not love.quit() then
 							return a or 0
 						end
 					end
-					love.handlers[name](a,b,c,d,e,f)
+					love.handlers[name](a, b, c, d, e, f)
 				end
 			end
 
+			-- Network and rollbacks
+			delta = love.timer and love.timer.step() or self.tickrate
+			NetworkManager:update(delta)
+			if InputManager.time < SnapshotManager.time then
+				accumulate = accumulate + SnapshotManager:rollback(InputManager.time)
+				InputManager.time = SnapshotManager.time
+			end
+
 			-- Update
-			accumulate = accumulate + (love.timer and love.timer.step() or self.tickrate)
+			accumulate = accumulate + delta
 			if love.update then
 				while accumulate >= self.tickrate do
-					love.update(self.tickrate)
 					accumulate = accumulate - self.tickrate
+					love.update(self.tickrate, accumulate < self.tickrate)
 				end
 			else
 				accumulate = accumulate % self.tickrate
