@@ -1,12 +1,13 @@
 --- Parser for LittleFighterForever syntax
--- @classmod l2df.parsers.lffs
+-- @classmod l2df.class.parser.lffs
 -- @author Abelidze
 -- @copyright Atom-TM 2019
 
-local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
+local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'JsonParser works only with l2df v1.0 and higher')
 
-local helper = require(__DIR__ .. 'helper')
-local DatParser = require(__DIR__ .. 'parsers.dat')
+local helper = core.import 'helper'
+local DatParser = core.import 'class.parser.dat'
 
 local strsub = string.sub
 local strjoin = table.concat

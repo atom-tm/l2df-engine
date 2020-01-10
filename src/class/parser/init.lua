@@ -1,5 +1,5 @@
 --- Base class for parsers
--- @classmod l2df.parsers.base
+-- @classmod l2df.class.parser
 -- @author Abelidze
 -- @copyright Atom-TM 2019
 

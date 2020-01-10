@@ -4,7 +4,7 @@ local Scene = core.import 'class.entity.scene'
 local Object = core.import 'class.entity.object'
 local UI = core.import 'class.entity.ui'
 
-local parser = core.import 'parsers.lffs'
+local parser = core.import 'class.parser.lffs'
 local helper = core.import 'helper'
 
 local Physix = core.import 'class.component.physix'

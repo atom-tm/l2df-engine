@@ -1,12 +1,13 @@
 --- Parser for JSON syntax
--- @classmod l2df.parsers.json
+-- @classmod l2df.class.parser.json
 -- @author Abelidze
 -- @copyright Atom-TM 2019
 
-local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
+local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'JsonParser works only with l2df v1.0 and higher')
 
-local json = require(__DIR__ .. 'external.json')
-local BaseParser = require(__DIR__ .. 'parsers.base')
+local json = core.import 'external.json'
+local BaseParser = core.import 'class.parser.base'
 
 local JsonParser = BaseParser:extend()
 

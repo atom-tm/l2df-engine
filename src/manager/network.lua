@@ -3,7 +3,7 @@
 -- @author Abelidze
 -- @copyright Atom-TM 2020
 
-local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
+local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'NetworkManager works only with l2df v1.0 and higher')
 
 local os = require 'os'

@@ -3,10 +3,10 @@
 -- @author Kasai, Abelidze
 -- @copyright Atom-TM 2020
 
-local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
+local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Config works only with l2df v1.0 and higher')
 
-local DatParser = core.import 'parsers.dat'
+local DatParser = core.import 'class.parser.dat'
 
 local strgmatch = string.gmatch
 local type = _G.type

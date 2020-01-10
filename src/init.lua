@@ -3,11 +3,7 @@
 -- @author Abelidze, Kasai
 -- @copyright Atom-TM 2019
 
-local __DIR__ = (...) .. '.'
-gamera = require(__DIR__ .. 'external.gamera')
-json = require(__DIR__ .. 'external.json')
----------------------------------------------
-l2df = require(__DIR__ .. 'core')
+l2df = require((...) .. '.core')
 helper = l2df.import 'helper'
 
 local love = _G.love
@@ -29,7 +25,7 @@ local core = l2df
 	local Entity = core.import 'class.entity'
 	local Scene = core.import 'class.entity.scene'
 
-	local parser = core.import 'parsers.lffs'
+	local parser = core.import 'class.parser.lffs'
 
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	love.keyboard.setKeyRepeat(false)

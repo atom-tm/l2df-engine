@@ -1,11 +1,13 @@
 --- Parser for DAT syntax
--- @classmod l2df.parsers.dat
+-- @classmod l2df.class.parser.dat
 -- @author Abelidze
 -- @copyright Atom-TM 2019
 
-local __DIR__ = (...):match('(.-)[^%.]+%.[^%.]+$')
+local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
+assert(type(core) == 'table' and core.version >= 1.0, 'DatParser works only with l2df v1.0 and higher')
 
-local helper = require(__DIR__ .. 'helper')
+local helper = core.import 'helper'
+local BaseParser = core.import 'class.parser'
 
 local strsub = string.sub
 local strfind = string.find
@@ -13,8 +15,6 @@ local strmatch = string.match
 local strformat = string.format
 local strjoin = table.concat
 local plural = helper.plural
-
-local BaseParser = require(__DIR__ .. 'parsers.base')
 
 local DatParser = BaseParser:extend()
 

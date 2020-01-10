@@ -117,7 +117,7 @@ local helper = { }
 			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
 			local modulepath = core.modulepath(folderpath)
 			local files = fs.getDirectoryItems(folderpath)
-			local parser = core.import 'parsers.lffs'
+			local parser = core.import 'class.parser.lffs'
 			local id, file
 			for i = 1, #files do
 				if not pattern or strfind(files[i], pattern) then
