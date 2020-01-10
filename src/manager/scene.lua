@@ -1,5 +1,5 @@
 --- Scene manager
--- @classmod l2df.core.manager.scene
+-- @classmod l2df.manager.scene
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

@@ -1,5 +1,5 @@
 --- Print component
--- @classmod l2df.core.class.component.print
+-- @classmod l2df.class.component.print
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

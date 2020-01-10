@@ -1,5 +1,5 @@
 --- Physics component
--- @classmod l2df.core.class.component.physix
+-- @classmod l2df.class.component.physix
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

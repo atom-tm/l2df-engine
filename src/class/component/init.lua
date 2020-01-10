@@ -1,5 +1,5 @@
 --- Component class
--- @classmod l2df.core.class.component
+-- @classmod l2df.class.component
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

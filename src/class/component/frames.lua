@@ -1,5 +1,5 @@
 --- Frames component
--- @classmod l2df.core.class.component.frames
+-- @classmod l2df.class.component.frames
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

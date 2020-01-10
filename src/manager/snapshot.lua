@@ -1,5 +1,5 @@
 --- Simulation manager
--- @classmod l2df.core.manager.simulation
+-- @classmod l2df.manager.simulation
 -- @author Abelidze
 -- @copyright Atom-TM 2020
 
@@ -54,10 +54,6 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 	function Manager:stage(f, ...)
 		history[#history + 1] = { f, { ... } }
 		return self
-	end
-
-	function Manager:hist()
-		return history
 	end
 
 	---

@@ -1,5 +1,5 @@
 --- UI entities module
--- @classmod l2df.core.class.entity.ui
+-- @classmod l2df.class.entity.ui
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

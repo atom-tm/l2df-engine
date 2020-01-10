@@ -1,5 +1,5 @@
 --- Event manager
--- @classmod l2df.core.manager.event
+-- @classmod l2df.manager.event
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

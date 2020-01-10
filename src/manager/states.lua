@@ -1,5 +1,5 @@
 --- States manager
--- @classmod l2df.core.manager.states
+-- @classmod l2df.manager.states
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

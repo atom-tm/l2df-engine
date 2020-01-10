@@ -1,5 +1,5 @@
 --- Storage class
--- @classmod l2df.core.class.storage
+-- @classmod l2df.class.storage
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

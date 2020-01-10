@@ -1,5 +1,5 @@
 --- Group manager
--- @classmod l2df.core.manager.group
+-- @classmod l2df.manager.group
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

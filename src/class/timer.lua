@@ -1,5 +1,5 @@
 --- Timer class
--- @classmod l2df.core.class.timer
+-- @classmod l2df.class.timer
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

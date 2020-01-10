@@ -1,5 +1,5 @@
 --- Render component
--- @classmod l2df.core.class.component.render
+-- @classmod l2df.class.component.render
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

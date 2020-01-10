@@ -1,5 +1,5 @@
 --- Transform component
--- @classmod l2df.core.class.component.transform
+-- @classmod l2df.class.component.transform
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

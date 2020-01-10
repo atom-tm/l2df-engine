@@ -1,5 +1,5 @@
 --- Resource manager
--- @classmod l2df.core.manager.resource
+-- @classmod l2df.manager.resource
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

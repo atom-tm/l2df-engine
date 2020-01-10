@@ -1,5 +1,5 @@
 --- Object entity
--- @classmod l2df.core.class.entity.object
+-- @classmod l2df.class.entity.object
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

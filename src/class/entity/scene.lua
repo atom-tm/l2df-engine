@@ -1,5 +1,5 @@
 --- Scene entity
--- @classmod l2df.core.class.entity.scene
+-- @classmod l2df.class.entity.scene
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

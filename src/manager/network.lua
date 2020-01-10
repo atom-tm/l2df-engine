@@ -1,5 +1,5 @@
 --- Network manager
--- @classmod l2df.core.manager.network
+-- @classmod l2df.manager.network
 -- @author Abelidze
 -- @copyright Atom-TM 2020
 

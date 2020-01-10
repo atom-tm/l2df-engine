@@ -1,5 +1,5 @@
 --- Plug class
--- @classmod l2df.core.class.plug
+-- @classmod l2df.class.plug
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

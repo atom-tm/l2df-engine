@@ -1,5 +1,5 @@
 --- Transform class
--- @classmod l2df.core.class.transform
+-- @classmod l2df.class.transform
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

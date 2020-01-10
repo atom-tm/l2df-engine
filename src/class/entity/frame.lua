@@ -1,5 +1,5 @@
 --- Frame entity
--- @classmod l2df.core.class.entity.frame
+-- @classmod l2df.class.entity.frame
 -- @author Kasai
 -- @copyright Atom-TM 2019
 

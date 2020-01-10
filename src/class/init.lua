@@ -1,5 +1,5 @@
 --- Basic class for OOP
--- @classmod l2df.core.class
+-- @classmod l2df.class
 -- @author Abelidze
 -- @copyright Atom-TM 2019
 

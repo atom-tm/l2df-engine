@@ -1,5 +1,5 @@
 --- Render manager
--- @classmod l2df.core.manager.render
+-- @classmod l2df.manager.render
 -- @author Abelidze, Kasai
 -- @copyright Atom-TM 2019
 

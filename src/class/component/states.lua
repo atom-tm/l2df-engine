@@ -1,5 +1,5 @@
 --- States component
--- @classmod l2df.core.class.component.states
+-- @classmod l2df.class.component.states
 -- @author Kasai
 -- @copyright Atom-TM 2019
 
