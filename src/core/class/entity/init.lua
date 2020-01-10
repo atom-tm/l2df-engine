@@ -12,6 +12,7 @@ local Component = core.import 'core.class.component'
 local Storage = core.import 'core.class.storage'
 
 local copyTable = helper.copyTable
+local dummy = function () return nil end
 
 local Entity = Class:extend()
 
@@ -103,8 +104,7 @@ local Entity = Class:extend()
 		local active = bool
 		if bool == nil then active = not self.active end
 		if self.parent and not (self.parent.active) and active then return end
-		local em = core.import 'core.manager.entity'
-		for object in em:enum(self) do
+		for object in self:enum() do
 			object.active = active
 		end
 		return true
@@ -173,6 +173,44 @@ local Entity = Class:extend()
 			end
 		end
 		return list
+	end
+
+	--- Enumeration entities' tree
+	--  @param boolean skipped  skip self in enumeration
+	--  @param boolean active  enumerate only active nodes
+	--  @return function
+	function Entity:enum(active, skipped)
+		local beginner = self
+		if not (beginner and (beginner.nodes or beginner.getNodes)) then return dummy end
+		beginner = skipped and beginner:getNodes() or { beginner }
+		local tasks = { { beginner, 0, #beginner } }
+		local depth = 1
+		local i = 0
+		local current = tasks[depth]
+		return function ()
+			while i < current[3] or depth > 1 do
+				i = i + 1
+				local returned = current[1][i]
+				local nodes = returned and returned:getNodes()
+				if returned and nodes and next(nodes) then
+					if not active or returned.active then
+						current[2] = i
+						current = { nodes, 0, #nodes }
+						tasks[#tasks + 1] = current
+						depth = depth + 1
+						i = 0
+					end
+				elseif i >= current[3] and depth > 1 then
+					depth = depth - 1
+					current = tasks[depth]
+					i = current[2]
+				end
+				if not active or returned and returned.active then
+					return returned
+				end
+			end
+			return nil
+		end
 	end
 
 return Entity

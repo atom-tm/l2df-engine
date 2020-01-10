@@ -16,7 +16,6 @@ local math = _G.math
 local core = l2df
 
 	local config = core.import 'config'
-	local EntityManager = core.import 'core.manager.entity'
 	local EventManager = core.import 'core.manager.event'
 	local GroupManager = core.import 'core.manager.group'
 	local RenderManager = core.import 'core.manager.render'
