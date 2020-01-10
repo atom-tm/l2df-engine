@@ -6,10 +6,10 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
-local Component = core.import 'core.class.component'
+local Component = core.import 'class.component'
 
-local RenderManager = core.import 'core.manager.render'
-local ResourceManager = core.import 'core.manager.resource'
+local RenderManager = core.import 'manager.render'
+local ResourceManager = core.import 'manager.resource'
 
 local loveNewFont = love.graphics.newFont
 

@@ -6,8 +6,8 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Timer works only with l2df v1.0 and higher')
 
-local Class = core.import 'core.class'
-local EventManager = core.import 'core.manager.event'
+local Class = core.import 'class'
+local EventManager = core.import 'manager.event'
 
 local Timer = Class:extend()
 

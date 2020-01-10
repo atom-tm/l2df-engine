@@ -6,8 +6,8 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
-local Component = core.import 'core.class.component'
-local EventManager = core.import 'core.manager.event'
+local Component = core.import 'class.component'
+local EventManager = core.import 'manager.event'
 local helper = core.import 'helper'
 local abs = math.abs
 

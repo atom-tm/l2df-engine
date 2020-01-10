@@ -6,7 +6,7 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
-local ResourceManager = core.import 'core.manager.resource'
+local ResourceManager = core.import 'manager.resource'
 local rad = math.rad
 
 local layers = {

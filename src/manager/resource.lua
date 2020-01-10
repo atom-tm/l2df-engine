@@ -6,11 +6,11 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'ResourceManager works only with l2df v1.0 and higher')
 
-local Class = core.import 'core.class'
-local Storage = core.import 'core.class.storage'
+local Class = core.import 'class'
+local Storage = core.import 'class.storage'
 local helper = core.import 'helper'
 local notNil = helper.notNil
-local Plug = core.import 'core.class.plug'
+local Plug = core.import 'class.plug'
 
 local fs = love and love.filesystem
 local min = math.min

@@ -1,20 +1,20 @@
 local core = l2df
-local Scene = core.import 'core.class.entity.scene'
-local UI = core.import 'core.class.entity.ui'
-local parser = core.import 'parsers.lffs'
 
+local Scene = core.import 'class.entity.scene'
+local Object = core.import 'class.entity.object'
+local UI = core.import 'class.entity.ui'
+
+local parser = core.import 'parsers.lffs'
 local helper = core.import 'helper'
 
-local Physix = core.import 'core.class.component.physix'
-local Input = core.import 'core.manager.input'
-local EventManager = core.import 'core.manager.event'
-local SceneManager = core.import 'core.manager.scene'
-local NetworkManager = core.import 'core.manager.network'
-local Snapshot = core.import 'core.manager.snapshot'
+local Physix = core.import 'class.component.physix'
+local Input = core.import 'manager.input'
+local EventManager = core.import 'manager.event'
+local SceneManager = core.import 'manager.scene'
+local NetworkManager = core.import 'manager.network'
+local Snapshot = core.import 'manager.snapshot'
+local RM = core.import 'manager.resource'
 
-local RM = core.import 'core.manager.resource'
-
-local Object = core.import 'core.class.entity.object'
 
 local ball = Object {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },

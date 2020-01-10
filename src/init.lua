@@ -16,18 +16,18 @@ local math = _G.math
 local core = l2df
 
 	local config = core.import 'config'
-	local EventManager = core.import 'core.manager.event'
-	local GroupManager = core.import 'core.manager.group'
-	local RenderManager = core.import 'core.manager.render'
-	local StatesManager = core.import 'core.manager.states'
-	local SceneManager = core.import 'core.manager.scene'
-	local ResourceManager = core.import 'core.manager.resource'
-	local SnapshotManager = core.import 'core.manager.snapshot'
-	local InputManager = core.import 'core.manager.input'
-	local NetworkManager = core.import 'core.manager.network'
+	local EventManager = core.import 'manager.event'
+	local GroupManager = core.import 'manager.group'
+	local RenderManager = core.import 'manager.render'
+	local StatesManager = core.import 'manager.states'
+	local SceneManager = core.import 'manager.scene'
+	local ResourceManager = core.import 'manager.resource'
+	local SnapshotManager = core.import 'manager.snapshot'
+	local InputManager = core.import 'manager.input'
+	local NetworkManager = core.import 'manager.network'
 
-	local Entity = core.import 'core.class.entity'
-	local Scene = core.import 'core.class.entity.scene'
+	local Entity = core.import 'class.entity'
+	local Scene = core.import 'class.entity.scene'
 
 	local parser = core.import 'parsers.lffs'
 

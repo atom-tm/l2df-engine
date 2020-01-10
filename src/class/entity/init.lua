@@ -7,9 +7,9 @@ local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
 local helper = core.import 'helper'
-local Class = core.import 'core.class'
-local Component = core.import 'core.class.component'
-local Storage = core.import 'core.class.storage'
+local Class = core.import 'class'
+local Component = core.import 'class.component'
+local Storage = core.import 'class.storage'
 
 local copyTable = helper.copyTable
 local dummy = function () return nil end

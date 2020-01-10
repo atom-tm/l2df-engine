@@ -6,11 +6,11 @@
 local core = l2df or require((...):match('(.-)core.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
-local Component = core.import 'core.class.component'
+local Component = core.import 'class.component'
 
-local Event = core.import 'core.manager.event'
-local RenderManager = core.import 'core.manager.render'
-local ResourceManager = core.import 'core.manager.resource'
+local Event = core.import 'manager.event'
+local RenderManager = core.import 'manager.render'
+local ResourceManager = core.import 'manager.resource'
 local ceil = math.ceil
 
 local Render = Component:extend({ unique = true })

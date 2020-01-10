@@ -6,7 +6,7 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'GroupManager works only with l2df v1.0 and higher')
 
-local Storage = core.import 'core.class.storage'
+local Storage = core.import 'class.storage'
 
 local objects = {}
 local groups = {}

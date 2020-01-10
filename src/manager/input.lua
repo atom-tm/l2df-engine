@@ -21,7 +21,7 @@ local function clearbit(x, p)
   return hasbit(x, p) and x - p or x
 end
 
-local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys = { }, keymap = { } }
+local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
 
 	--- Init
 	function Manager:init(keys)
@@ -39,11 +39,10 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 	--- Sync mappings with config
 	function Manager:updateMappings(controls)
 		self.mapping = { }
-		self.controls = controls or { }
-		for p = 1, #self.controls do
+		for p = 1, #controls do
 			inputs[p] = { data = 0, time = 0 }
 			self.buttons[p] = { }
-			for k, v in pairs(self.controls[p]) do
+			for k, v in pairs(controls[p]) do
 				if self.keymap[k] then
 					self.mapping[v] = { k, p }
 				end
@@ -55,17 +54,23 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 	-- @param string button  Pressed button
 	-- @param number player  Player to check
 	-- @return boolean
-	function Manager:pressed(button, player)
+	function Manager:ispressed(button, player)
 		local index = self.keymap[button]
 		local input = inputs[player or 1]
-		if not index or not input then
-			return false
-		end
-		return hasbit(input.data, self.keys[index][2])
+		return index and input and hasbit(input.data, self.keys[index][2]) or false
+	end
+
+	--- Check if input data exists
+	-- @param number data
+	-- @param number player
+	-- @return boolean
+	function Manager:check(data, player)
+		local input = inputs[player or 1]
+		return input and hasbit(input.data, data) or false
 	end
 
 	--- Persist input
-	function Manager:addinput(input, time, player)
+	function Manager:addinput(input, player, time)
 		player = player or 1
 		time = time or self.time
 		local left = inputs[player]
@@ -93,9 +98,17 @@ local Manager = { time = 0, buttons = { }, controls = { }, mapping = { }, keys =
 			inputs[player] = new
 			self.time = time
 		end
+		return self
+	end
+
+	--- Save input for local player
+	function Manager:saveinput(player, time)
+		return self:addinput(self:getinput(player), player, time)
 	end
 
 	--- Get input for local player
+	-- @param number player
+	-- @return number
 	function Manager:getinput(player)
 		local buttons = self.buttons[player or 1]
 		if not buttons then return 0 end

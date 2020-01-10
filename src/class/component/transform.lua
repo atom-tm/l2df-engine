@@ -6,10 +6,10 @@
 local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
-local Component = core.import 'core.class.component'
-local CTransform = core.import 'core.class.transform'
+local Component = core.import 'class.component'
+local CTransform = core.import 'class.transform'
 local helper = core.import 'helper'
-local Event = core.import 'core.manager.event'
+local Event = core.import 'manager.event'
 
 local stack = { CTransform:new() }
 

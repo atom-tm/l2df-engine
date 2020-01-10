@@ -7,7 +7,7 @@ local core = l2df or require(((...):match('(.-)core.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'StatesManager works only with l2df v1.0 and higher')
 
 local helper = core.import 'helper'
-local State = core.import 'core.class.state'
+local State = core.import 'class.state'
 
 local list = { }
 
