@@ -119,12 +119,12 @@ local Entity = Class:extend()
 		if self:hasComponent(component) then return false end
 		if component.unique and self:hasComponentClass(component.___class) then return false end
 		self.components.class[component.___class] = self.components.class[component.___class] and self.components.class[component.___class] + 1 or 1
-		return self.components:add(component), component, component.added and component:added(self, self.vars, ...)
+		return self.components:add(component), component, component.added and component:added(self, ...)
 	end
 
 	--- Create new component and add to manager
 	function Entity:createComponent(class, ...)
-		return self:addComponent(class:new(...),...)
+		return self:addComponent(class:new(...), ...)
 	end
 
 	--- Remove component from entity
@@ -133,7 +133,7 @@ local Entity = Class:extend()
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self.components:remove(component) then
 			self.components.class[component.___class] = self.components.class[component.___class] - 1
-			return component:removed(self, self.vars, ...)
+			return component:removed(self, ...)
 		end
 		return false
 	end

@@ -24,12 +24,14 @@ local Render = Component:extend({ unique = true })
         self.color = { 1,1,1,1 }
     end
 
-    function Render:added(entity, vars, sprites)
+    function Render:added(entity, sprites)
         if not entity then return false end
-        self.entity = entity
-        self.vars = vars
+
         assert(sprites and type(sprites) == "table", "Data entry error")
         sprites = sprites[1] and type(sprites[1]) == "table" and sprites or { sprites }
+
+        self.entity = entity
+        local vars = entity.vars
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -107,11 +109,13 @@ local Render = Component:extend({ unique = true })
     end
 
     function Render:postUpdate()
-        local vars = self.vars
+        if not self.entity then return end
+
+        local vars = self.entity.vars
         if not vars.hidden and #self.pics > 0 then
             RenderManager:add({
-                object = self.pics[self.vars.pic][1],
-                quad = self.pics[self.vars.pic][2],
+                object = self.pics[vars.pic][1],
+                quad = self.pics[vars.pic][2],
                 index = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,

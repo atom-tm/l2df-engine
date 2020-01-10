@@ -28,7 +28,7 @@ local Physix = Component:extend({ unique = true })
         kwargs = kwargs or { }
         self.gravity = kwargs.gravity or 0.98
         self.maxSpeed = kwargs.maxSpeed or 0
-        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.99
+        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.9
     end
 
     function Physix.World:push()
@@ -55,7 +55,7 @@ local Physix = Component:extend({ unique = true })
         self.static = kwargs.static or false
         self.weight = helper.bound(kwargs.weight, 0, 10) and kwargs.weight or 1
         self.bounce = helper.bound(kwargs.bounce, 0, 1) and kwargs.bounce or 0
-        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.9
+        self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.1
     end
 
     function Physix:added(entity)

@@ -41,10 +41,10 @@ local Print = Component:extend({ unique = false })
         self.color = kwargs.color and { (kwargs.color[1] or 255) / 255, (kwargs.color[2] or 255) / 255, (kwargs.color[3] or 255) / 255, (kwargs.color[4] or 255) / 255 } or { 1,1,1,1 }
     end
 
-    function Print:added(entity, vars)
+    function Print:added(entity)
         if not entity then return false end
         self.entity = entity
-        self.vars = vars
+        local vars = entity.vars
         vars.x = vars.x or 0
         vars.y = vars.y or 0
         vars.z = vars.z or 0
@@ -53,20 +53,23 @@ local Print = Component:extend({ unique = false })
     end
 
     function Print:postUpdate()
-        if not self.vars.hidden then
+        if not self.entity then return end
+
+        local vars = self.entity.vars
+        if not vars.hidden then
             RenderManager:add({
                 text = self.text,
                 font = self.font,
-                index = self.vars.globalZ or self.vars.z,
-                x = self.vars.globalX or self.vars.x,
-                y = self.vars.globalY or self.vars.y,
-                r = self.vars.r,
+                index = vars.globalZ or vars.z,
+                x = vars.globalX or vars.x,
+                y = vars.globalY or vars.y,
+                r = vars.r,
                 limit = self.limit,
                 align = self.align,
                 ox = self.ox,
                 oy = self.oy,
-                sx = self.vars.globalScaleX or 1 * self.sx,
-                sy = self.vars.globalScaleY or 1 * self.sy,
+                sx = vars.globalScaleX or 1 * self.sx,
+                sy = vars.globalScaleY or 1 * self.sy,
                 kx = self.kx,
                 ky = self.ky,
                 color = self.color,

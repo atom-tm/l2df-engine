@@ -17,32 +17,32 @@ local Transform = Component:extend({ unique = true })
 
     function Transform:init()
         self.entity = nil
-        self.vars = nil
     end
 
-    function Transform:added(entity, vars)
+    function Transform:added(entity)
         if not entity then return false end
+
         self.entity = entity
-        self.vars = vars
+        local vars = entity.vars
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
         vars.z = vars.z or 0
-
-        vars.globalX = vars.globalX or 0
-        vars.globalY = vars.globalY or 0
-        vars.globalZ = vars.globalZ or 0
+        vars.r = vars.r or 0
 
         vars.dx = vars.dx or 0
         vars.dy = vars.dy or 0
         vars.dz = vars.dz or 0
+        vars.dr = vars.dr or 0
+
+        vars.globalX = vars.globalX or 0
+        vars.globalY = vars.globalY or 0
+        vars.globalZ = vars.globalZ or 0
+        vars.globalR = vars.globalR or 0
 
         vars.globalScaleX = vars.globalScaleX or 1
         vars.globalScaleY = vars.globalScaleY or 1
         vars.globalScaleZ = vars.globalScaleZ or 1
-        vars.globalR = vars.globalR or 0
-        vars.r = vars.r or 0
-        vars.dr = vars.dr or 0
 
         vars.scaleX = vars.scaleX or 1
         vars.scaleY = vars.scaleY or 1
@@ -53,13 +53,19 @@ local Transform = Component:extend({ unique = true })
         vars.centerY = vars.centerY or 0
     end
 
-    function Transform:update(dt)
-        self:set(dt)
+    function Transform:removed(entity)
+        if self.entity ~= entity then return end
+
+        entity.vars.globalScaleX = nil
+        entity.vars.globalScaleY = nil
+        entity.vars.globalScaleZ = nil
+        entity.vars.globalR = nil
     end
 
+    function Transform:update(dt)
+        if not self.entity then return end
 
-    function Transform:set(dt)
-        local vars = self.vars
+        local vars = self.entity.vars
 
         vars.x = vars.x + vars.dx * dt
         vars.y = vars.y + vars.dy * dt
@@ -88,13 +94,6 @@ local Transform = Component:extend({ unique = true })
 
     function Transform:pop()
         stack[#stack] = nil
-    end
-
-    function Transform:removed(entity, vars)
-        vars.globalScaleX = nil
-        vars.globalScaleY = nil
-        vars.globalScaleZ = nil
-        vars.globalR = nil
     end
 
 return Transform

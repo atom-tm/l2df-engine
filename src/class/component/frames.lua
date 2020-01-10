@@ -16,7 +16,7 @@ local Frames = Component:extend({ unique = true })
         self.entity = nil
     end
 
-    function Frames:added(entity, vars, starting, frameList)
+    function Frames:added(entity, starting, frameList)
         if not entity then return false end
         self.entity = entity
         starting = starting or 1
