@@ -11,6 +11,10 @@ local EventManager = core.import 'manager.event'
 local helper = core.import 'helper'
 local abs = math.abs
 
+local function convert(x)
+    return x * 60
+end
+
 local Physix = Component:extend({ unique = true })
 
     local stack = { }
@@ -79,43 +83,50 @@ local Physix = Component:extend({ unique = true })
 
         local vars = self.entity.vars
         local c = stack[#stack]
-        local p = self.platform
 
-        -- vars.vx = vars.vx * (self.platform and self.platform.friction or 1) * c.friction
-        -- vars.vx = vars.dvx ~= 0 and vars.dvx or vars.vx + vars.dsx + c.wind
-        -- vars.vx = vars.vx < c.maxSpeed and vars.vx or c.maxSpeed
-        -- vars.vx = vars.vx > -c.maxSpeed and vars.vx or -c.maxSpeed
-        -- vars.dsx, vars.dvx = 0, 0
+        vars.vx = vars.vx - convert(vars.vx * c.friction) * dt
+        vars.vx = vars.dvx ~= 0 and convert(vars.dvx) or vars.vx
+        vars.vx = vars.vx + convert(vars.dsx)
+        vars.dsx, vars.dvx = 0, 0
 
-        -- vars.vz = vars.vz * (self.platform and self.platform.friction or c.friction)
-        -- vars.vz = vars.dvz ~= 0 and vars.dvz or vars.vz + vars.dsz
-        -- vars.vz = vars.vz < c.maxSpeed and vars.vz or c.maxSpeed
-        -- vars.vz = vars.vz > -c.maxSpeed and vars.vz or -c.maxSpeed
-        -- vars.dsz, vars.dvz = 0, 0
-
-        vars.vy = vars.dvy ~= 0 and vars.dvy
-        or vars.dsy ~= 0 and vars.vy + vars.dsy
-        or self.gravity and vars.vy + (c.gravity * self.weight)
-        or vars.vy
-        vars.vy = vars.vy * c.friction
-
-        vars.vy = c.maxSpeed ~= 0 and (vars.vy < c.maxSpeed and vars.vy or c.maxSpeed) or vars.vy
-        vars.vy = c.maxSpeed ~= 0 and (vars.vy > -c.maxSpeed and vars.vy or -c.maxSpeed) or vars.vy
-
-        vars.vy = p and vars.vy > 0 and vars.vy * -(self.bounce + p.bounce) or vars.vy
-        vars.vy = abs(vars.vy) < 0.001 and 0 or vars.vy
-
+        vars.vy = vars.vy + convert(c.gravity) * dt
+        vars.vy = vars.dvy ~= 0 and convert(vars.dvy) or vars.vy
+        vars.vy = vars.vy + convert(vars.dsy)
         vars.dsy, vars.dvy = 0, 0
 
-        vars.dx = vars.dx + vars.vx
-        vars.dy = vars.dy + vars.vy
-        vars.dz = vars.dz + vars.vz
+        vars.vz = vars.vz - convert(vars.vz * c.friction) * dt
+        vars.vz = vars.dvz ~= 0 and convert(vars.dvz) or vars.vz
+        vars.vz = vars.vz + convert(vars.dsz)
+        vars.dsz, vars.dvz = 0, 0
 
-        self.platform = nil
-        if vars.globalY >= 600 then
-            self.platform = Physix:new()
-            vars.y = 600
-        end
+        vars.dx = convert(vars.dx) + vars.vx
+        vars.dy = convert(vars.dy) + vars.vy
+        vars.dz = convert(vars.dz) + vars.vz
+
+        -- local p = self.platform
+        -- vars.vy = vars.dvy ~= 0 and vars.dvy
+        -- or vars.dsy ~= 0 and vars.vy + vars.dsy
+        -- or self.gravity and vars.vy + (c.gravity * self.weight)
+        -- or vars.vy
+        -- vars.vy = vars.vy * c.friction
+
+        -- vars.vy = c.maxSpeed ~= 0 and (vars.vy < c.maxSpeed and vars.vy or c.maxSpeed) or vars.vy
+        -- vars.vy = c.maxSpeed ~= 0 and (vars.vy > -c.maxSpeed and vars.vy or -c.maxSpeed) or vars.vy
+
+        -- vars.vy = p and vars.vy > 0 and vars.vy * -(self.bounce + p.bounce) or vars.vy
+        -- vars.vy = abs(vars.vy) < 0.001 and 0 or vars.vy
+
+        -- vars.dsy, vars.dvy = 0, 0
+
+        -- vars.dx = vars.dx + vars.vx
+        -- vars.dy = vars.dy + vars.vy
+        -- vars.dz = vars.dz + vars.vz
+
+        -- self.platform = nil
+        -- if vars.globalY >= 600 then
+        --     self.platform = Physix:new()
+        --     vars.y = 600
+        -- end
     end
 
 return Physix
