@@ -12,9 +12,9 @@ local Storage = Class:extend()
 
 	--- Storage initialization
 	function Storage:init()
-		self.list = {}
-		self.map = {}
-		self.free = {}
+		self.list = { }
+		self.map = { }
+		self.free = { }
 		self.length = 0
 		self.count = 0
 	end
@@ -24,7 +24,7 @@ local Storage = Class:extend()
 	--  @param[opt] boolean reload
 	function Storage:add(object, reload)
 		local id = self:has(object)
-		if id and not reload then return id end
+		if id and not reload then return id, object end
 
 		if #self.free > 0 then
 			id = self.free[#self.free]
@@ -44,7 +44,7 @@ local Storage = Class:extend()
 	function Storage:addById(object, id, reload)
 
 		local obj = self:getById(id)
-		if obj and not reload then return obj, id
+		if obj and not reload then return id, obj
 		elseif obj then self:remove(obj) end
 
 		self.list[id] = object

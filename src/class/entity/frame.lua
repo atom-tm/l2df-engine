@@ -28,8 +28,6 @@ local Frame = Class:extend({ name = 'frame' })
         self.vars.dsy = kwargs.dsy
         self.vars.dsz = kwargs.dsz
 
-
-
         self.id = id
         self.next = kwargs.next
         self.wait = kwargs.wait

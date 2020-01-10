@@ -70,7 +70,6 @@ local function keypressed(_, key)
 		-- data = data .. key
 		-- print(data)
 	end
-	print(Input:ispressed('up', 0))
 end
 
 NetworkManager:register('127.0.0.1:12565')

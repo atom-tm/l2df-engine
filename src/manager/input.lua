@@ -117,7 +117,6 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		for i = 1, #self.keys do
 			kc = self.keys[i]
 			if buttons[kc[1]] then
-				print(kc[1], kc[2])
 				input = setbit(input, kc[2])
 			end
 		end
