@@ -9,8 +9,6 @@ assert(type(core) == 'table' and core.version >= 1.0, 'SnapshotManager works onl
 local helper = core.import 'helper'
 local unpack = table.unpack or _G.unpack
 
-local history = nil
-
 local function createNode()
 	local node = { }
 	node.next = node
@@ -30,6 +28,8 @@ local function destroyNode(node)
 	node.next = nil
 	node.prev = nil
 end
+
+local history = createNode()
 
 local Manager = { time = 0, size = 1, maxsize = 1 }
 
@@ -56,6 +56,10 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 		return self
 	end
 
+	function Manager:hist()
+		return history
+	end
+
 	---
 	-- @return SnapshotManager
 	function Manager:commit()
@@ -78,8 +82,9 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 	---
 	-- @return number
 	function Manager:rollback(timestamp)
+		-- TODO: if timestamp is more than last stored snapshot then throw error
+		history.time = history.time == 0 and self.time or history.time
 		local it = history
-		local count = 0
 		repeat
 			if it.time < timestamp or it.prev.time > it.time or it == it.prev then
 				break
@@ -87,9 +92,7 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 			it = it.prev
 			destroyNode(it.next)
 			self.size = self.size - 1
-			count = count + 1
 		until it == history
-		print('Rollback size:', count)
 
 		history = it
 		for i = 1, #history do

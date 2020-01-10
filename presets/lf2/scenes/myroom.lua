@@ -6,9 +6,11 @@ local parser = core.import 'parsers.lffs'
 local helper = core.import 'helper'
 
 local Physix = core.import 'core.class.component.physix'
+local Input = core.import 'core.manager.input'
 local EventManager = core.import 'core.manager.event'
-local input = core.import 'core.manager.input'
+local SceneManager = core.import 'core.manager.scene'
 local NetworkManager = core.import 'core.manager.network'
+local Snapshot = core.import 'core.manager.snapshot'
 
 local RM = core.import 'core.manager.resource'
 
@@ -21,13 +23,13 @@ local ball = Object {
 }
 
 local wall = Object {
-	sprites = { "sprites/test/5.png" },
+	sprites = { 'sprites/test/5.png' },
 	x = 100,
 	y = 200,
 }
 
 local wall2 = Object {
-	sprites = { "sprites/test/5.png" },
+	sprites = { 'sprites/test/5.png' },
 	x = 550,
 	y = 200,
 }
@@ -42,7 +44,6 @@ local room = Scene {
 
 local state = 0
 local data = ''
-local pcopy, dcopy
 local f = function (_, key)
 	if key == 'f12' then
 		NetworkManager:destroy()
@@ -62,10 +63,13 @@ local f = function (_, key)
 		end
 		NetworkManager:broadcast(data)
 	elseif key == 'f5' then
-		pcopy, dcopy = ball:sync()
-		-- print( helper.dump(ball) )
+		for obj in SceneManager.root:enum() do
+			Snapshot:stage(obj.sync, obj, obj:sync())
+		end
+		Snapshot:commit()
+		-- print( helper.dump(Snapshot:hist().prev[3]) )
 	elseif key == 'f6' then
-		ball:sync(pcopy, dcopy)
+		Snapshot:rollback(0)
 	elseif key == 'backspace' then
 		data = ''
 	elseif key == 'up' then

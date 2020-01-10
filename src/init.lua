@@ -51,15 +51,16 @@ local core = l2df
 		EventManager:subscribe('new', SceneManager.classInit, Scene, SceneManager)
 		EventManager:subscribe('resize', RenderManager.resize, love, RenderManager)
 		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
+		EventManager:subscribe('update', InputManager.update, love, InputManager)
 		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
 		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
 		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
-		EventManager:subscribe('update', InputManager.update, love, InputManager)
+		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
-		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 
 		RenderManager:init()
+		SnapshotManager:init(10)
 		InputManager:init(config.keys)
 		InputManager:updateMappings(config.controls)
 		SceneManager:load('scenes/')

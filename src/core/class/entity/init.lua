@@ -85,7 +85,9 @@ local Entity = Class:extend()
 				vars = copyTable(self.vars)
 			}
 		end
-		data.parent:attach(self)
+		if data.parent then
+			data.parent:attach(self)
+		end
 		copyTable(data, self)
 	end
 
