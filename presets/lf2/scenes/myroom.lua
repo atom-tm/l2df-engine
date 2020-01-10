@@ -8,11 +8,11 @@ local parser = core.import 'class.parser.lffs'
 local helper = core.import 'helper'
 
 local Physix = core.import 'class.component.physix'
-local Input = core.import 'manager.input'
 local EventManager = core.import 'manager.event'
 local SceneManager = core.import 'manager.scene'
 local NetworkManager = core.import 'manager.network'
 local Snapshot = core.import 'manager.snapshot'
+local Input = core.import 'manager.input'
 local RM = core.import 'manager.resource'
 
 
@@ -69,7 +69,7 @@ local f = function (_, key)
 		Snapshot:commit()
 		-- print( helper.dump(Snapshot:hist().prev[3]) )
 	elseif key == 'f6' then
-		Snapshot:rollback(0)
+		Input.time = 0 -- Snapshot:rollback(0)
 	elseif key == 'backspace' then
 		data = ''
 	elseif key == 'up' then

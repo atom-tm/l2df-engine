@@ -7,7 +7,6 @@ local lurker = require 'lurker'
 
 local lag = 0
 local strformat = string.format
-local settings = l2df.settings
 
 function love.run()
 	return l2df:gameloop()

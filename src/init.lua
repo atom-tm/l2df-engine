@@ -30,9 +30,10 @@ local core = l2df
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	love.keyboard.setKeyRepeat(false)
 
-	function core:init()
+	function core:init(fps)
 		-- First call to core.root() always should be in core.init
-		parser:scan(core.root() .. 'core/class/entity')
+		parser:scan(core.root() .. 'class/entity')
+		self.tickrate = 1 / (fps or 60)
 
 		if love.timer then math.randomseed(love.timer.getTime()) end
 
@@ -64,7 +65,6 @@ local core = l2df
 
 		--SceneManager:set('sex')
 		SceneManager:push('myroom')
-		self.tickrate = 1 / 60
 	end
 
 	function core:gameloop()

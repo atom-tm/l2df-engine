@@ -15,27 +15,27 @@ local Physix = Component:extend({ unique = true })
 
     local stack = { }
 
-    Physix.Controller = Component:extend({ unique = true })
-    function Physix.Controller:init(...)
+    Physix.World = Component:extend({ unique = true })
+    function Physix.World:init(...)
         self:set(...)
     end
 
-    function Physix.Controller:set(kwargs)
+    function Physix.World:set(kwargs)
         kwargs = kwargs or { }
         self.gravity = kwargs.gravity or 0.98
         self.maxSpeed = kwargs.maxSpeed or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.99
     end
 
-    function Physix.Controller:push()
+    function Physix.World:push()
         stack[#stack + 1] = self
     end
 
-    function Physix.Controller:pop()
+    function Physix.World:pop()
         stack[#stack] = nil
     end
 
-    stack = { Physix.Controller:new() }
+    stack = { Physix.World:new() }
 
 
     function Physix:init(...)
