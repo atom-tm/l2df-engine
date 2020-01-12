@@ -34,7 +34,7 @@ local core = { version = 1.0 }
 			info = info or debug.getinfo(depth or 2, 'Sn')
 			local prefix = info.source
 				:sub(2, -1)
-				:gsub(fs.getSource() .. '/?', '')
+				:gsub(fs.getSource():gsub('%-', '%%%-') .. '/?', '')
 				:gsub(info.name .. '.lua', '')
 
 			return prefix .. path
