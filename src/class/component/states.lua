@@ -17,12 +17,12 @@ local States = Component:extend({ unique = true })
         self.entity = nil
     end
 
-    function States:added(entity)
+    function States:added(entity, kwargs)
         if not entity then return false end
 
         self.entity = entity
         local vars = entity.vars
-        vars.persistentStates = vars.persistentStates or { }
+        vars.persistentStates = vars.persistentStates or kwargs.states or { }
         vars.states = vars.states or { }
     end
 
@@ -31,10 +31,10 @@ local States = Component:extend({ unique = true })
 
         local vars = self.entity.vars
     	for i = 1, #vars.persistentStates do
-    		StatesManager:get(tostring(vars.persistentStates[i][1])):persistentUpdate(vars, vars.persistentStates[i][2])
+    		StatesManager:get(tostring(vars.persistentStates[i][1])):persistentUpdate(self.entity, vars.persistentStates[i][2])
     	end
     	for i = 1, #vars.states do
-    		StatesManager:get(tostring(vars.states[i][1])):update(vars, vars.states[i][2])
+    		StatesManager:get(tostring(vars.states[i][1])):update(self.entity, vars.states[i][2])
     	end
     	vars.states = { }
     end

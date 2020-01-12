@@ -17,7 +17,7 @@ local Timer = Class:extend()
         EventManager:subscribe('update', self.update, nil, self)
     end
 
-    function Timer:update()
+    function Timer:update(dt, islast)
         self.i = self.i + 1
         if self.i >= self.tick then
             EventManager:invoke('timer', self)

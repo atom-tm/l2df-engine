@@ -1,15 +1,12 @@
-local core = l2df or require((...):match("(.-)core.+$") or "" .. "core")
-assert(type(core) == "table" and core.version >= 1.0, "Entities works only with l2df v1.0 and higher")
+local core = l2df
 
-local State = core.import "class.state"
+local State = core.import('class.state'):new()
 
-local State = State:new()
-
-	function State:persistentUpdate(entity, vars)
+	function State:persistentUpdate(entity, params)
 		-- body
 	end
 
-	function State:update(entity, vars)
+	function State:update(entity, params)
 		-- body
 	end
 

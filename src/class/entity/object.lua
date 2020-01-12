@@ -10,9 +10,8 @@ local Entity = core.import 'class.entity'
 local Render = core.import 'class.component.render'
 local Frames = core.import 'class.component.frames'
 local States = core.import 'class.component.states'
-local Print = core.import 'class.component.print'
-local Transform = core.import 'class.component.transform'
 local Physix = core.import 'class.component.physix'
+local Transform = core.import 'class.component.transform'
 
 local Object = Entity:extend({ name = 'object' })
 
@@ -29,7 +28,7 @@ local Object = Entity:extend({ name = 'object' })
         self:addComponent(Physix())
         self:addComponent(Render(), kwargs.sprites)
         self:addComponent(Frames(), 1, kwargs.nodes)
-        self:addComponent(States())
+        self:addComponent(States(), kwargs)
     end
 
 return Object
