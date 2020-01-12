@@ -26,7 +26,7 @@ local Physix = Component:extend({ unique = true })
 
     function Physix.World:set(kwargs)
         kwargs = kwargs or { }
-        self.gravity = kwargs.gravity or 0.98
+        self.gravity = kwargs.gravity or 0 --0.98
         self.maxSpeed = kwargs.maxSpeed or 0
         self.friction = helper.bound(kwargs.friction, 0, 1) and kwargs.friction or 0.9
     end
@@ -89,7 +89,7 @@ local Physix = Component:extend({ unique = true })
         vars.vx = vars.vx + convert(vars.dsx)
         vars.dsx, vars.dvx = 0, 0
 
-        vars.vy = vars.vy + convert(c.gravity) * dt
+        vars.vy = vars.vy + convert(c.gravity - vars.vy * c.friction) * dt
         vars.vy = vars.dvy ~= 0 and convert(vars.dvy) or vars.vy
         vars.vy = vars.vy + convert(vars.dsy)
         vars.dsy, vars.dvy = 0, 0

@@ -75,13 +75,13 @@ local Transform = Class:extend()
 		return helper.mulMatrix(self.matrix, m)
 	end
 
-	function Transform:copy()
+	function Transform:clone()
 		local t = Transform:new()
 		t:append(self)
 		return t
 	end
 
-	function Transform:scale( sx, sy, sz, ox, oy )
+	function Transform:scale(sx, sy, sz, ox, oy)
 		sy = sy or sx or 1
 		sz = sz or sx or 1
 		sx = sx or 1
