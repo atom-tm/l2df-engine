@@ -4,7 +4,6 @@
 -- @copyright Atom-TM 2019
 
 l2df = require((...) .. '.core')
-helper = l2df.import 'helper'
 
 local love = _G.love
 local math = _G.math
@@ -30,6 +29,8 @@ local core = l2df
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.keyboard.setKeyRepeat(false)
 
+	---
+	-- @param number fps
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
 		parser:scan(core.root() .. 'class/entity')
@@ -120,9 +121,5 @@ local core = l2df
 			-- if love.timer then love.timer.sleep(self.tickrate - accumulate) end
 		end
 	end
-
-	-- function core:localechanged()
-	-- 	self.settings.global.lang = self.i18n.current
-	-- end
 
 return core

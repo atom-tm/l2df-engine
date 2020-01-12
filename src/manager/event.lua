@@ -6,6 +6,7 @@
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'EventManager works only with l2df v1.0 and higher')
 
+local helper = core.import 'helper'
 local SceneManager = core.import 'manager.scene'
 local Storage = core.import 'class.storage'
 local hook = helper.hook

@@ -8,9 +8,9 @@ assert(type(core) == 'table' and core.version >= 1.0, 'ResourceManager works onl
 
 local Class = core.import 'class'
 local Storage = core.import 'class.storage'
+local Plug = core.import 'class.plug'
 local helper = core.import 'helper'
 local notNil = helper.notNil
-local Plug = core.import 'class.plug'
 
 local fs = love and love.filesystem
 local min = math.min

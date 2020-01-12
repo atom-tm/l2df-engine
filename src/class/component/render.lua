@@ -108,8 +108,8 @@ local Render = Component:extend({ unique = true })
         end
     end
 
-    function Render:postUpdate()
-        if not self.entity then return end
+    function Render:postUpdate(dt, islast)
+        if not (self.entity and islast) then return end
 
         local vars = self.entity.vars
         if not vars.hidden and #self.pics > 0 then
