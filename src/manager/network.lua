@@ -10,16 +10,18 @@ local os = require 'os'
 local enet = require 'enet'
 local math = require 'math'
 local socket = require 'socket'
+local packer = core.import 'external.packer'
+local Client = core.import 'class.client'
 
+local pairs = _G.pairs
 local rand = math.random
 local strbyte = string.byte
 local strmatch = string.match
 local strformat = string.format
 
 local sock = nil
-local peers = { }
+local clients = { }
 local masters = { }
-local message = ''
 
 local PENDING = -1
 
@@ -46,6 +48,9 @@ local function discoverIP()
 	udp:close()
 	return result
 end
+
+local ClientEvents = { }
+local ClientEventsMap = { }
 
 local MasterEvents = {
 	--- Connected to master
@@ -74,32 +79,60 @@ local MasterEvents = {
 		end
 	end,
 
+	--- Request to link another peer
 	[JOIN] = function (self, manager, host, event, payload)
-		local peer, ip = { punch = true }
-		ip, peer.private, peer.public, peer.port = strmatch(payload, '^(%S*);(%S*);(%S*):(%S*)')
-		if peer.public == ip then -- under one NAT
-			peer.public = peer.private
-			peer.private = ip
+		local client, ip = Client { events = ClientEvents, emap = ClientEventsMap }
+		ip, client.name, client.private, client.public, client.port = strmatch(payload, '^(%S*);(%S*);(%S*);(%S*):(%S*)')
+		if client.public == ip then -- under one NAT
+			client.public = client.private
+			client.private = ip
 		end
 
-		local endpoint = strformat('%s:%s', peer.public, peer.port)
-		peer.entry = sock:connect(endpoint)
-		message = strformat('PeerID: %s, punching %s', peer.entry:connect_id(), endpoint)
-		peers[tostring(peer.entry)] = peer
+		local endpoint = strformat('%s:%s', client.public, client.port)
+		client.peer = sock:connect(endpoint)
+		print(strformat('PeerID: %s, punching %s', client.peer:connect_id(), endpoint))
+		clients[tostring(client.peer)] = client
 	end,
 
+	--- Drop all connections (leaving lobby)
 	[FLUSH] = function (self, manager, host, event, payload)
 		print('FLUSH')
-		for k, peer in pairs(peers) do
-			peer.entry:disconnect()
+		for k, client in pairs(clients) do
+			client.peer:disconnect()
+			client:disconnected(event)
 		end
-		peers = { }
+		clients = { }
 	end
 }
 
 local Manager = { }
 
-	--- Add master server
+	--- Init networking
+	-- @param string username
+	-- @return NetworkManager
+	function Manager:init(username)
+		if self:isReady() then
+			return self
+		end
+
+		self.ip = '127.0.0.1'
+		self.name = assert(type(username) == 'string' and username, 'Username is required for NetworkManager')
+		self.tag = rand(1000, 9999)
+		sock = enet.host_create()
+	end
+
+	---
+	-- @return boolean
+	function Manager:isReady()
+		return sock ~= nil
+	end
+
+	---
+	function Manager:isConnected()
+		return next(clients) ~= nil
+	end
+
+	--- Register new master server
 	-- @param string host
 	-- @return NetworkManager
 	function Manager:register(host)
@@ -110,20 +143,9 @@ local Manager = { }
 		return self
 	end
 
-	--- Init networking based on configuration
-	-- @param string username
-	-- @return NetworkManager
-	function Manager:init(username)
-		if self:isReady() then
-			return self
-		end
-
-		assert(type(username) == 'string', 'Username is required for NetworkManager')
+	---
+	function Manager:login()
 		self.ip = discoverIP() or '127.0.0.1'
-		self.name = username
-		self.tag = rand(1000, 9999)
-
-		sock = enet.host_create()
 		for host, master in pairs(masters) do
 			if master == PENDING then
 				masters[host] = sock:connect(host)
@@ -132,6 +154,18 @@ local Manager = { }
 		return self
 	end
 
+	---
+	function Manager:logout()
+		for host, master in pairs(masters) do
+			if master ~= PENDING and master:state() ~= 'disconnected' then
+				master:disconnect()
+			end
+			masters[host] = PENDING
+		end
+		return self
+	end
+
+	---
 	function Manager:join(username)
 		if not self:isReady() or not username then
 			return false
@@ -145,38 +179,48 @@ local Manager = { }
 		return true
 	end
 
-	function Manager:broadcast(message)
-		if not message then return end
-		for k, peer in pairs(peers) do
-			peer.entry:send(message)
+	---
+	function Manager:clients()
+		local k, v
+		return function ()
+			k, v = next(clients, k)
+			return v
 		end
+	end
+
+	---
+	function Manager:event(name, format, callback)
+		local id = #ClientEvents + 1
+		assert(id < 256, 'Too much network events. Max supported count: 255')
+		assert(ClientEvents[name] == nil, 'Attempt to register already existing network event')
+		assert(type(callback) == 'function', 'Callback for network event must be a function')
+		ClientEventsMap[name] = id
+		ClientEvents[id] = { 'B' .. (format or ''), format or '', callback }
+	end
+
+	---
+	function Manager:broadcast(event, ...)
+		event = event and ClientEventsMap[event] or 0
+		local format = ClientEvents[event]
+		if not (format and self:isConnected()) then return false end
+
+		local result = true
+		for k, client in pairs(clients) do
+			result = result and client:rawsend(format[1], event, ...)
+		end
+		return result
 	end
 
 	--- Dispose all connections
 	-- @return NetworkManager
 	function Manager:destroy()
-		for host, master in pairs(masters) do
-			if master ~= PENDING and master:state() ~= 'disconnected' then
-				master:disconnect()
-			end
-			masters[host] = PENDING
-		end
+		self:logout()
 		if sock then
 			sock:flush()
 			sock:destroy()
 			sock = nil
 		end
 		return self
-	end
-
-	---
-	-- @return boolean
-	function Manager:isReady()
-		return sock ~= nil
-	end
-
-	function Manager:isConnected()
-		return next(peers) ~= nil
 	end
 
 	--- Get formatted username
@@ -190,11 +234,10 @@ local Manager = { }
 	function Manager:update(dt)
 		if not self:isReady() then return end
 
-		local event, peer, endpoint = sock:service()
+		local event, client, endpoint = sock:service()
 		while event do
-			print(event.type, event.peer:connect_id())
 			endpoint = tostring(event.peer)
-			peer = peers[endpoint] or { punch = true, entry = event.peer }
+			client = clients[endpoint] or Client({ events = ClientEvents, emap = ClientEventsMap, peer = event.peer })
 
 			-- If it came from master
 			if masters[endpoint] then
@@ -204,38 +247,42 @@ local Manager = { }
 
 			-- If it came from another peer
 			elseif event.type == 'receive' then
-				print('User message: ' .. event.data)
+				client:received(event)
 
 			elseif event.type == 'connect' then
 				-- Drop pending and attach to existen
-				if peer.entry:state() ~= 'connected' then
-					peer.entry:reset()
-					peer.entry = event.peer
-					print('Attached to ', peer.entry)
+				if client:state() ~= 'connected' then
+					client.peer:reset()
+					client.peer = event.peer
+					print('Attached to', client.peer)
+
 				-- Drop duplicated connection
-				elseif event.peer:connect_id() < peer.entry:connect_id() then
-					peer.entry:disconnect()
-					peer.entry = event.peer
-					print('Switched to ', peer.entry)
+				elseif event.peer:connect_id() < client.peer:connect_id() then
+					client.peer:disconnect()
+					client.peer = event.peer
+					print('Switched to', client.peer)
+
 				-- Connected, do nothing
 				else
-					print('Connected to ', peer.entry)
+					print('Connected to', client.peer)
 				end
-				peers[endpoint] = peer
+				clients[endpoint] = client:connected(event)
 
-			elseif event.type == 'disconnect' and peer.entry == event.peer then
+			elseif event.type == 'disconnect' and client.peer == event.peer then
 				-- Failed to connect via public
-				-- TODO: remove punch field after successful connection
-				if peer.punch then
-					endpoint = strformat('%s:%s', peer.private, peer.port)
-					peer.entry = sock:connect(endpoint)
-					peer.punch = false
-					print('Punching local ', endpoint)
-					peers[tostring(peer.entry)] = peer
+				if client.attempts == 0 then
+					endpoint = strformat('%s:%s', client.private, client.port)
+					client.peer = sock:connect(endpoint)
+					client.attempts = 1
+					print('Connecting in local network', endpoint)
+					clients[tostring(client.peer)] = client
+
 				-- Connection impossible: symmetric NAT, firewall and etc
+				-- or just a simple disconnect
 				else
-					print('Disconnected from ', endpoint)
-					peers[endpoint] = nil
+					print('Disconnected from', endpoint)
+					client:disconnected(event)
+					clients[endpoint] = nil
 				end
 			end
 			event = sock:service()

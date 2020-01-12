@@ -34,13 +34,19 @@ local history = createNode()
 local Manager = { time = 0, size = 1, maxsize = 1 }
 
 	---
+	-- @param number maxsize
 	-- @return SnapshotManager
 	function Manager:init(maxsize)
 		self.maxsize = maxsize
 		self.size = 1
+		self:reset()
+		return self
+	end
+
+	---
+	function Manager:reset()
 		self.time = 0
 		history = createNode()
-		return self
 	end
 
 	---
@@ -76,6 +82,7 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 	end
 
 	---
+	-- @param number timestamp
 	-- @return number
 	function Manager:rollback(timestamp)
 		-- TODO: if timestamp is more than last stored snapshot then throw error

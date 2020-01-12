@@ -1,3 +1,8 @@
+--- Input manager
+-- @classmod l2df.manager.input
+-- @author Abelidze
+-- @copyright Atom-TM 2020
+
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'InputManager works only with l2df v1.0 and higher')
 
@@ -26,20 +31,41 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	--- Init
 	function Manager:init(keys)
 		keys = keys or { }
-		inputs = { }
-		self.time = 0
+		self.localplayers = 0
+		self.remoteplayers = 0
 		self.keys = { }
 		self.keymap = { }
+		self:reset()
 		for i = 1, #keys do
 			self.keys[i] = { keys[i], bit(i) }
 			self.keymap[keys[i]] = i
 		end
 	end
 
+	---
+	function Manager:reset()
+		self.time = 0
+		self.remoteplayers = 0
+		inputs = { }
+		for p = 1, self.localplayers do
+			self.buttons[p] = { }
+			inputs[p] = { data = 0, time = 0 }
+		end
+	end
+
+	---
+	-- @return number
+	function Manager:newRemotePlayer()
+		self.remoteplayers = self.remoteplayers + 1
+		inputs[self.localplayers + self.remoteplayers] = { data = 0, time = 0 }
+		return self.localplayers + self.remoteplayers
+	end
+
 	--- Sync mappings with config
 	function Manager:updateMappings(controls)
 		self.mapping = { }
-		for p = 1, #controls do
+		self.localplayers = #controls
+		for p = 1, self.localplayers do
 			inputs[p] = { data = 0, time = 0 }
 			self.buttons[p] = { }
 			for k, v in pairs(controls[p]) do
@@ -54,7 +80,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	-- @param string button  Pressed button
 	-- @param number player  Player to check
 	-- @return boolean
-	function Manager:ispressed(button, player)
+	function Manager:pressed(button, player)
 		local index = self.keymap[button]
 		local input = inputs[player or 1]
 		return index and input and hasbit(input.data, self.keys[index][2]) or false
@@ -69,7 +95,19 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		return input and hasbit(input.data, data) or false
 	end
 
+	--- Get last saved input for specific player
+	-- @param number player
+	-- @return number
+	function Manager:lastinput(player)
+		local input = inputs[player or 1]
+		return input and input.data or 0
+	end
+
 	--- Persist input
+	-- @param number input
+	-- @param number player
+	-- @param number time
+	-- @return InputManager
 	function Manager:addinput(input, player, time)
 		player = player or 1
 		time = time or self.time
@@ -94,7 +132,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		}
 		if left then left.next = new end
 		if right then right.prev = new end
-		if time < self.time then
+		if time <= self.time then
 			inputs[player] = new
 			self.time = time
 		end
@@ -102,6 +140,9 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Save input for local player
+	-- @param number player
+	-- @param number time
+	-- @return number
 	function Manager:saveinput(player, time)
 		return self:addinput(self:getinput(player), player, time)
 	end
@@ -140,11 +181,15 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Hook for update
-	function Manager:update(dt)
+	function Manager:update(dt, islast)
 		self.time = self.time + dt
 		for i = 1, #inputs do
 			local it = inputs[i]
+			while it.prev and it.prev.time > self.time do
+				it = it.prev
+			end
 			while it.next and it.next.time < self.time do
+				if not islast then print('RESIM', it.data) end
 				it = it.next
 			end
 			inputs[i] = it

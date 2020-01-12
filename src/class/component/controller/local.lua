@@ -1,7 +1,8 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
-assert(type(core) == 'table' and core.version >= 1.0, 'Controller works only with l2df v1.0 and higher')
+assert(type(core) == 'table' and core.version >= 1.0, 'LocalController works only with l2df v1.0 and higher')
 
 local Controller = core.import 'class.component.controller'
+local NetworkManager = core.import 'manager.network'
 local InputManager = core.import 'manager.input'
 
 local LocalController = Controller:extend()
@@ -9,26 +10,22 @@ local LocalController = Controller:extend()
 	--- Check if button is pressed
 	-- @param string button  Pressed button
 	-- @return boolean
-	function LocalController:ispressed(button)
-		return InputManager:ispressed(button, self.entity.vars.player)
+	function LocalController:pressed(button)
+		return InputManager:pressed(button, self.entity.vars.player)
 	end
 
 	--- Update controller timers
-	function LocalController:update(dt)
+	function LocalController:update(dt, islast)
 		if not self.entity then return end
 
 		local vars = self.entity.vars
-		local input = InputManager:getinput(vars.player)
-		if input ~= vars.input then
-			vars.input = input
-			InputManager:addinput(input, vars.player)
+		if islast then
+			local input = InputManager:getinput(vars.player)
+			if input ~= InputManager:lastinput(vars.player) then
+				InputManager:addinput(input, vars.player)
+				NetworkManager:broadcast('netinput', input, InputManager.time)
+			end
 		end
-
-		if self:ispressed('up') then vars.dvy = -1
-		elseif self:ispressed('down') then vars.dvy = 1 end
-
-		if self:ispressed('left') then vars.dvx = -4
-		elseif self:ispressed('right') then vars.dvx = 4 end
 
 		-- for i = 1, #settings.controls do
 		--  if control.players[i] then

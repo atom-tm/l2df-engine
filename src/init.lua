@@ -52,8 +52,8 @@ local core = l2df
 		EventManager:subscribe('update', InputManager.update, love, InputManager)
 		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
 		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
-		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
 		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
+		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
 		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
 
@@ -61,19 +61,17 @@ local core = l2df
 		SnapshotManager:init(10)
 		InputManager:init(config.keys)
 		InputManager:updateMappings(config.controls)
-		SceneManager:load('scenes/')
-		StatesManager:load('data/states')
-
-		--SceneManager:set('sex')
-		SceneManager:push('myroom')
 	end
 
+	---
+	-- @return function
 	function core:gameloop()
 		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
 		if love.timer then love.timer.step() end
 
 		local accumulate = 0
 		local delta = 0
+		local time = 0
 		return function()
 			-- Events
 			if love.event then
@@ -93,7 +91,9 @@ local core = l2df
 			NetworkManager:update(delta)
 			if InputManager.time < SnapshotManager.time then
 				accumulate = accumulate + SnapshotManager:rollback(InputManager.time)
+				time = InputManager.time
 				InputManager.time = SnapshotManager.time
+				print('ROLLBACK', time, InputManager.time)
 			end
 
 			-- Update

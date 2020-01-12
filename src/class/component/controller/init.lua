@@ -8,7 +8,7 @@ local Controller = Component:extend({ unique = true })
 	--- Check if button is pressed
 	-- @param string button  Pressed button
 	-- @return boolean
-	function Controller:ispressed(button)
+	function Controller:pressed(button)
 		return false
 	end
 
@@ -18,7 +18,6 @@ local Controller = Component:extend({ unique = true })
         self.entity = entity
         local vars = entity.vars
         vars.player = player or vars.player or 0
-        vars.input = vars.input or 0
         -- TODO: add FSM for combos?
         return true
     end

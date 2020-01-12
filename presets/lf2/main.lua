@@ -8,12 +8,18 @@ local lurker = require 'lurker'
 local lag = 0
 local strformat = string.format
 
+local SceneManager = l2df.import 'manager.scene'
+local StatesManager = l2df.import 'manager.states'
+
 function love.run()
 	return l2df:gameloop()
 end
 
 function love.load()
 	l2df:init()
+	StatesManager:load('data/states')
+	SceneManager:load('scenes/')
+	SceneManager:push('myroom')
 end
 
 function love.update(dt)
@@ -24,22 +30,12 @@ function love.update(dt)
 	end
 end
 
-function love.joystickpressed(joystick, button)
-	-- rooms.current:Keypressed('Joy'..button)
-end
-
-function love.joystickhat(joystick, hat, direction)
-	if direction ~= 'c' then
-		-- rooms.current:Keypressed('Joy'..hat..button)
-	end
-end
-
 function love.keypressed(key)
 	if key == 'f11' then
 		lag = lag + 0.001
 	elseif key == 'f12' then
 		lag = lag - 0.001
-	elseif key == 'x' then
+	elseif key == 'f10' then
 		lag = 0
 		love.timer.sleep(1)
 	end
