@@ -11,7 +11,9 @@ local Component = core.import 'class.component'
 local Event = core.import 'manager.event'
 local RenderManager = core.import 'manager.render'
 local ResourceManager = core.import 'manager.resource'
+
 local ceil = math.ceil
+local newQuad = love.graphics.newQuad
 
 local Render = Component:extend({ unique = true })
 
@@ -21,14 +23,14 @@ local Render = Component:extend({ unique = true })
         self.oy = 0
         self.kx = 0
         self.ky = 0
-        self.color = { 1,1,1,1 }
+        self.color = { 1, 1, 1, 1 }
     end
 
     function Render:added(entity, sprites)
         if not entity then return false end
 
-        assert(sprites and type(sprites) == "table", "Data entry error")
-        sprites = sprites[1] and type(sprites[1]) == "table" and sprites or { sprites }
+        assert(sprites and type(sprites) == 'table', 'Data entry error')
+        sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
 
         self.entity = entity
         local vars = entity.vars
@@ -64,7 +66,7 @@ local Render = Component:extend({ unique = true })
             x,y - количество ячеек в спрай-листе
             s - ячейка с которой начнётся считывание спрайтов
             f - ячейка на которой закончится считывание спрайтов
-            xo, yo - смещение ячеек в листе
+            ox, oy - смещение ячеек в листе
         ]]
 
         sprite.res = sprite.res or sprite[1] or nil
@@ -72,37 +74,45 @@ local Render = Component:extend({ unique = true })
         sprite.h = sprite.h or sprite[3] or nil
 
         if not (sprite.w and sprite.h) then
-            print("[Ex] It does not specify the width and height of the file", sprite.res)
+            print('[Ex] It does not specify the width and height of sprites', sprite.res)
             return
         end
-
-        if not ResourceManager:loadAsync(sprite.res) then
-            print("[Ex] Data error", sprite.res)
-            return
-        end
-
-        sprite.x = sprite.x or sprite[4] or 1
-        sprite.y = sprite.y or sprite[5] or 1
 
         local count = sprite.x * sprite.y
         if (count) == 0 then return end
 
+        sprite.x = sprite.x or sprite[4] or 1
+        sprite.y = sprite.y or sprite[5] or 1
         sprite.s = sprite.s or sprite[6] or 1
         sprite.f = sprite.f or sprite[7] or count
-
-        sprite.xo = sprite.xo or sprite[8] or 0
-        sprite.yo = sprite.yo or sprite[9] or 0
-
+        sprite.ox = sprite.ox or sprite[8] or 0
+        sprite.oy = sprite.oy or sprite[9] or 0
         sprite.ord = sprite.ord or sprite[10] or #self.pics
 
-        local quad = nil
+        if not ResourceManager:loadAsync(sprite.res, function (id, img)
+            local num = 0
+            for y = 1, sprite.y do
+                for x = 1, sprite.x do
+                    num = num + 1
+                    if (sprite.s <= num) and (num <= sprite.f) then
+                        self.pics[sprite.ord + (num - sprite.s) + 1] = {
+                            sprite.res,
+                            newQuad((x-1) * sprite.w + sprite.ox, (y-1) * sprite.h + sprite.oy, sprite.w, sprite.h, img:getDimensions())
+                        }
+                    end
+                end
+            end
+        end) then
+            print('[Ex] Data error', sprite.res)
+            return
+        end
+
         local num = 0
         for y = 1, sprite.y do
             for x = 1, sprite.x do
                 num = num + 1
                 if (sprite.s <= num) and (num <= sprite.f) then
-                    quad = RenderManager:generateQuad((x-1)*sprite.w+sprite.xo, (y-1)*sprite.h+sprite.yo, sprite.w, sprite.h)
-                    self.pics[sprite.ord + (num - sprite.s) + 1] = { sprite.res, quad }
+                    self.pics[sprite.ord + (num - sprite.s) + 1] = false
                 end
             end
         end
@@ -112,10 +122,11 @@ local Render = Component:extend({ unique = true })
         if not (self.entity and islast) then return end
 
         local vars = self.entity.vars
-        if not vars.hidden and #self.pics > 0 then
+        local pic = self.pics[vars.pic]
+        if not vars.hidden and pic then
             RenderManager:add({
-                object = self.pics[vars.pic][1],
-                quad = self.pics[vars.pic][2],
+                object = ResourceManager:get(pic[1]),
+                quad = pic[2],
                 index = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,

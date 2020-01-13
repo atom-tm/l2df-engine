@@ -6,8 +6,14 @@
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
-local ResourceManager = core.import 'manager.resource'
 local rad = math.rad
+local loveDraw = love.graphics.draw
+local loveClear = love.graphics.clear
+local lovePrintf = love.graphics.printf
+local loveGetColor = love.graphics.getColor
+local loveSetColor = love.graphics.setColor
+local loveSetCanvas = love.graphics.setCanvas
+local loveNewCanvas = love.graphics.newCanvas
 
 local layers = {
 	UI = { }
@@ -22,7 +28,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 		self.gameW, self.gameH = love.window.getMode()
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
 
-		self.canvas = love.graphics.newCanvas(self.resX, self.resY)
+		self.canvas = loveNewCanvas(self.resX, self.resY)
 		self:setMaxIndex(10)
 	end
 
@@ -45,9 +51,9 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	end
 
 	function Manager:layersClear()
-		love.graphics.setCanvas(self.canvas)
-		love.graphics.clear()
-		love.graphics.setCanvas()
+		loveSetCanvas(self.canvas)
+		loveClear()
+		loveSetCanvas()
 	end
 
 	function Manager:clear()
@@ -60,37 +66,27 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	end
 
 	function Manager:draw()
-		love.graphics.setCanvas(self.canvas)
+		loveSetCanvas(self.canvas)
 		self:render()
-		love.graphics.setCanvas()
-		love.graphics.draw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
+		loveSetCanvas()
+		loveDraw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
 	end
 
 	function Manager:render()
-		local input, r,g,b,a
+		local input, r, g, b, a
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
 				input = drawables[i][j]
-				r, g, b, a = love.graphics.getColor()
-				love.graphics.setColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
-				if input.object then
-					input.object = ResourceManager:get(input.object)
-					if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
-						love.graphics.draw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
-					end
-				elseif input.text and type(input.text) == "string" then
-					love.graphics.printf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+				r, g, b, a = loveGetColor()
+				loveSetColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
+				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
+					loveDraw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+				elseif input.text and type(input.text) == 'string' then
+					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
-				love.graphics.setColor(r, g, b, a)
+				loveSetColor(r, g, b, a)
 			end
 		end
-	end
-
-	function Manager:generateQuad(x, y, w, h)
-		if not (w and h) then return end
-		x = x or 1
-		y = y or 1
-		return love.graphics.newQuad(x,y,w,h,w,h)
 	end
 
 return Manager

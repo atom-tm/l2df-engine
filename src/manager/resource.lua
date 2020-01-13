@@ -15,14 +15,14 @@ local notNil = helper.notNil
 local fs = love and love.filesystem
 local min = math.min
 
-local asyncList = {}
-local asyncChannel = love.thread.getChannel("asyncChannel")
-local asyncReturn = love.thread.getChannel("asyncReturn")
+local asyncList = { }
+local asyncChannel = love.thread.getChannel('asyncChannel')
+local asyncReturn = love.thread.getChannel('asyncReturn')
 local asyncLoader = love.thread.newThread([[
-	require "love.image"
+	require 'love.image'
 	local extensions = ...
-	local asyncChannel = love.thread.getChannel("asyncChannel")
-	local asyncReturn = love.thread.getChannel("asyncReturn")
+	local asyncChannel = love.thread.getChannel('asyncChannel')
+	local asyncReturn = love.thread.getChannel('asyncReturn')
 	local continuation = true
 	while continuation do
 		local task = asyncChannel:pop()
@@ -68,6 +68,8 @@ local extensions = {
 		['.otf'] = true,
 	},
 }
+
+local callbacks = { }
 
 local Manager = { }
 	--- Saves the resource to the Manager
@@ -169,7 +171,7 @@ local Manager = { }
 			for i = 1, #asyncList do
 				asyncChannel:push(asyncList[i])
 			end
-			asyncList = {}
+			asyncList = { }
 			if not asyncLoader:isRunning() then asyncLoader:start(extensions) end
 		end
 		if asyncReturn:getCount() > 0 then
@@ -178,17 +180,22 @@ local Manager = { }
 				returned.resource = love.graphics.newImage(returned.resource)
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
+			if callbacks[returned.id] then
+				callbacks[returned.id](returned.id, returned.resource)
+				callbacks[returned.id] = nil
+			end
 			print("Async loaded:", self:get(returned.id), returned.id)
 		else asyncReturn:clear() end
 	end
 
 	--- Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
-	function Manager:loadAsync(filepath, reload, id, temp)
-		local id = id or filepath
+	function Manager:loadAsync(filepath, callback, reload, id, temp)
+		id = id or filepath
 		if not reload and self:get(id) then return id end
 		if not fs.getInfo(filepath) then return false end
 		local extension = filepath:match('^.+(%..+)$')
-		asyncList[#asyncList+1] = { id, filepath, extension, temp }
+		if callback then callbacks[id] = callback end
+		asyncList[#asyncList + 1] = { id, filepath, extension, temp }
 		id = self:addById(id, Plug:new(), temp)
 		return id
 	end

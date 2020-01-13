@@ -72,6 +72,7 @@ local core = l2df
 		local accumulate = 0
 		local delta = 0
 		local time = 0
+		local draw = false
 		return function()
 			-- Events
 			if love.event then
@@ -99,16 +100,19 @@ local core = l2df
 			-- Update
 			accumulate = accumulate + delta
 			if love.update then
+				draw = false
 				while accumulate >= self.tickrate do
 					accumulate = accumulate - self.tickrate
-					love.update(self.tickrate, accumulate < self.tickrate)
+					draw = accumulate < self.tickrate
+					love.update(self.tickrate, draw)
 				end
 			else
+				draw = true
 				accumulate = accumulate % self.tickrate
 			end
 
 			-- Draw
-			if love.graphics and love.graphics.isActive() then
+			if draw and love.graphics and love.graphics.isActive() then
 				love.graphics.origin()
 				love.graphics.clear(love.graphics.getBackgroundColor())
 
