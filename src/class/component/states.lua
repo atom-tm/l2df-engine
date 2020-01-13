@@ -13,30 +13,30 @@ local StatesManager = core.import 'manager.states'
 
 local States = Component:extend({ unique = true })
 
-    function States:init()
-        self.entity = nil
-    end
+	function States:init()
+		self.entity = nil
+	end
 
-    function States:added(entity, kwargs)
-        if not entity then return false end
+	function States:added(entity, kwargs)
+		if not entity then return false end
 
-        self.entity = entity
-        local vars = entity.vars
-        vars.persistentStates = vars.persistentStates or kwargs.states or { }
-        vars.states = vars.states or { }
-    end
+		self.entity = entity
+		local vars = entity.vars
+		vars.persistentStates = vars.persistentStates or kwargs.states or { kwargs.state }
+		vars.states = vars.states or { }
+	end
 
-    function States:update(dt)
-        if not self.entity then return end
+	function States:update(dt)
+		if not self.entity then return end
 
-        local vars = self.entity.vars
-    	for i = 1, #vars.persistentStates do
-    		StatesManager:get(tostring(vars.persistentStates[i][1])):persistentUpdate(self.entity, vars.persistentStates[i][2])
-    	end
-    	for i = 1, #vars.states do
-    		StatesManager:get(tostring(vars.states[i][1])):update(self.entity, vars.states[i][2])
-    	end
-    	vars.states = { }
-    end
+		local vars = self.entity.vars
+		for i = 1, #vars.persistentStates do
+			StatesManager:get(tostring(vars.persistentStates[i][1])):persistentUpdate(self.entity, vars.persistentStates[i][2])
+		end
+		for i = 1, #vars.states do
+			StatesManager:get(tostring(vars.states[i][1])):update(self.entity, vars.states[i][2])
+		end
+		vars.states = { }
+	end
 
 return States

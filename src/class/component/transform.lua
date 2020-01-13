@@ -6,9 +6,9 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
+local helper = core.import 'helper'
 local Component = core.import 'class.component'
 local CTransform = core.import 'class.transform'
-local helper = core.import 'helper'
 local Event = core.import 'manager.event'
 
 local stack = { CTransform:new() }
@@ -86,7 +86,7 @@ local Transform = Component:extend({ unique = true })
     end
 
     function Transform:push()
-        local v = self.vars
+        local v = self.entity.vars
         local transform = CTransform:new(v.x, v.y, v.z, v.scaleX * v.facing, v.scaleY, v.scaleZ, v.r, v.centerX, v.centerY)
         transform:append(stack[#stack])
         stack[#stack + 1] = transform

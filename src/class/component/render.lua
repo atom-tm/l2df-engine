@@ -46,6 +46,8 @@ local Render = Component:extend({ unique = true })
         vars.centerX = vars.centerX or 0
         vars.centerY = vars.centerY or 0
 
+        -- vars.facing = vars.facing or 1
+
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
 
@@ -78,11 +80,12 @@ local Render = Component:extend({ unique = true })
             return
         end
 
+        sprite.x = sprite.x or sprite[4] or 1
+        sprite.y = sprite.y or sprite[5] or 1
+
         local count = sprite.x * sprite.y
         if (count) == 0 then return end
 
-        sprite.x = sprite.x or sprite[4] or 1
-        sprite.y = sprite.y or sprite[5] or 1
         sprite.s = sprite.s or sprite[6] or 1
         sprite.f = sprite.f or sprite[7] or count
         sprite.ox = sprite.ox or sprite[8] or 0
@@ -131,7 +134,7 @@ local Render = Component:extend({ unique = true })
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,
                 r = vars.globalR or vars.r,
-                sx = vars.globalScaleX or vars.scaleX,
+                sx = vars.facing * (vars.globalScaleX or vars.scaleX),
                 sy = vars.globalScaleY or vars.scaleY,
                 ox = self.ox + vars.centerX,
                 oy = self.oy + vars.centerY,

@@ -80,7 +80,12 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 				r, g, b, a = loveGetColor()
 				loveSetColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
-					loveDraw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+					if input.quad then
+						loveDraw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+					else
+						loveDraw(input.object, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+					end
+					love.graphics.circle('fill', input.x, input.y, 8)
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
