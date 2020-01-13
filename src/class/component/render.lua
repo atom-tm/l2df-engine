@@ -92,8 +92,18 @@ local Render = Component:extend({ unique = true })
         sprite.oy = sprite.oy or sprite[9] or 0
         sprite.ord = sprite.ord or sprite[10] or #self.pics
 
+        local num = 0
+        for y = 1, sprite.y do
+            for x = 1, sprite.x do
+                num = num + 1
+                if (sprite.s <= num) and (num <= sprite.f) then
+                    self.pics[sprite.ord + (num - sprite.s) + 1] = false
+                end
+            end
+        end
+
         if not ResourceManager:loadAsync(sprite.res, function (id, img)
-            local num = 0
+            num = 0
             for y = 1, sprite.y do
                 for x = 1, sprite.x do
                     num = num + 1
@@ -108,16 +118,6 @@ local Render = Component:extend({ unique = true })
         end) then
             print('[Ex] Data error', sprite.res)
             return
-        end
-
-        local num = 0
-        for y = 1, sprite.y do
-            for x = 1, sprite.x do
-                num = num + 1
-                if (sprite.s <= num) and (num <= sprite.f) then
-                    self.pics[sprite.ord + (num - sprite.s) + 1] = false
-                end
-            end
         end
     end
 

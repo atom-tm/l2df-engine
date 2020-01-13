@@ -165,7 +165,7 @@ local Manager = { }
 		return id
 	end
 
-
+	---
 	function Manager:update()
 		if #asyncList > 0 then
 			for i = 1, #asyncList do
@@ -180,8 +180,11 @@ local Manager = { }
 				returned.resource = love.graphics.newImage(returned.resource)
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
-			if callbacks[returned.id] then
-				callbacks[returned.id](returned.id, returned.resource)
+			local c = callbacks[returned.id]
+			if c then
+				for i = 1, #c do
+					c[i](returned.id, returned.resource)
+				end
 				callbacks[returned.id] = nil
 			end
 			print("Async loaded:", self:get(returned.id), returned.id)
@@ -191,15 +194,23 @@ local Manager = { }
 	--- Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
 	function Manager:loadAsync(filepath, callback, reload, id, temp)
 		id = id or filepath
-		if not reload and self:get(id) then return id end
+		local res = self:get(id)
+		if not reload and res then
+			if callback and type(res) == 'table' and res.isInstanceOf and res:isInstanceOf(Plug) then
+				callbacks[id] = callbacks[id] or { }
+				callbacks[id][#callbacks[id] + 1] = callback
+			elseif callback then
+			    callback(id, res)
+			end
+			return id
+		end
 		if not fs.getInfo(filepath) then return false end
 		local extension = filepath:match('^.+(%..+)$')
-		if callback then callbacks[id] = callback end
+		if callback then callbacks[id] = { callback } end
 		asyncList[#asyncList + 1] = { id, filepath, extension, temp }
 		id = self:addById(id, Plug:new(), temp)
 		return id
 	end
-
 
 	--- Загрузка списка файлов с проверкой завершенности
 	function Manager:loadListAsync(files)
@@ -208,7 +219,7 @@ local Manager = { }
 		for i = 1, #files do
 			temp = self:get(files[i])
 			if temp == nil then self:loadAsync(files[i])
-			elseif not (type(temp) == table and temp.isInstanceOf and temp.isInstanceOf(Plug)) then
+			elseif not (type(temp) == 'table' and temp.isInstanceOf and temp:isInstanceOf(Plug)) then
 				result = result - 1
 			end
 		end
