@@ -78,12 +78,22 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 
 	--- Check if button is pressed
 	-- @param string button  Pressed button
-	-- @param number player  Player to check
+	-- @param number player  Player to check or nil to check any local player
 	-- @return boolean
+	-- @return number
 	function Manager:pressed(button, player)
 		local index = self.keymap[button]
-		local input = inputs[player or 1]
-		return index and input and hasbit(input.data, self.keys[index][2]) or false
+		if index then
+			index = self.keys[index][2]
+			local input = nil
+			for i = player or 1, player or self.localplayers do
+				input = inputs[i]
+				if input and hasbit(input.data, index) then
+					return true, i
+				end
+			end
+		end
+		return false
 	end
 
 	--- Check if input data exists
