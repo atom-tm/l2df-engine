@@ -248,7 +248,7 @@ local helper = { }
 	-- @param number max
 	-- @return boolean
 	function helper.bound(val, min, max)
-		return type(val) == 'number' and val > min and val < max and true or false
+		return type(val) == 'number' and val > min and val < max and val or false
 	end
 
 	--- Get rounded value with precision
