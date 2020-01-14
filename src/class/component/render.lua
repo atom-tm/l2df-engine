@@ -103,7 +103,7 @@ local Render = Component:extend({ unique = true })
         end
 
         if not ResourceManager:loadAsync(sprite.res, function (id, img)
-            num = 0
+            local num = 0
             for y = 1, sprite.y do
                 for x = 1, sprite.x do
                     num = num + 1

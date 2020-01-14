@@ -27,7 +27,6 @@ local core = l2df
 	local parser = core.import 'class.parser.lffs'
 
 	love.graphics.setDefaultFilter('nearest', 'nearest')
-	love.keyboard.setKeyRepeat(false)
 
 	---
 	-- @param number fps

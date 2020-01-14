@@ -8,6 +8,8 @@ assert(type(core) == 'table' and core.version >= 1.0, 'InputManager works only w
 
 local helper = core.import 'helper'
 
+local setKeyRepeat = love.keyboard.setKeyRepeat
+
 local inputs = { }
 
 local function bit(p)
@@ -36,6 +38,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		self.keys = { }
 		self.keymap = { }
 		self:reset()
+		setKeyRepeat(false)
 		for i = 1, #keys do
 			self.keys[i] = { keys[i], bit(i) }
 			self.keymap[keys[i]] = i
