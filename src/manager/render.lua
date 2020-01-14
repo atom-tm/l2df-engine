@@ -41,7 +41,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 
 	function Manager:add(input)
 		if not (input or input.object) then return end
-		local index = input.index > 0 and input.index < #drawables and input.index or 1
+		local index = input.z > 0 and input.z < #drawables and input.z or 1
 		drawables[index][#drawables[index] + 1] = input
 	end
 
@@ -81,9 +81,9 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 				loveSetColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
-						loveDraw(input.object, input.quad, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.quad, input.x, input.y + input.z, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					else
-						loveDraw(input.object, input.x, input.y, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.x, input.y + input.z, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					end
 					love.graphics.circle('fill', input.x, input.y, 8)
 				elseif input.text and type(input.text) == 'string' then

@@ -60,7 +60,7 @@ local Print = Component:extend({ unique = false })
             RenderManager:add({
                 text = self.text,
                 font = self.font,
-                index = vars.globalZ or vars.z,
+                z = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,
                 r = vars.r,

@@ -44,6 +44,10 @@ local function save()
 	Snapshot:commit()
 end
 
+	ball = Object(ballData)
+	ball:createComponent(LocalController, 1)
+	room:attach(ball)
+
 NetworkManager:register('127.0.0.1:12565')
 NetworkManager:event('start', nil, function (c, e)
 	delay = 3 - c:ping() / 1000

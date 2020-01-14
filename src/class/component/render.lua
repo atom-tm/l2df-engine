@@ -130,7 +130,7 @@ local Render = Component:extend({ unique = true })
             RenderManager:add({
                 object = ResourceManager:get(pic[1]),
                 quad = pic[2],
-                index = vars.globalZ or vars.z,
+                z = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,
                 r = vars.globalR or vars.r,
