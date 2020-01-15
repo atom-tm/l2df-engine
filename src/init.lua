@@ -11,6 +11,7 @@ local math = _G.math
 local core = l2df
 
 	local config = core.import 'config'
+	local log = core.import 'class.logger'
 	local EventManager = core.import 'manager.event'
 	local GroupManager = core.import 'manager.group'
 	local RenderManager = core.import 'manager.render'
@@ -93,7 +94,7 @@ local core = l2df
 				accumulate = accumulate + SnapshotManager:rollback(InputManager.time)
 				time = InputManager.time
 				InputManager.time = SnapshotManager.time
-				print('ROLLBACK', time, InputManager.time)
+				log:debug('ROLLBACK %s -> %s', time, InputManager.time)
 			end
 
 			-- Update

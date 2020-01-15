@@ -7,6 +7,8 @@ local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'ResourceManager works only with l2df v1.0 and higher')
 
 local Class = core.import 'class'
+
+local log = core.import 'class.logger'
 local Storage = core.import 'class.storage'
 local Plug = core.import 'class.plug'
 local helper = core.import 'helper'
@@ -187,7 +189,7 @@ local Manager = { }
 				end
 				callbacks[returned.id] = nil
 			end
-			print("Async loaded:", self:get(returned.id), returned.id)
+			log:debug('Async loaded: %s %s', self:get(returned.id), returned.id)
 		else asyncReturn:clear() end
 	end
 

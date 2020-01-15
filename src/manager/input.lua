@@ -194,7 +194,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Hook for update
-	function Manager:update(dt, islast)
+	function Manager:update(dt)
 		self.time = self.time + dt
 		for i = 1, #inputs do
 			local it = inputs[i]
@@ -202,7 +202,6 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 				it = it.prev
 			end
 			while it.next and it.next.time < self.time do
-				if not islast then print('RESIM', it.data) end
 				it = it.next
 			end
 			inputs[i] = it

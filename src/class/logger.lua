@@ -14,10 +14,12 @@ local assert = _G.assert
 local print = io.write
 local fopen = io.open
 local asctime = os.date
-local getinfo = debug.getinfo
+local getenv = os.getenv
+local strsub = string.sub
 local strformat = string.format
+local getline = core.getline
 
-local colors = not os.getenv('L2DF_NOCOLOR')
+local colors = not getenv('L2DF_NOCOLOR')
 local loggers = { }
 local levels = { }
 local methods = {
@@ -43,7 +45,7 @@ io.stdout:setvbuf('no') -- don't touch it
 -- 'bold' = '\033[1m'
 -- '\033[90m%(asctime)s\033[0m'
 
-local Logger = Class:extend({ name = '', level = 'debug' })
+local Logger = Class:extend({ name = '', level = getenv('L2DF_LOGLEVEL') or 'debug', file = getenv('L2DF_LOGFILE') })
 
     function Logger.get(name)
         return assert(loggers[name], 'Logger not found')
@@ -70,8 +72,7 @@ local Logger = Class:extend({ name = '', level = 'debug' })
             local time = asctime('%d.%m.%y %X')
             local msg = strformat(format, ...)
             if useDebug then
-                local info = getinfo(2, 'Sl')
-                msg = strformat('%s:%s: %s', info.short_src, info.currentline, msg)
+                msg = strformat('%s: %s', getline(), msg)
             end
 
             if colors then

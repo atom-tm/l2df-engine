@@ -6,9 +6,11 @@
 local __DIR__ = (...):match('(.-)[^%.]+$')
 
 local fs = love and love.filesystem
+local strformat = string.format
 local strmatch = string.match
 local strgsub = string.gsub
 local strsub = string.sub
+local getinfo = debug.getinfo
 
 local source = nil
 local gsource = nil
@@ -20,9 +22,14 @@ local core = { version = 1.0 }
 	end
 
 	function core.root()
+		gsource = gsource or fs and fs.getSource():gsub('%-', '%%%-')
 		source = source or core.fullpath('', 3)
-		gsource = gsource or source and ('^' .. source)
 		return source
+	end
+
+	function core.getline(i)
+		i = i or getinfo(3, 'Sl')
+		return strformat('%s:%s', gsource and strgsub(i.source, gsource .. '/?', '') or i.short_src, i.currentline)
 	end
 
 	function core.modulepath(path)
@@ -30,11 +37,11 @@ local core = { version = 1.0 }
 	end
 
 	function core.fullpath(path, depth, info)
-		if fs then
-			info = info or debug.getinfo(depth or 2, 'Sn')
+		if gsource and fs then
+			info = info or getinfo(depth or 2, 'Sn')
 			local prefix = info.source
 				:sub(2, -1)
-				:gsub(fs.getSource():gsub('%-', '%%%-') .. '/?', '')
+				:gsub(gsource .. '/?', '')
 				:gsub(info.name .. '.lua', '')
 
 			return prefix .. path

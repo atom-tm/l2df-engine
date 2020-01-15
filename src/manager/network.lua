@@ -10,6 +10,7 @@ local os = require 'os'
 local enet = require 'enet'
 local math = require 'math'
 local socket = require 'socket'
+local log = core.import 'class.logger'
 local packer = core.import 'external.packer'
 local Client = core.import 'class.client'
 
@@ -40,7 +41,7 @@ end
 local function discoverIP()
 	local udp = socket.udp()
 	if not udp:setpeername('www.google.com', 80) then
-		print('Error while discovering IP')
+		log:error('Discovering IP has failed')
 		udp:close()
 		return nil
 	end
@@ -64,7 +65,7 @@ local MasterEvents = {
 	disconnect = function (self, manager, host, event)
 		local master = masters[host]
 		if type(master) == 'userdata' then
-			print(host, 'connection lost')
+			log:warn('%s connection lost', host)
 			master:reset()
 			masters[host] = PENDING
 		end
@@ -90,13 +91,13 @@ local MasterEvents = {
 
 		local endpoint = strformat('%s:%s', client.public, client.port)
 		client.peer = sock:connect(endpoint)
-		print(strformat('PeerID: %s, punching %s', client.peer:connect_id(), endpoint))
+		log:info('PeerID: %s, punching %s', client.peer:connect_id(), endpoint)
 		clients[tostring(client.peer)] = client
 	end,
 
 	--- Drop all connections (leaving lobby)
 	[FLUSH] = function (self, manager, host, event, payload)
-		print('FLUSH')
+		log:info('FLUSH')
 		for k, client in pairs(clients) do
 			client.peer:disconnect()
 			client:disconnected(event)
@@ -254,17 +255,17 @@ local Manager = { }
 				if client:state() ~= 'connected' then
 					client.peer:reset()
 					client.peer = event.peer
-					print('Attached to', client.peer)
+					log:success('Attached to %s', client.peer)
 
 				-- Drop duplicated connection
 				elseif event.peer:connect_id() < client.peer:connect_id() then
 					client.peer:disconnect()
 					client.peer = event.peer
-					print('Switched to', client.peer)
+					log:success('Switched to %s', client.peer)
 
 				-- Connected, do nothing
 				else
-					print('Connected to', client.peer)
+					log:success('Connected to %s', client.peer)
 				end
 				clients[endpoint] = client:connected(event)
 
@@ -274,13 +275,13 @@ local Manager = { }
 					endpoint = strformat('%s:%s', client.private, client.port)
 					client.peer = sock:connect(endpoint)
 					client.attempts = 1
-					print('Connecting in local network', endpoint)
+					log:info('Connecting in local network', endpoint)
 					clients[tostring(client.peer)] = client
 
 				-- Connection impossible: symmetric NAT, firewall and etc
 				-- or just a simple disconnect
 				else
-					print('Disconnected from', endpoint)
+					log:info('Disconnected from', endpoint)
 					client:disconnected(event)
 					clients[endpoint] = nil
 				end

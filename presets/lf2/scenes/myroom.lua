@@ -4,6 +4,7 @@ local Scene = core.import 'class.entity.scene'
 local Object = core.import 'class.entity.object'
 local UI = core.import 'class.entity.ui'
 
+local log = core.import 'class.logger'
 local parser = core.import 'class.parser.lffs'
 local helper = core.import 'helper'
 
@@ -101,13 +102,13 @@ EventManager:subscribe('keypressed', function (_, key)
 			NetworkManager:init(data)
 			NetworkManager:login()
 			titleC.text = NetworkManager:username()
-			print('Username:', NetworkManager:username())
+			log:info('Username: %s', NetworkManager:username())
 			data = ''
 			return
 		elseif state == 1 then
 			state = 2
 			if not NetworkManager:isConnected() then
-				print('Searching:', data)
+				log:info('Searching: %s', data)
 				NetworkManager:join(data)
 				data = ''
 				return

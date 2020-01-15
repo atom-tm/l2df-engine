@@ -8,6 +8,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Components works only wit
 
 local Component = core.import 'class.component'
 
+local log = core.import 'class.logger'
 local Event = core.import 'manager.event'
 local RenderManager = core.import 'manager.render'
 local ResourceManager = core.import 'manager.resource'
@@ -76,7 +77,7 @@ local Render = Component:extend({ unique = true })
         sprite.h = sprite.h or sprite[3] or nil
 
         if not (sprite.w and sprite.h) then
-            print('[Ex] It does not specify the width and height of sprites', sprite.res)
+            log:error('Missing width and height for: %s', sprite.res)
             return
         end
 
@@ -116,7 +117,7 @@ local Render = Component:extend({ unique = true })
                 end
             end
         end) then
-            print('[Ex] Data error', sprite.res)
+            log:error('Data error: %s', sprite.res)
             return
         end
     end
