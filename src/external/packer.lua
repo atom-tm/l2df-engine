@@ -182,7 +182,7 @@ function packer.unpack(format, stream, pos)
 
       local exponent = (strbyte(x, n) % 128) * ((opt == 'd') and 16 or 2) + floor(strbyte(x, n - 1) / ((opt == 'd') and 16 or 128))
       if exponent == 0 then
-        vars[#vars + 1] = 0.0
+        vars[#vars + 1] = 0
       else
         mantissa = (ldexp(mantissa, (opt == 'd') and -52 or -23) + 1) * sign
         vars[#vars + 1] = ldexp(mantissa, exponent - ((opt == 'd') and 1023 or 127))

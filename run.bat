@@ -1,3 +1,3 @@
 @echo off 
- 
-lovec presets/lf2 --fused
+set L2DF_NOCOLOR=1
+love presets/lf2 --fused
