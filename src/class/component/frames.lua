@@ -34,15 +34,19 @@ local Frames = Component:extend({ unique = true })
 		self.list = { }
 		self.map = { }
 		for i = 1, #frames do
-			self:add(frames[i])
+			self:add(frames[i], i)
 		end
 	end
 
 	---
 	-- @param l2df.class.entity.frame frame
-	function Frames:add(frame)
-		if not (frame.isInstanceOf and frame:isInstanceOf(Frame)) then return end
-		if not frame.id then return end
+	-- @param number id
+	function Frames:add(frame, id)
+		frame.id = frame.id or id
+		if not (frame.isInstanceOf and frame:isInstanceOf(Frame) and frame.id) then
+			return
+		end
+
 		if frame.keyword then
 			self.map[frame.keyword] = frame
 		end
@@ -55,10 +59,11 @@ local Frames = Component:extend({ unique = true })
 	function Frames:set(id, remain)
 		local nextFrame = self.list[id] or self.map[id] or self.list[next(self.list)]
 		if not nextFrame then return end
+
 		self.frame = nextFrame
 		self.next = nextFrame.next
 		self.wait = nextFrame.wait
-		self.map[nextFrame.keyword] = nextFrame
+		self.map[nextFrame.keyword or ''] = nextFrame
 		self.counter = remain or 0
 	end
 

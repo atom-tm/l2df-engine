@@ -92,6 +92,8 @@ local Manager = { active = true }
 			i = i + 1
 			local object = current[1][i]
 			local nodes = nil
+
+			-- update components for current item
 			if object and object.active then
 				nodes = object:getNodes()
 				c = object and object:getComponents() or { }
@@ -103,6 +105,8 @@ local Manager = { active = true }
 					local _ = c[j].update and c[j]:update(...)
 				end
 			end
+
+			-- lift down
 			if nodes and #nodes > 0 then
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
@@ -113,6 +117,8 @@ local Manager = { active = true }
 				depth = depth + 1
 				tasks[depth] = current
 				i = 0
+
+			-- lift up				
 			elseif i >= current[3] and depth > 1 then
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
@@ -124,12 +130,11 @@ local Manager = { active = true }
 				object = current[1][i]
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
-					local _ = c[j].pop and c[j]:pop(...)
+					local _1 = c[j].pop and c[j]:pop(...)
+					local _2 = c[j].postUpdate and c[j]:postUpdate(...)
 				end
-				c = object and object:getComponents() or { }
-				for j = 1, #c do
-					local _ = c[j].postUpdate and c[j]:postUpdate(...)
-				end
+
+			-- ???
 			else
 				c = object and object:getComponents() or { }
 				for j = 1, #c do

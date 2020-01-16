@@ -1,5 +1,6 @@
 local core = l2df
 
+local Frame = core.import 'class.entity.frame'
 local Scene = core.import 'class.entity.scene'
 local Object = core.import 'class.entity.object'
 local UI = core.import 'class.entity.ui'
@@ -19,6 +20,8 @@ local Snapshot = core.import 'manager.snapshot'
 local Input = core.import 'manager.input'
 local RM = core.import 'manager.resource'
 
+local World = core.import 'class.component.physix.world'
+
 local title = UI.Text {
 	text = 'Enter username and press Enter',
 	font = 24
@@ -27,12 +30,32 @@ local titleC = title:getComponent(Print)
 
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
+	nodes = {
+		Frame {
+			itr = { kind = 'Scream', w = 32, h = 12, y = -16, text = 'ORA' },
+			body = { w = 50, h = 50, l = 32 }
+		}
+	},
 	states = { { 'MoveBoyMove' } },
 	x = 100, y = 100,
 }
 
-local room = Scene { nodes = { title } }
+local ball1 = Object(ballData)
+ball1:createComponent(LocalController, 1)
+ball1.debug = true
 
+local ball2 = Object(ballData)
+ball2:createComponent(LocalController, 2)
+ball2.debug = true
+ball2.vars.x = 300
+
+local room = Scene {
+	-- nodes = { title }
+	nodes = { ball1, ball2 }
+}
+room:addComponent(World(), { friction = 0.05 })
+
+--[[
 local timer = 0
 local delay = 0
 local state = 0
@@ -44,10 +67,6 @@ local function save()
 	end
 	Snapshot:commit()
 end
-
-	ball = Object(ballData)
-	ball:createComponent(LocalController, 1)
-	room:attach(ball)
 
 NetworkManager:register('127.0.0.1:12565')
 NetworkManager:event('start', nil, function (c, e)
@@ -69,11 +88,13 @@ EventManager:subscribe('update', function (_, dt)
 			Snapshot:reset()
 			local ball = Object(ballData)
 			ball:createComponent(LocalController, 1)
+			ball.debug = true
 			room:attach(ball)
 			for client in NetworkManager:clients() do
 				client.player = Input:newRemotePlayer()
 				ball = Object(ballData)
 				ball:createComponent(RemoteController, client.player)
+				ball.debug = true
 				room:attach(ball)
 			end
 			delay = 0
@@ -140,5 +161,6 @@ EventManager:subscribe('keypressed', function (_, key)
 		print(data)
 	end
 end)
+]]
 
 return room

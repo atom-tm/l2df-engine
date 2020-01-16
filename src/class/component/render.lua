@@ -16,6 +16,9 @@ local ResourceManager = core.import 'manager.resource'
 local ceil = math.ceil
 local newQuad = love.graphics.newQuad
 
+local greenColor = { 0, 1, 0, 1 }
+local redColor = { 1, 0, 0, 1 }
+
 local Render = Component:extend({ unique = true })
 
     function Render:init()
@@ -123,17 +126,20 @@ local Render = Component:extend({ unique = true })
     end
 
     function Render:postUpdate(dt, islast)
-        if not (self.entity and islast) then return end
+        local entity = self.entity
+        if not (entity and islast) then return end
 
-        local vars = self.entity.vars
+        local vars = entity.vars
+        if vars.hidden then return end
+
         local pic = self.pics[vars.pic]
-        if not vars.hidden and pic then
+        if pic then
             RenderManager:add({
                 object = ResourceManager:get(pic[1]),
                 quad = pic[2],
-                z = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,
                 y = vars.globalY or vars.y,
+                z = vars.globalZ or vars.z,
                 r = vars.globalR or vars.r,
                 sx = vars.facing * (vars.globalScaleX or vars.scaleX),
                 sy = vars.globalScaleY or vars.scaleY,
@@ -143,6 +149,44 @@ local Render = Component:extend({ unique = true })
                 ky = self.ky,
                 color = self.color
             })
+        end
+
+        if not entity.debug then return end
+
+        RenderManager:add({
+            circle = 'fill',
+            x = vars.globalX or vars.x,
+            y = vars.globalY or vars.y,
+            z = vars.globalZ or vars.z,
+            color = self.color
+        })
+
+        if vars.body then
+            RenderManager:add({
+                rect = 'line',
+                x = (vars.globalX or vars.x) + vars.body.x,
+                y = (vars.globalY or vars.y) + vars.body.y,
+                z = (vars.globalZ or vars.z) + vars.body.z,
+                w = vars.body.w,
+                h = vars.body.h,
+                color = greenColor
+            })
+        end
+
+        local itrs, itr = vars.itrs
+        if itrs then
+            for i = 1, #itrs do
+                itr = itrs[i]
+                RenderManager:add({
+                    rect = 'line',
+                    x = (vars.globalX or vars.x) + itr.x,
+                    y = (vars.globalY or vars.y) + itr.y,
+                    z = (vars.globalZ or vars.z) + itr.z,
+                    w = itr.w,
+                    h = itr.h,
+                    color = redColor
+                })
+            end
         end
     end
 

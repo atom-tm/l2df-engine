@@ -24,11 +24,12 @@ local Object = Entity:extend({ name = 'object' })
         self.vars.scaley = kwargs.scaley or 1
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
-        self:addComponent(Transform())
-        self:addComponent(Physix())
-        self:addComponent(Render(), kwargs.sprites)
+
         self:addComponent(Frames(), 1, kwargs.nodes)
         self:addComponent(States(), kwargs)
+        self:addComponent(Physix(), kwargs)
+        self:addComponent(Transform())
+        self:addComponent(Render(), kwargs.sprites)
     end
 
 return Object

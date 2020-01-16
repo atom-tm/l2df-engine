@@ -14,11 +14,11 @@ local Component = Class:extend()
 		-- pass
 	end
 
-	function Component:added(entity, vars)
+	function Component:added(entity)
 		-- pass
 	end
 
-	function Component:removed(entity, vars)
+	function Component:removed(entity)
 		-- pass
 	end
 

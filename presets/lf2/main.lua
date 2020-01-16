@@ -9,6 +9,7 @@ local lag = 0
 local strformat = string.format
 
 local SceneManager = l2df.import 'manager.scene'
+local KindsManager = l2df.import 'manager.kinds'
 local StatesManager = l2df.import 'manager.states'
 
 function love.run()
@@ -18,6 +19,7 @@ end
 function love.load()
 	l2df:init()
 	StatesManager:load('data/states')
+	KindsManager:load('data/kinds')
 	SceneManager:load('scenes/')
 	SceneManager:push('myroom')
 end

@@ -14,6 +14,8 @@ local loveGetColor = love.graphics.getColor
 local loveSetColor = love.graphics.setColor
 local loveSetCanvas = love.graphics.setCanvas
 local loveNewCanvas = love.graphics.newCanvas
+local loveCircle = love.graphics.circle
+local loveRect = love.graphics.rectangle
 
 local layers = {
 	UI = { }
@@ -85,7 +87,10 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 					else
 						loveDraw(input.object, input.x, input.y + input.z, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					end
-					love.graphics.circle('fill', input.x, input.y, 8)
+				elseif input.rect then
+					loveRect(input.rect, input.x, input.y + input.z, input.w or 1, input.h or 1)
+				elseif input.circle then
+					loveCircle(input.circle, input.x, input.y + input.z, input.r or 4)
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end

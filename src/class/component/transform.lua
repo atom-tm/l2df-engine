@@ -30,10 +30,6 @@ local Transform = Component:extend({ unique = true })
         vars.z = vars.z or 0
         vars.r = vars.r or 0
 
-        vars.mx = vars.mx or 0
-        vars.my = vars.my or 0
-        vars.mz = vars.mz or 0
-
         vars.globalX = vars.globalX or 0
         vars.globalY = vars.globalY or 0
         vars.globalZ = vars.globalZ or 0
@@ -61,21 +57,12 @@ local Transform = Component:extend({ unique = true })
         entity.vars.globalR = nil
     end
 
-    function Transform:update(dt)
+    function Transform:update()
         if not self.entity then return end
 
         local vars = self.entity.vars
-
-        vars.x = vars.x + vars.mx * dt
-        vars.y = vars.y + vars.my * dt
-        vars.z = vars.z + vars.mz * dt
-
-        vars.mx = 0
-        vars.my = 0
-        vars.mz = 0
-
         local m = stack[#stack]:vector(vars.x, vars.y, vars.z)
-        vars.globalX, vars.globalY, vars.globalZ = m[1][1], m[2][1], m[3][1]
+        vars.globalX, vars.globalY, vars.globalZ = vars.x, vars.y, vars.z--m[1][1], m[2][1], m[3][1]
 
         vars.globalScaleX = vars.scaleX * stack[#stack].sx
         vars.globalScaleY = vars.scaleY * stack[#stack].sy
