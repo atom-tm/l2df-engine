@@ -1,7 +1,8 @@
 --- Helper functions
 -- @module l2df.helper
--- @author Abelidze, Kasai
--- @copyright Atom-TM 2019
+-- @author Abelidze
+-- @author Kasai
+-- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 local fs = love and love.filesystem
@@ -16,6 +17,7 @@ local strrep = string.rep
 local floor = math.floor
 local sqrt = math.sqrt
 local pow = math.pow
+local abs = math.abs
 local tostring = _G.tostring
 local require = _G.require
 local pairs = _G.pairs
@@ -60,6 +62,9 @@ local mapper = setmetatable({
 dump = function(x, stack, indent)
   return mapper[type(x)](x, stack, indent)
 end
+
+local tableCount = 0
+local tableCache = { }
 
 local helper = { }
 
@@ -149,6 +154,28 @@ local helper = { }
 		return require(filepath:gsub('.lua$', ''):gsub('/', '.')), file
 	end
 
+	---
+	-- @return table
+    function helper.newTable()
+        if tableCount == 0 then
+            helper.freeTable { }
+        end
+        local table = tableCache[tableCount]
+        tableCache[tableCount] = nil
+        tableCount = tableCount - 1
+        return table
+    end
+
+    ---
+    -- @param table table
+    function helper.freeTable(table)
+        for k in pairs(table) do
+            table[k] = nil
+        end
+        tableCount = tableCount + 1
+        tableCache[tableCount] = table
+    end
+
 	--- Deep-copy of table
 	-- @param table table  Given table
 	-- @param table result
@@ -201,7 +228,7 @@ local helper = { }
 		local arr = { }
 		local i = 1
 		for v in ... do
-			arr[1] = v
+			arr[i] = v
 			i = i + 1
 		end
 		return arr
@@ -240,6 +267,15 @@ local helper = { }
 	-- @return number
 	function helper.clamp(val, min, max)
 		return val < min and min or (val > max and max or val)
+	end
+
+	--- Get the nearest boundary
+	-- @param number val
+	-- @param number min
+	-- @param number max
+	-- @return number
+	function helper.nearest(val, min, max)
+		return abs(val - min) < abs(val - max) and min or max
 	end
 
 	--- Find out if the object is within the specified values
@@ -283,7 +319,7 @@ local helper = { }
 	-- @param table arr  Array to process
 	-- @return int
 	function helper.maximum(arr)
-		max = 0
+		local max = 0
 		for i = 1, #arr do
 			if arr[i] > max then max = arr[i] end
 		end
@@ -323,9 +359,9 @@ local helper = { }
 	end
 
 	function helper.mulMatrix(m1, m2)
-	    local r = {}
+	    local r = { }
 	    for n = 1, #m1 do
-	        r[n] = {}
+	        r[n] = { }
 	        for i = 1, #m2[1] do
 	            r[n][i] = 0
 	            for j = 1, #m1[1] do
