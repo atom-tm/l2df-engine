@@ -23,19 +23,34 @@ local Frames = Component:extend({ unique = true })
 	function Frames:added(entity, starting, frames)
 		if not entity then return false end
 		self.entity = entity
+
+		local vars = entity.vars
+
 		starting = starting or 1
 		frames = frames or { }
 
-		self.frame = nil
-		self.wait = 0
-		self.next = starting
-		self.counter = 0
+		vars.frame = nil
+		vars.wait = 0
+		vars.next = starting
+		vars.counter = 0
 
 		self.list = { }
 		self.map = { }
 		for i = 1, #frames do
 			self:add(frames[i], i)
 		end
+	end
+
+	---
+	function Frames:removed(entity)
+		local vars = entity.vars
+
+		vars.frame = nil
+		vars.wait = nil
+		vars.counter = nil
+		vars.next = nil
+
+		self.entity = nil
 	end
 
 	---
@@ -57,14 +72,17 @@ local Frames = Component:extend({ unique = true })
 	-- @param number id
 	-- @param number remain
 	function Frames:set(id, remain)
+		if not self.entity then return end
+
 		local nextFrame = self.list[id] or self.map[id] or self.list[next(self.list)]
 		if not nextFrame then return end
 
-		self.frame = nextFrame
-		self.next = nextFrame.next
-		self.wait = nextFrame.wait
+		local vars = self.entity.vars
+		vars.frame = nextFrame
+		vars.next = nextFrame.next
+		vars.wait = nextFrame.wait
+		vars.counter = remain or 0
 		self.map[nextFrame.keyword or ''] = nextFrame
-		self.counter = remain or 0
 	end
 
 	---
@@ -72,16 +90,17 @@ local Frames = Component:extend({ unique = true })
 	function Frames:preUpdate(dt)
 		if not self.entity.active then return end
 
-		if self.counter >= self.wait then
-			self.counter = self.counter - self.wait
-			self:set(self.next, self.counter)
+		local vars = self.entity.vars
+		if vars.counter >= vars.wait then
+			vars.counter = vars.counter - vars.wait
+			self:set(vars.next, vars.counter)
 		end
 
-		if not (self.frame and self.frame.vars) then return end
-		for k, v in pairs(self.frame.vars) do
-			self.entity.vars[k] = v
+		if not (vars.frame and vars.frame.vars) then return end
+		for k, v in pairs(vars.frame.vars) do
+			vars[k] = v
 		end
-		self.counter = self.wait > 0 and self.counter + dt * 1000 or 0
+		vars.counter = vars.wait > 0 and vars.counter + dt * 1000 or 0
 	end
 
 return Frames
