@@ -12,6 +12,11 @@ local Storage = Class:extend()
 
 	--- Storage initialization
 	function Storage:init()
+		self:reset()
+	end
+
+	---
+	function Storage:reset()
 		self.list = { }
 		self.map = { }
 		self.free = { }

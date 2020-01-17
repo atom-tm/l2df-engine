@@ -13,20 +13,14 @@ local Storage = core.import 'class.storage'
 local list = { }
 local history = { }
 
-local Manager = { root = Scene() }
-
-	--- Initialization Scene class
-	--  @param Entity entity
-	function Manager:classInit(entity)
-		entity:setActive(false)
-	end
+local Manager = { root = Scene { active = true } }
 
 	--- Load presset scenes from a specified folder
 	--  @param string folderpath
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
-			if v.isInstanceOf and v:isInstanceOf(Scene) then
+			if type(v) == 'table' and v.isInstanceOf and v:isInstanceOf(Scene) then
 				list[k] = v
 				self.root:attach(v)
 			end
@@ -67,30 +61,33 @@ local Manager = { root = Scene() }
 	--- Setting the current scene
 	--  @param mixed id
 	--  @return boolean
-	function Manager:set(id)
-		for i = #history, 1 do
+	function Manager:set(id, ...)
+		for i = #history, 1, -1 do
 			history[i]:setActive(false)
+			local _ = history[i].leave and history[i]:leave(...)
 			history[i] = nil
 		end
-		return self:push(id)
+		return self:push(id, ...)
 	end
 
 	--- Adding scene to current list
 	--  @param mixed id
 	--  @return boolean
-	function Manager:push(id)
-		local set = assert(list[id], 'Room with provided id does not exist')
-		history[#history + 1] = set
-		return set:setActive(true)
+	function Manager:push(id, ...)
+		local scene = assert(list[id], 'Room with provided id does not exist')
+		history[#history + 1] = scene
+		local _ = scene.enter and scene:enter(...)
+		return scene:setActive(true)
 	end
 
 	--- Removing last scene from current list
 	--  @return boolean
-	function Manager:pop()
-		if not (#history > 1) then return false end
-		history[#history]:setActive(false)
+	function Manager:pop(...)
+		if not (#history > 0) then return false end
+		local scene = history[#history]
+		scene:setActive(false)
 		history[#history] = nil
-		return true
+		return scene.leave and scene:leave(...) or true
 	end
 
 return Manager

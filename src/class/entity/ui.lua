@@ -21,8 +21,8 @@ local UI = Entity:extend()
         self.vars.y = kwargs.y or 0
         self.vars.z = kwargs.z or 0
         self.vars.r = math.rad(kwargs.r or 0)
-        self.vars.scalex = kwargs.scalex or 1
-        self.vars.scaley = kwargs.scaley or 1
+        self.vars.scaleX = kwargs.scaleX or 1
+        self.vars.scaleY = kwargs.scaleY or 1
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
         self:addComponent(Transform())

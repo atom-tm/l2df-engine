@@ -292,7 +292,7 @@ local helper = { }
 	-- @param number precision  Needed precision
 	-- @return number
 	function helper.round(value, precision)
-		local i = pow(10, precision)
+		local i = pow(10, precision or 0)
 		return floor(value * i) / i
 	end
 

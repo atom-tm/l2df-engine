@@ -140,9 +140,28 @@ local World = Component:extend({ unique = true })
         self.entity = entity
         local vars = entity.vars
 
+        vars.cubes = { }
+        vars.cells = { }
+        vars.nonEmptyCells = { }
+
+        self.cubes = vars.cubes
+        self.cells = vars.cells
+        self.nonEmptyCells = vars.nonEmptyCells
+
         vars.gravity = kwargs.gravity or 0
-        vars.maxSpeed = kwargs.maxSpeed or 0
         vars.friction = bound(kwargs.friction, 0, 1) or 0
+    end
+
+    function World:removed(entity)
+        entity.vars.cubes = nil
+        entity.vars.cells = nil
+        entity.vars.nonEmptyCells = nil
+        entity.vars.gravity = nil
+
+        self.entity = nil
+        self.cubes = { }
+        self.cells = { }
+        self.nonEmptyCells = { }
     end
 
     function World:data()
@@ -242,6 +261,13 @@ local World = Component:extend({ unique = true })
         local actualX, actualY, actualZ, cols, len = self:check(item, goalX, goalY, goalZ, filter)
         self:translate(item, actualX, actualY, actualZ)
         return actualX, actualY, actualZ, cols, len
+    end
+
+    function World:moveRelative(item, dx, dy, dz, filter)
+        local x, y, z, w, h, d = self:getCube(item)
+        local actualX, actualY, actualZ, cols, len = self:projectMove(item, x, y, z, w, h, d, x + dx, y + dy, z + dz, filter)
+        self:translate(item, actualX, actualY, actualZ)
+        return actualX - x, actualY - y, actualZ - z, cols, len
     end
 
     function World:check(item, goalX, goalY, goalZ, filter)
@@ -601,7 +627,7 @@ local World = Component:extend({ unique = true })
         return Grid:toWorld(self.cellSize, cx, cy, cz)
     end
 
-    function World:toCell(x,y,z)
+    function World:toCell(x, y, z)
         return Grid:toCell(self.cellSize, x, y, z)
     end
 

@@ -12,7 +12,7 @@ local strgmatch = string.gmatch
 local type = _G.type
 
 local config = {
-	main = {
+	global = {
 		data_path = 'data/data.txt',		-- Путь до data.txt (список объектов и карт движка)
 		frames_path = 'data/frames.dat',	-- Путь до frames.dat (список кадров по умолчанию)
 		combos_path = 'data/combos.dat',	-- Путь до combos.dat (список переходов по комбинациям клавиш)

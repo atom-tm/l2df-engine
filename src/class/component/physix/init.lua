@@ -7,16 +7,21 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
+local helper = core.import 'helper'
+
 local Component = core.import 'class.component'
 local World = core.import 'class.component.physix.world'
 local KindsManager = core.import 'manager.kinds'
+
+local default = helper.notNil
 
 local function convert(x)
     return x * 60
 end
 
 local function movementFilter(self, other)
-    return self.vars.body and other.vars.body and 'slide' or 'cross'
+    if other.vars.body and other.vars.static then return 'slide' end
+    return self.vars.body and other.vars.body and self.vars.solid and other.vars.solid and 'slide' or 'cross'
 end
 
 local Physix = Component:extend({ unique = true })
@@ -62,6 +67,7 @@ local Physix = Component:extend({ unique = true })
 
         vars.gravity = kwargs.gravity or false
         vars.static = kwargs.static or false
+        vars.solid = default(kwargs.solid, true)
         return true
     end
 
@@ -70,6 +76,8 @@ local Physix = Component:extend({ unique = true })
         if world and world:hasItem(entity) then
             world:remove(entity)
         end
+        self.entity = nil
+        self.world = nil
     end
 
     function Physix:preUpdate()
@@ -84,7 +92,7 @@ local Physix = Component:extend({ unique = true })
             self.world = nil
             return
         elseif world ~= self.world then
-            local _ = self.world and self.world:remove(entity)
+            local _ = self.world and self.world:hasItem(entity) and self.world:remove(entity)
             self.world = world
         end
 
@@ -112,7 +120,7 @@ local Physix = Component:extend({ unique = true })
         vars.vx = vars.dvx ~= 0 and convert(vars.dvx) or vars.vx
         vars.vx = vars.vx + convert(vars.dsx)
 
-        vars.vy = vars.vy + convert((vars.gravity and wdata.gravity or 0) - vars.vy * wdata.friction) * dt
+        vars.vy = vars.vy + convert(vars.gravity and wdata.gravity or 0) * dt
         vars.vy = vars.dvy ~= 0 and convert(vars.dvy) or vars.vy
         vars.vy = vars.vy + convert(vars.dsy)
 
@@ -120,12 +128,21 @@ local Physix = Component:extend({ unique = true })
         vars.vz = vars.dvz ~= 0 and convert(vars.dvz) or vars.vz
         vars.vz = vars.vz + convert(vars.dsz)
 
-        local mx = vars.x + (convert(vars.dx) + vars.vx) * dt
-        local my = vars.y + (convert(vars.dy) + vars.vy) * dt
-        local mz = vars.z + (convert(vars.dz) + vars.vz) * dt
+        local mx = (convert(vars.dx) + vars.vx) * dt
+        local my = (convert(vars.dy) + vars.vy) * dt
+        local mz = (convert(vars.dz) + vars.vz) * dt
 
         if world:hasItem(entity) then
-            vars.x, vars.y, vars.z = world:move(entity, mx, my, mz, movementFilter)
+            if mx ~= 0 or my ~= 0 or mz ~= 0 then
+                local c, n
+                mx, my, mz, c, n = world:moveRelative(entity, mx, my, mz, movementFilter)
+                vars.x, vars.y, vars.z = vars.x + mx, vars.y + my, vars.z + mz
+                for i = 1, n do
+                    if c[n].normal.y ~= 0 then
+                        vars.vy = 0
+                    end
+                end
+            end
 
             local itrs, itr, kind, entities, count = vars.itrs
             local itrCount = itrs and #itrs or 0
@@ -139,38 +156,13 @@ local Physix = Component:extend({ unique = true })
                     end
                 end
             end
-        else
-            vars.x, vars.y, vars.z = mx, my, mz
+        elseif mx ~= 0 or my ~= 0 or mz ~= 0 then
+            vars.x, vars.y, vars.z = vars.x + mx, vars.y + my, vars.z + mz
         end
 
         vars.dsx, vars.dvx, vars.dx = 0, 0, 0
         vars.dsy, vars.dvy, vars.dy = 0, 0, 0
         vars.dsz, vars.dvz, vars.dz = 0, 0, 0
-
-        -- local p = self.platform
-        -- vars.vy = vars.dvy ~= 0 and vars.dvy
-        -- or vars.dsy ~= 0 and vars.vy + vars.dsy
-        -- or self.gravity and vars.vy + (c.gravity * self.weight)
-        -- or vars.vy
-        -- vars.vy = vars.vy * c.friction
-
-        -- vars.vy = c.maxSpeed ~= 0 and (vars.vy < c.maxSpeed and vars.vy or c.maxSpeed) or vars.vy
-        -- vars.vy = c.maxSpeed ~= 0 and (vars.vy > -c.maxSpeed and vars.vy or -c.maxSpeed) or vars.vy
-
-        -- vars.vy = p and vars.vy > 0 and vars.vy * -(self.bounce + p.bounce) or vars.vy
-        -- vars.vy = abs(vars.vy) < 0.001 and 0 or vars.vy
-
-        -- vars.dsy, vars.dvy = 0, 0
-
-        -- vars.dx = vars.dx + vars.vx
-        -- vars.dy = vars.dy + vars.vy
-        -- vars.dz = vars.dz + vars.vz
-
-        -- self.platform = nil
-        -- if vars.globalY >= 600 then
-        --     self.platform = Physix:new()
-        --     vars.y = 600
-        -- end
     end
 
 return Physix

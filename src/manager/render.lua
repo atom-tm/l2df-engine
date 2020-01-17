@@ -6,7 +6,10 @@
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only with l2df v1.0 and higher')
 
+local helper = core.import 'helper'
+
 local rad = math.rad
+local round = helper.round
 local loveDraw = love.graphics.draw
 local loveClear = love.graphics.clear
 local lovePrintf = love.graphics.printf
@@ -16,6 +19,10 @@ local loveSetCanvas = love.graphics.setCanvas
 local loveNewCanvas = love.graphics.newCanvas
 local loveCircle = love.graphics.circle
 local loveRect = love.graphics.rectangle
+
+local function setAlpha(r, g, b, a, i)
+	loveSetColor(r * i, g * i, b * i, a)
+end
 
 local layers = {
 	UI = { }
@@ -36,15 +43,16 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 
 	function Manager:setMaxIndex(index)
 		drawables = { }
-		for i = 1, index do
-			drawables[i] = { }
-		end
+		-- for i = 1, index do
+		-- 	drawables[i] = { }
+		-- end
 	end
 
 	function Manager:add(input)
 		if not (input or input.object) then return end
-		local index = input.z > 0 and input.z < #drawables and input.z or 1
-		drawables[index][#drawables[index] + 1] = input
+		-- local index = input.z > 0 and input.z < #drawables and input.z or 1
+		-- drawables[index][#drawables[index] + 1] = input
+		drawables[#drawables + 1] = input
 	end
 
 	function Manager:resize(w, h)
@@ -60,9 +68,9 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 
 	function Manager:clear()
 		for i = 1, #drawables do
-			for j = #drawables[i], 1, -1 do
-				drawables[i][j] = nil
-			end
+			--for j = #drawables[i], 1, -1 do
+				drawables[i] = nil
+			--end
 		end
 		self:layersClear()
 	end
@@ -75,27 +83,40 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	end
 
 	function Manager:render()
-		local input, r, g, b, a
+		local input, r1, g1, b1, a1, r2, g2, b2, a2
 		for i = 1, #drawables do
-			for j = 1, #drawables[i] do
-				input = drawables[i][j]
-				r, g, b, a = loveGetColor()
-				loveSetColor(input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1)
+			--for j = 1, #drawables[i] do
+				input = drawables[i]--[j]
+				r1, g1, b1, a1 = loveGetColor()
+				r2, g2, b2, a2 = input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1
+				loveSetColor(r2, g2, b2, a2)
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
-						loveDraw(input.object, input.quad, input.x, input.y + input.z, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.quad, round(input.x), round(input.y + input.z), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					else
-						loveDraw(input.object, input.x, input.y + input.z, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, round(input.x), round(input.y + input.z), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					end
 				elseif input.rect then
-					loveRect(input.rect, input.x, input.y + input.z, input.w or 1, input.h or 1)
+					loveRect(input.rect, round(input.x), round(input.y), input.w or 1, input.h or 1)
+				elseif input.cube then
+					setAlpha(r2, g2, b2, a2, 0.3)
+					loveRect('fill', input.x, input.y + input.z + input.l, input.w, input.h)
+
+					setAlpha(r2, g2, b2, a2, 1)
+					loveRect('line', input.x, input.y + input.z + input.l, input.w, input.h)
+
+					setAlpha(r2, g2, b2, a2, 0.5)
+					loveRect('fill', input.x, input.y + input.z, input.w, input.l)
+
+					setAlpha(r2, g2, b2, a2, 1)
+					loveRect('line', input.x, input.y + input.z, input.w, input.l)
 				elseif input.circle then
-					loveCircle(input.circle, input.x, input.y + input.z, input.r or 4)
+					loveCircle(input.circle, round(input.x), round(input.y + input.z), input.r or 4)
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
-				loveSetColor(r, g, b, a)
-			end
+				loveSetColor(r1, g1, b1, a1)
+			--end
 		end
 	end
 

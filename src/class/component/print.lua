@@ -49,6 +49,7 @@ local Print = Component:extend({ unique = false })
         vars.y = vars.y or 0
         vars.z = vars.z or 0
         vars.r = vars.r or 0
+        vars.text = vars.text or self.text or ''
         vars.hidden = vars.hidden or false
     end
 
@@ -58,7 +59,7 @@ local Print = Component:extend({ unique = false })
         local vars = self.entity.vars
         if not vars.hidden then
             RenderManager:add({
-                text = self.text,
+                text = vars.text,
                 font = self.font,
                 z = vars.globalZ or vars.z,
                 x = vars.globalX or vars.x,

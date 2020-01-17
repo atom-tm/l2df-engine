@@ -69,14 +69,15 @@ local Manager = { active = true }
 	--- Monitors whether an object calls certain functions
 	--  @param Entity source
 	--  @param table|string events
-	--  @param boolean save_result  Whether to save the result of the function execution
-	function Manager:monitoring(source, events, save_result)
-		save_result = save_result and false
+	--  @param boolean saveResult  Whether to save the result of the function execution
+	function Manager:monitoring(source, events, saveResult)
+		-- TODO: saveResult is not working, fix it
+		saveResult = saveResult and false --not not saveResult
 		if type(events) == 'string' then
-			hook(source, events, function (...) Manager:invoke(events, source, ...) end, save_result)
+			hook(source, events, function (...) Manager:invoke(events, source, ...) end, saveResult)
 		elseif type(events) == 'table' then
 			for key in pairs(events) do
-				hook(source, key, function (...) Manager:invoke(key, source, ...) end, save_result)
+				hook(source, key, function (...) Manager:invoke(key, source, ...) end, saveResult)
 			end
 		end
 	end
@@ -87,6 +88,7 @@ local Manager = { active = true }
 		local tasks = { { beginer, 0, #beginer } }
 		local depth = 1
 		local i = 0
+		local c = nil
 		local current = tasks[depth]
 		while i < current[3] or depth > 1 do
 			i = i + 1
@@ -96,13 +98,10 @@ local Manager = { active = true }
 			-- update components for current item
 			if object and object.active then
 				nodes = object:getNodes()
-				c = object and object:getComponents() or { }
+				c = object:getComponents() or { }
 				for j = 1, #c do
-					local _ = c[j].preUpdate and c[j]:preUpdate(...)
-				end
-				c = object and object:getComponents() or { }
-				for j = 1, #c do
-					local _ = c[j].update and c[j]:update(...)
+					local _1 = c[j].preUpdate and c[j]:preUpdate(...)
+					local _2 = c[j].update and c[j]:update(...)
 				end
 			end
 
@@ -134,7 +133,7 @@ local Manager = { active = true }
 					local _2 = c[j].postUpdate and c[j]:postUpdate(...)
 				end
 
-			-- ???
+			-- bottom layer
 			else
 				c = object and object:getComponents() or { }
 				for j = 1, #c do

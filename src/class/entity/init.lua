@@ -60,6 +60,7 @@ local Entity = Class:extend()
 		if self.parent then
 			self.parent:detach(self)
 		end
+		return true
 	end
 
 	--- Getting a list of object inheritors
@@ -105,7 +106,7 @@ local Entity = Class:extend()
 	function Entity:setActive(bool)
 		local active = bool
 		if bool == nil then active = not self.active end
-		if self.parent and not (self.parent.active) and active then return end
+		if self.parent and not (self.parent.active) and active then return false end
 		for object in self:enum() do
 			object.active = active
 		end
@@ -133,9 +134,19 @@ local Entity = Class:extend()
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self.components:remove(component) then
 			self.components.class[component.___class] = self.components.class[component.___class] - 1
-			return component:removed(self, ...)
+			return component.removed and component:removed(self, ...)
 		end
 		return false
+	end
+
+	---
+	function Entity:clearComponents()
+		for _, component in self.components:enum() do
+			self:removeComponent(component)
+		end
+		self.components:reset()
+		self.components.class = { }
+		return true
 	end
 
 	--- Check if component exists on entity

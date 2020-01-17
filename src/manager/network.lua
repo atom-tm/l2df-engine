@@ -21,6 +21,7 @@ local strmatch = string.match
 local strformat = string.format
 
 local sock = nil
+local sockReady = false
 local clients = { }
 local masters = { }
 
@@ -65,7 +66,7 @@ local MasterEvents = {
 	disconnect = function (self, manager, host, event)
 		local master = masters[host]
 		if type(master) == 'userdata' then
-			log:warn('%s connection lost', host)
+			log:warn 'Lost connection to master'
 			master:reset()
 			masters[host] = PENDING
 		end
@@ -119,13 +120,16 @@ local Manager = { }
 		self.ip = '127.0.0.1'
 		self.name = assert(type(username) == 'string' and username, 'Username is required for NetworkManager')
 		self.tag = rand(1000, 9999)
+		if sock then
+			sock:destroy()
+		end
 		sock = enet.host_create()
 	end
 
 	---
 	-- @return boolean
 	function Manager:isReady()
-		return sock ~= nil
+		return sock and sockReady
 	end
 
 	---
@@ -150,6 +154,8 @@ local Manager = { }
 		for host, master in pairs(masters) do
 			if master == PENDING then
 				masters[host] = sock:connect(host)
+				sockReady = true
+				log:debug('Connecting to master: %s', host)
 			end
 		end
 		return self
@@ -219,6 +225,7 @@ local Manager = { }
 		if sock then
 			sock:flush()
 			sock:destroy()
+			sockReady = false
 			sock = nil
 		end
 		return self
@@ -227,7 +234,7 @@ local Manager = { }
 	--- Get formatted username
 	-- @return string
 	function Manager:username()
-		return strformat('%s.%s', self.name, self.tag)
+		return strformat('%s#%s', self.name, self.tag)
 	end
 
 	--- Manager's update
@@ -267,6 +274,9 @@ local Manager = { }
 				else
 					log:success('Connected to %s', client.peer)
 				end
+				if ClientEventsMap.connected then
+					ClientEvents[ClientEventsMap.connected][3](client, e)
+				end
 				clients[endpoint] = client:connected(event)
 
 			elseif event.type == 'disconnect' and client.peer == event.peer then
@@ -282,6 +292,9 @@ local Manager = { }
 				-- or just a simple disconnect
 				else
 					log:info('Disconnected from', endpoint)
+					if ClientEventsMap.disconnected then
+						ClientEvents[ClientEventsMap.disconnected][3](client, e)
+					end
 					client:disconnected(event)
 					clients[endpoint] = nil
 				end

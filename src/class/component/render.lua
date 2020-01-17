@@ -16,8 +16,8 @@ local ResourceManager = core.import 'manager.resource'
 local ceil = math.ceil
 local newQuad = love.graphics.newQuad
 
-local greenColor = { 0, 1, 0, 1 }
-local redColor = { 1, 0, 0, 1 }
+local greenColor = { 0, 1, 0, 0.5 }
+local redColor = { 1, 0, 0, 0.5 }
 
 local Render = Component:extend({ unique = true })
 
@@ -33,7 +33,11 @@ local Render = Component:extend({ unique = true })
     function Render:added(entity, sprites)
         if not entity then return false end
 
-        assert(sprites and type(sprites) == 'table', 'Data entry error')
+        self.pics = { }
+        if not (sprites and type(sprites) == 'table') then
+            log:warn 'Created object without render support'
+            return entity:removeComponent(self)
+        end
         sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
 
         self.entity = entity
@@ -55,7 +59,6 @@ local Render = Component:extend({ unique = true })
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
 
-        self.pics = { }
         for i = 1, #sprites do
             self:addSprite(sprites[i])
         end
@@ -163,12 +166,13 @@ local Render = Component:extend({ unique = true })
 
         if vars.body then
             RenderManager:add({
-                rect = 'line',
+                cube = true,
                 x = (vars.globalX or vars.x) + vars.body.x,
                 y = (vars.globalY or vars.y) + vars.body.y,
                 z = (vars.globalZ or vars.z) + vars.body.z,
                 w = vars.body.w,
                 h = vars.body.h,
+                l = vars.body.l,
                 color = greenColor
             })
         end
@@ -178,12 +182,13 @@ local Render = Component:extend({ unique = true })
             for i = 1, #itrs do
                 itr = itrs[i]
                 RenderManager:add({
-                    rect = 'line',
+                    cube = true,
                     x = (vars.globalX or vars.x) + itr.x,
                     y = (vars.globalY or vars.y) + itr.y,
                     z = (vars.globalZ or vars.z) + itr.z,
                     w = itr.w,
                     h = itr.h,
+                    l = itr.l,
                     color = redColor
                 })
             end

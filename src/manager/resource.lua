@@ -148,20 +148,20 @@ local Manager = { }
 	--  @param mixed id
 	--  @return mixed id
 	--  @return mixed resource
-	function Manager:load(filepath, reload, id, temp)
+	function Manager:load(filepath, reload, id, temp, ...)
 		local id = id or filepath
 		if not reload and self:get(id) then return id end
 		if not fs.getInfo(filepath) then return false end
 		local resource = nil
 		local extension = filepath:match('^.+(%..+)$')
 		if extensions.image[extension] then
-			resource = love.graphics.newImage(filepath)
+			resource = love.graphics.newImage(filepath, ...)
 		elseif extensions.video[extension] then
-			resource = love.graphics.newVideo(filepath)
+			resource = love.graphics.newVideo(filepath, ...)
 		elseif extensions.sound[extension] then
-			resource = love.audio.newSource(filepath)
+			resource = love.audio.newSource(filepath, ...)
 		elseif extensions.font[extension] then
-			resource = love.graphics.newFont(filepath)
+			resource = love.graphics.newFont(filepath, ...)
 		else return false end
 		id = self:addById(id, resource, temp)
 		return id
