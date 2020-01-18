@@ -54,7 +54,7 @@ local Render = Component:extend({ unique = true })
         vars.centerX = vars.centerX or 0
         vars.centerY = vars.centerY or 0
 
-        -- vars.facing = vars.facing or 1
+        vars.facing = vars.facing or 1
 
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
@@ -154,7 +154,7 @@ local Render = Component:extend({ unique = true })
             })
         end
 
-        if not entity.debug then return end
+        if not RenderManager.DEBUG then return end
 
         RenderManager:add({
             circle = 'fill',
@@ -183,7 +183,7 @@ local Render = Component:extend({ unique = true })
                 itr = itrs[i]
                 RenderManager:add({
                     cube = true,
-                    x = (vars.globalX or vars.x) + itr.x,
+                    x = (vars.globalX or vars.x) + itr.x * vars.facing + itr.w * (vars.facing - 1) / 2,
                     y = (vars.globalY or vars.y) + itr.y,
                     z = (vars.globalZ or vars.z) + itr.z,
                     w = itr.w,

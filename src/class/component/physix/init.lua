@@ -65,6 +65,7 @@ local Physix = Component:extend({ unique = true })
         end
         vars.body = body
 
+        vars.facing = vars.facing or kwargs.facing or 1
         vars.gravity = kwargs.gravity or false
         vars.static = kwargs.static or false
         vars.solid = default(kwargs.solid, true)
@@ -150,7 +151,13 @@ local Physix = Component:extend({ unique = true })
                 itr = itrs[i]
                 kind = KindsManager:get(itr.kind)
                 if kind then
-                    entities, count = world:queryCube(vars.x + itr.x, vars.y + itr.y, vars.z + itr.z, itr.w, itr.h, itr.l, kind.filter)
+                    entities, count = world:queryCube(
+                        vars.x + itr.x * vars.facing + itr.w * (vars.facing - 1) / 2,
+                        vars.y + itr.y,
+                        vars.z + itr.z,
+                        itr.w, itr.h, itr.l,
+                        kind.filter
+                    )
                     for j = 1, count do
                         kind:trigger(entity, entities[j], itr)
                     end

@@ -12,7 +12,6 @@ local tickrate = 1 / 60
 
 local core = l2df
 
-	local config = core.import 'config'
 	local log = core.import 'class.logger'
 	local parser = core.import 'class.parser.lffs'
 
@@ -52,11 +51,6 @@ local core = l2df
 		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
 		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
-
-		RenderManager:init()
-		SnapshotManager:init(30)
-		InputManager:init(config.keys)
-		InputManager:updateMappings(config.controls)
 	end
 
 	---

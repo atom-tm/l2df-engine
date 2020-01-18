@@ -82,7 +82,10 @@ local Frames = Component:extend({ unique = true })
 		vars.next = nextFrame.next
 		vars.wait = nextFrame.wait
 		vars.counter = remain or 0
-		self.map[nextFrame.keyword or ''] = nextFrame
+		if nextFrame.keyword then
+			self.map[nextFrame.keyword] = nextFrame
+			-- TODO: this can break sync, fix it in future with list's ids
+		end
 	end
 
 	---

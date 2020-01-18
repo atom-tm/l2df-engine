@@ -9,6 +9,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only 
 local helper = core.import 'helper'
 
 local rad = math.rad
+local floor = math.floor
 local round = helper.round
 local loveDraw = love.graphics.draw
 local loveClear = love.graphics.clear
@@ -28,31 +29,34 @@ local layers = {
 	UI = { }
 }
 
-local drawables = { }
+local drawables = { { } }
 
-local Manager = { canvas = nil, scalex = nil, scaley = nil }
+local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L2DF_DEBUG') or false }
 
-	function Manager:init()
+	function Manager:init(zlevels, cellsize)
 		self.resX, self.resY = 640, 360
 		self.gameW, self.gameH = love.window.getMode()
 		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
+		self.cellsize = cellsize or 1
 
 		self.canvas = loveNewCanvas(self.resX, self.resY)
-		self:setMaxIndex(10)
+		self:setMaxZIndex(zlevels or 10)
 	end
 
-	function Manager:setMaxIndex(index)
+	function Manager:setMaxZIndex(index)
 		drawables = { }
-		-- for i = 1, index do
-		-- 	drawables[i] = { }
-		-- end
+		for i = 1, index do
+			drawables[i] = { }
+		end
 	end
 
 	function Manager:add(input)
-		if not (input or input.object) then return end
-		-- local index = input.z > 0 and input.z < #drawables and input.z or 1
-		-- drawables[index][#drawables[index] + 1] = input
-		drawables[#drawables + 1] = input
+		if not input then return end
+
+		local levels = #drawables
+		local index = floor(((input.z or 0) + (input.l or 0)) / self.cellsize) + 1
+		index = index > 0 and index < #drawables and index or 1
+		drawables[index][#drawables[index] + 1] = input
 	end
 
 	function Manager:resize(w, h)
@@ -68,9 +72,9 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 
 	function Manager:clear()
 		for i = 1, #drawables do
-			--for j = #drawables[i], 1, -1 do
-				drawables[i] = nil
-			--end
+			for j = #drawables[i], 1, -1 do
+				drawables[i][j] = nil
+			end
 		end
 		self:layersClear()
 	end
@@ -85,8 +89,8 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 	function Manager:render()
 		local input, r1, g1, b1, a1, r2, g2, b2, a2
 		for i = 1, #drawables do
-			--for j = 1, #drawables[i] do
-				input = drawables[i]--[j]
+			for j = 1, #drawables[i] do
+				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
 				r2, g2, b2, a2 = input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1
 				loveSetColor(r2, g2, b2, a2)
@@ -116,7 +120,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil }
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
 				loveSetColor(r1, g1, b1, a1)
-			--end
+			end
 		end
 	end
 

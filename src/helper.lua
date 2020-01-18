@@ -293,7 +293,7 @@ local helper = { }
 	-- @return number
 	function helper.round(value, precision)
 		local i = pow(10, precision or 0)
-		return floor(value * i) / i
+		return floor(value * i + 0.5) / i
 	end
 
 	--- Coalesce function for 'non-empty' value
