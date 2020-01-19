@@ -189,7 +189,7 @@ local Manager = { }
 				end
 				callbacks[returned.id] = nil
 			end
-			log:debug('Async loaded: %s %s', self:get(returned.id), returned.id)
+			log:debug('Async loaded: %s', returned.id)
 		else asyncReturn:clear() end
 	end
 

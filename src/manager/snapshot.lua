@@ -6,6 +6,7 @@
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'SnapshotManager works only with l2df v1.0 and higher')
 
+local log = core.import 'class.logger'
 local helper = core.import 'helper'
 local unpack = table.unpack or _G.unpack
 
@@ -96,6 +97,10 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 			destroyNode(it.next)
 			self.size = self.size - 1
 		until it == history
+
+		if it.prev == it then
+			log:warn('Too big rollback from %.2fs to %.2fs', timestamp, it.time)
+		end
 
 		history = it
 		for i = 1, #history do

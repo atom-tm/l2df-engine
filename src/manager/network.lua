@@ -262,17 +262,17 @@ local Manager = { }
 				if client:state() ~= 'connected' then
 					client.peer:reset()
 					client.peer = event.peer
-					log:success('Attached to %s', client.peer)
+					log:success('Attached to %s', tostring(client.peer))
 
 				-- Drop duplicated connection
 				elseif event.peer:connect_id() < client.peer:connect_id() then
 					client.peer:disconnect()
 					client.peer = event.peer
-					log:success('Switched to %s', client.peer)
+					log:success('Switched to %s', tostring(client.peer))
 
 				-- Connected, do nothing
 				else
-					log:success('Connected to %s', client.peer)
+					log:success('Connected to %s', tostring(client.peer))
 				end
 				if ClientEventsMap.connected then
 					ClientEvents[ClientEventsMap.connected][3](client, e)
@@ -285,13 +285,13 @@ local Manager = { }
 					endpoint = strformat('%s:%s', client.private, client.port)
 					client.peer = sock:connect(endpoint)
 					client.attempts = 1
-					log:info('Connecting in local network', endpoint)
+					log:info('Connecting in local network: %s', endpoint)
 					clients[tostring(client.peer)] = client
 
 				-- Connection impossible: symmetric NAT, firewall and etc
 				-- or just a simple disconnect
 				else
-					log:info('Disconnected from', endpoint)
+					log:info('Disconnected from %s', endpoint)
 					if ClientEventsMap.disconnected then
 						ClientEvents[ClientEventsMap.disconnected][3](client, e)
 					end
