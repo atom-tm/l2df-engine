@@ -1,120 +1,129 @@
-# Love2D Fighting Engine
+Love2D Fighting Engine
+======================
 
-Небольшой движок для игр в жанре Beat 'em up и fighting на основе фреймворка Love2d.
+<!-- [![Build Status](https://travis-ci.org/atom-tm/l2df-engine.svg?branch=develop)](https://travis-ci.org/atom-tm/l2df-engine) -->
 
-## Блоки
+Love2D Fighting Engine (`L2DF`) is a cross-platform game engine written in Lua.
 
-### Opoint
+`L2DF` is a perfect solution for:
 
-*Opoint* - блок отвечающий за создание объектов. Располагается в блоке *\<frame\>* объекта, поддерживает многоразовое использование.
+- 2D and 2.5D games
+- fightings
+- beat 'em ups
+- platformers
+- similar genres
 
-*Все opoint блоки обрабатываются во время первого тика каждого кадра.*
+The backstage of this engine is an old "Little Fighter 2" game, so if you are familiar with it you can dive in very fast
+because `L2DF` uses similar syntax and terms. But if you're not there're no problem as we are going to support more syntaxes
+like M.U.G.E.N. and make engine as flexible as it's possible.
 
-> **id** (int) - id призываемого объекта
+If you're not that good in programming there're no problem since we have different presets which you can modificate
+without any single line of code! It was achieved with a flexible architecture and easy-to-read-and-write custom data files
+with our XML/HTML like syntax. We're going to release our custom editor for these files, so you won't need to edit data
+files manually in text-format :)
 
-> **action** (int) - кадр в котором появляется объект
-
-> **action_random** (int) - случайное смещение кадров
-
-> **x**, **y**, **z** (int) - положение призываемого объекта по осям x, y, z, относительно положения призывающего объекта
-
-> **x_random**, **y_random**, **z_random** (int) - случайное смещение по осям, относительно положения призываемого объекта
-
-> **facing** (int) - направление взгляда призываемого объекта, относительно призывающего
-
-> **count** (int) - количество призываемых объектов в одной точке
-
-### Body
-
-*Body* - блок отвечающий за коллайдер "тела" объекта. "Тело" взаимодействует с другими коллайдерами, такими как *itr*. Блок *body* располагается внутри блока *\<frame\>* объекта, поддерживает многоразовое использование.
-
-*Чаще всего блок body используется в связки с itr блоком вражеского объекта, для перевода обладателя в кадры получения урона*
-
-> **x**, **y** (int) - координаты расположения тела, относительно объекта
-
-> **w**, **h** (int) - ширина и высота коллайдера
-
-> **injury_frame** (int) - кадр в который перейдёт объект при получении урона *если данный параметр не указан, объект перейдёт в стандарные кадры получения урона*
-
-> **untouchable** (bool) - если данный параметр обозначен как *true*, тело становится недоступно для взаимодействия со стандартным *itr*
+Right now `L2DF` uses [LÖVE](https://bitbucket.org/rude/love) as "backend" for rendering, input and other stuff, but we
+also have plans to support [CoronaSDK](https://github.com/coronalabs/corona) and [Luce](https://github.com/peersuasive/luce) in future.
 
 
-## Описание структуры
+Features
+--------
 
-Ниже приведено примерное описание структуры движка.
+* Cross-platform. As soon as you use Lua and one of our backends it'll be available on mobile, desktop, TV and other devices.
+* Custom easy-to-learn syntax to make up / modificate rooms, objects, animations and etc.
+* Very flexible entity-component architecture.
+* Fast physics / collision detection - perfect for fighting games!
+* Frames based architecture - have a full control of your objects in each single frame.
+* Number of presets which you can use to rapidly start making your game.
+* Integrated Peer-to-Peer network support.
+* UDP-holepunching and master-server to exclude requirement of using VPN, Hamachi and other software to initialize connection under NAT.
+* "GGPO like" rollback networking instead of lockstep to make you feel an excellent netplay experience.
 
-* СИСТЕМНЫЕ папки и файлы заданы для движка по умолчанию, без них он не будет работать
-* МОДУЛЬНАЯ папки и файлы можно удалять, переименовывать или изменять.
-Пути до файлов, содержащихся в этих папках прописываются в системных файлах.
 
-Сейчас в проекте имеются следующие элементы:
+Installation
+------------
 
-* bg - МОДУЛЬНАЯ папка с картами, в ней хранятся все арены игры
-	* test-arena - пример папки с ареной
-		Арена состоит из dat файла, в котором описаны слои этой арены и фильтры (слои, накладывающиеся сверху), также там описываются свойства карты, такие как гравитация, трение, ширина итд, задаются локальные источники освящения, координаты спавнов. К картам можно подключать файлы "эффектов", чтобы на каждой карте эффекты были собственные, иначе берется стандартный файл эффектов.
-* chars - МОДУЛЬНАЯ папка с персонажами, там каждому чару выделено по папочке, где собраны все требуемые только им датки и спрайты
-	- test-char - пример персонажа
-		- sprites - папка содержит все спрайты персонажа
-		- ai.lua - набор инструкций поведения персонажа, если за него играет компьютер
-		- main.dat / character.dat - файл описания перса
-			датник персонажа имеет следующую структуру:
-			- head - в этом теге задаются системные значения, например пути до спрайтов, имя, стартовое и максимальное здоровье, регенерация и прочее
-			- frames_list - в этом теге задаются кадры "по умолчанию" (о них подробнее ниже)
-			- dtypes_list - в этом теге задаются типы урона (о них подробнее ниже)
-			- variables - локальные для каждого персонажа переменные, которые могут использоваться, допустим, в ai или стейтах
-			- frame - основной блок описывающий один кадр (или фрейм) персонажа. данных блоков можно создавать бесконечное количество, каждый из них имеет следующую структуру:
-				- данные шапки - в основном они системные, если они не указаны, имеют по умолчанию 0. среди этих данных находятся, например, номер спрайта, смещение, следующий кадр, длительность этого кадра итд
-				- блок стейта - таких блоков может быть несколько, тут задаются стейты и им передаются какие-то значения
-				- блок тела - таких блоков может быть несколько, они отвечают за физическое тело персонажа, с которым будут происходить взаимодействия следующего блока
-				- блок итерации - таких бло.. ну вы поняли.. отвечает за взаимодействия персонажей и объектов между собой. взаимодействие начинается когда блок итерации пересекается координатами с блоком тела. сценарий взаимодействия зависит от указанного типа "kind" (кинды находятся в папке ниже)
-				- блок вызова - таких бла бла... отвечает за создание объектов
-		- head.png - аваратка персонажа (кажется в барах используется)
-		- face.png - аватарка персонажа (а эта в меню выбора, ну или наоборот)
-* data - СИСТЕМНАЯ папка, содержит основные файлы с настройками движка
-	- combinations.dat - системный файл с описаниями доступных комбинаций, комбинации описываются как [код клавиш]:[текстовый идентефикатор]. допустим если написать 314:hit_Da, то при использовании в коде персонажа hit_Da: xxx, персонаж перейдет в кадр xxx, если друг за другом были нажаты клавиши, имеющие коды 3,1,4.
-	- damage_types.dat - системный файл, который описывает поведение персонажа при получении того или иного типа урона. к примеру при получении урона, который помечен как dtype: 1, персонаж перейдет в кадры, которые указаны в соответсвующем разделе данного файла. Если в файле нет какого-то типа урона, персонаж будет переходить в стандартные кадры, захардкоженные в движок. Также в каждом отдельном персонаже можно локально настроить поведение при тех или иных типах урона.
-	- data.txt - системный файл в котором описываются пути до персонажей, объектов и карт. каждому персонажу\\объекту\\карте присваевается свой id, по которому в дальнейшем происходит обращение
-	- english.lua - локализация, сделана в виде Lua таблички
-	- frames.dat - системный файл для задачи фреймов "по умолчанию". такие фреймы используются при написании стейтов (об этом далее), это типа текстовых ссылок. К примеру, если указать тут death: 220, то при обращении к кадру "death", персонажа будет переносить в кадр 220 по умолчанию. В каждом отдельном персонаже можно локально задать тот или иной кадр.
-	- russian.lua - тоже локализация (их стоит в отдельную папку засунуть)
-	- settings.dat - системный файл с настройками игры (с ним ещё много мороки, поэтому без подробностей)
-	- sparks.dat - это системный датник спарков. они сделаны отдельными объектами, для реализации разных фич. обращение к кадрам этого датника происходит из файла damage_types.dat
-	- system.dat - тут задаются айдишники системных датников (сами пути прописаны в data.txt)
-* docs - документация в html формате
-* effects - МОДУЛЬНАЯ папка с датниками общих эффектов (взрывы там, брызги и так далее)
-* kinds - СИСТЕМНАЯ папка, содержащая в себе сценарии взаимодействий
-	- test-kind.lua - каждый такой файл имеет одинаковую структуру по умолчанию, которая состоит из функций
-		- loadingBody - в этой функции задаётся считывание переменных, которые указываются в блоке тела в кадре персонажа и использутся в данном кинде далее
-		- loadingItr - тоже самое, но для блока итерации
-		- bodyCondition - дополнительные проверки, которые проходят при пересечении Itr'ом какого-либо Body (например проврека на то что был ударен враг, а не союзник)
-		- itrCondition - тоже самое, но только когда два Itr'а пересекаются (будет использовано, например, для столкновения ударов)
-		- bodyProcessing - непосредственно сценарий взаимодействия персонажей
-		- itrProcessing - сценарий столкновения персонажей
-* libs - СИСТЕМНАЯ папка, содержащая в себе весь код движка
-	- battle - в папке лежат модули используемые непосредсвтенно в бою
-		- ai.lua - функции аи
-		- collision.lua - столкновения, взаимодействия
-		- control.lua - считывание нажатий, проверка нажатий, откаты нажатий итд
-		- entities.lua - куча функций, всё что касается персонажей, создание, удаление, просчитывание хп, смена кадра итд
-		- graphic.lua - отрисовка персонажей, их теней и отражений, а также поведение камеры
-		- physix.lua - "физика". перемещения, проверки на пересечение границ карты, гравитация, трение
-		- resources.lua - загрузка системных ресурсов используемых в бою, по хорошему половину этих ресурсов надо вынести в system.dat и грузить оттуда
-	- battle.lua - описание всего боя, общий процесс, что происходит в начале боя, смена карты и так далее
-	- data.lua - подгрузка всего из папки data, а также из системных папок стейтов и итераций
-	- fonts.lua - файл со шрифтами (временная реализация) и скриптом отрисовки текста
-	- helper.lua - вспомогательные функции
-	- gamera.lua - библиотека камеры
-	- images.lua - функции загрузки и отрисовки спрайтов
-	- localization.lua - не помню, что тут находится xD ну что-то про локализацию
-	- resources.lua - загрузка в память файлов персонажей и карт
-	- rooms.lua - основа для комнат (далее подробнее)
-	- settings.lua - загрузка настроек в память, функция по смене разрешения и сохранение настроек
-	- sounds.lua - функции загрузки и воспроизведения звуков
-* music - МОДУЛЬНАЯ папка с музыкой
-* objects - МОДУЛЬНАЯ папка с dat файлами объектов. структура объектов такая-же как и у персонажей, только type в шапке другой
-* rooms - СИСТЕМНАЯ папка с файлами комнат. все комнаты задаются непосредственно в движке (файл libs/rooms.lua) а тут хранятся наборы поведения, ресурсов и прочего для тех или иных комнат. все комнаты имеют обязательные функции load, update и draw, а также свои локальные функции. в зависимости от того, какая сейчас комната, выполняется тот или иной набор данных функций
-* sounds - МОДУЛЬНАЯ папка со звуками
-* sprites - МОДУЛЬНАЯ папка со спрайтами (однако пока там находится СИСТЕМНАЯ папка с интерфейсами, но это скоро будет доработано)
-	- UI - папка содержащая все элементы интерфейса
-	- filter.png - фильтр "освящения"
-* states - СИСТЕМНАЯ папка с описаниями сценариев стейтов. каждый персонаж может единовреемнно иметь несколько стейтов в своём кадре. для каждого из указанных стейтов выполняется функция Processing. Также в шапке персонажа можно подключить "пассивные" стейты, у которых каждый тик будет выполняться функция Update. Стейт может быть и пассивным и активным одновременно. Например стейт блока, который повышает защиту персонажа, когда активен и имеет функцию снятия добавленной защиты и пассивный таймер, чтобы блоком не спамили.
+1. Go to [releases](https://github.com/atom-tm/l2df-engine/releases) page
+2. Download one of packages in the latest available release:
+	- `l2df.lua` - if you want just to import engine into your game with `require 'l2df'`
+	- `demo-x.x.x.exe` - if you want just to test latest changes and features in Windows
+	- `demo-x.x.x.zip` - if you want to see / modificate a single full-featured example
+	- `Source code.zip` - everything is under your control, feel the full power of presets and modificate engine if you need it!
+
+3. Place engine in your project and require it:
+```lua
+require 'l2df'
+-- ^ exposes _G.l2df / l2df variable, you can localize it:
+local l2df = require 'l2df'
+-- or in libs/:
+local l2df = require 'libs.l2df'
+-- or in libs/ with some "hacks":
+local src = love.filesystem.getSource()
+package.path = ('%s;%s/libs/?.lua;%s/libs/?/init.lua'):format(package.path, src, src)
+-- if previous 2 lines don't work:
+love.filesystem.setRequirePath('libs/?.lua;libs/?/init.lua;?.lua;?/init.lua')
+local l2df = require 'l2df'
+```
+
+4. Initialize engine with default `init` function. It's not needed if you want to use only some parts of `L2DF`.
+```lua
+function love.load()
+	l2df:init()
+end
+```
+
+5. If you don't have your own game loop leave out the rest of it to `L2DF`.
+Else read [documentation](https://atom-tm.github.io/l2df-engine) for more information on how to integrate `L2DF` into your already existen game loop.
+```lua
+function love.run()
+	return l2df:gameloop()
+end
+```
+
+6. Now you are ready to start development!
+
+
+Documentation
+-------------
+
+You can find it here: [https://atom-tm.github.io/l2df-engine](https://atom-tm.github.io/l2df-engine).
+
+It's still in-progress but already covers some basics of development with our engine.
+
+
+License
+-------
+`L2DF` is an open-sourced software licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+This project also uses some parts of third-party libraries listed below.
+
+```
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+| Project            | Distribution Files                   | Modificated | Copyright Holder    | License   |
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+| gamera             | src/external/gamera.lua              |      -      | Enrique García Cota | MIT       |
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+| lua-struct         | src/external/packer.lua              |      +      | Iryont              | MIT       |
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+| JSON Encode/Decode | src/external/json.lua                |      -      | Jeffrey Friedl      | CC BY 3.0 |
+| in pure Lua        |                                      |             |                     |           |
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+| bump-3dpd          | src/class/component/physix/cube.lua  |      +      | Enrique García Cota | MIT       |
+|                    | src/class/component/physix/grid.lua  |      +      |                     |           |
+|                    | src/class/component/physix/world.lua |      +      |                     |           |
+|--------------------|--------------------------------------|-------------|---------------------|-----------|
+```
+
+You can find full license text for this software in `THIRD-PARTY-LICENSE` file.
+
+
+Contributing
+------------
+
+Currently we don't have appropriate contributing guide but if you really want to help our team in some improvements or
+bug fixes then dm one of the core developers in Discord to discuss the topic / your pull-request:
+
+* `Abelidze#0109`
+* `Kasai#1590`
+
+Also if you've found a bug it'd be great if you can explain it on the [issues](https://github.com/atom-tm/l2df-engine/issues) page.
