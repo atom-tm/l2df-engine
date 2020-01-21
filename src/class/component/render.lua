@@ -23,25 +23,21 @@ local Render = Component:extend({ unique = true })
 
     function Render:init()
         self.entity = nil
-        self.ox = 0
-        self.oy = 0
-        self.kx = 0
-        self.ky = 0
-        self.color = { 1, 1, 1, 1 }
     end
 
     function Render:added(entity, sprites)
         if not entity then return false end
 
-        self.pics = { }
+        self.entity = entity
+        local vars = entity.vars
+        vars[self] = { }
+
+        vars[self].pics = { }
         if not (sprites and type(sprites) == 'table') then
             log:warn 'Created object without render support'
             return entity:removeComponent(self)
         end
         sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
-
-        self.entity = entity
-        local vars = entity.vars
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -97,14 +93,14 @@ local Render = Component:extend({ unique = true })
         sprite.f = sprite.f or sprite[7] or count
         sprite.ox = sprite.ox or sprite[8] or 0
         sprite.oy = sprite.oy or sprite[9] or 0
-        sprite.ord = sprite.ord or sprite[10] or #self.pics
+        sprite.ord = sprite.ord or sprite[10] or #vars[self].pics
 
         local num = 0
         for y = 1, sprite.y do
             for x = 1, sprite.x do
                 num = num + 1
                 if (sprite.s <= num) and (num <= sprite.f) then
-                    self.pics[sprite.ord + (num - sprite.s) + 1] = false
+                    vars[self].pics[sprite.ord + (num - sprite.s) + 1] = false
                 end
             end
         end
@@ -115,7 +111,7 @@ local Render = Component:extend({ unique = true })
                 for x = 1, sprite.x do
                     num = num + 1
                     if (sprite.s <= num) and (num <= sprite.f) then
-                        self.pics[sprite.ord + (num - sprite.s) + 1] = {
+                        vars[self].pics[sprite.ord + (num - sprite.s) + 1] = {
                             sprite.res,
                             newQuad((x-1) * sprite.w + sprite.ox, (y-1) * sprite.h + sprite.oy, sprite.w, sprite.h, img:getDimensions())
                         }
@@ -135,7 +131,7 @@ local Render = Component:extend({ unique = true })
         local vars = entity.vars
         if vars.hidden then return end
 
-        local pic = self.pics[vars.pic]
+        local pic = vars[self].pics[vars.pic]
         if pic then
             RenderManager:add({
                 object = ResourceManager:get(pic[1]),
@@ -146,11 +142,6 @@ local Render = Component:extend({ unique = true })
                 r = vars.globalR or vars.r,
                 sx = vars.facing * (vars.globalScaleX or vars.scaleX),
                 sy = vars.globalScaleY or vars.scaleY,
-                ox = self.ox + vars.centerX,
-                oy = self.oy + vars.centerY,
-                kx = self.kx,
-                ky = self.ky,
-                color = self.color
             })
         end
 
@@ -161,7 +152,6 @@ local Render = Component:extend({ unique = true })
             x = vars.globalX or vars.x,
             y = vars.globalY or vars.y,
             z = vars.globalZ or vars.z,
-            color = self.color
         })
 
         if vars.body then
