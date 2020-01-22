@@ -8,8 +8,8 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Logger works only with l2
 
 local Class = core.import 'class'
 
+local unpack = table.unpack or _G.unpack
 local pairs = _G.pairs
-local unpack = _G.unpack
 local assert = _G.assert
 local print = io.write
 local fopen = io.open
