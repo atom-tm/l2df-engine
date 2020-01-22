@@ -1,5 +1,4 @@
-Love2D Fighting Engine
-======================
+# About L2DF
 
 <!-- [![Build Status](https://travis-ci.org/atom-tm/l2df-engine.svg?branch=develop)](https://travis-ci.org/atom-tm/l2df-engine) -->
 
@@ -26,8 +25,7 @@ Right now `L2DF` uses [LÖVE](https://bitbucket.org/rude/love) as "backend" for 
 also have plans to support [CoronaSDK](https://github.com/coronalabs/corona) and [Luce](https://github.com/peersuasive/luce) in future.
 
 
-Features
---------
+## Features
 
 * Cross-platform. As soon as you use Lua and one of our backends it'll be available on mobile, desktop, TV and other devices.
 * Custom easy-to-learn syntax to make up / modificate rooms, objects, animations and etc.
@@ -40,8 +38,7 @@ Features
 * "GGPO like" rollback networking instead of lockstep to make you feel an excellent netplay experience.
 
 
-Installation
-------------
+## Installation
 
 1. Go to [releases](https://github.com/atom-tm/l2df-engine/releases) page
 2. Download one of packages in the latest available release:
@@ -83,16 +80,14 @@ end
 6. Now you are ready to start development!
 
 
-Documentation
--------------
+## Documentation
 
 You can find it here: [https://atom-tm.github.io/l2df-engine](https://atom-tm.github.io/l2df-engine).
 
 It's still in-progress but already covers some basics of development with our engine.
 
 
-License
--------
+## License
 `L2DF` is an open-sourced software licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 This project also uses some parts of third-party libraries listed below.
@@ -117,8 +112,7 @@ This project also uses some parts of third-party libraries listed below.
 You can find full license text for this software in `THIRD-PARTY-LICENSE` file.
 
 
-Contributing
-------------
+## Contributing
 
 Currently we don't have appropriate contributing guide but if you really want to help our team in some improvements or
 bug fixes then dm one of the core developers in Discord to discuss the topic / your pull-request:

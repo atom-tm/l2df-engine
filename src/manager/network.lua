@@ -55,14 +55,14 @@ local ClientEvents = { }
 local ClientEventsMap = { }
 
 local MasterEvents = {
-	--- Connected to master
+	-- Connected to master
 	connect = function (self, manager, host, event)
 		if type(masters[host]) == 'userdata' then
 			masters[host]:send( strformat('%c%s;%s', INIT, manager.ip, manager:username()) )
 		end
 	end,
 
-	--- Disconnected from master
+	-- Disconnected from master
 	disconnect = function (self, manager, host, event)
 		local master = masters[host]
 		if type(master) == 'userdata' then
@@ -72,7 +72,7 @@ local MasterEvents = {
 		end
 	end,
 
-	--- Received message from master
+	-- Received message from master
 	receive = function (self, manager, host, event)
 		local code, payload = strmatch(event.data, '^(.)(.*)')
 		code = code and strbyte(code)
@@ -81,7 +81,7 @@ local MasterEvents = {
 		end
 	end,
 
-	--- Request to link another peer
+	-- Request to link another peer
 	[JOIN] = function (self, manager, host, event, payload)
 		local client, ip = Client { events = ClientEvents, emap = ClientEventsMap }
 		ip, client.name, client.private, client.public, client.port = strmatch(payload, '^(%S*);(%S*);(%S*);(%S*):(%S*)')
@@ -96,7 +96,7 @@ local MasterEvents = {
 		clients[tostring(client.peer)] = client
 	end,
 
-	--- Drop all connections (leaving lobby)
+	-- Drop all connections (leaving lobby)
 	[FLUSH] = function (self, manager, host, event, payload)
 		log:info('FLUSH')
 		for k, client in pairs(clients) do
@@ -111,7 +111,7 @@ local Manager = { }
 
 	--- Init networking
 	-- @param string username
-	-- @return NetworkManager
+	-- @return l2df.manager.network
 	function Manager:init(username)
 		if self:isReady() then
 			return self
@@ -126,20 +126,21 @@ local Manager = { }
 		sock = enet.host_create()
 	end
 
-	---
+	--- Determine if manager is ready to setup connetions
 	-- @return boolean
 	function Manager:isReady()
 		return sock and sockReady
 	end
 
-	---
+	--- Determine if any client is connected
+	-- @return boolean
 	function Manager:isConnected()
 		return next(clients) ~= nil
 	end
 
 	--- Register new master server
 	-- @param string host
-	-- @return NetworkManager
+	-- @return l2df.manager.network
 	function Manager:register(host)
 		if masters[host] then return end
 		-- TODO: add host validation
@@ -148,7 +149,8 @@ local Manager = { }
 		return self
 	end
 
-	---
+	--- Login to all registered masters and discover your public IP
+	-- @return l2df.manager.network
 	function Manager:login()
 		self.ip = discoverIP() or '127.0.0.1'
 		for host, master in pairs(masters) do
@@ -161,7 +163,8 @@ local Manager = { }
 		return self
 	end
 
-	---
+	--- Disconnects from all registered masters
+	-- @return l2df.manager.network
 	function Manager:logout()
 		for host, master in pairs(masters) do
 			if master ~= PENDING and master:state() ~= 'disconnected' then
@@ -172,7 +175,9 @@ local Manager = { }
 		return self
 	end
 
-	---
+	--- Send search request to master
+	-- @param string username
+	-- @return boolean
 	function Manager:join(username)
 		if not self:isReady() or not username then
 			return false
@@ -186,7 +191,8 @@ local Manager = { }
 		return true
 	end
 
-	---
+	--- Returns an iterator on connected clients
+	-- @return function
 	function Manager:clients()
 		local k, v
 		return function ()
@@ -195,7 +201,10 @@ local Manager = { }
 		end
 	end
 
-	---
+	--- Register new network event
+	-- @param string name
+	-- @param string format
+	-- @param function callback
 	function Manager:event(name, format, callback)
 		local id = #ClientEvents + 1
 		assert(id < 256, 'Too much network events. Max supported count: 255')
@@ -205,7 +214,8 @@ local Manager = { }
 		ClientEvents[id] = { 'B' .. (format or ''), format or '', callback }
 	end
 
-	---
+	--- Broadcast event to all connected clients
+	-- @param string event
 	function Manager:broadcast(event, ...)
 		event = event and ClientEventsMap[event] or 0
 		local format = ClientEvents[event]
@@ -219,7 +229,7 @@ local Manager = { }
 	end
 
 	--- Dispose all connections
-	-- @return NetworkManager
+	-- @return l2df.manager.network
 	function Manager:destroy()
 		self:logout()
 		if sock then

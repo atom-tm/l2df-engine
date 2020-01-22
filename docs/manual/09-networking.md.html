@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+  <title>L2DF Documentation</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="/favicon/manifest.json" />
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
+  <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+
+<div id="container">
+
+  <div class="header" id="header">
+    <div class="header__logo">
+      <a href="../index.html">
+        <img src="../img/logo.png" alt="L2DF" />
+      </a>
+    </div>
+    <div class="header__nav">
+      <ul class="nav nav__docs">
+        <li class="nav__item nav__link__active">
+          <a class="nav__link" href="../manual/readme.md.html">Docs</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="../index.html">API Reference</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="https://github.com/atom-tm/l2df-engine/issues">Support</a>
+        </li>
+      </ul>
+    </div>
+  </div> <!-- header -->
+
+
+  <div class="nav" id="navigation">
+    <div class="nav__scrollable">
+      <a class="btn btn-outline-danger" href="../index.html"><i class="fa fa-chevron-left"></i> Index</a>
+
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#Network_manager">Network manager </a></li>
+        <li><a href="#Master_server">Master-server </a></li>
+        <li><a href="#Connection_protocol">Connection protocol </a></li>
+        <li><a href="#Clients">Clients </a></li>
+        <li><a href="#Events_and_game_protocol">Events and game protocol </a></li>
+        <li><a href="#Rollbacks">Rollbacks </a></li>
+        <li><a href="#Inputs">Inputs </a></li>
+        <li><a href="#Desync">Desync </a></li>
+      </ul>
+
+
+      <h2>Manual</h2>
+      <ul class="">
+        <li><a href="../manual/readme.md.html">About L2DF</a></li>
+        <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
+        <li><a href="../manual/02-presets.md.html">Presets</a></li>
+        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/04-managers.md.html">Managers</a></li>
+        <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
+        <li><a href="../manual/06-ui.md.html">User Interface</a></li>
+        <li><a href="../manual/07-frames.md.html">Frames</a></li>
+        <li><a href="../manual/07-states.md.html">States</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><strong>Networking</strong></li>
+        <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
+      </ul>
+      <h2>Modules</h2>
+      <ul class="nowrap">
+        <li><a href="../modules/l2df.config.html">l2df.config</a></li>
+        <li><a href="../modules/l2df.core.html">l2df.core</a></li>
+        <li><a href="../modules/l2df.helper.html">l2df.helper</a></li>
+        <li><a href="../modules/l2df.html">l2df</a></li>
+      </ul>
+      <h2>Classes</h2>
+      <ul class="nowrap">
+        <li><a href="../classes/l2df.class.client.html">l2df.class.client</a></li>
+        <li><a href="../classes/l2df.class.component.controller.html">l2df.class.component.controller</a></li>
+        <li><a href="../classes/l2df.class.component.controller.local.html">l2df.class.component.controller.local</a></li>
+        <li><a href="../classes/l2df.class.component.controller.remote.html">l2df.class.component.controller.remote</a></li>
+        <li><a href="../classes/l2df.class.component.frames.html">l2df.class.component.frames</a></li>
+        <li><a href="../classes/l2df.class.component.html">l2df.class.component</a></li>
+        <li><a href="../classes/l2df.class.component.physix.cube.html">l2df.class.component.physix.cube</a></li>
+        <li><a href="../classes/l2df.class.component.physix.grid.html">l2df.class.component.physix.grid</a></li>
+        <li><a href="../classes/l2df.class.component.physix.html">l2df.class.component.physix</a></li>
+        <li><a href="../classes/l2df.class.component.physix.world.html">l2df.class.component.physix.world</a></li>
+        <li><a href="../classes/l2df.class.component.print.html">l2df.class.component.print</a></li>
+        <li><a href="../classes/l2df.class.component.render.html">l2df.class.component.render</a></li>
+        <li><a href="../classes/l2df.class.component.states.html">l2df.class.component.states</a></li>
+        <li><a href="../classes/l2df.class.component.transform.html">l2df.class.component.transform</a></li>
+        <li><a href="../classes/l2df.class.entity.frame.html">l2df.class.entity.frame</a></li>
+        <li><a href="../classes/l2df.class.entity.html">l2df.class.entity</a></li>
+        <li><a href="../classes/l2df.class.entity.object.html">l2df.class.entity.object</a></li>
+        <li><a href="../classes/l2df.class.entity.scene.html">l2df.class.entity.scene</a></li>
+        <li><a href="../classes/l2df.class.entity.ui.html">l2df.class.entity.ui</a></li>
+        <li><a href="../classes/l2df.class.html">l2df.class</a></li>
+        <li><a href="../classes/l2df.class.kind.html">l2df.class.kind</a></li>
+        <li><a href="../classes/l2df.class.logger.html">l2df.class.logger</a></li>
+        <li><a href="../classes/l2df.class.parser.dat.html">l2df.class.parser.dat</a></li>
+        <li><a href="../classes/l2df.class.parser.html">l2df.class.parser</a></li>
+        <li><a href="../classes/l2df.class.parser.json.html">l2df.class.parser.json</a></li>
+        <li><a href="../classes/l2df.class.parser.lffs.html">l2df.class.parser.lffs</a></li>
+        <li><a href="../classes/l2df.class.plug.html">l2df.class.plug</a></li>
+        <li><a href="../classes/l2df.class.state.html">l2df.class.state</a></li>
+        <li><a href="../classes/l2df.class.storage.html">l2df.class.storage</a></li>
+        <li><a href="../classes/l2df.class.timer.html">l2df.class.timer</a></li>
+        <li><a href="../classes/l2df.class.transform.html">l2df.class.transform</a></li>
+        <li><a href="../classes/l2df.manager.event.html">l2df.manager.event</a></li>
+        <li><a href="../classes/l2df.manager.group.html">l2df.manager.group</a></li>
+        <li><a href="../classes/l2df.manager.input.html">l2df.manager.input</a></li>
+        <li><a href="../classes/l2df.manager.kinds.html">l2df.manager.kinds</a></li>
+        <li><a href="../classes/l2df.manager.network.html">l2df.manager.network</a></li>
+        <li><a href="../classes/l2df.manager.render.html">l2df.manager.render</a></li>
+        <li><a href="../classes/l2df.manager.resource.html">l2df.manager.resource</a></li>
+        <li><a href="../classes/l2df.manager.scene.html">l2df.manager.scene</a></li>
+        <li><a href="../classes/l2df.manager.snapshot.html">l2df.manager.snapshot</a></li>
+        <li><a href="../classes/l2df.manager.states.html">l2df.manager.states</a></li>
+      </ul>
+    </div> <!-- nav__scrollable -->
+  </div> <!-- navigation -->
+
+
+  <div class="content" id="content">
+
+
+<h1>Networking</h1>
+
+<p>Nowadays online multiplayer in games is not a feature, but a requirement.
+Everyday gamers play numbers of hours, matches and sessions in their favourite games with friends and other people.</p>
+
+<p>L2DF can be used with both host-clients and peer-to-peer multiplayer model. <br />
+For the last one we also provide you a bunch of tools to implement rollback based networking<sup><a href="http://blog.hypersect.com/rollback-networking-in-inversus/">[1]</a></sup><sup><a href="http://mauve.mizuumi.net/2012/07/05/understanding-fighting-game-networking/">[2]</a></sup><sup><a href="https://en.wikipedia.org/wiki/GGPO">[3]</a></sup>.
+Also we want to note that we don't like (hate) lockstep networking and we'll skip it in this topic.</p>
+
+
+<p><a name="Network_manager"></a></p>
+<h2>Network manager</h2>
+
+<p>As we discussed in <a href="../manual/04-managers.md.html#">previous topic</a> L2DF has <a href="../classes/l2df.manager.network.html#">NetworkManager</a> which you can use
+to easily enable multiplayer for your game.</p>
+
+<p>It has various of methods which you can find and learn in its <a href="../classes/l2df.manager.network.html#">API reference</a>.
+Most important one is <a href="../classes/l2df.manager.network.html#Manager:init">NetworkManager:init</a> since its your starting point in every
+multiplayer implementation. It does these two things:</p>
+
+<ul>
+    <li>initializes local player's username adding "#xxxx" suffix to it, so other players can find you later with this username;</li>
+    <li>initializes your socket<sup><a href="https://en.wikipedia.org/wiki/Network_socket">[4]</a></sup> to connect masters and peers later.</li>
+</ul>
+
+<p>To get generated username use <a href="../classes/l2df.manager.network.html#Manager:username">NetworkManager:username</a> method.</p>
+
+<p>To init it again you can destroy old socket and other stuff with <a href="../classes/l2df.manager.network.html#Manager:destroy">NetworkManager:destroy</a> method.</p>
+
+<p>On top of that L2DF uses <code>lua-enet</code> which is a part of LOVE framework.
+Read more about that <a href="https://love2d.org/wiki/lua-enet">here</a> for advanced networking use-cases.</p>
+
+
+<p><a name="Master_server"></a></p>
+<h2>Master-server</h2>
+
+<p>To implement online matchmaking and make finding of players possible L2DF uses <a href="https://github.com/atom-tm/l2df-master">master-servers</a>.</p>
+
+<p>It works as simple as it is:</p>
+
+<ol>
+    <li><p>Player connects to master and sends its username.</p></li>
+    <li><p>Master registers user, so now others can find him by username.</p></li>
+    <li><p>Player wants to find another player / his lobby and sends his username:</p>
+    <ul>
+        <li>if noone was found add this player to it's own lobby;</li>
+        <li>if someone was found then join his lobby = connect to each user in the lobby (peer-to-peer);</li>
+        <li>if everything is like in the previous variant, but current user is already connected to lobby then he should
+        leave lobby first = disconnect from all clients (internally master sends <code>FLUSH</code> event for doing that).</li>
+    </ul></li>
+    <li><p>In lobby users can wait for other players or start game immediately - depends on your implementation / preset.</p></li>
+    <li><p>If somebody disconnects from master it will be removed from lobby BUT not from other peers. It's used to not overload
+    master-servers and "localize" lobbies after game startups - so nobody else can connect after game starts.</p></li>
+    <li><p>If the last user in lobby disconnects master'll destroy this lobby.</p></li>
+</ol>
+
+<p>We support multiple master-server at the same time so you can create "mirrors", "fallbacks", "public and private" and
+other types of masters - it's up to you how you will use this feature.</p>
+
+<p>To add new master-server to your network's list <a href="../classes/l2df.manager.network.html#Manager:register">NetworkManager:register</a> method.
+Host format is <code>X.X.X.X:PORT</code> where <code>X</code> is parts of master's public IP and <code>PORT</code> is master's port (default is 12565).</p>
+
+<p>For debug purpose there're also <code>L2DF_MASTER</code> environment variable which you can use to add new master-server without
+changing game's source code.</p>
+
+<p>To connect all registered master-servers use <a href="../classes/l2df.manager.network.html#Manager:login">NetworkManager:login</a>. <br />
+Disconnect from them: <a href="../classes/l2df.manager.network.html#Manager:logout">NetworkManager:logout</a></p>
+
+<p>Except connecting to master <a href="../classes/l2df.manager.network.html#Manager:login">NetworkManager:login</a> also attempts to get your public IP
+address (connects to google.com for that). It's used later to help setup connection between you and other players.</p>
+
+
+<p><a name="Connection_protocol"></a></p>
+<h2>Connection protocol</h2>
+
+<p>For information about master-server's protocol read <a href="../manual/10-masters-protocol.md.html#">this page</a>.</p>
+
+<p>As we already stated L2DF is adapted to be used in p2p networking. <br />
+How it works in a perfect world:</p>
+
+<p><img src="../img/p2p.png" alt="sync"/></p>
+
+<p>But as you may know in real world most of the computers are located in local networks which use NAT.
+The case for that is limited amount of IPv4 addresses (a little bit bigger than 4 billions).</p>
+
+<p>There're no problems with NAT if you connect to somebody publicly available in the network (no NAT or with NAT forwarding; NONAT below).
+But there're a big problem if somebody wants set connection with you first - it's impossible until you configure your NAT
+to forward some specific connections (sometimes it's not possible).</p>
+
+<p>Okay, imagine the worst (to be fair it's "common") case scenario: <br />
+We have 2 computers under NAT (Wi-Fi, ISP, no matter what) and want to setup a connection. <br />
+Is it possible? - Yes! Sometimes :)</p>
+
+<p>NAT has different implementation and some of them works together, some not. <br />
+Typical terms you can find about NAT: 1. full cone, 2. address-restricted, 3. port-restricted, 4. with hairpin, 5. no hairpin.</p>
+
+<p>Okay, what are solutions?</p>
+
+<ol>
+    <li><p>NAT port forwarding / static routing: sometimes it's enough just to set correct routes on your router and you're done.</p></li>
+    <li><p>UDP holepunching <a href="http://www.raknet.net/raknet/manual/natpunchthrough.html">[5]</a>: L2DF implements this technique
+    and it's why we're using master-server. This is perfect except one problem: if you have 2+3 NAT (see above) it's very
+    hard to setup connection since for different addresses NAT uses different ports on same socket which leads to problems -
+    we have to "predict" port and it's not very efficient. Some illustration on how it works:</p></li>
+</ol>
+
+<p><img src="../img/holepunching.png" alt="holepunching"/></p>
+
+<ol>
+    <li><p>Use IPv6: if both of the clients have IPv6 address it's possible to setup connection using it since most of the ISPs
+    provides them as publicly available without problems. Currently we're not supporting it.</p></li>
+    <li><p>UPnP: if one the clients' router support this technology, you can use it to open needed ports and setup connection
+    using it. May be implemented in L2DF in future.</p></li>
+    <li><p>Relay servers: it's how Steam, Unity and others networking works. Relay servers (or TURN servers) transfer traffic
+    between clients as if they are connected together. We're going to implement this in future.</p></li>
+    <li><p>VPN: like previous one but more universal. It emulates "local network" so you can connect to anyone in these</p></li>
+</ol>
+
+<p>Sounds a little bit complicated. And it is :)</p>
+
+
+<p><a name="Clients"></a></p>
+<h2>Clients</h2>
+
+<p>For each connected player L2DF creates a <a href="../classes/l2df.class.client.html#">Client</a> instance which contains a references to connected
+peer and useful methods to communicate with it.</p>
+
+<p><a href="../classes/l2df.class.client.html#">Client</a> is a first argument in all event's callback functions.</p>
+
+<p>You can get an iterator for all connected clients with <a href="../classes/l2df.manager.network.html#Manager:clients">NetworkManager:clients</a> method and
+use it, e.g. like this:</p>
+
+
+<pre>
+<span class="keyword">for</span> client <span class="keyword">in</span> NetworkManager:clients() <span class="keyword">do</span>
+    <span class="global">print</span>(<span class="string">'Connected to'</span>, client:username())
+<span class="keyword">end</span>
+</pre>
+
+
+
+<p><a name="Events_and_game_protocol"></a></p>
+<h2>Events and game protocol</h2>
+
+<p>To organize your communication between clients L2DF provides <a href="../classes/l2df.manager.network.html#Manager:event">NetworkManager:event</a> method.</p>
+
+<p>This method registers network event that can be sent later with <a href="../classes/l2df.manager.network.html#Manager:broadcast">NetworkManager:broadcast</a>
+and <a href="../classes/l2df.class.client.html#">Client:send</a> methods.</p>
+
+<p>Simple usage:</p>
+
+
+<pre>
+NetworkManager:event(<span class="string">'hello'</span>, <span class="string">'Is'</span>, <span class="keyword">function</span> (client, event, index, message)
+    <span class="global">print</span>(<span class="string">'Hello'</span>, message, <span class="string">'your index is'</span>, index, <span class="string">'for that client.'</span>)
+<span class="keyword">end</span>)
+
+<span class="comment">-- ...
+</span>
+<span class="keyword">local</span> i = <span class="number">1</span>
+<span class="keyword">local</span> msg = <span class="string">'from '</span> .. NetworkManager:username()
+<span class="keyword">for</span> client <span class="keyword">in</span> NetworkManager:clients() <span class="keyword">do</span>
+    client:send(<span class="string">'hello'</span>, i, msg)
+    i = i + <span class="number">1</span>
+<span class="keyword">end</span>
+</pre>
+
+
+<p>The above example can be simplified with <a href="../classes/l2df.manager.network.html#Manager:broadcast">NetworkManager:broadcast</a> method since
+it also sends event with parameters to all connected clients.</p>
+
+<p>NetworkManager:event's format argument (second) defines a package structure that would be sent across network. <br />
+All defined variables will be unpacked and passed to callback function after <a href="../classes/l2df.class.client.html#">Client</a> and enet's event references.<br />
+There're description of all available types for it:</p>
+
+<pre><code> "b" a signed char (1 byte).
+ "B" an unsigned char (1 byte).
+ "h" a signed short (2 bytes).
+ "H" an unsigned short (2 bytes).
+ "i" a signed int (4 bytes).
+ "I" an unsigned int (4 bytes).
+ "l" a signed long (8 bytes).
+ "L" an unsigned long (8 bytes).
+ "f" a float (4 bytes).
+ "d" a double (8 bytes).
+ "s" a zero-terminated string.
+ "cn" a sequence of exactly n chars corresponding to a single Lua string.
+</code></pre>
+
+
+<p>See more examples in <a href="../manual/02-presets.md.html#">LF2&apos;s preset</a>.</p>
+
+<p><b>**Please, note that all calls to <a href="../classes/l2df.manager.network.html#Manager:event">NetworkManager:event</a> should be declared in global scope or
+should always have the defined order of execution (no if statements that can differ on clients) since it defined your
+protocol! Changes made to it lead to changes of your protocol and game versions' netcode incompatibility.**</b></p>
+
+
+<p><a name="Rollbacks"></a></p>
+<h2>Rollbacks</h2>
+
+<h3>How it works</h3>
+
+<p>Before getting into the implementation details, let’s review how rollback networking functions at a high-level.</p>
+
+<p>Rollback networking an evolution of synchronous networking systems where every player would send input commands
+to every other player. The last ones are also known as "lockstep" systems. Little Fighter 2 is an example of the game
+which uses this type of networking. A deterministic game simulation in LF2 would advance one frame every time it had
+received commands from each peer. This architecture had numerous benefits, but one huge caveat that drove action games
+away from it: input latency. In order to allow time for receiving remote player input, the local input wouldn’t be
+injected into the simulation for a number of frames equal to the transfer speed.</p>
+
+<p><img src="../img/Sync.png" alt="sync"/></p>
+
+<p>Rollback fixes the latency issue by processing local inputs immediately while predicting the remote inputs.
+When the actual remote inputs arrive over the network, it checks if anything was mispredicted.
+If a misprediction was found, time will be rewound to the mispredicted frame and then simulated back to the present
+using the corrected input values and further predicted values. This rollback and correction process all happens in
+the span of a single frame such that user only sees a slight pop in the results.</p>
+
+<p><img src="../img/Rollback.png" alt="rollback"/></p>
+
+<p>As network latency increases, visual pops in motion will increase, but they will only be in relation to direct
+effects of remote player input. For example, the launching of a projectile might skip the first couple frames,
+but once the projectile is in flight it can be reacted to exactly as if it were in a local multiplayer game.</p>
+
+<p>Rollback networking is designed to create a near zero latency experience for the local user and fair conflict
+resolution because every participant’s inputs are respected. When you move, you move right away. If you press
+a button on a specific frame to counter an attack, you will counter the attack. This architecture also creates
+a minimal overlap in which game and network code need to consider one another. When adding features to the game,
+there is almost zero concern about networking
+Everything just works and that’s a rather freeing experience for the engineer.</p>
+
+<p>The main downsides of rollback are that it does not easily support joining in-progress matches, and it does not scale
+to large player counts. It also doesn’t support a variable frame rate simulation, but I’ll discuss how it can still
+support variable frame rate rendering later.</p>
+
+<p>Rollback is perfect for fast, twitchy, frame-accurate games that require responsive input and have short gameplay rounds.
+It is the standard approach for modern fighting games and should be the standard approach for any quick round-based
+game with direct player interaction.</p>
+
+
+<h3>How to implement</h3>
+
+<p><a href="../classes/l2df.manager.snapshot.html#">SnapshotManager</a> - provides you a transactional storage with commit / rollback support. <br />
+<a href="../classes/l2df.manager.input.html#">InputManager</a> - saves 'timestamp' for all your inputs which is used internally to rollback with
+<a href="../classes/l2df.manager.snapshot.html#">SnapshotManager</a> <br />
+<a href="../classes/l2df.class.entity.html#Entity:sync">Entity:sync</a> - can be used in pair with <a href="../classes/l2df.manager.snapshot.html#Manager:stage">SnapshotManager:stage</a> to
+persist entity's state for future rollbacks.</p>
+
+<p>For more detailed information on implementation see <a href="../manual/02-presets.md.html#">LF2&apos;s preset</a>.</p>
+
+
+<p><a name="Inputs"></a></p>
+<h2>Inputs</h2>
+
+<p>This section has not completed yet...</p>
+
+
+<p><a name="Desync"></a></p>
+<h2>Desync</h2>
+
+<p>There're 3 variants depending on your chosen solution:</p>
+
+<ol>
+    <li>Server-Client: if you implemented this type of networking there're no desync since all logic is processed on the server
+    and your clients become just a readers of the game state from the server, cheating depends on the server (usually hard).
+    Requires pretty good machine with publicly available IP to start and process multiple matches at the same time.</li>
+    <li>Host-Client: no desync and delay on host and some delay on all clients, host can cheat easily.</li>
+    <li>Peer-to-Peer: in this case you have at least three different models:
+    <ul>
+        <li>simple sync of all objects: no delay for local player, easy to cheat, high bandwidth usage;</li>
+        <li>lockstep simulation: desync depends on determinism, hard to cheat, high input lag, low bandwidth usage, the worst user experience;</li>
+        <li>rollback networking: no delay for local player, cheating leads to desync, low bandwidth usage.</li>
+    </ul></li>
+</ol>
+
+
+<p>Now we want to cover only the last section about rollback netcode.</p>
+
+
+<p>To avoid desync with this type of networking you should follow these requirements:</p>
+
+<ol>
+    <li>Game simulation MUST be deterministic: same floating point operations on different machines, no random, no undefined
+    behaviour, same game loops and order of execution with the same input.</li>
+    <li>Game clocks (at least from start of the simulation) should be synchonized as accurate as possible.</li>
+    <li>If you recognized desync you should do one of these things:
+    <ul>
+        <li>netpause, sync clocks and world;</li>
+        <li>sync the whole world or its parts from time to time;</li>
+        <li>interupt game session.</li>
+    </ul></li>
+</ol>
+
+
+<p>Later we will provide your examples of situations when there're could be desync and explain how to avoid it.</p>
+
+
+<h4>References:</h4>
+
+<p>[1] Rollback Networking in INVERSUS - <a href="http://blog.hypersect.com/rollback-networking-in-inversus/">http://blog.hypersect.com/rollback-networking-in-inversus/</a></p>
+
+<p>[2] Understanding Fighting Game Networking - <a href="http://mauve.mizuumi.net/2012/07/05/understanding-fighting-game-networking/">http://mauve.mizuumi.net/2012/07/05/understanding-fighting-game-networking/</a></p>
+
+<p>[3] GGPO - <a href="https://en.wikipedia.org/wiki/GGPO">https://en.wikipedia.org/wiki/GGPO</a></p>
+
+<p>[4] Network socket - <a href="https://en.wikipedia.org/wiki/Network_socket">https://en.wikipedia.org/wiki/Network_socket</a></p>
+
+<p>[5] NAT Punch-through - <a href="http://www.raknet.net/raknet/manual/natpunchthrough.html">http://www.raknet.net/raknet/manual/natpunchthrough.html</a></p>
+
+
+  <div id="about" class="about">
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+  </div> <!-- about -->
+
+  </div> <!-- content -->
+</div> <!-- container -->
+
+  <script src="../js/dc-code.js" async></script>
+<!-- <script src="https://atom-tm.github.io/l2df-engine/js/dc-code.js" async></script> -->
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+  <title>L2DF Documentation</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="/favicon/manifest.json" />
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
+  <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+
+<div id="container">
+
+  <div class="header" id="header">
+    <div class="header__logo">
+      <a href="../index.html">
+        <img src="../img/logo.png" alt="L2DF" />
+      </a>
+    </div>
+    <div class="header__nav">
+      <ul class="nav nav__docs">
+        <li class="nav__item nav__link__active">
+          <a class="nav__link" href="../manual/readme.md.html">Docs</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="../index.html">API Reference</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="https://github.com/atom-tm/l2df-engine/issues">Support</a>
+        </li>
+      </ul>
+    </div>
+  </div> <!-- header -->
+
+
+  <div class="nav" id="navigation">
+    <div class="nav__scrollable">
+      <a class="btn btn-outline-danger" href="../index.html"><i class="fa fa-chevron-left"></i> Index</a>
+
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#Body">Body </a></li>
+        <li><a href="#Itr">Itr </a></li>
+        <li><a href="#Kinds">Kinds </a></li>
+        <li><a href="#Blocks_syntax_and_description">Blocks syntax and description </a></li>
+      </ul>
+
+
+      <h2>Manual</h2>
+      <ul class="">
+        <li><a href="../manual/readme.md.html">About L2DF</a></li>
+        <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
+        <li><a href="../manual/02-presets.md.html">Presets</a></li>
+        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/04-managers.md.html">Managers</a></li>
+        <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
+        <li><a href="../manual/06-ui.md.html">User Interface</a></li>
+        <li><a href="../manual/07-frames.md.html">Frames</a></li>
+        <li><a href="../manual/07-states.md.html">States</a></li>
+        <li><strong>Itrs, bodies and kinds</strong></li>
+        <li><a href="../manual/09-networking.md.html">Networking</a></li>
+        <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
+      </ul>
+      <h2>Modules</h2>
+      <ul class="nowrap">
+        <li><a href="../modules/l2df.config.html">l2df.config</a></li>
+        <li><a href="../modules/l2df.core.html">l2df.core</a></li>
+        <li><a href="../modules/l2df.helper.html">l2df.helper</a></li>
+        <li><a href="../modules/l2df.html">l2df</a></li>
+      </ul>
+      <h2>Classes</h2>
+      <ul class="nowrap">
+        <li><a href="../classes/l2df.class.client.html">l2df.class.client</a></li>
+        <li><a href="../classes/l2df.class.component.controller.html">l2df.class.component.controller</a></li>
+        <li><a href="../classes/l2df.class.component.controller.local.html">l2df.class.component.controller.local</a></li>
+        <li><a href="../classes/l2df.class.component.controller.remote.html">l2df.class.component.controller.remote</a></li>
+        <li><a href="../classes/l2df.class.component.frames.html">l2df.class.component.frames</a></li>
+        <li><a href="../classes/l2df.class.component.html">l2df.class.component</a></li>
+        <li><a href="../classes/l2df.class.component.physix.cube.html">l2df.class.component.physix.cube</a></li>
+        <li><a href="../classes/l2df.class.component.physix.grid.html">l2df.class.component.physix.grid</a></li>
+        <li><a href="../classes/l2df.class.component.physix.html">l2df.class.component.physix</a></li>
+        <li><a href="../classes/l2df.class.component.physix.world.html">l2df.class.component.physix.world</a></li>
+        <li><a href="../classes/l2df.class.component.print.html">l2df.class.component.print</a></li>
+        <li><a href="../classes/l2df.class.component.render.html">l2df.class.component.render</a></li>
+        <li><a href="../classes/l2df.class.component.states.html">l2df.class.component.states</a></li>
+        <li><a href="../classes/l2df.class.component.transform.html">l2df.class.component.transform</a></li>
+        <li><a href="../classes/l2df.class.entity.frame.html">l2df.class.entity.frame</a></li>
+        <li><a href="../classes/l2df.class.entity.html">l2df.class.entity</a></li>
+        <li><a href="../classes/l2df.class.entity.object.html">l2df.class.entity.object</a></li>
+        <li><a href="../classes/l2df.class.entity.scene.html">l2df.class.entity.scene</a></li>
+        <li><a href="../classes/l2df.class.entity.ui.html">l2df.class.entity.ui</a></li>
+        <li><a href="../classes/l2df.class.html">l2df.class</a></li>
+        <li><a href="../classes/l2df.class.kind.html">l2df.class.kind</a></li>
+        <li><a href="../classes/l2df.class.logger.html">l2df.class.logger</a></li>
+        <li><a href="../classes/l2df.class.parser.dat.html">l2df.class.parser.dat</a></li>
+        <li><a href="../classes/l2df.class.parser.html">l2df.class.parser</a></li>
+        <li><a href="../classes/l2df.class.parser.json.html">l2df.class.parser.json</a></li>
+        <li><a href="../classes/l2df.class.parser.lffs.html">l2df.class.parser.lffs</a></li>
+        <li><a href="../classes/l2df.class.plug.html">l2df.class.plug</a></li>
+        <li><a href="../classes/l2df.class.state.html">l2df.class.state</a></li>
+        <li><a href="../classes/l2df.class.storage.html">l2df.class.storage</a></li>
+        <li><a href="../classes/l2df.class.timer.html">l2df.class.timer</a></li>
+        <li><a href="../classes/l2df.class.transform.html">l2df.class.transform</a></li>
+        <li><a href="../classes/l2df.manager.event.html">l2df.manager.event</a></li>
+        <li><a href="../classes/l2df.manager.group.html">l2df.manager.group</a></li>
+        <li><a href="../classes/l2df.manager.input.html">l2df.manager.input</a></li>
+        <li><a href="../classes/l2df.manager.kinds.html">l2df.manager.kinds</a></li>
+        <li><a href="../classes/l2df.manager.network.html">l2df.manager.network</a></li>
+        <li><a href="../classes/l2df.manager.render.html">l2df.manager.render</a></li>
+        <li><a href="../classes/l2df.manager.resource.html">l2df.manager.resource</a></li>
+        <li><a href="../classes/l2df.manager.scene.html">l2df.manager.scene</a></li>
+        <li><a href="../classes/l2df.manager.snapshot.html">l2df.manager.snapshot</a></li>
+        <li><a href="../classes/l2df.manager.states.html">l2df.manager.states</a></li>
+      </ul>
+    </div> <!-- nav__scrollable -->
+  </div> <!-- navigation -->
+
+
+  <div class="content" id="content">
+
+
+<h1>Itrs, bodies and kinds</h1>
+
+<p><a name="Body"></a></p>
+<h2>Body</h2>
+
+<p><strong>Body</strong> is a block responsible for "body" collider of the object. In other words it makes the object to have a physical
+body which can interact with other bodies in the game world. Except that it can also interact with "itrs" -
+special type of colliders also known as "triggers". <br />
+Currently we support only one body per object's frame.</p>
+
+<p><a name="Itr"></a></p>
+<h2>Itr</h2>
+
+<p><strong>Itr</strong> is a block which defines triggers on the object. Each itr can trigger specific event / script called "kind". <br />
+Each object's frame can have multiple itrs - leads to very funny use-cases.</p>
+
+<p><em>Most often, the "body" block is used in conjunction with the "itr" block of an enemy object to switch the owner to damage frames</em></p>
+
+
+<p><a name="Kinds"></a></p>
+<h2>Kinds</h2>
+
+<p>This section has not finished yet.</p>
+
+
+<p><a name="Blocks_syntax_and_description"></a></p>
+<h2>Blocks syntax and description</h2>
+
+
+<table class="info-table">
+<tr>
+<th colspan="2">body:</th>
+</tr>
+
+<tr>
+<td colspan="2" class="block-descr">Блок задаёт координаты и размеры хитбокса, ответственного за "тело" персонажа, с которым будут взаимодейстовать хитбоксы itr</td>
+</tr>
+
+<tr>
+<td class="state-num">kind</td>
+<td class="state-desc">Тип</td>
+</tr>
+<tr>
+<td class="state-num">x</td>
+<td class="state-desc">Точка отсчета по координате x</td>
+</tr>
+<tr>
+<td class="state-num">y</td>
+<td class="state-desc">Точка отсчета по координате y</td>
+</tr>
+<tr>
+<td class="state-num">w</td>
+<td class="state-desc">Ширина хитбокса</td>
+</tr>
+<tr>
+<td class="state-num">h</td>
+<td class="state-desc">Высота хитбокса</td>
+</tr>
+<tr>
+<td colspan="2"  class="state-desc">
+<pre class="dc-code">
+body: { kind: 0  x: 0  y: 0  w: 1  h: 1 }
+</pre>
+</td>
+</tr>
+</table>
+
+
+
+<table class="info-table">
+<tr>
+<th colspan="2">itr:</th>
+</tr>
+<tr>
+<td colspan="2" class="block-descr">Блок задаёт координаты и размеры хитбокса, ответственного за "взаимодействие" персонажа (чаще всего за удар). Данный хитбокс будет взаимодействовать с хитбоксами типа bdy при столкновении</td>
+</tr>
+<tr>
+<td class="state-num">kind</td>
+<td class="state-desc">Тип (<a href="">список</a>)</td>
+</tr>
+<tr>
+<td class="state-num">x</td>
+<td class="state-desc">Точка отсчета по оси x</td>
+</tr>
+<tr>
+<td class="state-num">y</td>
+<td class="state-desc">Точка отсчета по оси y</td>
+</tr>
+<tr>
+<td class="state-num">z</td>
+<td class="state-desc">
+<div class="engine">PDK</div> Смещение хитбокса по оси z (значения больше нуля - вниз, меньше - назад)
+</td>
+</tr>
+<tr>
+<td class="state-num">w</td>
+<td class="state-desc">Ширина хитбокса</td>
+</tr>
+<tr>
+<td class="state-num">h</td>
+<td class="state-desc">Высота хитбокса</td>
+</tr>
+<tr>
+<td class="state-num">zwidth</td>
+<td class="state-desc">Ширина хитбокса по оси z</td>
+</tr>
+<tr>
+<td class="state-num">dvx</td>
+<td class="state-desc">Придание атакуемому ускорения по оси x</td>
+</tr>
+<tr>
+<td class="state-num">dvy</td>
+<td class="state-desc">Придание атакуемому ускорения по оси y</td>
+</tr>
+<tr>
+<td class="state-num">dvz</td>
+<td class="state-desc">Придание атакуемому ускорения по оси z</td>
+</tr>
+<tr>
+<td class="state-num">h</td>
+<td class="state-desc">Высота хитбокса</td>
+</tr>
+</table>
+
+
+
+  <div id="about" class="about">
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+  </div> <!-- about -->
+
+  </div> <!-- content -->
+</div> <!-- container -->
+
+  <script src="../js/dc-code.js" async></script>
+<!-- <script src="https://atom-tm.github.io/l2df-engine/js/dc-code.js" async></script> -->
+</body>
+</html>

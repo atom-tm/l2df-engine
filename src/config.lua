@@ -1,5 +1,5 @@
 --- Configs and settings
--- @classmod l2df.config
+-- @module l2df.config
 -- @author Kasai, Abelidze
 -- @copyright Atom-TM 2020
 

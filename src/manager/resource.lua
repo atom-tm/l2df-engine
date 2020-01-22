@@ -75,10 +75,10 @@ local callbacks = { }
 
 local Manager = { }
 	--- Saves the resource to the Manager
-	--  @param mixed resource
-	--  @param boolean temp
-	--  @return number id
-	--  @return mixed resource
+	-- @param mixed resource
+	-- @param boolean temp
+	-- @return number id
+	-- @return mixed resource
 	function Manager:add(resource, temp)
 		if resourse == nil then return false end
 		local id = nil
@@ -88,11 +88,11 @@ local Manager = { }
 	end
 
 	--- Stores the resource in the Manager using a unique identifier
-	--  @param mixed id
-	--  @param mixed resource
-	--  @param boolean temp
-	--  @return mixed id
-	--  @return mixed resource
+	-- @param mixed id
+	-- @param mixed resource
+	-- @param boolean temp
+	-- @return mixed id
+	-- @return mixed resource
 	function Manager:addById(id, resource, temp)
 		if not id then return self:add(resource, temp) end
 		if resource == nil then return false end
@@ -102,16 +102,16 @@ local Manager = { }
 	end
 
 	--- Removes the specified resource from the Manager
-	--  @param mixed resource
-	--  @return boolean success
+	-- @param mixed resource
+	-- @return boolean success
 	function Manager:remove(resource)
 		list.temp:remove(resource)
 		return list.global:remove(resource)
 	end
 
 	--- Removes the specified resource from the Manager by Id
-	--  @param mixed id
-	--  @return boolean success
+	-- @param mixed id
+	-- @return boolean success
 	function Manager:removeById(id)
 		local res = list.global:getById(id)
 		if not res then return true end
@@ -128,26 +128,27 @@ local Manager = { }
 	end
 
 	--- Gets the resource Id from the Manager
-	--  @param mixed resource
-	--  @return mixed id
+	-- @param mixed resource
+	-- @return mixed id
 	function Manager:getId(resource)
 		return list.global:has(resource)
 	end
 
 	--- Returns a resource from the Manager by Id
-	--  @param mixed id
-	--  @return mixed resource
-	--  @return boolean is the resource marked temporary
+	-- @param mixed id
+	-- @return mixed resource
+	-- @return boolean is the resource marked temporary
 	function Manager:get(id)
 		return list.global:getById(id) or list.temp:getById(id) or nil
 	end
 
 	--- Adds a supported file type to the Manager by loading it from a path
-	--  @param string filepath
-	--  @param boolean reload
-	--  @param mixed id
-	--  @return mixed id
-	--  @return mixed resource
+	-- @param string filepath
+	-- @param boolean reload
+	-- @param mixed id
+	-- @param boolean temp
+	-- @return mixed id
+	-- @return mixed resource
 	function Manager:load(filepath, reload, id, temp, ...)
 		local id = id or filepath
 		if not reload and self:get(id) then return id end

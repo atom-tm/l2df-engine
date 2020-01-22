@@ -1,5 +1,5 @@
 --- World component
--- @module l2df.class.component.physix.world
+-- @classmod l2df.class.component.physix.world
 -- @author Abelidze
 -- @author oniietzschan
 -- @author Enrique García Cota

@@ -189,8 +189,8 @@ local Entity = Class:extend()
 	end
 
 	--- Enumeration entities' tree
-	--  @param boolean skipped  skip self in enumeration
 	--  @param boolean active  enumerate only active nodes
+	--  @param boolean skipped  skip self in enumeration
 	--  @return function
 	function Entity:enum(active, skipped)
 		local beginner = self

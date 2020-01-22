@@ -1,250 +1,299 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-    <title>L2DF documentation</title>
-    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+  <title>L2DF Documentation</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="/favicon/manifest.json" />
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
+  <link rel="stylesheet" href="../ldoc.css" type="text/css" />
 </head>
 <body>
 
+
+
 <div id="container">
 
-<div id="product">
-    <div id="product_logo"></div>
-    <div id="product_name"><big><b></b></big></div>
-    <div id="product_description"></div>
-</div> <!-- id="product" -->
+  <div class="header" id="header">
+    <div class="header__logo">
+      <a href="../index.html">
+        <img src="../img/logo.png" alt="L2DF" />
+      </a>
+    </div>
+    <div class="header__nav">
+      <ul class="nav nav__docs">
+        <li class="nav__item nav__link__active">
+          <a class="nav__link" href="../manual/readme.md.html">Docs</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="../index.html">API Reference</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="https://github.com/atom-tm/l2df-engine/issues">Support</a>
+        </li>
+      </ul>
+    </div>
+  </div> <!-- header -->
 
 
-<div id="main">
+  <div class="nav" id="navigation">
+    <div class="nav__scrollable">
+      <a class="btn btn-outline-danger" href="../index.html"><i class="fa fa-chevron-left"></i> Index</a>
+
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#Features">Features </a></li>
+        <li><a href="#Installation">Installation </a></li>
+        <li><a href="#Documentation">Documentation </a></li>
+        <li><a href="#License">License </a></li>
+        <li><a href="#Contributing">Contributing </a></li>
+      </ul>
 
 
-<!-- Menu -->
-
-<div id="navigation">
-<br/>
-<h1>L2DF</h1>
-
-<ul>
-  <li><a href="../index.html">Index</a></li>
-</ul>
-
-<h2>Contents</h2>
-<ul>
-<li><a href="#__________">Блоки </a></li>
-<li><a href="#___________________________________">Описание структуры </a></li>
-</ul>
-
-
-<h2>Manual</h2>
-<ul class="nowrap">
-  <li><strong>Love2D Fighting Engine</strong></li>
-</ul>
-<h2>Reference</h2>
-<ul class="nowrap">
-  <li><a href="../reference/l2df.core.html">l2df.core</a></li>
-  <li><a href="../reference/l2df.helper.html">l2df.helper</a></li>
-  <li><a href="../reference/l2df.html">l2df</a></li>
-</ul>
-<h2>Classes</h2>
-<ul class="nowrap">
-  <li><a href="../classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></li>
-  <li><a href="../classes/l2df.core.class.component.html">l2df.core.class.component</a></li>
-  <li><a href="../classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></li>
-  <li><a href="../classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></li>
-  <li><a href="../classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></li>
-  <li><a href="../classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></li>
-  <li><a href="../classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></li>
-  <li><a href="../classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></li>
-  <li><a href="../classes/l2df.core.class.entity.html">l2df.core.class.entity</a></li>
-  <li><a href="../classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></li>
-  <li><a href="../classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></li>
-  <li><a href="../classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></li>
-  <li><a href="../classes/l2df.core.class.html">l2df.core.class</a></li>
-  <li><a href="../classes/l2df.core.class.state.html">l2df.core.class.state</a></li>
-  <li><a href="../classes/l2df.core.class.storage.html">l2df.core.class.storage</a></li>
-  <li><a href="../classes/l2df.core.class.timer.html">l2df.core.class.timer</a></li>
-  <li><a href="../classes/l2df.core.class.transform.html">l2df.core.class.transform</a></li>
-  <li><a href="../classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></li>
-  <li><a href="../classes/l2df.core.manager.event.html">l2df.core.manager.event</a></li>
-  <li><a href="../classes/l2df.core.manager.group.html">l2df.core.manager.group</a></li>
-  <li><a href="../classes/l2df.core.manager.render.html">l2df.core.manager.render</a></li>
-  <li><a href="../classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></li>
-  <li><a href="../classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></li>
-  <li><a href="../classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></li>
-  <li><a href="../classes/l2df.core.manager.states.html">l2df.core.manager.states</a></li>
-  <li><a href="../classes/l2df.parsers.base.html">l2df.parsers.base</a></li>
-  <li><a href="../classes/l2df.parsers.dat.html">l2df.parsers.dat</a></li>
-  <li><a href="../classes/l2df.parsers.json.html">l2df.parsers.json</a></li>
-  <li><a href="../classes/l2df.parsers.lffs.html">l2df.parsers.lffs</a></li>
-</ul>
-
-</div>
-
-<div id="content">
-
-
-<h1>Love2D Fighting Engine</h1>
-
-<p>Небольшой движок для игр в жанре Beat 'em up и fighting на основе фреймворка Love2d.</p>
-
-<p><a name="__________"></a></p>
-<h2>Блоки</h2>
-
-<h3>Opoint</h3>
-
-<p><em>Opoint</em> - блок отвечающий за создание объектов. Располагается в блоке *\<frame\>* объекта, поддерживает многоразовое использование.</p>
-
-<p><em>Все opoint блоки обрабатываются во время первого тика каждого кадра.</em></p>
-
-<blockquote>
-    <p><strong>id</strong> (int) - id призываемого объекта</p>
-
-    <p><strong>action</strong> (int) - кадр в котором появляется объект</p>
-
-    <p><strong>action_random</strong> (int) - случайное смещение кадров</p>
-
-    <p><strong>x</strong>, <strong>y</strong>, <strong>z</strong> (int) - положение призываемого объекта по осям x, y, z, относительно положения призывающего объекта</p>
-
-    <p><strong>x_random</strong>, <strong>y_random</strong>, <strong>z_random</strong> (int) - случайное смещение по осям, относительно положения призываемого объекта</p>
-
-    <p><strong>facing</strong> (int) - направление взгляда призываемого объекта, относительно призывающего</p>
-
-    <p><strong>count</strong> (int) - количество призываемых объектов в одной точке</p>
-</blockquote>
-
-<h3>Body</h3>
-
-<p><em>Body</em> - блок отвечающий за коллайдер "тела" объекта. "Тело" взаимодействует с другими коллайдерами, такими как <em>itr</em>. Блок <em>body</em> располагается внутри блока *\<frame\>* объекта, поддерживает многоразовое использование.</p>
-
-<p><em>Чаще всего блок body используется в связки с itr блоком вражеского объекта, для перевода обладателя в кадры получения урона</em></p>
-
-<blockquote>
-    <p><strong>x</strong>, <strong>y</strong> (int) - координаты расположения тела, относительно объекта</p>
-
-    <p><strong>w</strong>, <strong>h</strong> (int) - ширина и высота коллайдера</p>
-
-    <p><strong>injury_frame</strong> (int) - кадр в который перейдёт объект при получении урона <em>если данный параметр не указан, объект перейдёт в стандарные кадры получения урона</em></p>
-
-    <p><strong>untouchable</strong> (bool) - если данный параметр обозначен как <em>true</em>, тело становится недоступно для взаимодействия со стандартным <em>itr</em></p>
-</blockquote>
+      <h2>Manual</h2>
+      <ul class="">
+        <li><strong>About L2DF</strong></li>
+        <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
+        <li><a href="../manual/02-presets.md.html">Presets</a></li>
+        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/04-managers.md.html">Managers</a></li>
+        <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
+        <li><a href="../manual/06-ui.md.html">User Interface</a></li>
+        <li><a href="../manual/07-frames.md.html">Frames</a></li>
+        <li><a href="../manual/07-states.md.html">States</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/09-networking.md.html">Networking</a></li>
+        <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
+      </ul>
+      <h2>Modules</h2>
+      <ul class="nowrap">
+        <li><a href="../modules/l2df.config.html">l2df.config</a></li>
+        <li><a href="../modules/l2df.core.html">l2df.core</a></li>
+        <li><a href="../modules/l2df.helper.html">l2df.helper</a></li>
+        <li><a href="../modules/l2df.html">l2df</a></li>
+      </ul>
+      <h2>Classes</h2>
+      <ul class="nowrap">
+        <li><a href="../classes/l2df.class.client.html">l2df.class.client</a></li>
+        <li><a href="../classes/l2df.class.component.controller.html">l2df.class.component.controller</a></li>
+        <li><a href="../classes/l2df.class.component.controller.local.html">l2df.class.component.controller.local</a></li>
+        <li><a href="../classes/l2df.class.component.controller.remote.html">l2df.class.component.controller.remote</a></li>
+        <li><a href="../classes/l2df.class.component.frames.html">l2df.class.component.frames</a></li>
+        <li><a href="../classes/l2df.class.component.html">l2df.class.component</a></li>
+        <li><a href="../classes/l2df.class.component.physix.cube.html">l2df.class.component.physix.cube</a></li>
+        <li><a href="../classes/l2df.class.component.physix.grid.html">l2df.class.component.physix.grid</a></li>
+        <li><a href="../classes/l2df.class.component.physix.html">l2df.class.component.physix</a></li>
+        <li><a href="../classes/l2df.class.component.physix.world.html">l2df.class.component.physix.world</a></li>
+        <li><a href="../classes/l2df.class.component.print.html">l2df.class.component.print</a></li>
+        <li><a href="../classes/l2df.class.component.render.html">l2df.class.component.render</a></li>
+        <li><a href="../classes/l2df.class.component.states.html">l2df.class.component.states</a></li>
+        <li><a href="../classes/l2df.class.component.transform.html">l2df.class.component.transform</a></li>
+        <li><a href="../classes/l2df.class.entity.frame.html">l2df.class.entity.frame</a></li>
+        <li><a href="../classes/l2df.class.entity.html">l2df.class.entity</a></li>
+        <li><a href="../classes/l2df.class.entity.object.html">l2df.class.entity.object</a></li>
+        <li><a href="../classes/l2df.class.entity.scene.html">l2df.class.entity.scene</a></li>
+        <li><a href="../classes/l2df.class.entity.ui.html">l2df.class.entity.ui</a></li>
+        <li><a href="../classes/l2df.class.html">l2df.class</a></li>
+        <li><a href="../classes/l2df.class.kind.html">l2df.class.kind</a></li>
+        <li><a href="../classes/l2df.class.logger.html">l2df.class.logger</a></li>
+        <li><a href="../classes/l2df.class.parser.dat.html">l2df.class.parser.dat</a></li>
+        <li><a href="../classes/l2df.class.parser.html">l2df.class.parser</a></li>
+        <li><a href="../classes/l2df.class.parser.json.html">l2df.class.parser.json</a></li>
+        <li><a href="../classes/l2df.class.parser.lffs.html">l2df.class.parser.lffs</a></li>
+        <li><a href="../classes/l2df.class.plug.html">l2df.class.plug</a></li>
+        <li><a href="../classes/l2df.class.state.html">l2df.class.state</a></li>
+        <li><a href="../classes/l2df.class.storage.html">l2df.class.storage</a></li>
+        <li><a href="../classes/l2df.class.timer.html">l2df.class.timer</a></li>
+        <li><a href="../classes/l2df.class.transform.html">l2df.class.transform</a></li>
+        <li><a href="../classes/l2df.manager.event.html">l2df.manager.event</a></li>
+        <li><a href="../classes/l2df.manager.group.html">l2df.manager.group</a></li>
+        <li><a href="../classes/l2df.manager.input.html">l2df.manager.input</a></li>
+        <li><a href="../classes/l2df.manager.kinds.html">l2df.manager.kinds</a></li>
+        <li><a href="../classes/l2df.manager.network.html">l2df.manager.network</a></li>
+        <li><a href="../classes/l2df.manager.render.html">l2df.manager.render</a></li>
+        <li><a href="../classes/l2df.manager.resource.html">l2df.manager.resource</a></li>
+        <li><a href="../classes/l2df.manager.scene.html">l2df.manager.scene</a></li>
+        <li><a href="../classes/l2df.manager.snapshot.html">l2df.manager.snapshot</a></li>
+        <li><a href="../classes/l2df.manager.states.html">l2df.manager.states</a></li>
+      </ul>
+    </div> <!-- nav__scrollable -->
+  </div> <!-- navigation -->
 
 
-<p><a name="___________________________________"></a></p>
-<h2>Описание структуры</h2>
+  <div class="content" id="content">
 
-<p>Ниже приведено примерное описание структуры движка.</p>
+
+<h1>About L2DF</h1>
+
+
+<!-- [![Build Status](https://travis-ci.org/atom-tm/l2df-engine.svg?branch=develop)](https://travis-ci.org/atom-tm/l2df-engine) -->
+
+
+<p>Love2D Fighting Engine (<code>L2DF</code>) is a cross-platform game engine written in Lua.</p>
+
+<p><code>L2DF</code> is a perfect solution for:</p>
 
 <ul>
-    <li>СИСТЕМНЫЕ папки и файлы заданы для движка по умолчанию, без них он не будет работать</li>
-    <li>МОДУЛЬНАЯ папки и файлы можно удалять, переименовывать или изменять.
-    Пути до файлов, содержащихся в этих папках прописываются в системных файлах.</li>
+    <li>2D and 2.5D games</li>
+    <li>fightings</li>
+    <li>beat 'em ups</li>
+    <li>platformers</li>
+    <li>similar genres</li>
 </ul>
 
-<p>Сейчас в проекте имеются следующие элементы:</p>
+<p>The backstage of this engine is an old "Little Fighter 2" game, so if you are familiar with it you can dive in very fast
+because <code>L2DF</code> uses similar syntax and terms. But if you're not there're no problem as we are going to support more syntaxes
+like M.U.G.E.N. and make engine as flexible as it's possible.</p>
+
+<p>If you're not that good in programming there're no problem since we have different presets which you can modificate
+without any single line of code! It was achieved with a flexible architecture and easy-to-read-and-write custom data files
+with our XML/HTML like syntax. We're going to release our custom editor for these files, so you won't need to edit data
+files manually in text-format :)</p>
+
+<p>Right now <code>L2DF</code> uses <a href="https://bitbucket.org/rude/love">LÖVE</a> as "backend" for rendering, input and other stuff, but we
+also have plans to support <a href="https://github.com/coronalabs/corona">CoronaSDK</a> and <a href="https://github.com/peersuasive/luce">Luce</a> in future.</p>
+
+
+<p><a name="Features"></a></p>
+<h2>Features</h2>
 
 <ul>
-    <li>bg - МОДУЛЬНАЯ папка с картами, в ней хранятся все арены игры
-
-<pre>
-* test-arena - пример папки с ареной
-    Арена состоит из dat файла, в котором описаны слои этой арены и фильтры (слои, накладывающиеся сверху), также там описываются свойства карты, такие как гравитация, трение, ширина итд, задаются локальные источники освящения, координаты спавнов. К картам можно подключать файлы <span class="string">"эффектов"</span>, чтобы на каждой карте эффекты были собственные, иначе берется стандартный файл эффектов.
-</pre>
-</li>
-    <li>chars - МОДУЛЬНАЯ папка с персонажами, там каждому чару выделено по папочке, где собраны все требуемые только им датки и спрайты
-
-<pre>
-- test-char - пример персонажа
-    - sprites - папка содержит все спрайты персонажа
-    - ai.lua - набор инструкций поведения персонажа, если за него играет компьютер
-    - main.dat / character.dat - файл описания перса
-        датник персонажа имеет следующую структуру:
-        - head - в этом теге задаются системные значения, например пути до спрайтов, имя, стартовое и максимальное здоровье, регенерация и прочее
-        - frames_list - в этом теге задаются кадры <span class="string">"по умолчанию"</span> (о них подробнее ниже)
-        - dtypes_list - в этом теге задаются типы урона (о них подробнее ниже)
-        - variables - локальные для каждого персонажа переменные, которые могут использоваться, допустим, в ai или стейтах
-        - frame - основной блок описывающий один кадр (или фрейм) персонажа. данных блоков можно создавать бесконечное количество, каждый из них имеет следующую структуру:
-            - данные шапки - в основном они системные, если они не указаны, имеют по умолчанию <span class="number">0.</span> среди этих данных находятся, например, номер спрайта, смещение, следующий кадр, длительность этого кадра итд
-            - блок стейта - таких блоков может быть несколько, тут задаются стейты и им передаются какие-то значения
-            - блок тела - таких блоков может быть несколько, они отвечают за физическое тело персонажа, с которым будут происходить взаимодействия следующего блока
-            - блок итерации - таких бло.. ну вы поняли.. отвечает за взаимодействия персонажей и объектов между собой. взаимодействие начинается когда блок итерации пересекается координатами с блоком тела. сценарий взаимодействия зависит от указанного типа <span class="string">"kind"</span> (кинды находятся в папке ниже)
-            - блок вызова - таких бла бла... отвечает за создание объектов
-    - head.png - аваратка персонажа (кажется в барах используется)
-    - face.png - аватарка персонажа (а эта в меню выбора, ну или наоборот)
-</pre>
-</li>
-    <li>data - СИСТЕМНАЯ папка, содержит основные файлы с настройками движка
-
-<pre>
-- combinations.dat - системный файл с описаниями доступных комбинаций, комбинации описываются как [код клавиш]:[текстовый идентефикатор]. допустим если написать <span class="number">314</span>:hit_Da, то при использовании в коде персонажа hit_Da: xxx, персонаж перейдет в кадр xxx, если друг за другом были нажаты клавиши, имеющие коды <span class="number">3</span>,<span class="number">1</span>,<span class="number">4.</span>
-- damage_types.dat - системный файл, который описывает поведение персонажа при получении того или иного типа урона. к примеру при получении урона, который помечен как dtype: <span class="number">1</span>, персонаж перейдет в кадры, которые указаны в соответсвующем разделе данного файла. Если в файле нет какого-то типа урона, персонаж будет переходить в стандартные кадры, захардкоженные в движок. Также в каждом отдельном персонаже можно локально настроить поведение при тех или иных типах урона.
-- data.txt - системный файл в котором описываются пути до персонажей, объектов и карт. каждому персонажу\\объекту\\карте присваевается свой id, по которому в дальнейшем происходит обращение
-- english.lua - локализация, сделана в виде Lua таблички
-- frames.dat - системный файл для задачи фреймов <span class="string">"по умолчанию"</span>. такие фреймы используются при написании стейтов (об этом далее), это типа текстовых ссылок. К примеру, если указать тут death: <span class="number">220</span>, то при обращении к кадру <span class="string">"death"</span>, персонажа будет переносить в кадр <span class="number">220</span> по умолчанию. В каждом отдельном персонаже можно локально задать тот или иной кадр.
-- russian.lua - тоже локализация (их стоит в отдельную папку засунуть)
-- settings.dat - системный файл с настройками игры (с ним ещё много мороки, поэтому без подробностей)
-- sparks.dat - это системный датник спарков. они сделаны отдельными объектами, для реализации разных фич. обращение к кадрам этого датника происходит из файла damage_types.dat
-- system.dat - тут задаются айдишники системных датников (сами пути прописаны в data.txt)
-</pre>
-</li>
-    <li>docs - документация в html формате</li>
-    <li>effects - МОДУЛЬНАЯ папка с датниками общих эффектов (взрывы там, брызги и так далее)</li>
-    <li>kinds - СИСТЕМНАЯ папка, содержащая в себе сценарии взаимодействий
-
-<pre>
-- test-kind.lua - каждый такой файл имеет одинаковую структуру по умолчанию, которая состоит из функций
-    - loadingBody - в этой функции задаётся считывание переменных, которые указываются в блоке тела в кадре персонажа и использутся в данном кинде далее
-    - loadingItr - тоже самое, но для блока итерации
-    - bodyCondition - дополнительные проверки, которые проходят при пересечении Itr<span class="string">'ом какого-либо Body (например проврека на то что был ударен враг, а не союзник)
-    - itrCondition - тоже самое, но только когда два Itr'</span>а пересекаются (будет использовано, например, для столкновения ударов)
-    - bodyProcessing - непосредственно сценарий взаимодействия персонажей
-    - itrProcessing - сценарий столкновения персонажей
-</pre>
-</li>
-    <li>libs - СИСТЕМНАЯ папка, содержащая в себе весь код движка
-
-<pre>
-- battle - в папке лежат модули используемые непосредсвтенно в бою
-    - ai.lua - функции аи
-    - collision.lua - столкновения, взаимодействия
-    - control.lua - считывание нажатий, проверка нажатий, откаты нажатий итд
-    - entities.lua - куча функций, всё что касается персонажей, создание, удаление, просчитывание хп, смена кадра итд
-    - graphic.lua - отрисовка персонажей, их теней и отражений, а также поведение камеры
-    - physix.lua - <span class="string">"физика"</span>. перемещения, проверки на пересечение границ карты, гравитация, трение
-    - resources.lua - загрузка системных ресурсов используемых в бою, по хорошему половину этих ресурсов надо вынести в system.dat и грузить оттуда
-- battle.lua - описание всего боя, общий процесс, что происходит в начале боя, смена карты и так далее
-- data.lua - подгрузка всего из папки data, а также из системных папок стейтов и итераций
-- fonts.lua - файл со шрифтами (временная реализация) и скриптом отрисовки текста
-- helper.lua - вспомогательные функции
-- gamera.lua - библиотека камеры
-- images.lua - функции загрузки и отрисовки спрайтов
-- localization.lua - не помню, что тут находится xD ну что-то про локализацию
-- resources.lua - загрузка в память файлов персонажей и карт
-- rooms.lua - основа для комнат (далее подробнее)
-- settings.lua - загрузка настроек в память, функция по смене разрешения и сохранение настроек
-- sounds.lua - функции загрузки и воспроизведения звуков
-</pre>
-</li>
-    <li>music - МОДУЛЬНАЯ папка с музыкой</li>
-    <li>objects - МОДУЛЬНАЯ папка с dat файлами объектов. структура объектов такая-же как и у персонажей, только type в шапке другой</li>
-    <li>rooms - СИСТЕМНАЯ папка с файлами комнат. все комнаты задаются непосредственно в движке (файл libs/rooms.lua) а тут хранятся наборы поведения, ресурсов и прочего для тех или иных комнат. все комнаты имеют обязательные функции load, update и draw, а также свои локальные функции. в зависимости от того, какая сейчас комната, выполняется тот или иной набор данных функций</li>
-    <li>sounds - МОДУЛЬНАЯ папка со звуками</li>
-    <li>sprites - МОДУЛЬНАЯ папка со спрайтами (однако пока там находится СИСТЕМНАЯ папка с интерфейсами, но это скоро будет доработано)
-
-<pre>
-- UI - папка содержащая все элементы интерфейса
-- filter.png - фильтр <span class="string">"освящения"</span>
-</pre>
-</li>
-    <li>states - СИСТЕМНАЯ папка с описаниями сценариев стейтов. каждый персонаж может единовреемнно иметь несколько стейтов в своём кадре. для каждого из указанных стейтов выполняется функция Processing. Также в шапке персонажа можно подключить "пассивные" стейты, у которых каждый тик будет выполняться функция Update. Стейт может быть и пассивным и активным одновременно. Например стейт блока, который повышает защиту персонажа, когда активен и имеет функцию снятия добавленной защиты и пассивный таймер, чтобы блоком не спамили.</li>
+    <li>Cross-platform. As soon as you use Lua and one of our backends it'll be available on mobile, desktop, TV and other devices.</li>
+    <li>Custom easy-to-learn syntax to make up / modificate rooms, objects, animations and etc.</li>
+    <li>Very flexible entity-component architecture.</li>
+    <li>Fast physics / collision detection - perfect for fighting games!</li>
+    <li>Frames based architecture - have a full control of your objects in each single frame.</li>
+    <li>Number of presets which you can use to rapidly start making your game.</li>
+    <li>Integrated Peer-to-Peer network support.</li>
+    <li>UDP-holepunching and master-server to exclude requirement of using VPN, Hamachi and other software to initialize connection under NAT.</li>
+    <li>"GGPO like" rollback networking instead of lockstep to make you feel an excellent netplay experience.</li>
 </ul>
 
 
-</div> <!-- id="content" -->
-</div> <!-- id="main" -->
-<div id="about">
-<i style="float:right;">Last updated 2019-10-17 12:47:26 </i>
-</div> <!-- id="about" -->
-</div> <!-- id="container" -->
+<p><a name="Installation"></a></p>
+<h2>Installation</h2>
+
+<ol>
+    <li><p>Go to <a href="https://github.com/atom-tm/l2df-engine/releases">releases</a> page</p></li>
+    <li><p>Download one of packages in the latest available release:</p>
+
+<pre>
+- <span class="backtick"><code>l2df.lua</code></span> - <span class="keyword">if</span> you want just to import engine into your game with <span class="backtick"><code>require &apos;l2df&apos;</code></span>
+- <span class="backtick"><code>demo-x.x.x.exe</code></span> - <span class="keyword">if</span> you want just to test latest changes <span class="keyword">and</span> features <span class="keyword">in</span> Windows
+- <span class="backtick"><code>demo-x.x.x.zip</code></span> - <span class="keyword">if</span> you want to see / modificate a single full-featured example
+- <span class="backtick"><code>Source code.zip</code></span> - everything is under your control, feel the full power of presets <span class="keyword">and</span> modificate engine <span class="keyword">if</span> you need it!
+</pre>
+</li>
+    <li><p>Place engine in your project and require it:</p>
+
+<pre>
+<span class="global">require</span> <span class="string">'l2df'</span>
+<span class="comment">-- ^ exposes _G.l2df / l2df variable, you can localize it:
+</span><span class="keyword">local</span> l2df = <span class="global">require</span> <span class="string">'l2df'</span>
+<span class="comment">-- or in libs/:
+</span><span class="keyword">local</span> l2df = <span class="global">require</span> <span class="string">'libs.l2df'</span>
+<span class="comment">-- or in libs/ with some "hacks":
+</span><span class="keyword">local</span> src = love.filesystem.getSource()
+<span class="global">package</span>.path = (<span class="string">'%s;%s/libs/?.lua;%s/libs/?/init.lua'</span>):format(<span class="global">package</span>.path, src, src)
+<span class="comment">-- if previous 2 lines don't work:
+</span>love.filesystem.setRequirePath(<span class="string">'libs/?.lua;libs/?/init.lua;?.lua;?/init.lua'</span>)
+<span class="keyword">local</span> l2df = <span class="global">require</span> <span class="string">'l2df'</span>
+</pre>
+</li>
+    <li><p>Initialize engine with default <code>init</code> function. It's not needed if you want to use only some parts of <code>L2DF</code>.</p>
+
+<pre>
+<span class="keyword">function</span> love.<span class="global">load</span>()
+    l2df:init()
+<span class="keyword">end</span>
+</pre>
+</li>
+    <li><p>If you don't have your own game loop leave out the rest of it to <code>L2DF</code>.
+Else read <a href="https://atom-tm.github.io/l2df-engine">documentation</a> for more information on how to integrate <code>L2DF</code> into your already existen game loop.</p>
+
+<pre>
+<span class="keyword">function</span> love.run()
+    <span class="keyword">return</span> l2df:gameloop()
+<span class="keyword">end</span>
+</pre>
+</li>
+    <li><p>Now you are ready to start development!</p></li>
+</ol>
+
+
+<p><a name="Documentation"></a></p>
+<h2>Documentation</h2>
+
+<p>You can find it here: <a href="https://atom-tm.github.io/l2df-engine">https://atom-tm.github.io/l2df-engine</a>.</p>
+
+<p>It's still in-progress but already covers some basics of development with our engine.</p>
+
+
+<p><a name="License"></a></p>
+<h2>License</h2>
+<p><code>L2DF</code> is an open-sourced software licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+
+<p>This project also uses some parts of third-party libraries listed below.</p>
+
+<pre><code> |--------------------|--------------------------------------|-------------|---------------------|-----------|
+ | Project            | Distribution Files                   | Modificated | Copyright Holder    | License   |
+ |--------------------|--------------------------------------|-------------|---------------------|-----------|
+ | gamera             | src/external/gamera.lua              |      -      | Enrique García Cota | MIT       |
+ |--------------------|--------------------------------------|-------------|---------------------|-----------|
+ | lua-struct         | src/external/packer.lua              |      +      | Iryont              | MIT       |
+ |--------------------|--------------------------------------|-------------|---------------------|-----------|
+ | JSON Encode/Decode | src/external/json.lua                |      -      | Jeffrey Friedl      | CC BY 3.0 |
+ | in pure Lua        |                                      |             |                     |           |
+ |--------------------|--------------------------------------|-------------|---------------------|-----------|
+ | bump-3dpd          | src/class/component/physix/cube.lua  |      +      | Enrique García Cota | MIT       |
+ |                    | src/class/component/physix/grid.lua  |      +      |                     |           |
+ |                    | src/class/component/physix/world.lua |      +      |                     |           |
+ |--------------------|--------------------------------------|-------------|---------------------|-----------|
+</code></pre>
+
+
+<p>You can find full license text for this software in <code>THIRD-PARTY-LICENSE</code> file.</p>
+
+
+<p><a name="Contributing"></a></p>
+<h2>Contributing</h2>
+
+<p>Currently we don't have appropriate contributing guide but if you really want to help our team in some improvements or
+bug fixes then dm one of the core developers in Discord to discuss the topic / your pull-request:</p>
+
+<ul>
+    <li><code>Abelidze#0109</code></li>
+    <li><code>Kasai#1590</code></li>
+</ul>
+
+<p>Also if you've found a bug it'd be great if you can explain it on the <a href="https://github.com/atom-tm/l2df-engine/issues">issues</a> page.</p>
+
+
+  <div id="about" class="about">
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+  </div> <!-- about -->
+
+  </div> <!-- content -->
+</div> <!-- container -->
+
+  <script src="../js/dc-code.js" async></script>
+<!-- <script src="https://atom-tm.github.io/l2df-engine/js/dc-code.js" async></script> -->
 </body>
 </html>

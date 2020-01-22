@@ -82,7 +82,7 @@ local Client = Class:extend()
 
 	---
 	-- @param string format
-	-- @param boolean
+	-- @return boolean
 	function Client:rawsend(format, ...)
 		if not (format and self:state() == 'connected') then
 			return false

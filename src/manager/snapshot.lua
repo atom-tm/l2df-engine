@@ -1,5 +1,5 @@
---- Simulation manager
--- @classmod l2df.manager.simulation
+--- Snapshot manager
+-- @classmod l2df.manager.snapshot
 -- @author Abelidze
 -- @copyright Atom-TM 2020
 

@@ -1,231 +1,386 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-    <title>L2DF documentation</title>
-    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+  <title>L2DF Documentation</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="/favicon/manifest.json" />
+  <meta name="msapplication-TileColor" content="#ffffff" />
+  <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" />
+  <link rel="stylesheet" href="ldoc.css" type="text/css" />
 </head>
 <body>
 
+
+
 <div id="container">
 
-<div id="product">
-    <div id="product_logo"></div>
-    <div id="product_name"><big><b></b></big></div>
-    <div id="product_description"></div>
-</div> <!-- id="product" -->
+  <div class="header" id="header">
+    <div class="header__logo">
+      <a href="../index.html">
+        <img src="img/logo.png" alt="L2DF" />
+      </a>
+    </div>
+    <div class="header__nav">
+      <ul class="nav nav__docs">
+        <li class="nav__item ">
+          <a class="nav__link" href="manual/readme.md.html">Docs</a>
+        </li>
+        <li class="nav__item nav__link__active">
+          <a class="nav__link" href="index.html">API Reference</a>
+        </li>
+        <li class="nav__item ">
+          <a class="nav__link" href="https://github.com/atom-tm/l2df-engine/issues">Support</a>
+        </li>
+      </ul>
+    </div>
+  </div> <!-- header -->
 
 
-<div id="main">
-
-
-<!-- Menu -->
-
-<div id="navigation">
-<br/>
-<h1>L2DF</h1>
+  <div class="nav" id="navigation">
+    <div class="nav__scrollable">
 
 
 
+      <h2>Modules</h2>
+      <ul class="nowrap">
+        <li><a href="modules/l2df.config.html">l2df.config</a></li>
+        <li><a href="modules/l2df.core.html">l2df.core</a></li>
+        <li><a href="modules/l2df.helper.html">l2df.helper</a></li>
+        <li><a href="modules/l2df.html">l2df</a></li>
+      </ul>
+      <h2>Classes</h2>
+      <ul class="nowrap">
+        <li><a href="classes/l2df.class.client.html">l2df.class.client</a></li>
+        <li><a href="classes/l2df.class.component.controller.html">l2df.class.component.controller</a></li>
+        <li><a href="classes/l2df.class.component.controller.local.html">l2df.class.component.controller.local</a></li>
+        <li><a href="classes/l2df.class.component.controller.remote.html">l2df.class.component.controller.remote</a></li>
+        <li><a href="classes/l2df.class.component.frames.html">l2df.class.component.frames</a></li>
+        <li><a href="classes/l2df.class.component.html">l2df.class.component</a></li>
+        <li><a href="classes/l2df.class.component.physix.cube.html">l2df.class.component.physix.cube</a></li>
+        <li><a href="classes/l2df.class.component.physix.grid.html">l2df.class.component.physix.grid</a></li>
+        <li><a href="classes/l2df.class.component.physix.html">l2df.class.component.physix</a></li>
+        <li><a href="classes/l2df.class.component.physix.world.html">l2df.class.component.physix.world</a></li>
+        <li><a href="classes/l2df.class.component.print.html">l2df.class.component.print</a></li>
+        <li><a href="classes/l2df.class.component.render.html">l2df.class.component.render</a></li>
+        <li><a href="classes/l2df.class.component.states.html">l2df.class.component.states</a></li>
+        <li><a href="classes/l2df.class.component.transform.html">l2df.class.component.transform</a></li>
+        <li><a href="classes/l2df.class.entity.frame.html">l2df.class.entity.frame</a></li>
+        <li><a href="classes/l2df.class.entity.html">l2df.class.entity</a></li>
+        <li><a href="classes/l2df.class.entity.object.html">l2df.class.entity.object</a></li>
+        <li><a href="classes/l2df.class.entity.scene.html">l2df.class.entity.scene</a></li>
+        <li><a href="classes/l2df.class.entity.ui.html">l2df.class.entity.ui</a></li>
+        <li><a href="classes/l2df.class.html">l2df.class</a></li>
+        <li><a href="classes/l2df.class.kind.html">l2df.class.kind</a></li>
+        <li><a href="classes/l2df.class.logger.html">l2df.class.logger</a></li>
+        <li><a href="classes/l2df.class.parser.dat.html">l2df.class.parser.dat</a></li>
+        <li><a href="classes/l2df.class.parser.html">l2df.class.parser</a></li>
+        <li><a href="classes/l2df.class.parser.json.html">l2df.class.parser.json</a></li>
+        <li><a href="classes/l2df.class.parser.lffs.html">l2df.class.parser.lffs</a></li>
+        <li><a href="classes/l2df.class.plug.html">l2df.class.plug</a></li>
+        <li><a href="classes/l2df.class.state.html">l2df.class.state</a></li>
+        <li><a href="classes/l2df.class.storage.html">l2df.class.storage</a></li>
+        <li><a href="classes/l2df.class.timer.html">l2df.class.timer</a></li>
+        <li><a href="classes/l2df.class.transform.html">l2df.class.transform</a></li>
+        <li><a href="classes/l2df.manager.event.html">l2df.manager.event</a></li>
+        <li><a href="classes/l2df.manager.group.html">l2df.manager.group</a></li>
+        <li><a href="classes/l2df.manager.input.html">l2df.manager.input</a></li>
+        <li><a href="classes/l2df.manager.kinds.html">l2df.manager.kinds</a></li>
+        <li><a href="classes/l2df.manager.network.html">l2df.manager.network</a></li>
+        <li><a href="classes/l2df.manager.render.html">l2df.manager.render</a></li>
+        <li><a href="classes/l2df.manager.resource.html">l2df.manager.resource</a></li>
+        <li><a href="classes/l2df.manager.scene.html">l2df.manager.scene</a></li>
+        <li><a href="classes/l2df.manager.snapshot.html">l2df.manager.snapshot</a></li>
+        <li><a href="classes/l2df.manager.states.html">l2df.manager.states</a></li>
+      </ul>
+      <h2>Manual</h2>
+      <ul class="">
+        <li><a href="manual/readme.md.html">About L2DF</a></li>
+        <li><a href="manual/01-introduction.md.html">Introduction</a></li>
+        <li><a href="manual/02-presets.md.html">Presets</a></li>
+        <li><a href="manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="manual/04-managers.md.html">Managers</a></li>
+        <li><a href="manual/05-ecs.md.html">Entity-Component system</a></li>
+        <li><a href="manual/06-ui.md.html">User Interface</a></li>
+        <li><a href="manual/07-frames.md.html">Frames</a></li>
+        <li><a href="manual/07-states.md.html">States</a></li>
+        <li><a href="manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="manual/09-networking.md.html">Networking</a></li>
+        <li><a href="manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
+      </ul>
+    </div> <!-- nav__scrollable -->
+  </div> <!-- navigation -->
 
-<h2>Reference</h2>
-<ul class="nowrap">
-  <li><a href="reference/l2df.core.html">l2df.core</a></li>
-  <li><a href="reference/l2df.helper.html">l2df.helper</a></li>
-  <li><a href="reference/l2df.html">l2df</a></li>
-</ul>
-<h2>Classes</h2>
-<ul class="nowrap">
-  <li><a href="classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></li>
-  <li><a href="classes/l2df.core.class.component.html">l2df.core.class.component</a></li>
-  <li><a href="classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></li>
-  <li><a href="classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></li>
-  <li><a href="classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></li>
-  <li><a href="classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></li>
-  <li><a href="classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></li>
-  <li><a href="classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></li>
-  <li><a href="classes/l2df.core.class.entity.html">l2df.core.class.entity</a></li>
-  <li><a href="classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></li>
-  <li><a href="classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></li>
-  <li><a href="classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></li>
-  <li><a href="classes/l2df.core.class.html">l2df.core.class</a></li>
-  <li><a href="classes/l2df.core.class.state.html">l2df.core.class.state</a></li>
-  <li><a href="classes/l2df.core.class.storage.html">l2df.core.class.storage</a></li>
-  <li><a href="classes/l2df.core.class.timer.html">l2df.core.class.timer</a></li>
-  <li><a href="classes/l2df.core.class.transform.html">l2df.core.class.transform</a></li>
-  <li><a href="classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></li>
-  <li><a href="classes/l2df.core.manager.event.html">l2df.core.manager.event</a></li>
-  <li><a href="classes/l2df.core.manager.group.html">l2df.core.manager.group</a></li>
-  <li><a href="classes/l2df.core.manager.render.html">l2df.core.manager.render</a></li>
-  <li><a href="classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></li>
-  <li><a href="classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></li>
-  <li><a href="classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></li>
-  <li><a href="classes/l2df.core.manager.states.html">l2df.core.manager.states</a></li>
-  <li><a href="classes/l2df.parsers.base.html">l2df.parsers.base</a></li>
-  <li><a href="classes/l2df.parsers.dat.html">l2df.parsers.dat</a></li>
-  <li><a href="classes/l2df.parsers.json.html">l2df.parsers.json</a></li>
-  <li><a href="classes/l2df.parsers.lffs.html">l2df.parsers.lffs</a></li>
-</ul>
-<h2>Manual</h2>
-<ul class="nowrap">
-  <li><a href="manual/readme.md.html">Love2D Fighting Engine</a></li>
-</ul>
 
-</div>
-
-<div id="content">
+  <div class="content" id="content">
 
 
-  <h2>Love2D Fighting</h2>
-  <p>2D engine for fighting games</p>
+    <h2>Love2D Fighting</h2>
 
-<h2>Reference</h2>
-<table class="module_list">
-    <tr>
-        <td class="name"  nowrap><a href="reference/l2df.core.html">l2df.core</a></td>
+    <p>2D engine for fighting games. Read the <a href="manual/01-introduction.md.html#">manual</a> before you start.</p>
+
+    <h2>Modules</h2>
+    <table class="module_list">
+      <tr>
+        <td class="name"  nowrap><a href="modules/l2df.config.html">l2df.config</a></td>
+        <td class="summary">Configs and settings</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="modules/l2df.core.html">l2df.core</a></td>
         <td class="summary">Core module</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="reference/l2df.helper.html">l2df.helper</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="modules/l2df.helper.html">l2df.helper</a></td>
         <td class="summary">Helper functions</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="reference/l2df.html">l2df</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="modules/l2df.html">l2df</a></td>
         <td class="summary">L2DF engine</td>
-    </tr>
-</table>
-<h2>Classes</h2>
-<table class="module_list">
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.frames.html">l2df.core.class.component.frames</a></td>
+      </tr>
+    </table>
+    <h2>Classes</h2>
+    <table class="module_list">
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.client.html">l2df.class.client</a></td>
+        <td class="summary">Network client class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.controller.html">l2df.class.component.controller</a></td>
+        <td class="summary">Controller component</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.controller.local.html">l2df.class.component.controller.local</a></td>
+        <td class="summary">LocalController component</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.controller.remote.html">l2df.class.component.controller.remote</a></td>
+        <td class="summary">RemoteController component</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.frames.html">l2df.class.component.frames</a></td>
         <td class="summary">Frames component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.html">l2df.core.class.component</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.html">l2df.class.component</a></td>
         <td class="summary">Component class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.physix.html">l2df.core.class.component.physix</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.physix.cube.html">l2df.class.component.physix.cube</a></td>
+        <td class="summary">Cube helper</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.physix.grid.html">l2df.class.component.physix.grid</a></td>
+        <td class="summary">Grid helper</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.physix.html">l2df.class.component.physix</a></td>
         <td class="summary">Physics component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.print.html">l2df.core.class.component.print</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.physix.world.html">l2df.class.component.physix.world</a></td>
+        <td class="summary">World component</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.print.html">l2df.class.component.print</a></td>
         <td class="summary">Print component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.render.html">l2df.core.class.component.render</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.render.html">l2df.class.component.render</a></td>
         <td class="summary">Render component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.states.html">l2df.core.class.component.states</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.states.html">l2df.class.component.states</a></td>
         <td class="summary">States component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.component.transform.html">l2df.core.class.component.transform</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.component.transform.html">l2df.class.component.transform</a></td>
         <td class="summary">Transform component</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.entity.frame.html">l2df.core.class.entity.frame</a></td>
-        <td class="summary">Frame entity</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.entity.html">l2df.core.class.entity</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.entity.frame.html">l2df.class.entity.frame</a></td>
+        <td class="summary">Frame class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.entity.html">l2df.class.entity</a></td>
         <td class="summary">Entity class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.entity.object.html">l2df.core.class.entity.object</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.entity.object.html">l2df.class.entity.object</a></td>
         <td class="summary">Object entity</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.entity.scene.html">l2df.core.class.entity.scene</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.entity.scene.html">l2df.class.entity.scene</a></td>
         <td class="summary">Scene entity</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.entity.ui.html">l2df.core.class.entity.ui</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.entity.ui.html">l2df.class.entity.ui</a></td>
         <td class="summary">UI entities module</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.html">l2df.core.class</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.html">l2df.class</a></td>
         <td class="summary">Basic class for OOP</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.state.html">l2df.core.class.state</a></td>
-        <td class="summary">State class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.storage.html">l2df.core.class.storage</a></td>
-        <td class="summary">Storage class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.timer.html">l2df.core.class.timer</a></td>
-        <td class="summary">Timer class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.class.transform.html">l2df.core.class.transform</a></td>
-        <td class="summary">Transform class</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.entity.html">l2df.core.manager.entity</a></td>
-        <td class="summary">Entity manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.event.html">l2df.core.manager.event</a></td>
-        <td class="summary">Event manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.group.html">l2df.core.manager.group</a></td>
-        <td class="summary">Group manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.render.html">l2df.core.manager.render</a></td>
-        <td class="summary">Render manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.resource.html">l2df.core.manager.resource</a></td>
-        <td class="summary">Resource manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.scene.html">l2df.core.manager.scene</a></td>
-        <td class="summary">Scene manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.settings.html">l2df.core.manager.settings</a></td>
-        <td class="summary">Settings manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.core.manager.states.html">l2df.core.manager.states</a></td>
-        <td class="summary">States manager</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.parsers.base.html">l2df.parsers.base</a></td>
-        <td class="summary">Base class for parsers</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.parsers.dat.html">l2df.parsers.dat</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.kind.html">l2df.class.kind</a></td>
+        <td class="summary">Kind class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.logger.html">l2df.class.logger</a></td>
+        <td class="summary">Logger class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.parser.dat.html">l2df.class.parser.dat</a></td>
         <td class="summary">Parser for DAT syntax</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.parsers.json.html">l2df.parsers.json</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.parser.html">l2df.class.parser</a></td>
+        <td class="summary">Base class for parsers</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.parser.json.html">l2df.class.parser.json</a></td>
         <td class="summary">Parser for JSON syntax</td>
-    </tr>
-    <tr>
-        <td class="name"  nowrap><a href="classes/l2df.parsers.lffs.html">l2df.parsers.lffs</a></td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.parser.lffs.html">l2df.class.parser.lffs</a></td>
         <td class="summary">Parser for LittleFighterForever syntax</td>
-    </tr>
-</table>
-<h2>Manual</h2>
-<table class="module_list">
-    <tr>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.plug.html">l2df.class.plug</a></td>
+        <td class="summary">Plug class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.state.html">l2df.class.state</a></td>
+        <td class="summary">State class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.storage.html">l2df.class.storage</a></td>
+        <td class="summary">Storage class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.timer.html">l2df.class.timer</a></td>
+        <td class="summary">Timer class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.class.transform.html">l2df.class.transform</a></td>
+        <td class="summary">Transform class</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.event.html">l2df.manager.event</a></td>
+        <td class="summary">Event manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.group.html">l2df.manager.group</a></td>
+        <td class="summary">Group manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.input.html">l2df.manager.input</a></td>
+        <td class="summary">Input manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.kinds.html">l2df.manager.kinds</a></td>
+        <td class="summary">Kinds manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.network.html">l2df.manager.network</a></td>
+        <td class="summary">Network manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.render.html">l2df.manager.render</a></td>
+        <td class="summary">Render manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.resource.html">l2df.manager.resource</a></td>
+        <td class="summary">Resource manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.scene.html">l2df.manager.scene</a></td>
+        <td class="summary">Scene manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.snapshot.html">l2df.manager.snapshot</a></td>
+        <td class="summary">Snapshot manager</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="classes/l2df.manager.states.html">l2df.manager.states</a></td>
+        <td class="summary">States manager</td>
+      </tr>
+    </table>
+    <h2>Manual</h2>
+    <table class="module_list">
+      <tr>
         <td class="name"  nowrap><a href="manual/readme.md.html">readme.md</a></td>
-        <td class="summary">Love2D Fighting Engine</td>
-    </tr>
-</table>
+        <td class="summary">About L2DF</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/01-introduction.md.html">01-introduction.md</a></td>
+        <td class="summary">Introduction</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/02-presets.md.html">02-presets.md</a></td>
+        <td class="summary">Presets</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/03-syntax.md.html">03-syntax.md</a></td>
+        <td class="summary">Syntax</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/04-managers.md.html">04-managers.md</a></td>
+        <td class="summary">Managers</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/05-ecs.md.html">05-ecs.md</a></td>
+        <td class="summary">Entity-Component system</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/06-ui.md.html">06-ui.md</a></td>
+        <td class="summary">User Interface</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/07-frames.md.html">07-frames.md</a></td>
+        <td class="summary">Frames</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/07-states.md.html">07-states.md</a></td>
+        <td class="summary">States</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/08-itr-body-kinds.md.html">08-itr-body-kinds.md</a></td>
+        <td class="summary">Itrs, bodies and kinds</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/09-networking.md.html">09-networking.md</a></td>
+        <td class="summary">Networking</td>
+      </tr>
+      <tr>
+        <td class="name"  nowrap><a href="manual/10-masters-protocol.md.html">10-masters-protocol.md</a></td>
+        <td class="summary">Master-servers' protocol</td>
+      </tr>
+    </table>
 
-</div> <!-- id="content" -->
-</div> <!-- id="main" -->
-<div id="about">
-<i style="float:right;">Last updated 2019-10-17 12:47:26 </i>
-</div> <!-- id="about" -->
-</div> <!-- id="container" -->
+  <div id="about" class="about">
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+  </div> <!-- about -->
+
+  </div> <!-- content -->
+</div> <!-- container -->
+
+  <script src="js/dc-code.js" async></script>
+<!-- <script src="https://atom-tm.github.io/l2df-engine/js/dc-code.js" async></script> -->
 </body>
 </html>

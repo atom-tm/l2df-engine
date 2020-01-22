@@ -1,0 +1,110 @@
+/* LUA-CODE */
+pre {
+    background-color: rgb(245, 245, 245);
+    border: 1px solid #C0C0C0; /* silver */
+    padding: 10px;
+    margin: 10px 0 10px 0;
+    overflow: auto;
+    font-family: "Andale Mono", monospace;
+
+    .example { font-size: .85em; }
+
+    .comment { color: #558817; }
+    .constant { color: #a8660d; }
+    .escape { color: #844631; }
+    .keyword { color: #aa5050; font-weight: bold; }
+    .library { color: #0e7c6b; }
+    .marker { color: #512b1e; background: #fedc56; font-weight: bold; }
+    .string { color: #8080ff; }
+    .number { color: #f8660d; }
+    .operator { color: #2239a8; font-weight: bold; }
+    .preprocessor, pre .prepro { color: #a33243; }
+    .global { color: #800080; }
+    .user-keyword { color: #800080; }
+    .prompt { color: #558817; }
+    .url { color: #272fc2; text-decoration: underline; }
+}
+
+/* DC-CODE */
+.dc-code {
+    border: 1px solid #cccccc;
+    padding: 7px; margin: 15px 9px;
+    font-size: 12px;
+    background: #f9f9fc;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    color: #AAAAAA;
+
+    .tags {
+        color: #EB7309;
+    }
+
+    .tag-num {
+        font-weight: bold;
+    }
+
+    .tag-name {
+        font-style: italic;
+        color: #777777;
+    }
+
+    .key-words {
+        color: #B2231F;
+        font-weight: bold;
+    }
+
+    .key-words2 {
+        color: #B81B91;
+        font-weight: bold;
+    }
+
+    .value {
+        color: #222222;
+    }
+
+    .bdy {
+        color: #2C5AAF;
+        font-weight: bold;
+    }
+
+    .itr {
+        color: #D21212;
+        font-weight: bold;
+    }
+
+    .opoint {
+        color: #BABC14;
+        font-weight: bold;
+    }
+
+    .wpoint {
+        color: #3F931A;
+        font-weight: bold;
+    }
+
+    .mpoint {
+        color: #AD2CAF;
+        font-weight: bold;
+    }
+
+    .b {
+        color: #2C5AAF;
+        font-weight: bold;
+    }
+
+    .comment {
+        color: #757575;
+        margin: 7px;
+        display: inline-block;
+        padding: 4px 8px;
+        background: #eeeef6;
+        border-radius: 5px;
+    }
+
+    .comment2 {
+        color: #666666;
+    }
+}
