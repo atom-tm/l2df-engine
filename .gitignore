@@ -1,5 +1,6 @@
 bg/Arena
 bg/Hall
 dev/
+presets/*/**/l2df*
 *.sublime-*
 *settings\.dat
