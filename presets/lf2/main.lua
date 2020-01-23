@@ -27,7 +27,13 @@ function love.load()
 	RenderManager:init()
 	SnapshotManager:init(30)
 	InputManager:init(config.keys)
-	InputManager:updateMappings(config.controls)
+	InputManager:updateMappings({
+		{
+			up = 'w', down = 's', left = 'a', right = 'd',
+			attack = 'f', jump = 'g', defend = 'h',
+			special1 = 'j'
+		}
+	})
 
 	StatesManager:load('data/states')
 	KindsManager:load('data/kinds')

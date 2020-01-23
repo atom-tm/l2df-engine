@@ -15,11 +15,15 @@ local loveNewFont = love.graphics.newFont
 
 local Print = Component:extend({ unique = false })
 
+    --- Init
+    -- @param table kwargs
     function Print:init(kwargs)
         self.entity = nil
         self:set(kwargs)
     end
 
+    --- Set params for printing
+    -- @param table kwargs
     function Print:set(kwargs)
         kwargs = kwargs or { }
         if type(kwargs.font) == 'number' then
@@ -41,6 +45,8 @@ local Print = Component:extend({ unique = false })
         self.color = kwargs.color and { (kwargs.color[1] or 255) / 255, (kwargs.color[2] or 255) / 255, (kwargs.color[3] or 255) / 255, (kwargs.color[4] or 255) / 255 } or { 1,1,1,1 }
     end
 
+    --- Component added to l2df.class.entity
+    -- @param l2df.class.entity entity
     function Print:added(entity)
         if not entity then return false end
         self.entity = entity
@@ -53,6 +59,7 @@ local Print = Component:extend({ unique = false })
         vars.hidden = vars.hidden or false
     end
 
+    --- Post-update event
     function Print:postUpdate()
         if not self.entity then return end
 

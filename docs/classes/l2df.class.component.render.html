@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.class.component.render</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Render component</p>
     <p>
@@ -157,8 +157,20 @@
     <h2><a href="#Functions">Functions</a></h2>
     <table class="function_list">
       <tr>
+        <td class="name" nowrap><a href="#Render:init">Render:init()</a></td>
+        <td class="summary">Init</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Render:added">Render:added(entity, sprites)</a></td>
+        <td class="summary">Component added to l2df.class.entity</td>
+      </tr>
+      <tr>
         <td class="name" nowrap><a href="#Render:addSprite">Render:addSprite(sprite)</a></td>
-        <td class="summary">Функция добавляет новый спрайт лист объекту</td>
+        <td class="summary">Add new sprite-list</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Render:postUpdate">Render:postUpdate(dt, islast)</a></td>
+        <td class="summary">Post-update event</td>
       </tr>
     </table>
     <br/>
@@ -170,18 +182,94 @@
     Methods
       <dl class="function">
         <dt>
+          <a name = "Render:init"></a>
+          <strong>Render:init()</strong>
+
+        <dd>
+          Init
+
+
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Render:added"></a>
+          <strong>Render:added(entity, sprites)</strong>
+
+        <dd>
+          Component added to l2df.class.entity
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">entity</span>
+                  <span class="types"><a class="type" href="../classes/l2df.class.entity.html#">l2df.class.entity</a></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">sprites</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Render:addSprite"></a>
           <strong>Render:addSprite(sprite)</strong>
 
         <dd>
-          Функция добавляет новый спрайт лист объекту
+          Add new sprite-list
 
 
           <h3>Parameters:</h3>
           <ul>
                 <li>
                   <span class="parameter">sprite</span>
-                  <span class="types"><span class="type">mixed</span></span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Render:postUpdate"></a>
+          <strong>Render:postUpdate(dt, islast)</strong>
+
+        <dd>
+          Post-update event
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">dt</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">islast</span>
+                  <span class="types"><span class="type">boolean</span></span>
 
 
 

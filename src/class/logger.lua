@@ -47,14 +47,19 @@ io.stdout:setvbuf('no') -- don't touch it
 
 local Logger = Class:extend({ name = '', level = getenv('L2DF_LOGLEVEL') or 'debug', file = getenv('L2DF_LOGFILE') })
 
+    --- Get logger by name
+    -- @param string name
+    -- @return l2df.class.logger
     function Logger.get(name)
         return assert(loggers[name], 'Logger not found')
     end
 
+    --- Disable colors in console
     function Logger.disableColors()
         colors = false
     end
 
+    --- Init
     function Logger:init(name, kwargs)
         assert(not (name and loggers[name]), 'Logger already exists')
         kwargs = kwargs or { }

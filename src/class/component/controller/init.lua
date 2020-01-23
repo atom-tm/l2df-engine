@@ -17,6 +17,9 @@ local Controller = Component:extend({ unique = true })
 		return false
 	end
 
+    --- Component added to l2df.class.entity
+    -- @param l2df.class.entity entity
+    -- @param number player
     function Controller:added(entity, player)
         if not entity then return false end
 

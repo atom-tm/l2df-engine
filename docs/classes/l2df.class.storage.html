@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.class.storage</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Storage class</p>
     <p>
@@ -161,8 +161,16 @@
         <td class="summary">Storage initialization</td>
       </tr>
       <tr>
+        <td class="name" nowrap><a href="#Storage:reset">Storage:reset()</a></td>
+        <td class="summary">Reset storage flushing all stored data</td>
+      </tr>
+      <tr>
         <td class="name" nowrap><a href="#Storage:add">Storage:add(object[, reload])</a></td>
         <td class="summary">Add new object to storage</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Storage:addById">Storage:addById(object, id, reload)</a></td>
+        <td class="summary">Add object to storage with provided id</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Storage:remove">Storage:remove(object)</a></td>
@@ -174,11 +182,27 @@
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Storage:getById">Storage:getById(id)</a></td>
-        <td class="summary">Return object from storage by Id</td>
+        <td class="summary">Return object from storage by id</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Storage:has">Storage:has(object)</a></td>
         <td class="summary">Checks for object in storage</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Storage:enum">Storage:enum(skipNil)</a></td>
+        <td class="summary">Enumerate storage data #1</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Storage:pairs">Storage:pairs(skipNil)</a></td>
+        <td class="summary">Enumerate storage data #2</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Storage:first">Storage:first()</a></td>
+        <td class="summary">Get first stored element</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Storage:last">Storage:last()</a></td>
+        <td class="summary">Get last stored element</td>
       </tr>
     </table>
     <br/>
@@ -204,6 +228,20 @@
 
       </dd>
         <dt>
+          <a name = "Storage:reset"></a>
+          <strong>Storage:reset()</strong>
+
+        <dd>
+          Reset storage flushing all stored data
+
+
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Storage:add"></a>
           <strong>Storage:add(object[, reload])</strong>
 
@@ -215,7 +253,7 @@
           <ul>
                 <li>
                   <span class="parameter">object</span>
-                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+                  <span class="types"><span class="type">mixed</span></span>
 
 
 
@@ -230,6 +268,74 @@
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+
+
+
+            </li>
+            <li>
+              <span class="types"><span class="type">mixed</span></span>
+
+
+
+            </li>
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Storage:addById"></a>
+          <strong>Storage:addById(object, id, reload)</strong>
+
+        <dd>
+          Add object to storage with provided id
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">object</span>
+                  <span class="types"><span class="type">mixed</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">id</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">reload</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+
+
+
+            </li>
+            <li>
+              <span class="types"><span class="type">mixed</span></span>
+
+
+
+            </li>
+          </ol>
 
 
 
@@ -247,13 +353,22 @@
           <ul>
                 <li>
                   <span class="parameter">object</span>
-                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+                  <span class="types"><span class="type">mixed</span></span>
 
 
 
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">boolean</span></span>
+
+
+
+
+          </ol>
 
 
 
@@ -278,6 +393,15 @@
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">boolean</span></span>
+
+
+
+
+          </ol>
 
 
 
@@ -288,19 +412,29 @@
           <strong>Storage:getById(id)</strong>
 
         <dd>
-          Return object from storage by Id
+          Return object from storage by id
 
 
           <h3>Parameters:</h3>
           <ul>
                 <li>
                   <span class="parameter">id</span>
+                  <span class="types"><span class="type">number</span></span>
 
 
 
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">mixed</span></span>
+
+
+
+
+          </ol>
 
 
 
@@ -318,12 +452,134 @@
           <ul>
                 <li>
                   <span class="parameter">object</span>
+                  <span class="types"><span class="type">mixed</span></span>
 
 
 
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">boolean</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Storage:enum"></a>
+          <strong>Storage:enum(skipNil)</strong>
+
+        <dd>
+          Enumerate storage data #1
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">skipNil</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">function</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Storage:pairs"></a>
+          <strong>Storage:pairs(skipNil)</strong>
+
+        <dd>
+          Enumerate storage data #2
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">skipNil</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">function</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Storage:first"></a>
+          <strong>Storage:first()</strong>
+
+        <dd>
+          Get first stored element
+
+
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">mixed</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Storage:last"></a>
+          <strong>Storage:last()</strong>
+
+        <dd>
+          Get last stored element
+
+
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">mixed</span></span>
+
+
+
+
+          </ol>
 
 
 

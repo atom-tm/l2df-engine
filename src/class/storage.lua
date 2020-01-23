@@ -15,7 +15,7 @@ local Storage = Class:extend()
 		self:reset()
 	end
 
-	---
+	--- Reset storage flushing all stored data
 	function Storage:reset()
 		self.list = { }
 		self.map = { }
@@ -25,8 +25,10 @@ local Storage = Class:extend()
 	end
 
 	--- Add new object to storage
-	--  @param table object
+	--  @param mixed object
 	--  @param[opt] boolean reload
+	-- @return number
+	-- @return mixed
 	function Storage:add(object, reload)
 		local id = self:has(object)
 		if id and not reload then return id, object end
@@ -45,7 +47,12 @@ local Storage = Class:extend()
 		return id, object
 	end
 
-	---
+	--- Add object to storage with provided id
+	-- @param mixed object
+	-- @param number id
+	-- @param boolean reload
+	-- @return number
+	-- @return mixed
 	function Storage:addById(object, id, reload)
 
 		local obj = self:getById(id)
@@ -60,7 +67,8 @@ local Storage = Class:extend()
 	end
 
 	--- Remove object from storage
-	--  @param table object
+	-- @param mixed object
+	-- @return boolean
 	function Storage:remove(object)
 		local id = self.map[object]
 		if not id then return false end
@@ -75,7 +83,8 @@ local Storage = Class:extend()
 	end
 
 	--- Remove object from storage by Id
-	--  @param number id
+	-- @param number id
+	-- @return boolean
 	function Storage:removeById(id)
 		if not self.list[id] then return false end
 		self.map[self.list[id]] = nil
@@ -88,17 +97,23 @@ local Storage = Class:extend()
 		return true
 	end
 
-	--- Return object from storage by Id
+	--- Return object from storage by id
+	-- @param number id
+	-- @return mixed
 	function Storage:getById(id)
 		return self.list[id] or false
 	end
 
 	--- Checks for object in storage
+	-- @param mixed object
+	-- @return boolean
 	function Storage:has(object)
 		return self.map[object] or false
 	end
 
-	---
+	--- Enumerate storage data #1
+	-- @param boolean skipNil
+	-- @return function
 	function Storage:enum(skipNil)
 		local id = 0
 		return function ()
@@ -112,7 +127,9 @@ local Storage = Class:extend()
 		end
 	end
 
-	---
+	--- Enumerate storage data #2
+	-- @param boolean skipNil
+	-- @return function
 	function Storage:pairs(skipNil)
 		local index, object
 		return function ()
@@ -123,6 +140,8 @@ local Storage = Class:extend()
 		end
 	end
 
+	--- Get first stored element
+	-- @return mixed
 	function Storage:first()
 		for i = 1, self.length do
 			if self.list[i] then return self.list[i] end
@@ -130,6 +149,8 @@ local Storage = Class:extend()
 		return false
 	end
 
+	--- Get last stored element
+	-- @return mixed
 	function Storage:last()
 		return self.list[self.length] or false
 	end

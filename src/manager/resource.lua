@@ -74,6 +74,7 @@ local extensions = {
 local callbacks = { }
 
 local Manager = { }
+
 	--- Saves the resource to the Manager
 	-- @param mixed resource
 	-- @param boolean temp
@@ -168,7 +169,7 @@ local Manager = { }
 		return id
 	end
 
-	---
+	--- Update event
 	function Manager:update()
 		if #asyncList > 0 then
 			for i = 1, #asyncList do
@@ -194,7 +195,13 @@ local Manager = { }
 		else asyncReturn:clear() end
 	end
 
-	--- Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
+	--- Add new file to queue for async loading or return already loaded resource's id
+	-- @param string filepath
+	-- @param function callback
+	-- @param boolean reload
+	-- @param number id
+	-- @param boolean temp
+	-- @return number
 	function Manager:loadAsync(filepath, callback, reload, id, temp)
 		id = id or filepath
 		local res = self:get(id)
@@ -215,7 +222,10 @@ local Manager = { }
 		return id
 	end
 
-	--- Загрузка списка файлов с проверкой завершенности
+	--- Async loading of multiple resources
+	-- @param table files
+	-- @return boolean
+	-- @return number
 	function Manager:loadListAsync(files)
 		local result = #files
 		local temp

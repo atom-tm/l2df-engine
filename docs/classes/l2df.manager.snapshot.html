@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.manager.snapshot</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Snapshot manager</p>
     <p>
@@ -158,27 +158,27 @@
     <table class="function_list">
       <tr>
         <td class="name" nowrap><a href="#Manager:init">Manager:init(maxsize)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Init</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:reset">Manager:reset()</a></td>
+        <td class="summary">Reset manager's timer and drop all snapshots</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:update">Manager:update(dt)</a></td>
+        <td class="summary">Update event</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:stage">Manager:stage(f)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Persist a function and its arguments to it later during rollback</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:commit">Manager:commit()</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Commit all staged functions</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:rollback">Manager:rollback(timestamp)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Rollback in history and execute persisted functions</td>
       </tr>
     </table>
     <br/>
@@ -194,9 +194,7 @@
           <strong>Manager:init(maxsize)</strong>
 
         <dd>
-
-
-
+          Init
 
 
           <h3>Parameters:</h3>
@@ -213,7 +211,7 @@
         <h3>Returns:</h3>
           <ol>
 
-              <span class="types"><span class="type">SnapshotManager</span></span>
+              <span class="types"><a class="type" href="../classes/l2df.manager.snapshot.html#">l2df.manager.snapshot</a></span>
 
 
 
@@ -225,13 +223,49 @@
 
       </dd>
         <dt>
+          <a name = "Manager:reset"></a>
+          <strong>Manager:reset()</strong>
+
+        <dd>
+          Reset manager's timer and drop all snapshots
+
+
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Manager:update"></a>
+          <strong>Manager:update(dt)</strong>
+
+        <dd>
+          Update event
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">dt</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Manager:stage"></a>
           <strong>Manager:stage(f)</strong>
 
         <dd>
-
-
-
+          Persist a function and its arguments to it later during rollback
 
 
           <h3>Parameters:</h3>
@@ -248,7 +282,7 @@
         <h3>Returns:</h3>
           <ol>
 
-              <span class="types"><span class="type">SnapshotManager</span></span>
+              <span class="types"><a class="type" href="../classes/l2df.manager.snapshot.html#">l2df.manager.snapshot</a></span>
 
 
 
@@ -264,16 +298,14 @@
           <strong>Manager:commit()</strong>
 
         <dd>
-
-
-
+          Commit all staged functions
 
 
 
         <h3>Returns:</h3>
           <ol>
 
-              <span class="types"><span class="type">SnapshotManager</span></span>
+              <span class="types"><a class="type" href="../classes/l2df.manager.snapshot.html#">l2df.manager.snapshot</a></span>
 
 
 
@@ -289,9 +321,7 @@
           <strong>Manager:rollback(timestamp)</strong>
 
         <dd>
-
-
-
+          Rollback in history and execute persisted functions
 
 
           <h3>Parameters:</h3>

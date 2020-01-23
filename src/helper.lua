@@ -154,7 +154,7 @@ local helper = { }
 		return require(filepath:gsub('.lua$', ''):gsub('/', '.')), file
 	end
 
-	---
+	--- Allocate new table from pool
 	-- @return table
     function helper.newTable()
         if tableCount == 0 then
@@ -166,7 +166,7 @@ local helper = { }
         return table
     end
 
-    ---
+    --- Dispose table and return it back to pool
     -- @param table table
     function helper.freeTable(table)
         for k in pairs(table) do
@@ -358,6 +358,9 @@ local helper = { }
 		return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
 	end
 
+	--- Matrix multiplication
+	-- @param table m1
+	-- @param table m2
 	function helper.mulMatrix(m1, m2)
 	    local r = { }
 	    for n = 1, #m1 do

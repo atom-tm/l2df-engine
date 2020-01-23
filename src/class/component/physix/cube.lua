@@ -86,7 +86,7 @@ local Cube = { }
         return ti1, ti2, nx1, ny1, nz1, nx2, ny2, nz2
     end
 
-    -- Calculates the minkowsky difference between 2 cubes, which is another cube
+    --- Calculates the minkowsky difference between 2 cubes, which is another cube
     function Cube:getDiff(x1, y1, z1, w1, h1, d1, x2, y2, z2, w2, h2, d2)
         return
             x2 - x1 - w1,

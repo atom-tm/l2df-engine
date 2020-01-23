@@ -57,6 +57,10 @@
     <div class="nav__scrollable">
       <a class="btn btn-outline-danger" href="../index.html"><i class="fa fa-chevron-left"></i> Index</a>
 
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#Functions">Functions</a></li>
+      </ul>
 
 
       <h2>Classes</h2>
@@ -133,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.class.transform</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Transform class</p>
     <p>
@@ -150,11 +154,470 @@
     </ul>
 
 
+    <h2><a href="#Functions">Functions</a></h2>
+    <table class="function_list">
+      <tr>
+        <td class="name" nowrap><a href="#Transform:init">Transform:init([x[, y[, z[, sx[, sy[, sz[, r[, ox[, oy]]]]]]]]])</a></td>
+        <td class="summary">Init</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:set">Transform:set([x[, y[, z[, sx[, sy[, sz[, r[, ox[, oy]]]]]]]]])</a></td>
+        <td class="summary">Update transform</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:append">Transform:append(transform)</a></td>
+        <td class="summary">Apply another Transform to current</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:vector">Transform:vector(x, y, z)</a></td>
+        <td class="summary">Apply transform to vector and return new one</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:clone">Transform:clone()</a></td>
+        <td class="summary">Clone transform</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:scale">Transform:scale([sx[, sy[, sz]]])</a></td>
+        <td class="summary">Apply scale to transform</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:translate">Transform:translate([dx[, dy[, dz[, ox[, oy]]]]])</a></td>
+        <td class="summary">Move transform</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Transform:rotate">Transform:rotate([a[, x[, y]]])</a></td>
+        <td class="summary">Rotate transform around point</td>
+      </tr>
+    </table>
     <br/>
     <br/>
 
 
 
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    Methods
+      <dl class="function">
+        <dt>
+          <a name = "Transform:init"></a>
+          <strong>Transform:init([x[, y[, z[, sx[, sy[, sz[, r[, ox[, oy]]]]]]]]])</strong>
+
+        <dd>
+          Init
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">z</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sx</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sz</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">r</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">ox</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">oy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:set"></a>
+          <strong>Transform:set([x[, y[, z[, sx[, sy[, sz[, r[, ox[, oy]]]]]]]]])</strong>
+
+        <dd>
+          Update transform
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">z</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sx</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sz</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">r</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">ox</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">oy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:append"></a>
+          <strong>Transform:append(transform)</strong>
+
+        <dd>
+          Apply another Transform to current
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">transform</span>
+                  <span class="types"><a class="type" href="../classes/l2df.class.transform.html#">l2df.class.transform</a></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">boolean</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:vector"></a>
+          <strong>Transform:vector(x, y, z)</strong>
+
+        <dd>
+          Apply transform to vector and return new one
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">z</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:clone"></a>
+          <strong>Transform:clone()</strong>
+
+        <dd>
+          Clone transform
+
+
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">l2df.class.transfor</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:scale"></a>
+          <strong>Transform:scale([sx[, sy[, sz]]])</strong>
+
+        <dd>
+          Apply scale to transform
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">sx</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">sz</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:translate"></a>
+          <strong>Transform:translate([dx[, dy[, dz[, ox[, oy]]]]])</strong>
+
+        <dd>
+          Move transform
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">dx</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">dy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">dz</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">ox</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">oy</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "Transform:rotate"></a>
+          <strong>Transform:rotate([a[, x[, y]]])</strong>
+
+        <dd>
+          Rotate transform around point
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">a</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+    </dl>
 
 
 

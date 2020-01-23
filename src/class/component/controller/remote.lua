@@ -26,6 +26,8 @@ local RemoteController = Controller:extend()
 	end
 
 	--- Update controller timers
+	-- @param number dt
+	-- @param boolean islast
 	function RemoteController:update(dt, islast)
 		if not self.entity then return end
 

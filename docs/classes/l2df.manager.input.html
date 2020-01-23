@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.manager.input</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Input manager</p>
     <p>
@@ -161,10 +161,12 @@
         <td class="summary">Init</td>
       </tr>
       <tr>
+        <td class="name" nowrap><a href="#Manager:reset">Manager:reset()</a></td>
+        <td class="summary">Reset all inputs and timer of manager</td>
+      </tr>
+      <tr>
         <td class="name" nowrap><a href="#Manager:newRemotePlayer">Manager:newRemotePlayer()</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Create input source for remote player</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:updateMappings">Manager:updateMappings(controls)</a></td>
@@ -235,6 +237,7 @@
           <ul>
                 <li>
                   <span class="parameter">keys</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
 
 
 
@@ -247,13 +250,25 @@
 
       </dd>
         <dt>
+          <a name = "Manager:reset"></a>
+          <strong>Manager:reset()</strong>
+
+        <dd>
+          Reset all inputs and timer of manager
+
+
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Manager:newRemotePlayer"></a>
           <strong>Manager:newRemotePlayer()</strong>
 
         <dd>
-
-
-
+          Create input source for remote player
 
 
 
@@ -261,9 +276,7 @@
           <ol>
 
               <span class="types"><span class="type">number</span></span>
-
-
-
+              player's id
 
           </ol>
 
@@ -283,6 +296,7 @@
           <ul>
                 <li>
                   <span class="parameter">controls</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
 
 
 
@@ -445,7 +459,7 @@
         <h3>Returns:</h3>
           <ol>
 
-              <span class="types"><span class="type">InputManager</span></span>
+              <span class="types"><a class="type" href="../classes/l2df.manager.input.html#">l2df.manager.input</a></span>
 
 
 
@@ -595,6 +609,7 @@
           <ul>
                 <li>
                   <span class="parameter">dt</span>
+                  <span class="types"><span class="type">number</span></span>
 
 
 
@@ -618,6 +633,7 @@
           <ul>
                 <li>
                   <span class="parameter">key</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
 
 
 
@@ -641,6 +657,7 @@
           <ul>
                 <li>
                   <span class="parameter">key</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
 
 
 

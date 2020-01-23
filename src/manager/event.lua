@@ -17,7 +17,7 @@ local handlers = { }
 local Manager = { active = true }
 
 	--- Embed references to Manager methods in the entity instance that you create
-	--  @param Entity entity
+	-- @param l2df.class.entity entity
 	function Manager:classInit(entity)
 		if not entity:isInstanceOf(Entity) then return end
 		entity.subscribe = self.subscribe
@@ -26,10 +26,10 @@ local Manager = { active = true }
 	end
 
 	--- Allows the object to listen events sent to the Manager
-	--  @param Entity subscriber
-	--  @param string event
-	--  @param function handler
-	--  @param Entity source
+	-- @param l2df.class.entity subscriber
+	-- @param string event
+	-- @param function handler
+	-- @param l2df.class.entity source
 	function Manager.subscribe(subscriber, event, handler, source, ...)
 		if not (type(event) == 'string' and subscriber and type(handler) == 'function') then return end
 		subscribers[event] = subscribers[event] or Storage:new()
@@ -40,23 +40,23 @@ local Manager = { active = true }
 	end
 
 	--- Disables event tracking by objects using handler
-	--  @param string event
-	--  @param function handler
+	-- @param string event
+	-- @param function handler
 	function Manager:unsubscribe(event, handler)
 		local id = handlers[event][handler]
 		return self:unsubscribeById(event, id)
 	end
 
 	--- Disables event tracking by objects using Id
-	--  @param string event
-	--  @param number id
+	-- @param string event
+	-- @param number id
 	function Manager:unsubscribeById(event, id)
 		return (event and id and subscribers[event]:removeById(id)) or false
 	end
 
 	--- Invoke an event for all active subscribers
-	--  @param string event
-	--  @param Entity source
+	-- @param string event
+	-- @param l2df.class.entity source
 	function Manager:invoke(event, source, ...)
 		if not subscribers[event] then return end
 		for key, val in subscribers[event]:enum(true) do
@@ -67,9 +67,9 @@ local Manager = { active = true }
 	end
 
 	--- Monitors whether an object calls certain functions
-	--  @param Entity source
-	--  @param table|string events
-	--  @param boolean saveResult  Whether to save the result of the function execution
+	-- @param l2df.class.entity source
+	-- @param table|string events
+	-- @param boolean saveResult  Whether to save the result of the function execution
 	function Manager:monitoring(source, events, saveResult)
 		-- TODO: saveResult is not working, fix it
 		saveResult = saveResult and false --not not saveResult
@@ -82,7 +82,7 @@ local Manager = { active = true }
 		end
 	end
 
-	---
+	--- Update event
 	function Manager:update(...)
 		local beginer = { SceneManager.root }
 		local tasks = { { beginer, 0, #beginer } }

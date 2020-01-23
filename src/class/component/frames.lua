@@ -11,13 +11,13 @@ local Frame = core.import 'class.entity.frame'
 
 local Frames = Component:extend({ unique = true })
 
-	---
+	--- Init
 	function Frames:init()
 		self.entity = nil
 	end
 
-	---
-	-- @param Entity entity
+    --- Component added to l2df.class.entity
+    -- @param l2df.class.entity entity
 	-- @param number starting
 	-- @param table frames
 	function Frames:added(entity, starting, frames)
@@ -41,7 +41,8 @@ local Frames = Component:extend({ unique = true })
 		end
 	end
 
-	---
+    --- Component removed from l2df.class.entity
+    -- @param l2df.class.entity entity
 	function Frames:removed(entity)
 		local vars = entity.vars
 
@@ -53,7 +54,7 @@ local Frames = Component:extend({ unique = true })
 		self.entity = nil
 	end
 
-	---
+    --- Add new frame with specified id
 	-- @param l2df.class.entity.frame frame
 	-- @param number id
 	function Frames:add(frame, id)
@@ -68,7 +69,7 @@ local Frames = Component:extend({ unique = true })
 		self.list[frame.id] = frame
 	end
 
-	---
+	--- Change current frame
 	-- @param number id
 	-- @param number remain
 	function Frames:set(id, remain)
@@ -88,7 +89,7 @@ local Frames = Component:extend({ unique = true })
 		end
 	end
 
-	---
+	--- Pre-update event
 	-- @param number dt
 	function Frames:preUpdate(dt)
 		if not self.entity.active then return end

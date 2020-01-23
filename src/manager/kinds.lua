@@ -19,14 +19,14 @@ local list = { }
 local Manager = { }
 
 	--- Adds the kind file to the list
-	--  @param string filepath
+	-- @param string filepath
 	function Manager:add(filepath)
 		local req, key = requireFile(filepath)
 		list[key] = req
 	end
 
 	--- Loads kind files from the specified folder
-	--  @param string folderpath
+	-- @param string folderpath
 	function Manager:load(folderpath)
 		local r = requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -37,8 +37,8 @@ local Manager = { }
 	end
 
 	--- Gets a kind from the list by its number
-	--  @param number kind
-	--  @return Kind
+	-- @param number kind
+	-- @return l2df.class.kind
 	function Manager:get(kind)
 		return list[kind] or nil
 	end

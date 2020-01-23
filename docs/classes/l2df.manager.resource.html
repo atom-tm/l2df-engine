@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.manager.resource</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Resource manager</p>
     <p>
@@ -189,12 +189,16 @@
         <td class="summary">Adds a supported file type to the Manager by loading it from a path</td>
       </tr>
       <tr>
+        <td class="name" nowrap><a href="#Manager:update">Manager:update()</a></td>
+        <td class="summary">Update event</td>
+      </tr>
+      <tr>
         <td class="name" nowrap><a href="#Manager:loadAsync">Manager:loadAsync(filepath, callback, reload, id, temp)</a></td>
-        <td class="summary">Добавляет новый файл в список на загрузку, либо возвращает уже загруженный</td>
+        <td class="summary">Add new file to queue for async loading or return already loaded resource's id</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:loadListAsync">Manager:loadListAsync(files)</a></td>
-        <td class="summary">Загрузка списка файлов с проверкой завершенности</td>
+        <td class="summary">Async loading of multiple resources</td>
       </tr>
     </table>
     <br/>
@@ -495,47 +499,75 @@
 
       </dd>
         <dt>
+          <a name = "Manager:update"></a>
+          <strong>Manager:update()</strong>
+
+        <dd>
+          Update event
+
+
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Manager:loadAsync"></a>
           <strong>Manager:loadAsync(filepath, callback, reload, id, temp)</strong>
 
         <dd>
-          Добавляет новый файл в список на загрузку, либо возвращает уже загруженный
+          Add new file to queue for async loading or return already loaded resource's id
 
 
           <h3>Parameters:</h3>
           <ul>
                 <li>
                   <span class="parameter">filepath</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
 
 
 
                 </li>
                 <li>
                   <span class="parameter">callback</span>
+                  <span class="types"><span class="type">function</span></span>
 
 
 
                 </li>
                 <li>
                   <span class="parameter">reload</span>
+                  <span class="types"><span class="type">boolean</span></span>
 
 
 
                 </li>
                 <li>
                   <span class="parameter">id</span>
+                  <span class="types"><span class="type">number</span></span>
 
 
 
                 </li>
                 <li>
                   <span class="parameter">temp</span>
+                  <span class="types"><span class="type">boolean</span></span>
 
 
 
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">number</span></span>
+
+
+
+
+          </ol>
 
 
 
@@ -546,19 +578,35 @@
           <strong>Manager:loadListAsync(files)</strong>
 
         <dd>
-          Загрузка списка файлов с проверкой завершенности
+          Async loading of multiple resources
 
 
           <h3>Parameters:</h3>
           <ul>
                 <li>
                   <span class="parameter">files</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
 
 
 
                 </li>
         </ul>
 
+        <h3>Returns:</h3>
+          <ol>
+            <li>
+              <span class="types"><span class="type">boolean</span></span>
+
+
+
+            </li>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+
+
+
+            </li>
+          </ol>
 
 
 

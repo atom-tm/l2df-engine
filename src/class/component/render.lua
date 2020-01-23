@@ -21,6 +21,7 @@ local redColor = { 1, 0, 0, 0.5 }
 
 local Render = Component:extend({ unique = true })
 
+    --- Init
     function Render:init()
         self.entity = nil
         self.ox = 0
@@ -30,6 +31,9 @@ local Render = Component:extend({ unique = true })
         self.color = { 1, 1, 1, 1 }
     end
 
+    --- Component added to l2df.class.entity
+    -- @param l2df.class.entity entity
+    -- @param table sprites
     function Render:added(entity, sprites)
         if not entity then return false end
 
@@ -65,8 +69,8 @@ local Render = Component:extend({ unique = true })
     end
 
 
-    --- Функция добавляет новый спрайт лист объекту
-    -- @param mixed sprite
+    --- Add new sprite-list
+    -- @param table sprite
     function Render:addSprite(sprite)
 
         --[[
@@ -128,6 +132,9 @@ local Render = Component:extend({ unique = true })
         end
     end
 
+    --- Post-update event
+    -- @param number dt
+    -- @param boolean islast
     function Render:postUpdate(dt, islast)
         local entity = self.entity
         if not (entity and islast) then return end

@@ -16,7 +16,7 @@ local history = { }
 local Manager = { root = Scene { active = true } }
 
 	--- Load presset scenes from a specified folder
-	--  @param string folderpath
+	-- @param string folderpath
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -28,9 +28,9 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Load presset scene from file or scene object preserving the id
-	--  @param string|Scene filepath
-	--  @param mixed id
-	--  @return boolean
+	-- @param string|l2df.class.entity.scene filepath
+	-- @param mixed id
+	-- @return boolean
 	function Manager:add(filepath, id)
 		assert(filepath, 'You must specify the path to the file or pass the scene object')
 		if filepath.isInstanceOf and filepath:isInstanceOf(Scene) and id then
@@ -49,8 +49,8 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Deleting a scene from the Manager by Id
-	--  @param mixed id
-	--  @return boolean
+	-- @param mixed id
+	-- @return boolean
 	function Manager:remove(id)
 		if not id then return false end
 		self.root:detach(list[id])
@@ -59,8 +59,8 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Setting the current scene
-	--  @param mixed id
-	--  @return boolean
+	-- @param mixed id
+	-- @return boolean
 	function Manager:set(id, ...)
 		for i = #history, 1, -1 do
 			history[i]:setActive(false)
@@ -71,8 +71,8 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Adding scene to current list
-	--  @param mixed id
-	--  @return boolean
+	-- @param mixed id
+	-- @return boolean
 	function Manager:push(id, ...)
 		local scene = assert(list[id], 'Room with provided id does not exist')
 		history[#history + 1] = scene
@@ -81,7 +81,7 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Removing last scene from current list
-	--  @return boolean
+	-- @return boolean
 	function Manager:pop(...)
 		if not (#history > 0) then return false end
 		local scene = history[#history]

@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Module <code>l2df.helper</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Helper functions</p>
     <p>
@@ -174,15 +174,11 @@
       </tr>
       <tr>
         <td class="name" nowrap><a href="#newTable">newTable()</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Allocate new table from pool</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#freeTable">freeTable(table)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Dispose table and return it back to pool</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#copyTable">copyTable(table, result)</a></td>
@@ -251,6 +247,10 @@
       <tr>
         <td class="name" nowrap><a href="#distance">distance(x1, y1, x2, y2)</a></td>
         <td class="summary">Get distance between two points</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#mulMatrix">mulMatrix(m1, m2)</a></td>
+        <td class="summary">Matrix multiplication</td>
       </tr>
     </table>
     <br/>
@@ -415,9 +415,7 @@
           <strong>newTable()</strong>
 
         <dd>
-
-
-
+          Allocate new table from pool
 
 
 
@@ -440,9 +438,7 @@
           <strong>freeTable(table)</strong>
 
         <dd>
-
-
-
+          Dispose table and return it back to pool
 
 
           <h3>Parameters:</h3>
@@ -1090,6 +1086,37 @@
 
 
           </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "mulMatrix"></a>
+          <strong>mulMatrix(m1, m2)</strong>
+
+        <dd>
+          Matrix multiplication
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">m1</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">m2</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                </li>
+        </ul>
+
 
 
 

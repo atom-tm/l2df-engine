@@ -31,6 +31,7 @@ end
 local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
 
 	--- Init
+	-- @param table keys
 	function Manager:init(keys)
 		keys = keys or { }
 		self.localplayers = 0
@@ -45,7 +46,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		end
 	end
 
-	---
+	--- Reset all inputs and timer of manager
 	function Manager:reset()
 		self.time = 0
 		self.remoteplayers = 0
@@ -56,8 +57,8 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		end
 	end
 
-	---
-	-- @return number
+	--- Create input source for remote player
+	-- @return number  player's id
 	function Manager:newRemotePlayer()
 		self.remoteplayers = self.remoteplayers + 1
 		inputs[self.localplayers + self.remoteplayers] = { data = 0, time = 0 }
@@ -65,6 +66,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Sync mappings with config
+	-- @param table controls
 	function Manager:updateMappings(controls)
 		self.mapping = { }
 		self.localplayers = #controls
@@ -120,7 +122,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	-- @param number input
 	-- @param number player
 	-- @param number time
-	-- @return InputManager
+	-- @return l2df.manager.input
 	function Manager:addinput(input, player, time)
 		player = player or 1
 		time = time or self.time
@@ -194,6 +196,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Hook for update
+	-- @param number dt
 	function Manager:update(dt)
 		self.time = self.time + dt
 		for i = 1, #inputs do
@@ -209,6 +212,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Hook for love.keypressed
+	-- @param string key
 	function Manager:keypressed(key)
 		local map = self.mapping[key]
 		if map then
@@ -217,6 +221,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	end
 
 	--- Hook for love.keyreleased
+	-- @param string key
 	function Manager:keyreleased(key)
 		local map = self.mapping[key]
 		if map then

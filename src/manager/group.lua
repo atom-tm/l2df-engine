@@ -15,7 +15,7 @@ local classes = {}
 local Manager = { }
 
 	--- Embed references to Manager methods in the entity instance that you create
-	--  @param Entity entity
+	-- @param l2df.class.entity entity
 	function Manager:classInit(entity)
 		if entity.___class then
 			classes[entity.___class] = classes[entity.___class] or Storage:new()
@@ -28,8 +28,8 @@ local Manager = { }
 	end
 
 	--- Returns all objects that are instances of the class
-	--  @param Class class
-	--  @return table
+	-- @param l2df.class class
+	-- @return table
 	function Manager:getByClass(class)
 		local result = { }
 		if not classes[class] then return result end
@@ -40,8 +40,8 @@ local Manager = { }
 	end
 
 	--- Returns all objects that are heirs of the class
-	--  @param Class class
-	--  @return table
+	-- @param l2df.class class
+	-- @return table
 	function Manager:getByInstance(class)
 		local result = { }
 		local matches = { }
@@ -59,8 +59,8 @@ local Manager = { }
 	end
 
 	--- Add tags to object
-	--  @param object self
-	--  @param mixed tags
+	-- @param table self
+	-- @param mixed tags
 	function Manager.addTags(self, tags)
 		tags = type(tags) == 'table' and tags or { tags }
 		local tag = nil
@@ -74,8 +74,8 @@ local Manager = { }
 	end
 
 	--- Remove tags from object
-	--  @param object self
-	--  @param mixed tags
+	-- @param table self
+	-- @param mixed tags
 	function Manager.removeTags(self, tags)
 		tags = type(tags) == 'table' and tags or { tags }
 		for i = 1, #tags do
@@ -85,8 +85,8 @@ local Manager = { }
 	end
 
 	--- Gets a list of object tags
-	--  @param mixed self
-	--  @return table
+	-- @param mixed self
+	-- @return table
 	function Manager.getTags(self)
 		local result = { }
 		for k, v in objects[self]:enum(true) do
@@ -96,8 +96,8 @@ local Manager = { }
 	end
 
 	--- Checks if an object has tags
-	--  @param object self
-	--  @param mixed tags
+	-- @param table self
+	-- @param mixed tags
 	function Manager.hasTags(self, tags)
 		tags = type(tags) == 'table' and tags or { tags }
 		for i = 1, #tags do
@@ -109,8 +109,8 @@ local Manager = { }
 	end
 
 	--- Returns a list of objects that contain the specified tag
-	--  @param mixed tag
-	--  @return table
+	-- @param mixed tag
+	-- @return table
 	function Manager:getByTag(tag)
 		local result = { }
 		for k, v in groups[tag]:enum(true) do
@@ -120,9 +120,9 @@ local Manager = { }
 	end
 
 	--- Returns a list of objects that satisfy the filter
-	--  @param mixed tags
-	--  @param function filter
-	--  @return table
+	-- @param mixed tags
+	-- @param function filter
+	-- @return table
 	function Manager:getByFilter(tags, filter)
 		tags = type(tags) == 'table' and tags or { tags }
 		filter = type(filter) == 'function' and filter or function (e)

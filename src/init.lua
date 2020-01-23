@@ -25,7 +25,7 @@ local core = l2df
 
 	local Entity = core.import 'class.entity'
 
-	---
+	--- Engine's standart entry point
 	-- @param number fps
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
@@ -53,7 +53,7 @@ local core = l2df
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
 	end
 
-	---
+	--- Engine's game loop
 	-- @return function
 	function core:gameloop()
 		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end

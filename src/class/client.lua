@@ -16,7 +16,8 @@ local ClientEventsMap = nil
 
 local Client = Class:extend()
 
-	---
+	--- Init
+	-- @param table kwargs
 	function Client:init(kwargs)
 		kwargs = kwargs or { }
 		ClientEvents = ClientEvents or kwargs.events
@@ -32,7 +33,7 @@ local Client = Class:extend()
 		end
 	end
 
-	---
+	--- Client connected event
 	-- @param table event
 	-- @return Client
 	function Client:connected(event)
@@ -40,13 +41,13 @@ local Client = Class:extend()
 		return self
 	end
 
-	---
+	--- Client disconnected event
 	-- @param table event
 	function Client:disconnected(event)
 		return nil
 	end
 
-	---
+	--- Client received payload event
 	-- @param table event
 	-- @return boolean
 	function Client:received(event)
@@ -57,20 +58,21 @@ local Client = Class:extend()
 		return true
 	end
 
-	---
+	--- Get current client's connection state
 	-- @return string
 	function Client:state()
 		return self.peer and self.peer:state() or 'disconnected'
 	end
 
-	---
+	--- Get client's ping
 	-- @return number
 	function Client:ping()
 		return self.peer and self.peer:round_trip_time() / 2 or 0
 	end
 
-	---
+	--- Send event previously registered with l2df.manager.network.event
 	-- @param string event
+	-- @param ... ...
 	-- @return boolean
 	function Client:send(event, ...)
 		event = ClientEvents[event and ClientEventsMap[event] or 0]
@@ -80,8 +82,9 @@ local Client = Class:extend()
 		return false
 	end
 
-	---
+	--- Send raw-formatted message to client
 	-- @param string format
+	-- @param ... ...
 	-- @return boolean
 	function Client:rawsend(format, ...)
 		if not (format and self:state() == 'connected') then

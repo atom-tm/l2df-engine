@@ -16,6 +16,16 @@ local acos = math.acos
 
 local Transform = Class:extend()
 
+	--- Init
+	-- @param[opt] number x
+	-- @param[opt] number y
+	-- @param[opt] number z
+	-- @param[opt] number sx
+	-- @param[opt] number sy
+	-- @param[opt] number sz
+	-- @param[opt] number r
+	-- @param[opt] number ox
+	-- @param[opt] number oy
 	function Transform:init(...)
 		self.matrix = {
 			{ 1, 0, 0, 0 },
@@ -30,6 +40,16 @@ local Transform = Class:extend()
 		self:set(...)
 	end
 
+	--- Update transform
+	-- @param[opt] number x
+	-- @param[opt] number y
+	-- @param[opt] number z
+	-- @param[opt] number sx
+	-- @param[opt] number sy
+	-- @param[opt] number sz
+	-- @param[opt] number r
+	-- @param[opt] number ox
+	-- @param[opt] number oy
 	function Transform:set(x, y, z, sx, sy, sz, r, ox, oy)
 		x = x or 0
 		y = y or 0
@@ -55,6 +75,9 @@ local Transform = Class:extend()
 		self.r = r
 	end
 
+	--- Apply another Transform to current
+	-- @param l2df.class.transform transform
+	-- @return boolean
 	function Transform:append(transform)
 	if not transform:isInstanceOf(Transform) then return false end
 		self.matrix = helper.mulMatrix(transform.matrix, self.matrix)
@@ -65,6 +88,11 @@ local Transform = Class:extend()
 		return true
 	end
 
+	--- Apply transform to vector and return new one
+	-- @param number x
+	-- @param number y
+	-- @param number z
+	-- @return table
 	function Transform:vector(x, y, z)
 		local m = {
 			{ x },
@@ -75,13 +103,19 @@ local Transform = Class:extend()
 		return helper.mulMatrix(self.matrix, m)
 	end
 
+	--- Clone transform
+	-- @return l2df.class.transfor
 	function Transform:clone()
 		local t = Transform:new()
 		t:append(self)
 		return t
 	end
 
-	function Transform:scale(sx, sy, sz, ox, oy)
+	--- Apply scale to transform
+	-- @param[opt] number sx
+	-- @param[opt] number sy
+	-- @param[opt] number sz
+	function Transform:scale(sx, sy, sz)
 		sy = sy or sx or 1
 		sz = sz or sx or 1
 		sx = sx or 1
@@ -97,10 +131,18 @@ local Transform = Class:extend()
 		self.sz = self.sz * sz
 	end
 
+	--- Move transform
+	-- @param[opt] number dx
+	-- @param[opt] number dy
+	-- @param[opt] number dz
+	-- @param[opt] number ox
+	-- @param[opt] number oy
 	function Transform:translate(dx, dy, dz, ox, oy)
 		dx = dx or 0
 		dy = dy or 0
 		dz = dz or 0
+		ox = ox or 0
+		oy = oy or 0
 		local m = {
 			{ 1, 0, 0, dx - ox },
 			{ 0, 1, 0, dy - oy },
@@ -110,8 +152,14 @@ local Transform = Class:extend()
 		self.matrix = helper.mulMatrix(m, self.matrix)
 	end
 
+	--- Rotate transform around point
+	-- @param[opt] number a
+	-- @param[opt] number x
+	-- @param[opt] number y
 	function Transform:rotate(a, x, y)
 		a = a or 0
+		x = x or 0
+		y = y or 0
 		local ca = cos(rad(a))
 		local sa = sin(rad(a))
 		local m = {

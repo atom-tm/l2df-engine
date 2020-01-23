@@ -11,12 +11,17 @@ local EventManager = core.import 'manager.event'
 
 local Timer = Class:extend()
 
+    --- Init
+    -- @param number tick
     function Timer:init(tick)
         self.i = 0
         self.tick = tick
         EventManager:subscribe('update', self.update, nil, self)
     end
 
+    --- Update event
+    -- @param number dt
+    -- @param boolean islast
     function Timer:update(dt, islast)
         self.i = self.i + 1
         if self.i >= self.tick then

@@ -34,9 +34,9 @@ local history = createNode()
 
 local Manager = { time = 0, size = 1, maxsize = 1 }
 
-	---
+	--- Init
 	-- @param number maxsize
-	-- @return SnapshotManager
+	-- @return l2df.manager.snapshot
 	function Manager:init(maxsize)
 		self.maxsize = maxsize
 		self.size = 1
@@ -44,27 +44,28 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 		return self
 	end
 
-	---
+	--- Reset manager's timer and drop all snapshots
 	function Manager:reset()
 		self.time = 0
 		history = createNode()
 	end
 
-	---
+	--- Update event
+	-- @param number dt
 	function Manager:update(dt)
 		self.time = self.time + dt
 	end
 
-	---
+	--- Persist a function and its arguments to it later during rollback
 	-- @param function f
-	-- @return SnapshotManager
+	-- @return l2df.manager.snapshot
 	function Manager:stage(f, ...)
 		history[#history + 1] = { f, { ... } }
 		return self
 	end
 
-	---
-	-- @return SnapshotManager
+	--- Commit all staged functions
+	-- @return l2df.manager.snapshot
 	function Manager:commit()
 		local node = createNode()
 		node.next = history.next
@@ -82,7 +83,7 @@ local Manager = { time = 0, size = 1, maxsize = 1 }
 		return self
 	end
 
-	---
+	--- Rollback in history and execute persisted functions
 	-- @param number timestamp
 	-- @return number
 	function Manager:rollback(timestamp)

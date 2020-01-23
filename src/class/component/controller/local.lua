@@ -20,6 +20,8 @@ local LocalController = Controller:extend()
 	end
 
 	--- Update controller timers
+	-- @param number dt
+	-- @param boolean islast
 	function LocalController:update(dt, islast)
 		if not self.entity then return end
 

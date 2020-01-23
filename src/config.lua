@@ -59,18 +59,6 @@ local config = {
 	},
 
 	keys = { 'up', 'down', 'left', 'right', 'attack', 'jump', 'defend', 'special1' },
-	controls = {							-- Настройки управления
-		{
-			up = 'w', down = 's', left = 'a', right = 'd',
-			attack = 'f', jump = 'g', defend = 'h',
-			special1 = 'j'
-		},
-		{
-			up = 'o', down = 'l', left = 'k', right = ';',
-			attack = 'p', jump = '[', defend = ']',
-			special1 = '\\'
-		}
-	}
 }
 
 local Module = { }

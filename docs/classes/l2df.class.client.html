@@ -137,7 +137,7 @@
 
     <div class="module-header">
       <h1>Class <code>l2df.class.client</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:13:06</span>
     </div>
     <p>Network client class</p>
     <p>
@@ -157,46 +157,36 @@
     <h2><a href="#Functions">Functions</a></h2>
     <table class="function_list">
       <tr>
+        <td class="name" nowrap><a href="#Client:init">Client:init(kwargs)</a></td>
+        <td class="summary">Init</td>
+      </tr>
+      <tr>
         <td class="name" nowrap><a href="#Client:connected">Client:connected(event)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Client connected event</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Client:disconnected">Client:disconnected(event)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Client disconnected event</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Client:received">Client:received(event)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Client received payload event</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Client:state">Client:state()</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Get current client's connection state</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Client:ping">Client:ping()</a></td>
-        <td class="summary">
-
-</td>
+        <td class="summary">Get client's ping</td>
       </tr>
       <tr>
-        <td class="name" nowrap><a href="#Client:send">Client:send(event)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="name" nowrap><a href="#Client:send">Client:send(event, ...)</a></td>
+        <td class="summary">Send event previously registered with l2df.manager.network.event</td>
       </tr>
       <tr>
-        <td class="name" nowrap><a href="#Client:rawsend">Client:rawsend(format)</a></td>
-        <td class="summary">
-
-</td>
+        <td class="name" nowrap><a href="#Client:rawsend">Client:rawsend(format, ...)</a></td>
+        <td class="summary">Send raw-formatted message to client</td>
       </tr>
     </table>
     <br/>
@@ -208,13 +198,35 @@
     Methods
       <dl class="function">
         <dt>
+          <a name = "Client:init"></a>
+          <strong>Client:init(kwargs)</strong>
+
+        <dd>
+          Init
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">kwargs</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
           <a name = "Client:connected"></a>
           <strong>Client:connected(event)</strong>
 
         <dd>
-
-
-
+          Client connected event
 
 
           <h3>Parameters:</h3>
@@ -247,9 +259,7 @@
           <strong>Client:disconnected(event)</strong>
 
         <dd>
-
-
-
+          Client disconnected event
 
 
           <h3>Parameters:</h3>
@@ -273,9 +283,7 @@
           <strong>Client:received(event)</strong>
 
         <dd>
-
-
-
+          Client received payload event
 
 
           <h3>Parameters:</h3>
@@ -308,9 +316,7 @@
           <strong>Client:state()</strong>
 
         <dd>
-
-
-
+          Get current client's connection state
 
 
 
@@ -333,9 +339,7 @@
           <strong>Client:ping()</strong>
 
         <dd>
-
-
-
+          Get client's ping
 
 
 
@@ -355,12 +359,10 @@
       </dd>
         <dt>
           <a name = "Client:send"></a>
-          <strong>Client:send(event)</strong>
+          <strong>Client:send(event, ...)</strong>
 
         <dd>
-
-
-
+          Send event previously registered with l2df.manager.network.event
 
 
           <h3>Parameters:</h3>
@@ -368,6 +370,13 @@
                 <li>
                   <span class="parameter">event</span>
                   <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">...</span>
+                  <span class="types"><span class="type">...</span></span>
 
 
 
@@ -390,12 +399,10 @@
       </dd>
         <dt>
           <a name = "Client:rawsend"></a>
-          <strong>Client:rawsend(format)</strong>
+          <strong>Client:rawsend(format, ...)</strong>
 
         <dd>
-
-
-
+          Send raw-formatted message to client
 
 
           <h3>Parameters:</h3>
@@ -403,6 +410,13 @@
                 <li>
                   <span class="parameter">format</span>
                   <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">...</span>
+                  <span class="types"><span class="type">...</span></span>
 
 
 

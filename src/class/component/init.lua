@@ -10,14 +10,19 @@ local Class = core.import 'class'
 
 local Component = Class:extend()
 
+	--- Init
 	function Component:init()
 		-- pass
 	end
 
+    --- Component added to l2df.class.entity
+    -- @param l2df.class.entity entity
 	function Component:added(entity)
 		-- pass
 	end
 
+    --- Component removed from l2df.class.entity
+    -- @param l2df.class.entity entity
 	function Component:removed(entity)
 		-- pass
 	end

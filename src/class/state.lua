@@ -10,15 +10,22 @@ local Class = core.import 'class'
 
 local State = Class:extend()
 
+	--- Init
     function State:init()
         -- pass
     end
 
-    function State:persistentUpdate(entity, vars)
+    --- Persistent update
+    -- @param l2df.class.entity entity
+    -- @param table params
+    function State:persistentUpdate(entity, params)
         -- pass
     end
 
-    function State:update(entity, vars)
+    --- Update
+    -- @param l2df.class.entity entity
+    -- @param table params
+    function State:update(entity, params)
         -- pass
     end
 

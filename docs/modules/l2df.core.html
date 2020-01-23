@@ -57,6 +57,10 @@
     <div class="nav__scrollable">
       <a class="btn btn-outline-danger" href="../index.html"><i class="fa fa-chevron-left"></i> Index</a>
 
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#Functions">Functions</a></li>
+      </ul>
 
 
       <h2>Modules</h2>
@@ -133,7 +137,7 @@
 
     <div class="module-header">
       <h1>Module <code>l2df.core</code></h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-22 12:01:34</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2020-01-23 05:08:30</span>
     </div>
     <p>Core module</p>
     <p>
@@ -150,11 +154,204 @@
     </ul>
 
 
+    <h2><a href="#Functions">Functions</a></h2>
+    <table class="function_list">
+      <tr>
+        <td class="name" nowrap><a href="#import">import(name)</a></td>
+        <td class="summary">Wrapper on standart 'require', imports engine's components
+ automatically adding required module's prefix</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#root">root()</a></td>
+        <td class="summary">Important function to determine engine's location
+ First call to core.root() always should be in core.init</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#getline">getline([i])</a></td>
+        <td class="summary">Return information about line where this function was executed</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#modulepath">modulepath(path)</a></td>
+        <td class="summary">Convert path to module's path.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#fullpath">fullpath(path[, depth[, info]])</a></td>
+        <td class="summary">Converts the path relative to the game's entry point</td>
+      </tr>
+    </table>
     <br/>
     <br/>
 
 
 
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+    Methods
+      <dl class="function">
+        <dt>
+          <a name = "import"></a>
+          <strong>import(name)</strong>
+
+        <dd>
+          Wrapper on standart 'require', imports engine's components
+ automatically adding required module's prefix
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">name</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+                    Name of the module/class to import from l2df
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><span class="type">function</span></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "root"></a>
+          <strong>root()</strong>
+
+        <dd>
+          Important function to determine engine's location
+ First call to core.root() always should be in core.init
+
+
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "getline"></a>
+          <strong>getline([i])</strong>
+
+        <dd>
+          Return information about line where this function was executed
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">i</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "modulepath"></a>
+          <strong>modulepath(path)</strong>
+
+        <dd>
+          Convert path to module's path.
+ Useful to require .lua scripts by their path
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">path</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
+          <a name = "fullpath"></a>
+          <strong>fullpath(path[, depth[, info]])</strong>
+
+        <dd>
+          Converts the path relative to the game's entry point
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">path</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">depth</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">info</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+        </ul>
+
+        <h3>Returns:</h3>
+          <ol>
+
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+
+          </ol>
+
+
+
+
+      </dd>
+    </dl>
 
 
 

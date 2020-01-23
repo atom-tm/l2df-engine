@@ -14,14 +14,14 @@ local list = { }
 local Manager = { }
 
 	--- Adds the state file to the list
-	--  @param string filepath
+	-- @param string filepath
 	function Manager:add(filepath)
 		local req, key = helper.requireFile(filepath)
 		list[key] = req
 	end
 
 	--- Loads state files from the specified folder
-	--  @param string folderpath
+	-- @param string folderpath
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -32,8 +32,8 @@ local Manager = { }
 	end
 
 	--- Gets a state from the list by its number
-	--  @param number state
-	--  @return State
+	-- @param number state
+	-- @return l2df.class.state
 	function Manager:get(state)
 		return list[state] or nil
 	end
