@@ -17,34 +17,60 @@ local Physix = core.import 'class.component.physix'
 local UI = Entity:extend()
 
     function UI:init(kwargs)
-        self.vars.x = kwargs.x or 0
-        self.vars.y = kwargs.y or 0
-        self.vars.z = kwargs.z or 0
-        self.vars.r = math.rad(kwargs.r or 0)
-        self.vars.scaleX = kwargs.scaleX or 1
-        self.vars.scaleY = kwargs.scaleY or 1
-        self.vars.pic = kwargs.pic or 1
-        self.vars.hidden = kwargs.hidden or false
+        local vars = self.vars
+        vars.x = kwargs.x or 0
+        vars.y = kwargs.y or 0
+        vars.z = kwargs.z or 0
+        vars.hidden = kwargs.hidden or false
         self:addComponent(Transform())
     end
 
-    UI.Image = UI:extend({ name = 'image' })
-    function UI.Image:init(kwargs)
-        self:super(kwargs)
-        self:addComponent(Render(), kwargs.sprites)
+    function UI:on(event, callback)
+        assert(type(event) == "string", "Event name must be string")
+        assert(type(callback) == "function", "Callback must be a function")
+
+        if type(self[event]) == "function" then
+            local old = self[event]
+            self[event] = function (...)
+                old(...)
+                callback(...)
+            end
+        end
+        return self
     end
 
-    UI.Text = UI:extend({ name = 'text' })
-    function UI.Text:init(kwargs)
-        self:super(kwargs)
-        self:addComponent(Print(kwargs))
+    function UI:hide()
+        self.vars.hidden = true
+        return self
     end
 
-    UI.Animation = UI:extend({ name = 'animation' })
-    function UI.Animation:init(kwargs)
-        self:super(kwargs)
-        self:addComponent(Render(), kwargs.sprites)
-        self:addComponent(Frames(), 1, kwargs.nodes)
+    function UI:show()
+        self.vars.hidden = false
+        return self
     end
+
+    function UI:toggle()
+        self.vars.hidden = not self.vars.hidden
+        return self
+    end
+
+        UI.Image = UI:extend({ name = 'image' })
+        function UI.Image:init(kwargs)
+            self:super(kwargs)
+            self:addComponent(Render(), kwargs.sprites)
+        end
+
+        UI.Text = UI:extend({ name = 'text' })
+        function UI.Text:init(kwargs)
+            self:super(kwargs)
+            self:addComponent(Print(kwargs))
+        end
+
+        UI.Animation = UI:extend({ name = 'animation' })
+        function UI.Animation:init(kwargs)
+            self:super(kwargs)
+            self:addComponent(Render(), kwargs.sprites)
+            self:addComponent(Frames(), 1, kwargs.nodes)
+        end
 
 return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })
