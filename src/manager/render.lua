@@ -92,8 +92,10 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L
 			for j = 1, #drawables[i] do
 				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
-				r2, g2, b2, a2 = input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1
-				loveSetColor(r2, g2, b2, a2)
+				if input.color then
+					r2, g2, b2, a2 = input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1
+					loveSetColor(r2, g2, b2, a2)
+				end
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
 						loveDraw(input.object, input.quad, round(input.x), round(input.y + input.z), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)

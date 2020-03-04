@@ -78,6 +78,9 @@ local Render = Component:extend({ unique = true })
             ox, oy - смещение ячеек в листе
         ]]
 
+        local entity = self.entity
+        local vars = entity.vars
+
         sprite.res = sprite.res or sprite[1] or nil
         sprite.w = sprite.w or sprite[2] or nil
         sprite.h = sprite.h or sprite[3] or nil
