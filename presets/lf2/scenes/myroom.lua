@@ -28,6 +28,40 @@ local title = UI.Text {
 }
 local titleC = title:getComponent(Print)
 
+local ui1 = UI.Text {
+	text = "Hello world",
+	font = 46,
+	color = {51,186,191}
+}
+
+local anim1 = UI.Animation {
+	sprites = { 'sprites/UI/CharSelectMenu/1-1.png', 120, 200 },
+	nodes = {
+		Frame {
+			x = 10, next = 2, wait = 150
+		},
+		Frame {
+			x = 25, next = 3, wait = 150
+		},
+		Frame {
+			x = 50, next = 1, wait = 150
+		}
+	},
+}
+
+local image1 = UI.Image {
+	sprites = { 'sprites/UI/CharSelectMenu/1-1.png', 120, 200 },
+	x = 100,
+	y = 150,
+}
+
+local video1 = UI.Video {
+	x = 0,
+	y = 0,
+	resource = { 'sprites/intro.ogv' },
+}
+video1:play()
+
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
 	nodes = {
@@ -51,7 +85,7 @@ ball2.vars.x = 300
 
 local room = Scene {
 	-- nodes = { title }
-	nodes = { ball1, ball2 }
+	nodes = { ball1, ball2, ui1, image1, anim1, video1 }
 }
 room:addComponent(World(), { friction = 0.05 })
 

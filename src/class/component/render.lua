@@ -29,12 +29,14 @@ local Render = Component:extend({ unique = true })
     --- Component added to l2df.class.entity
     -- @param l2df.class.entity entity
     -- @param table sprites
-    function Render:added(entity, sprites)
+    function Render:added(entity, sprites, kwargs)
         if not entity then return false end
 
         self.entity = entity
         local vars = entity.vars
         vars[self] = { }
+
+        kwargs = kwargs or { }
 
         vars[self].pics = { }
         if not (sprites and type(sprites) == 'table') then
@@ -42,6 +44,7 @@ local Render = Component:extend({ unique = true })
             return entity:removeComponent(self)
         end
         sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
+
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -59,6 +62,13 @@ local Render = Component:extend({ unique = true })
         vars.hidden = vars.hidden or false
         vars.pic = vars.pic or 1
 
+        vars[self].color = kwargs.color and {
+            (kwargs.color[1] or 255) / 255,
+            (kwargs.color[2] or 255) / 255,
+            (kwargs.color[3] or 255) / 255,
+            (kwargs.color[4] or 255) / 255 }
+        or { 1,1,1,1 }
+
         for i = 1, #sprites do
             self:addSprite(sprites[i])
         end
@@ -68,6 +78,8 @@ local Render = Component:extend({ unique = true })
     --- Add new sprite-list
     -- @param table sprite
     function Render:addSprite(sprite)
+
+        local vars = self.entity.vars
 
         --[[
             res - ссылка на ресурс спрайт-листа
@@ -152,6 +164,7 @@ local Render = Component:extend({ unique = true })
                 r = vars.globalR or vars.r,
                 sx = vars.facing * (vars.globalScaleX or vars.scaleX),
                 sy = vars.globalScaleY or vars.scaleY,
+                color = vars[self].color
             })
         end
 
@@ -162,6 +175,7 @@ local Render = Component:extend({ unique = true })
             x = vars.globalX or vars.x,
             y = vars.globalY or vars.y,
             z = vars.globalZ or vars.z,
+            color = vars[self].color
         })
 
         if vars.body then

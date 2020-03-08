@@ -22,6 +22,7 @@ local asyncChannel = love.thread.getChannel('asyncChannel')
 local asyncReturn = love.thread.getChannel('asyncReturn')
 local asyncLoader = love.thread.newThread([[
 	require 'love.image'
+	require 'love.video'
 	local extensions = ...
 	local asyncChannel = love.thread.getChannel('asyncChannel')
 	local asyncReturn = love.thread.getChannel('asyncReturn')
@@ -36,6 +37,8 @@ local asyncLoader = love.thread.newThread([[
 			local resource = nil
 			if extensions.image[extension] then
 				resource = love.image.newImageData(file)
+			elseif extensions.video[extension] then
+				resource = love.video.newVideoStream(file)
 			else print("error extensions") end
 			if resource then
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
@@ -182,6 +185,8 @@ local Manager = { }
 			local returned = asyncReturn:pop()
 			if extensions.image[returned.extension] then
 				returned.resource = love.graphics.newImage(returned.resource)
+			elseif extensions.video[returned.extension] then
+				returned.resource = love.graphics.newVideo(returned.resource)
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
 			local c = callbacks[returned.id]

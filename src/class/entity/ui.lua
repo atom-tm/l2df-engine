@@ -11,24 +11,23 @@ local Render = core.import 'class.component.render'
 local Frames = core.import 'class.component.frames'
 local States = core.import 'class.component.states'
 local Print = core.import 'class.component.print'
+local Video = core.import 'class.component.video'
 local Transform = core.import 'class.component.transform'
 local Physix = core.import 'class.component.physix'
 
 local UI = Entity:extend()
 
     function UI:init(kwargs)
-        local vars = self.vars
-        vars.x = kwargs.x or 0
-        vars.y = kwargs.y or 0
-        vars.z = kwargs.z or 0
-        vars.hidden = kwargs.hidden or false
         self:addComponent(Transform())
+        local vars = self.vars
+        vars.x = kwargs.x
+        vars.y = kwargs.y
+        vars.hidden = kwargs.hidden
     end
 
     function UI:on(event, callback)
         assert(type(event) == "string", "Event name must be string")
         assert(type(callback) == "function", "Callback must be a function")
-
         if type(self[event]) == "function" then
             local old = self[event]
             self[event] = function (...)
@@ -54,23 +53,55 @@ local UI = Entity:extend()
         return self
     end
 
-        UI.Image = UI:extend({ name = 'image' })
-        function UI.Image:init(kwargs)
-            self:super(kwargs)
-            self:addComponent(Render(), kwargs.sprites)
-        end
 
-        UI.Text = UI:extend({ name = 'text' })
-        function UI.Text:init(kwargs)
-            self:super(kwargs)
-            self:addComponent(Print(kwargs))
-        end
+    UI.Text = UI:extend({ name = 'text' })
+    function UI.Text:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Print(), kwargs)
+    end
 
-        UI.Animation = UI:extend({ name = 'animation' })
-        function UI.Animation:init(kwargs)
-            self:super(kwargs)
-            self:addComponent(Render(), kwargs.sprites)
-            self:addComponent(Frames(), 1, kwargs.nodes)
-        end
+    UI.Image = UI:extend({ name = 'image' })
+    function UI.Image:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Render(), kwargs.sprites)
+    end
 
-return setmetatable({ UI.Image, UI.Animation, UI.Text }, { __index = UI })
+    UI.Animation = UI:extend({ name = 'animation' })
+    function UI.Animation:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Render(), kwargs.sprites)
+        self:addComponent(Frames(), 1, kwargs.nodes)
+    end
+
+    UI.Video = UI:extend({ name = 'video' })
+    function UI.Video:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Video(), kwargs.resource)
+    end
+
+    function UI.Video:play()
+        self.video:play()
+    end
+
+
+
+
+
+
+
+
+    --[[UI.Image = UI:extend({ name = 'image' })
+    function UI.Image:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Render(), kwargs.sprites)
+    end
+
+
+    UI.Animation = UI:extend({ name = 'animation' })
+    function UI.Animation:init(kwargs)
+        self:super(kwargs)
+        self:addComponent(Render(), kwargs.sprites)
+        self:addComponent(Frames(), 1, kwargs.nodes)
+    end]]
+
+return setmetatable({ UI.Text, UI.Image, UI.Animation, UI.Video }, { __index = UI })
