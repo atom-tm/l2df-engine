@@ -21,13 +21,16 @@ local Video = Component:extend({ unique = false })
 
     --- Component added to l2df.class.entity
     -- @param l2df.class.entity entity
-    function Video:added(entity, input, kwargs)
+    function Video:added(entity, kwargs)
         if not entity then return false end
         self.entity = entity
-        local vars = entity.vars
-        input = input or { }
+        local vars = self.entity.vars
         kwargs = kwargs or { }
         vars[self] = {}
+
+        vars[self].delayed_start = kwargs.autoplay
+        vars[self].looped = kwargs.loop
+        vars[self].hide_when_paused = kwargs.hiding
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -38,11 +41,11 @@ local Video = Component:extend({ unique = false })
         vars.scaleY = vars.scaleY or 1
         vars.hidden = vars.hidden or false
 
-        local resource = input.resource or input[1]
+        local resource = kwargs.resource.resource or kwargs.resource[1]
 
         ResourceManager:loadAsync(resource, function (id, video)
             vars[self].resource = video
-            if input.autoplay then
+            if vars[self].delayed_start then
                 vars[self].resource:play()
             end
         end)
@@ -56,16 +59,50 @@ local Video = Component:extend({ unique = false })
 
     end
 
-    function Video:play()
-        if self.resource:isPlaying() then return false end
-        self.resource:play()
+    function Video:setState(state)
+        local vars = self.entity.vars
+        if state == "play" then
+            if vars[self].resource then vars[self].resource:play() end
+            vars[self].delayed_start = true
+        elseif state == "stop" then
+            if vars[self].resource then
+                vars[self].resource:pause()
+                vars[self].resource:rewind()
+            end
+            vars[self].delayed_start = false
+        elseif state == "pause" then
+            if vars[self].resource then vars[self].resource:pause() end
+            vars[self].delayed_start = false
+        elseif state == "invert" then
+            if vars[self].resource then
+                if vars[self].resource:isPlaying() then
+                    vars[self].resource:pause()
+                else
+                    vars[self].resource:play()
+                end
+            end
+            vars[self].delayed_start = not vars[self].delayed_start
+        else
+            return false
+        end
         return true
     end
+
 
     --- Post-update event
     function Video:postUpdate()
         if not self.entity then return end
         local vars = self.entity.vars
+
+        if vars[self].resource then
+            if vars[self].looped and vars[self].delayed_start and not vars[self].resource:isPlaying() then
+                vars[self].resource:rewind()
+                vars[self].resource:play()
+            end
+            if vars[self].hide_when_paused and not vars[self].resource:isPlaying() then return end
+        else return end
+
+
         if not vars.hidden then
             RenderManager:add({
                 object = vars[self].resource,

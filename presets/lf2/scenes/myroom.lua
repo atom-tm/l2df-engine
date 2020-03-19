@@ -59,8 +59,12 @@ local video1 = UI.Video {
 	x = 0,
 	y = 0,
 	resource = { 'sprites/intro.ogv' },
+	loop = true,
+	hiding = true,
 }
+
 video1:play()
+video1:pause()
 
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
@@ -88,6 +92,21 @@ local room = Scene {
 	nodes = { ball1, ball2, ui1, image1, anim1, video1 }
 }
 room:addComponent(World(), { friction = 0.05 })
+
+EventManager:subscribe('keypressed', function (_, key)
+	if key == 'f2' then
+		video1:play()
+	end
+	if key == 'f3' then
+		video1:pause()
+	end
+	if key == 'f4' then
+		video1:stop()
+	end
+	if key == "f5" then
+		video1:invert()
+	end
+end)
 
 --[[
 local timer = 0

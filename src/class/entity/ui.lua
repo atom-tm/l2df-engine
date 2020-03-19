@@ -76,17 +76,24 @@ local UI = Entity:extend()
     UI.Video = UI:extend({ name = 'video' })
     function UI.Video:init(kwargs)
         self:super(kwargs)
-        self:addComponent(Video(), kwargs.resource)
+        self:addComponent(Video(), kwargs)
     end
 
     function UI.Video:play()
-        self.video:play()
+        self:getComponent(Video):setState("play")
     end
 
+    function UI.Video:pause()
+        self:getComponent(Video):setState("pause")
+    end
 
+    function UI.Video:stop()
+        self:getComponent(Video):setState("stop")
+    end
 
-
-
+    function UI.Video:invert()
+        self:getComponent(Video):setState("invert")
+    end
 
 
 
