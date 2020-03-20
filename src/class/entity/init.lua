@@ -55,6 +55,12 @@ local Entity = Class:extend()
 		entity.parent = nil
 	end
 
+	function Entity:detachAll()
+		for id, key in self.nodes:enum(true) do
+			self:detach(key)
+		end
+	end
+
 	--- Removing object from inheritors list of his parent
 	function Entity:detachParent()
 		if self.parent then

@@ -52,19 +52,23 @@ local anim1 = UI.Animation {
 local image1 = UI.Image {
 	sprites = { 'sprites/UI/CharSelectMenu/1-1.png', 120, 200 },
 	x = 100,
-	y = 150,
+	y = 100,
 }
 
 local video1 = UI.Video {
 	x = 0,
 	y = 0,
-	resource = { 'sprites/intro.ogv' },
+	resource = { 'sprites/giphy.ogv' },
 	loop = true,
+	autoplay = false,
 	hiding = true,
 }
 
-video1:play()
-video1:pause()
+local button_test = UI.Button {
+	states = { normal = image1, focus = anim1 },
+	action = function () video1:play() end,
+	x = 100, y = 0,
+}
 
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
@@ -89,7 +93,7 @@ ball2.vars.x = 300
 
 local room = Scene {
 	-- nodes = { title }
-	nodes = { ball1, ball2, ui1, image1, anim1, video1 }
+	nodes = { ball1, ball2, ui1, video1, button_test }
 }
 room:addComponent(World(), { friction = 0.05 })
 
@@ -105,6 +109,9 @@ EventManager:subscribe('keypressed', function (_, key)
 	end
 	if key == "f5" then
 		video1:invert()
+	end
+	if key == "f6" then
+		button_test:focus()
 	end
 end)
 

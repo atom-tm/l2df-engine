@@ -28,9 +28,9 @@ local Video = Component:extend({ unique = false })
         kwargs = kwargs or { }
         vars[self] = {}
 
-        vars[self].delayed_start = kwargs.autoplay
+        vars[self].played = kwargs.autoplay
         vars[self].looped = kwargs.loop
-        vars[self].hide_when_paused = kwargs.hiding
+        vars[self].hiding = kwargs.hiding
 
         vars.x = vars.x or 0
         vars.y = vars.y or 0
@@ -45,7 +45,7 @@ local Video = Component:extend({ unique = false })
 
         ResourceManager:loadAsync(resource, function (id, video)
             vars[self].resource = video
-            if vars[self].delayed_start then
+            if vars[self].played then
                 vars[self].resource:play()
             end
         end)
@@ -63,16 +63,16 @@ local Video = Component:extend({ unique = false })
         local vars = self.entity.vars
         if state == "play" then
             if vars[self].resource then vars[self].resource:play() end
-            vars[self].delayed_start = true
+            vars[self].played = true
         elseif state == "stop" then
             if vars[self].resource then
                 vars[self].resource:pause()
                 vars[self].resource:rewind()
             end
-            vars[self].delayed_start = false
+            vars[self].played = false
         elseif state == "pause" then
             if vars[self].resource then vars[self].resource:pause() end
-            vars[self].delayed_start = false
+            vars[self].played = false
         elseif state == "invert" then
             if vars[self].resource then
                 if vars[self].resource:isPlaying() then
@@ -81,7 +81,7 @@ local Video = Component:extend({ unique = false })
                     vars[self].resource:play()
                 end
             end
-            vars[self].delayed_start = not vars[self].delayed_start
+            vars[self].played = not vars[self].played
         else
             return false
         end
@@ -95,11 +95,12 @@ local Video = Component:extend({ unique = false })
         local vars = self.entity.vars
 
         if vars[self].resource then
-            if vars[self].looped and vars[self].delayed_start and not vars[self].resource:isPlaying() then
+            if vars[self].looped and vars[self].played and not vars[self].resource:isPlaying() then
                 vars[self].resource:rewind()
                 vars[self].resource:play()
+            else
+                if vars[self].hiding and not vars[self].resource:isPlaying() then return end
             end
-            if vars[self].hide_when_paused and not vars[self].resource:isPlaying() then return end
         else return end
 
 
