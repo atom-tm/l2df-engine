@@ -18,3 +18,21 @@ local ui
 
 		local eeeee = Entity()
 		eeeee:attach(ui)
+
+
+local button_test = UI.Button {
+	states = {
+		normal = UI.Image {
+			sprites = { 'sprites/test/knopka.png', 68, 35, 1, 3 },
+			pic = 1,
+		},
+		click =  UI.Image {
+			sprites = { 'sprites/test/knopka.png', 68, 35, 1, 3 },
+			pic = 2
+		}
+	},
+	action = function ()
+		print("Hello!")
+	end,
+	x = 100, y = 100, cooldown = 15
+}

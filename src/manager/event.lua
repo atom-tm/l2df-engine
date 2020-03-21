@@ -90,6 +90,9 @@ local Manager = { active = true }
 		local i = 0
 		local c = nil
 		local current = tasks[depth]
+
+		local _trash = null
+
 		while i < current[3] or depth > 1 do
 			i = i + 1
 			local object = current[1][i]
@@ -98,10 +101,11 @@ local Manager = { active = true }
 			-- update components for current item
 			if object and object.active then
 				nodes = object:getNodes()
+
 				c = object:getComponents() or { }
 				for j = 1, #c do
-					local _1 = c[j].preUpdate and c[j]:preUpdate(...)
-					local _2 = c[j].update and c[j]:update(...)
+					_trash = c[j].preUpdate and c[j]:preUpdate(...)
+					_trash = c[j].update and c[j]:update(...)
 				end
 			end
 
@@ -109,7 +113,7 @@ local Manager = { active = true }
 			if nodes and #nodes > 0 then
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
-					local _ = c[j].push and c[j]:push(...)
+					_trash = c[j].push and c[j]:push(...)
 				end
 				current[2] = i
 				current = { nodes, 0, #nodes }
@@ -117,11 +121,11 @@ local Manager = { active = true }
 				tasks[depth] = current
 				i = 0
 
-			-- lift up				
+			-- lift up
 			elseif i >= current[3] and depth > 1 then
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
-					local _ = c[j].postUpdate and c[j]:postUpdate(...)
+					_trash = c[j].postUpdate and c[j]:postUpdate(...)
 				end
 				depth = depth - 1
 				current = tasks[depth]
@@ -129,15 +133,15 @@ local Manager = { active = true }
 				object = current[1][i]
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
-					local _1 = c[j].pop and c[j]:pop(...)
-					local _2 = c[j].postUpdate and c[j]:postUpdate(...)
+					_trash = c[j].pop and c[j]:pop(...)
+					_trash = c[j].postUpdate and c[j]:postUpdate(...)
 				end
 
 			-- bottom layer
 			else
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
-					local _ = c[j].postUpdate and c[j]:postUpdate(...)
+					_trash = c[j].postUpdate and c[j]:postUpdate(...)
 				end
 			end
 		end
