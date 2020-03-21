@@ -20,55 +20,109 @@ local Snapshot = core.import 'manager.snapshot'
 local Input = core.import 'manager.input'
 local RM = core.import 'manager.resource'
 
+local Script = core.import 'class.component.script'
 local World = core.import 'class.component.physix.world'
+
+local title = UI.Text {
+	text = 'Hello mother fucker!',
+	font = 24,
+}
+
+local menu1 = UI.Menu {
+	x = 100, y = 100,
+	list = {
+		UI.Button {
+			states = {
+				normal = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 1
+				},
+				focus = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 2
+				},
+				click = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 1
+				},
+			},
+			x = 0, y = 0,
+			action = function (...)
+				print("ACTION 1")
+			end
+		},
+		UI.Button {
+			states = {
+				normal = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 3
+				},
+				focus = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 4
+				},
+				click = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 3
+				},
+			},
+			x = 0, y = 30,
+			action = function (...)
+				title:toggle()
+			end
+		},
+		UI.Button {
+			states = {
+				normal = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 5
+				},
+				focus = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 6
+				},
+				click = UI.Image {
+					sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+					pic = 5
+				},
+			},
+			x = 0, y = 60
+		}
+	}
+}
+
+local room = Scene {
+	nodes = { menu1, title }
+}
+room:addComponent(World(), { friction = 0.05 })
+
+EventManager:subscribe('keypressed', function (_, key)
+	if key == "f2" then
+		menu1:prev()
+	end
+	if key == "f3" then
+		menu1:next()
+	end
+	if key == "f4" then
+		menu1:choice()
+	end
+end)
+
+
+
+
+
+
+
+
+
+--[[
 
 local title = UI.Text {
 	text = 'Enter username and press Enter',
 	font = 24
 }
 local titleC = title:getComponent(Print)
-
-local ui1 = UI.Text {
-	text = "Hello world",
-	font = 46,
-	color = {51,186,191}
-}
-
-local anim1 = UI.Animation {
-	sprites = { 'sprites/UI/CharSelectMenu/1-1.png', 120, 200 },
-	nodes = {
-		Frame {
-			x = 10, next = 2, wait = 150
-		},
-		Frame {
-			x = 25, next = 3, wait = 150
-		},
-		Frame {
-			x = 50, next = 1, wait = 150
-		}
-	},
-}
-
-local image1 = UI.Image {
-	sprites = { 'sprites/UI/CharSelectMenu/1-1.png', 120, 200 },
-	x = 100,
-	y = 100,
-}
-
-local video1 = UI.Video {
-	x = 0,
-	y = 0,
-	resource = { 'sprites/giphy.ogv' },
-	loop = true,
-	autoplay = false,
-	hiding = true,
-}
-
-local button_test = UI.Button {
-	states = { normal = image1, focus = anim1 },
-	action = function () video1:play() end,
-	x = 100, y = 0,
-}
 
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
@@ -91,31 +145,7 @@ ball2:createComponent(LocalController, 2)
 ball2.debug = true
 ball2.vars.x = 300
 
-local room = Scene {
-	-- nodes = { title }
-	nodes = { ball1, ball2, ui1, video1, button_test }
-}
-room:addComponent(World(), { friction = 0.05 })
 
-EventManager:subscribe('keypressed', function (_, key)
-	if key == 'f2' then
-		video1:play()
-	end
-	if key == 'f3' then
-		video1:pause()
-	end
-	if key == 'f4' then
-		video1:stop()
-	end
-	if key == "f5" then
-		video1:invert()
-	end
-	if key == "f6" then
-		button_test:focus()
-	end
-end)
-
---[[
 local timer = 0
 local delay = 0
 local state = 0

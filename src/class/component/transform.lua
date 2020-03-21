@@ -62,7 +62,7 @@ local Transform = Component:extend({ unique = true })
 
         local vars = self.entity.vars
         local m = stack[#stack]:vector(vars.x, vars.y, vars.z)
-        vars.globalX, vars.globalY, vars.globalZ = vars.x, vars.y, vars.z--m[1][1], m[2][1], m[3][1]
+        vars.globalX, vars.globalY, vars.globalZ = m[1][1], m[2][1], m[3][1]
 
         vars.globalScaleX = vars.scaleX * stack[#stack].sx
         vars.globalScaleY = vars.scaleY * stack[#stack].sy

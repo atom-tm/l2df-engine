@@ -102,9 +102,6 @@ local Manager = { active = true }
 			if object and object.active then
 				nodes = object:getNodes()
 
-				_trash = object and object.preUpdate and object:preUpdate(...)
-				_trash = object and object.update and object:update(...)
-
 				c = object:getComponents() or { }
 				for j = 1, #c do
 					_trash = c[j].preUpdate and c[j]:preUpdate(...)
@@ -126,7 +123,6 @@ local Manager = { active = true }
 
 			-- lift up
 			elseif i >= current[3] and depth > 1 then
-				_trash = object and object.postUpdate and object:postUpdate(...)
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
 					_trash = c[j].postUpdate and c[j]:postUpdate(...)
@@ -143,7 +139,6 @@ local Manager = { active = true }
 
 			-- bottom layer
 			else
-				_trash = object and object.postUpdate and object:postUpdate(...)
 				c = object and object:getComponents() or { }
 				for j = 1, #c do
 					_trash = c[j].postUpdate and c[j]:postUpdate(...)
