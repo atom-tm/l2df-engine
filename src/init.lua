@@ -18,6 +18,7 @@ local core = l2df
 	local EventManager = core.import 'manager.event'
 	local GroupManager = core.import 'manager.group'
 	local RenderManager = core.import 'manager.render'
+	local SoundManager = core.import 'manager.sound'
 	local ResourceManager = core.import 'manager.resource'
 	local SnapshotManager = core.import 'manager.snapshot'
 	local InputManager = core.import 'manager.input'
@@ -46,6 +47,7 @@ local core = l2df
 		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
 		EventManager:subscribe('update', InputManager.update, love, InputManager)
 		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
+		EventManager:subscribe('update', SoundManager.play, love, SoundManager)
 		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
 		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)

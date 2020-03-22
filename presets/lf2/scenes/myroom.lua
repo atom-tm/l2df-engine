@@ -19,6 +19,7 @@ local NetworkManager = core.import 'manager.network'
 local Snapshot = core.import 'manager.snapshot'
 local Input = core.import 'manager.input'
 local RM = core.import 'manager.resource'
+local SoundManager = core.import 'manager.sound'
 
 local Script = core.import 'class.component.script'
 local World = core.import 'class.component.physix.world'
@@ -49,6 +50,9 @@ local menu1 = UI.Menu {
 			x = 0, y = 0,
 			action = function (...)
 				print("ACTION 1")
+				RM:loadAsync("music/main.mp3", function(id, res)
+					SoundManager:setMusic(res)
+				end)
 			end
 		},
 		UI.Button {
@@ -69,6 +73,9 @@ local menu1 = UI.Menu {
 			x = 0, y = 30,
 			action = function (...)
 				title:toggle()
+				SoundManager:add {
+					resource = RM:get("sounds/broken_block.wav")
+				}
 			end
 		},
 		UI.Button {
@@ -86,10 +93,14 @@ local menu1 = UI.Menu {
 					pic = 5
 				},
 			},
-			x = 0, y = 60
+			x = 0, y = 60,
+			action = function(...)
+				SoundManager:setMusic(RM:get(RM:load("music/battle.mp3")))
+			end
 		}
 	}
 }
+RM:load("sounds/broken_block.wav")
 
 local room = Scene {
 	nodes = { menu1, title }

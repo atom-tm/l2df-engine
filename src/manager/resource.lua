@@ -39,6 +39,8 @@ local asyncLoader = love.thread.newThread([[
 				resource = love.image.newImageData(file)
 			elseif extensions.video[extension] then
 				resource = love.video.newVideoStream(file)
+			elseif extensions.sound[extension] then
+				resource = id
 			else print("error extensions") end
 			if resource then
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
@@ -164,7 +166,7 @@ local Manager = { }
 		elseif extensions.video[extension] then
 			resource = love.graphics.newVideo(filepath, ...)
 		elseif extensions.sound[extension] then
-			resource = love.audio.newSource(filepath, ...)
+			resource = love.audio.newSource(filepath, "static", ...)
 		elseif extensions.font[extension] then
 			resource = love.graphics.newFont(filepath, ...)
 		else return false end
@@ -187,6 +189,8 @@ local Manager = { }
 				returned.resource = love.graphics.newImage(returned.resource)
 			elseif extensions.video[returned.extension] then
 				returned.resource = love.graphics.newVideo(returned.resource)
+			elseif extensions.sound[returned.extension] then
+				returned.resource = love.audio.newSource(returned.resource, "stream")
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
 			local c = callbacks[returned.id]

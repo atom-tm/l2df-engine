@@ -16,6 +16,7 @@ local StatesManager = l2df.import 'manager.states'
 local InputManager = l2df.import 'manager.input'
 local SnapshotManager = l2df.import 'manager.snapshot'
 local RenderManager = l2df.import 'manager.render'
+local SoundManager = l2df.import 'manager.sound'
 
 function love.run()
 	return l2df:gameloop()
@@ -25,6 +26,7 @@ function love.load()
 	l2df:init()
 
 	RenderManager:init()
+	SoundManager:init()
 	SnapshotManager:init(30)
 	InputManager:init(config.keys)
 	InputManager:updateMappings({
