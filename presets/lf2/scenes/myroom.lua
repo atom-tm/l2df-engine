@@ -31,6 +31,9 @@ local title = UI.Text {
 
 local menu1 = UI.Menu {
 	x = 100, y = 100,
+	sounds = {
+		prev = "sounds/broken_block.wav"
+	},
 	list = {
 		UI.Button {
 			states = {
@@ -71,12 +74,9 @@ local menu1 = UI.Menu {
 				},
 			},
 			x = 0, y = 30,
-			action = function (...)
+			action = function (object)
 				title:toggle()
-				SoundManager:add {
-					resource = RM:get("sounds/broken_block.wav")
-				}
-			end
+			end,
 		},
 		UI.Button {
 			states = {

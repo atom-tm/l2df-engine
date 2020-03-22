@@ -15,6 +15,7 @@ local Video = core.import 'class.component.video'
 local Transform = core.import 'class.component.transform'
 local Physix = core.import 'class.component.physix'
 local Script = core.import 'class.component.script'
+local Sound = core.import 'class.component.sound'
 
 local UI = Entity:extend()
 
@@ -102,53 +103,65 @@ local UI = Entity:extend()
 
         self:super(kwargs)
 
-        self.blocked = false
-        self.cooldown_time = kwargs.cooldown or 0
-        self.cooldown = 0
+        self:addComponent(Sound(), kwargs.sounds)
+
+        self.vars.cooldown = 0
+        self.vars.cooldown_time = kwargs.cooldown or 0
 
         local states = kwargs.states or kwargs[1]
         states = type(states) == "table" and states or { }
 
-        self.states = {}
-        self.states[1] = states.normal or states[1]
-        assert(self.states[1] and self.states[1].isInstanceOf and self.states[1]:isInstanceOf(UI), "Requires a UI type object")
+        self.vars.states = {}
+        self.vars.states[1] = states.normal or states[1]
+        assert(self.vars.states[1] and self.vars.states[1].isInstanceOf and self.vars.states[1]:isInstanceOf(UI), "Requires a UI type object")
 
-        self.states[2] = (states.focus and states.focus.isInstanceOf and states.focus:isInstanceOf(UI) and states.focus) or self.states[1]
-        self.states[3] = (states.hover and states.hover.isInstanceOf and states.hover:isInstanceOf(UI) and states.hover) or self.states[2]
-        self.states[4] = (states.click and states.click.isInstanceOf and states.click:isInstanceOf(UI) and states.click) or self.states[3]
+        self.vars.states[2] = (states.focus and states.focus.isInstanceOf and states.focus:isInstanceOf(UI) and states.focus) or self.vars.states[1]
+        self.vars.states[3] = (states.hover and states.hover.isInstanceOf and states.hover:isInstanceOf(UI) and states.hover) or self.vars.states[2]
+        self.vars.states[4] = (states.click and states.click.isInstanceOf and states.click:isInstanceOf(UI) and states.click) or self.vars.states[3]
 
-        self.state = 1
-        self.last_state = self.state
+        self.vars.state = 1
+        self.vars.last_state = self.vars.state
+        self:attach(self.vars.states[self.vars.state])
 
-        self:attach(self.states[self.state])
-
-        self.action = kwargs.action or kwargs[2]
-        self.action = type(self.action) == "function" and self.action or function() end
+        self.vars.action = kwargs.action or kwargs[2]
+        self.vars.action = type(self.vars.action) == "function" and self.vars.action or function() end
 
         self:addComponent(Script(), function ()
-            if self.state ~= self.last_state then
-                self.last_state = self.state
+            if self.vars.state ~= self.vars.last_state then
+                if self.vars.last_state == 1 and self.vars.state == 2 then
+                    self.vars.sound = "focus"
+                    self:change()
+                elseif self.vars.last_state == 1 and self.vars.state == 3 then
+                    self.vars.sound = "hover"
+                    self:change()
+                end
+                self.vars.last_state = self.vars.state
                 self:detachAll()
-                self:attach(self.states[self.state])
+                self:attach(self.vars.states[self.vars.state])
             end
-            self.state = self.cooldown == 0 and 1 or self.state
-            self.cooldown = self.cooldown > 0 and self.cooldown - 1 or self.cooldown
+            self.vars.state = self.vars.cooldown == 0 and 1 or self.vars.state
+            self.vars.cooldown = self.vars.cooldown > 0 and self.vars.cooldown - 1 or self.vars.cooldown
         end)
     end
 
+    function UI.Button:change()
+        self.vars.sound = "change"
+    end
+
     function UI.Button:focus()
-        self.state = self.state < 2 and 2 or self.state
+        self.vars.state = self.vars.state < 2 and 2 or self.vars.state
     end
 
     function UI.Button:hover()
-        self.state = self.state < 3 and 3 or self.state
+        self.vars.state = self.vars.state < 3 and 3 or self.vars.state
     end
 
     function UI.Button:click()
-        if self.state == 4 then return end
-        self.state = 4
-        self:action()
-        self.cooldown = self.cooldown_time
+        if self.vars.state == 4 then return end
+        self.vars.state = 4
+        self.vars:action()
+        self.vars.cooldown = self.vars.cooldown_time
+        self.vars.sound = "click"
     end
 
 
@@ -156,6 +169,7 @@ local UI = Entity:extend()
     function UI.Menu:init(kwargs, list)
         self:super(kwargs)
         local list = kwargs.list
+        self:addComponent(Sound(), kwargs.sounds)
 
         assert(type(list) == "table" and #list > 0, "You fucker, there should be a list of buttons here!")
 
@@ -177,16 +191,25 @@ local UI = Entity:extend()
     function UI.Menu:next()
         local list = self:getNodes()
         self.selected = self.selected == #list and 1 or self.selected + 1
+        self:change()
+        self.vars.sound = 'next'
     end
 
     function UI.Menu:prev()
         local list = self:getNodes()
         self.selected = self.selected == 1 and #list or self.selected - 1
+        self:change()
+        self.vars.sound = 'prev'
+    end
+
+    function UI.Menu:change()
+        self.vars.sound = 'change'
     end
 
     function UI.Menu:choice()
         local list = self:getNodes()
         list[self.selected]:click()
+        self.vars.sound = 'choice'
     end
 
 
