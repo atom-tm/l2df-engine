@@ -31,7 +31,7 @@ local Parser = Class:extend()
 				return self:parse(str, obj)
 			end
 		end
-		return nil
+		return obj
 	end
 
 	--- Base method for parsing string

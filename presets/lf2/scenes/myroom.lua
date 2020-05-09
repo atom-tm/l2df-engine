@@ -34,7 +34,7 @@ local menu1 = UI.Menu {
 	sounds = {
 		prev = "sounds/broken_block.wav"
 	},
-	list = {
+	nodes = {
 		UI.Button {
 			states = {
 				normal = UI.Image {

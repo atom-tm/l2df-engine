@@ -17,15 +17,31 @@ local dummy = function () return nil end
 local Entity = Class:extend()
 
 	--- Creating a entity instance
-	function Entity:new(...)
+	function Entity:new(kwargs, id, ...)
 		local obj = self:___getInstance()
+		obj.id = id
 		obj.nodes = Storage:new()
 		obj.components = Storage:new()
 		obj.components.class = { }
 		obj.parent = nil
 		obj.active = true
 		obj.vars = { }
-		obj:init(...)
+		obj.R = setmetatable({ }, {
+			__index = function (t, key)
+				if obj[key] then
+					return obj[key]
+				end
+				local x = obj.nodes:getByKey(key)
+				return x and x.R or nil -- t.R
+			end,
+			__newindex = function (t, key, value)
+				obj[key] = value
+			end,
+			__call = function ()
+				return obj
+			end
+		})
+		obj:init(kwargs, id, ...)
 		return obj
 	end
 
@@ -35,6 +51,9 @@ local Entity = Class:extend()
 		if entity.parent == self or self:isDescendant(entity) then return false end
 		if entity.parent then entity.parent:detach(entity) end
 		entity.parent = self
+		if entity.id then
+			return self.nodes:addByKey(entity, entity.id, true)
+		end
 		return self.nodes:add(entity)
 	end
 
@@ -71,7 +90,7 @@ local Entity = Class:extend()
 
 	--- Getting a list of object inheritors
 	function Entity:getNodes()
-		local list = {}
+		local list = { }
 		for id, key in self.nodes:enum(true) do
 			list[#list + 1] = key
 		end

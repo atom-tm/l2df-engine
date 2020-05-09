@@ -32,7 +32,9 @@ local LffsParser = DatParser:extend()
 	LffsParser.BLOCK_LBRACKET = '{'
 	LffsParser.BLOCK_RBRACKET = '}'
 	LffsParser.VALUE_END_PATTERN = '[;,%s]'
-	LffsParser.BLOCK_PATTERN = '(</?([%w_]+)>)' --'<([%w_]+)>([^<>]*)</[%w_]+>'
+	LffsParser.BLOCK_PATTERN = '(</?([%w_]+)>)'
+	--'(</?([%w_]+)%s*#?%s*([%w_]-)>)'
+	--'<([%w_]+)>([^<>]*)</[%w_]+>'
 	LffsParser.ARGS_PATTERN = '([^<:>])'
 
 	--- Method for parsing lffs formatted string

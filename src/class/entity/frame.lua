@@ -13,8 +13,8 @@ local pairs = _G.pairs
 local Frame = Class:extend({ name = 'frame' })
 
 	function Frame:init(kwargs, id, keyword)
-        self.id = id
-        self.keyword = keyword
+        self.id = kwargs.id or id
+        self.keyword = kwargs.keyword or keyword
         self.next = kwargs.next
         self.wait = kwargs.wait or 0
 

@@ -18,6 +18,7 @@ local Storage = Class:extend()
 	--- Reset storage flushing all stored data
 	function Storage:reset()
 		self.list = { }
+		self.keys = { }
 		self.map = { }
 		self.free = { }
 		self.length = 0
@@ -54,7 +55,6 @@ local Storage = Class:extend()
 	-- @return number
 	-- @return mixed
 	function Storage:addById(object, id, reload)
-
 		local obj = self:getById(id)
 		if obj and not reload then return id, obj
 		elseif obj then self:remove(obj) end
@@ -64,6 +64,22 @@ local Storage = Class:extend()
 
 		self.count = self.count + 1
 		return id, object
+	end
+
+	--- Add object to storage with provided key
+	-- @param mixed object
+	-- @param string key
+	-- @param boolean reload
+	-- @return number
+	-- @return mixed
+	function Storage:addByKey(object, key, reload)
+		local obj, id = self:getByKey(key)
+		if obj and not reload then return self.keys[key], obj
+		elseif obj then self:remove(obj) end
+
+		id, obj = self:add(object)
+		self.keys[key] = id
+		return id, obj
 	end
 
 	--- Remove object from storage
@@ -102,6 +118,14 @@ local Storage = Class:extend()
 	-- @return mixed
 	function Storage:getById(id)
 		return self.list[id] or false
+	end
+
+	--- Return object from storage by key
+	-- @param string key
+	-- @return mixed
+	function Storage:getByKey(key)
+		key = self.keys[key]
+		return key and self.list[key] or false
 	end
 
 	--- Checks for object in storage

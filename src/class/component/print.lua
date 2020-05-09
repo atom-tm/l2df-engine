@@ -15,95 +15,88 @@ local loveNewFont = love.graphics.newFont
 
 local Print = Component:extend({ unique = false })
 
-    --- Init
-    -- @param table kwargs
-    function Print:init()
-        self.entity = nil
-    end
+	--- Set params for printing
+	-- @param table kwargs
+	function Print:set(kwargs)
+		local vars = self:vars()
+		kwargs = kwargs or { }
 
-    --- Set params for printing
-    -- @param table kwargs
-    function Print:set(kwargs)
-        if not self.entity then return false end
-        local vars = self.entity.vars
-        kwargs = kwargs or { }
+		vars.text = kwargs.text or self.text or ''
 
-        vars[self].text = kwargs.text or self.text or ''
+		if type(kwargs.font) == 'number' then
+			vars.font = loveNewFont(kwargs.font)
+		elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
+			vars.font = kwargs.font
+		else
+			vars.font = loveNewFont()
+		end
 
-        if type(kwargs.font) == 'number' then
-            vars[self].font = loveNewFont(kwargs.font)
-        elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
-            vars[self].font = kwargs.font
-        else
-            vars[self].font = loveNewFont()
-        end
+		vars.limit = kwargs.limit or vars.font:getWidth(vars.text)
 
-        vars[self].limit = kwargs.limit or vars[self].font:getWidth(vars[self].text)
-
-        vars[self].color = kwargs.color and {
-            (kwargs.color[1] or 255) / 255,
-            (kwargs.color[2] or 255) / 255,
-            (kwargs.color[3] or 255) / 255,
-            (kwargs.color[4] or 255) / 255 }
-        or { 1,1,1,1 }
+		vars.color = kwargs.color and {
+			(kwargs.color[1] or 255) / 255,
+			(kwargs.color[2] or 255) / 255,
+			(kwargs.color[3] or 255) / 255,
+			(kwargs.color[4] or 255) / 255 }
+		or { 1,1,1,1 }
 
 
-        --[[if type(kwargs.font) == 'number' then
-            self.font = loveNewFont(kwargs.font)
-        elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
-            vars[self].font = kwargs.font
-        else
-            vars[self].font = loveNewFont()
-        end
-        self.ox = kwargs.ox or self.ox or 0
-        self.oy = kwargs.oy or self.oy or 0
-        self.kx = kwargs.kx or self.kx or 0
-        self.ky = kwargs.ky or self.ky or 0
-        self.sx = kwargs.sx or self.sx or 1
-        self.sy = kwargs.sy or self.sy or 1
-        self.color = kwargs.color and { (kwargs.color[1] or 255) / 255, (kwargs.color[2] or 255) / 255, (kwargs.color[3] or 255) / 255, (kwargs.color[4] or 255) / 255 } or { 1,1,1,1 }]]
-    end
+		--[[if type(kwargs.font) == 'number' then
+			self.font = loveNewFont(kwargs.font)
+		elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
+			vars[self].font = kwargs.font
+		else
+			vars[self].font = loveNewFont()
+		end
+		self.ox = kwargs.ox or self.ox or 0
+		self.oy = kwargs.oy or self.oy or 0
+		self.kx = kwargs.kx or self.kx or 0
+		self.ky = kwargs.ky or self.ky or 0
+		self.sx = kwargs.sx or self.sx or 1
+		self.sy = kwargs.sy or self.sy or 1
+		self.color = kwargs.color and { (kwargs.color[1] or 255) / 255, (kwargs.color[2] or 255) / 255, (kwargs.color[3] or 255) / 255, (kwargs.color[4] or 255) / 255 } or { 1,1,1,1 }]]
+	end
 
-    --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
-    function Print:added(entity, kwargs)
-        if not entity then return false end
-        self.entity = entity
-        local vars = entity.vars
-        vars[self] = {}
+	--- Component added to l2df.class.entity
+	-- @param l2df.class.entity entity
+	function Print:added(entity, kwargs)
+		if not entity then return false end
+		self.super.added(self, entity)
 
-        vars.x = vars.x or 0
-        vars.y = vars.y or 0
-        vars.z = vars.z or 0
-        vars.r = vars.r or 0
+		local vars = self:vars()
 
-        vars.scaleX = vars.scaleX or 1
-        vars.scaleY = vars.scaleY or 1
+		vars.x = kwargs.x or vars.x or 0
+		vars.y = kwargs.y or vars.y or 0
+		vars.z = kwargs.z or vars.z or 0
+		vars.r = kwargs.r or vars.r or 0
 
-        vars.hidden = vars.hidden or false
+		vars.scaleX = kwargs.scaleX or vars.scaleX or 1
+		vars.scaleY = kwargs.scaleY or vars.scaleY or 1
 
-        self:set(kwargs)
-    end
+		vars.hidden = kwargs.hidden or vars.hidden or false
 
-    --- Post-update event
-    function Print:postUpdate()
-        if not self.entity then return end
-        local vars = self.entity.vars
-        if not vars.hidden then
-            RenderManager:add({
-                text = vars[self].text,
-                font = vars[self].font,
-                limit = vars[self].limit,
+		self:set(kwargs)
+	end
 
-                z = vars.globalZ or vars.z,
-                x = vars.globalX or vars.x,
-                y = vars.globalY or vars.y,
-                r = vars.r,
+	--- Post-update event
+	function Print:postUpdate()
+		if not self.entity then return end
+		local vars = self:vars()
+		if not vars.hidden then
+			RenderManager:add({
+				text = vars.text,
+				font = vars.font,
+				limit = vars.limit,
 
-                color = vars[self].color,
+				x = vars.globalX or vars.x,
+				y = vars.globalY or vars.y,
+				z = vars.globalZ or vars.z,
+				r = vars.r,
 
-            })
-        end
-    end
+				color = vars.color,
+
+			})
+		end
+	end
 
 return Print
