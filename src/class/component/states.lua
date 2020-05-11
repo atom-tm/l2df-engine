@@ -81,6 +81,12 @@ local States = Component:extend({ unique = true })
 		return true
 	end
 
+	function States:has(state)
+		if not self.entity then return false end
+		local vars = self.entity.vars
+		return vars.persistent_states[vars.states_head]:has(state)
+	end
+
 	function States:switch(state, params)
 		if not self:clear(1) or not state then return end
 		local vars = self.entity.vars
