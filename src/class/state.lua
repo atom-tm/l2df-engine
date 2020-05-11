@@ -16,9 +16,10 @@ local State = Class:extend()
     end
 
     --- Persistent update
+    -- @param number dt
     -- @param l2df.class.entity entity
     -- @param table params
-    function State:persistentUpdate(entity, params)
+    function State:persistentUpdate(dt, entity, params)
         -- pass
     end
 

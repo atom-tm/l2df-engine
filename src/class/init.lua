@@ -47,8 +47,7 @@ local Class = { }
 	end
 
 	--- Class initialization
-	function Class:init(int)
-		self.x = int
+	function Class:init()
 		-- pass
 	end
 

@@ -10,6 +10,7 @@ local helper = core.import 'helper'
 local SceneManager = core.import 'manager.scene'
 local Storage = core.import 'class.storage'
 local hook = helper.hook
+local unpack = table.unpack or unpack
 
 local subscribers = { }
 local handlers = { }
@@ -33,7 +34,7 @@ local Manager = { active = true }
 	function Manager.subscribe(subscriber, event, handler, source, ...)
 		if not (type(event) == 'string' and subscriber and type(handler) == 'function') then return end
 		subscribers[event] = subscribers[event] or Storage:new()
-		local id = subscribers[event]:add({ subscriber = subscriber, handler = handler, source = source, params = ... })
+		local id = subscribers[event]:add({ subscriber = subscriber, handler = handler, source = source, params = {...} })
 		handlers[event] = handlers[event] or { }
 		handlers[event][handler] = id
 		return id
@@ -61,7 +62,14 @@ local Manager = { active = true }
 		if not subscribers[event] then return end
 		for key, val in subscribers[event]:enum(true) do
 			if val.subscriber.active and (not val.source or val.source == source) then
-				val.handler(val.params, ...)
+				local len = #val.params
+				for i = 1, select('#', ...) do
+					val.params[len + i] = select(i, ...)
+				end
+				val.handler(unpack(val.params))
+				for i = #val.params, len + 1, -1 do
+					val.params[i] = nil
+				end
 			end
 		end
 	end

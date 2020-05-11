@@ -31,8 +31,8 @@ local Manager = { }
 		end
 	end
 
-	--- Gets a state from the list by its number
-	-- @param number state
+	--- Gets a state from the list by its key
+	-- @param mixed state
 	-- @return l2df.class.state
 	function Manager:get(state)
 		return list[state] or nil
