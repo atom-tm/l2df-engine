@@ -84,7 +84,8 @@ local States = Component:extend({ unique = true })
 	function States:has(state)
 		if not self.entity then return false end
 		local vars = self.entity.vars
-		return vars.persistent_states[vars.states_head]:has(state)
+		local state = vars.persistent_states[vars.states_head]
+		return state and state:has(state) or false
 	end
 
 	function States:switch(state, params)
@@ -125,7 +126,7 @@ local States = Component:extend({ unique = true })
 			local params = vars.persistent_params[vars.states_head]
 			for i, state in states:enum() do
 				if type(state) == 'table' then
-					state:persistentUpdate(self.entity, params[i])
+					state:persistentUpdate(dt, self.entity, params[i])
 				else
 					StatesManager:get(tostring(state)):persistentUpdate(dt, self.entity, params[i])
 				end
