@@ -15,6 +15,7 @@ local core = l2df
 	local log = core.import 'class.logger'
 	local parser = core.import 'class.parser.lffs'
 
+	local Factory = core.import 'manager.factory'
 	local EventManager = core.import 'manager.event'
 	local GroupManager = core.import 'manager.group'
 	local RenderManager = core.import 'manager.render'
@@ -31,6 +32,7 @@ local core = l2df
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
 		parser:scan(core.root() .. 'class/entity')
+		Factory:scan(core.root() .. 'class/entity')
 		tickrate = 1 / (fps or 60)
 		love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -46,8 +48,8 @@ local core = l2df
 		EventManager:subscribe('resize', RenderManager.resize, love, RenderManager)
 		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
 		EventManager:subscribe('update', InputManager.update, love, InputManager)
-		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
 		EventManager:subscribe('update', SoundManager.play, love, SoundManager)
+		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
 		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
 		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)

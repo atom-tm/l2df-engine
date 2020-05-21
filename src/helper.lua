@@ -68,7 +68,7 @@ local tableCache = { }
 
 local helper = { }
 
-	--- Require a script from file. Returns loaded module and its filename
+	--- Serialize variable to string
 	-- @param mixed var  Variable to dump
 	-- @return string
 	function helper.dump(var)
