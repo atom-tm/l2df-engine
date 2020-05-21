@@ -45,6 +45,16 @@ local Entity = Class:extend()
 		return obj
 	end
 
+	--- Create copy of current object (with all attached nodes)
+	function Entity:clone()
+		local entity = self:new()
+		entity.nodes = Storage:new()
+		local nodes = self:getNodes()
+		for id, key in self.nodes:enum(true) do
+			entity:attach(key:clone())
+		end
+	end
+
 	--- Adding an inheritor to an object
 	function Entity:attach(entity)
 		assert(entity:isInstanceOf(Entity), 'not a subclass of Entity')
