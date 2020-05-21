@@ -24,15 +24,17 @@ local plural = helper.plural
 
 local LffsParser = BaseParser:extend()
 
-	LffsParser.ARRAY_LBRACKET = strbyte('<')
-	LffsParser.ARRAY_RBRACKET = strbyte('>')
-	LffsParser.BLOCK_LBRACKET = strbyte('[')
-	LffsParser.BLOCK_RBRACKET = strbyte(']')
-	LffsParser.PARAM_SYMBOL = strbyte(':')
-	LffsParser.QUOTE_SYMBOL = strbyte('"')
+	LffsParser.PARAM_SYMBOL = ':'
+	LffsParser.QUOTE_SYMBOL = '"'
 	LffsParser.CLOSE_SYMBOL = strbyte('/')
+	LffsParser.ARRAY_RBRACKETB = strbyte('>')
+	LffsParser.BLOCK_RBRACKETB = strbyte(']')
+	LffsParser.ARRAY_LBRACKET = '<'
+	LffsParser.ARRAY_RBRACKET = '>'
+	LffsParser.BLOCK_LBRACKET = '['
+	LffsParser.BLOCK_RBRACKET = ']'
 	LffsParser.VALUE_END_PATTERN = '[;,%s]'
-	LffsParser.BLOCK_PATTERN = '([%w_]+)%s*:?%s*([%w_]-)'
+	LffsParser.BLOCK_PATTERN = '([%w_]+):?([%w_]*)'
 
 	--- Method for parsing lffs formatted string
 	-- You can extend existing object by passing it as second parameter
@@ -47,8 +49,9 @@ local LffsParser = BaseParser:extend()
 		local is_array = { false }
 		local head = 1
 		local param = nil
+		local pname = nil
+		local ptype = nil
 		local token = nil
-		local plural_token = nil
 		local parent = nil
 		local foobar = nil
 		local char = nil
@@ -60,6 +63,7 @@ local LffsParser = BaseParser:extend()
 		local bufsize = 0
 		local oldsize = 0
 		local ending = nil
+		local ending_byte = nil
 		local prune_param = false
 		local is_param = false
 		local is_string = false
@@ -68,11 +72,11 @@ local LffsParser = BaseParser:extend()
 		while pos < len do
 			while pos < len do
 				pos = pos + 1
-				byte = strbyte(str, pos)
+				char = strsub(str, pos, pos)
 
 				if not is_concat then
 					-- Previous token was param
-					if byte == self.PARAM_SYMBOL then
+					if char == self.PARAM_SYMBOL then
 						is_param = true
 						if is_array[head] then
 							is_array[head] = false
@@ -87,31 +91,33 @@ local LffsParser = BaseParser:extend()
 						break
 
 					-- Start collecting quoted string
-					elseif byte == self.QUOTE_SYMBOL then
+					elseif char == self.QUOTE_SYMBOL then
 						is_concat = self.QUOTE_SYMBOL
 						is_string = true
 						break
 
 					-- Create object block
-					elseif byte == self.BLOCK_RBRACKET then
+					elseif char == self.BLOCK_RBRACKET then
+						pname, ptype = strmatch(token, self.BLOCK_PATTERN)
 						parent = stack[head]
 						head = head + 1
-						foobar = parent[token] or { }
-						parent[token] = foobar
+						foobar = parent[pname] or { }
+						foobar._type = ptype ~= '' and ptype or nil
+						parent[pname] = foobar
 						stack[head] = foobar
 						is_array[head] = true
 						break
 
 					-- Create / append array block
-					elseif byte == self.ARRAY_RBRACKET then
-						plural_token = token .. 's'
-						-- plural_token = plural(token)
+					elseif char == self.ARRAY_RBRACKET then
+						pname, ptype = strmatch(token, self.BLOCK_PATTERN)
+						pname = plural(pname)
 						parent = stack[head]
-						foobar = parent[plural_token] or { }
-						parent[plural_token] = foobar
+						foobar = parent[pname] or { }
+						parent[pname] = foobar
 
 						parent = foobar
-						foobar = { }
+						foobar = ptype ~= '' and { _type = ptype } or { }
 						parent[#parent + 1] = foobar
 						head = head + 1
 						stack[head] = foobar
@@ -119,19 +125,21 @@ local LffsParser = BaseParser:extend()
 						break
 
 					-- Start collecting block's caption / close block
-					elseif byte == self.BLOCK_LBRACKET then
+					elseif char == self.BLOCK_LBRACKET then
 						ending = self.BLOCK_RBRACKET
+						ending_byte = self.BLOCK_RBRACKETB
 						break
 
 					-- Start collecting array's item's caption / close item
-					elseif byte == self.ARRAY_LBRACKET then
+					elseif char == self.ARRAY_LBRACKET then
 						ending = self.ARRAY_RBRACKET
+						ending_byte = self.ARRAY_RBRACKETB
 						break
 					end
 
 				-- Stop concating
-				elseif byte == is_concat then
-					if byte ~= self.QUOTE_SYMBOL then
+				elseif char == is_concat then
+					if char ~= self.QUOTE_SYMBOL then
 						pos = pos - 1
 					end
 					is_concat = false
@@ -140,8 +148,7 @@ local LffsParser = BaseParser:extend()
 				end
 
 				-- Collecting token
-				char = strsub(str, pos, pos)
-				if strmatch(char, self.VALUE_END_PATTERN) and not is_concat then
+				if not is_concat and strmatch(char, self.VALUE_END_PATTERN) then
 					break
 				else
 					bufsize = bufsize + 1
@@ -196,7 +203,7 @@ local LffsParser = BaseParser:extend()
 				end
 				if strbyte(str, pos + 1) == self.CLOSE_SYMBOL then
 					pos = pos + 1
-					while pos < len and strbyte(str, pos) ~= ending do
+					while pos < len and strbyte(str, pos) ~= ending_byte do
 						pos = pos + 1
 					end
 					head = head - 1

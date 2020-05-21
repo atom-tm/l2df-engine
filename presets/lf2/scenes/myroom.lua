@@ -15,6 +15,7 @@ local Physix = core.import 'class.component.physix'
 local Print = core.import 'class.component.print'
 
 local EventManager = core.import 'manager.event'
+local SceneManager = core.import 'manager.scene'
 local NetworkManager = core.import 'manager.network'
 local Snapshot = core.import 'manager.snapshot'
 local Input = core.import 'manager.input'
@@ -52,7 +53,6 @@ local menu1 = UI.Menu {
 			},
 			x = 0, y = 0,
 			action = function (...)
-				print("ACTION 1")
 				RM:loadAsync("music/main.mp3", function(id, res)
 					SoundManager:setMusic(res)
 				end)
@@ -76,6 +76,7 @@ local menu1 = UI.Menu {
 			x = 0, y = 30,
 			action = function (object)
 				title:toggle()
+				SceneManager:set('new_syntax_room')
 			end,
 		},
 		UI.Button {

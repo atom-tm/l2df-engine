@@ -112,7 +112,7 @@ local UI = Entity:extend()
 	function UI.Button:init(kwargs)
 		self:super(kwargs)
 
-		local states = kwargs.states or kwargs[1] or kwargs.nodes
+		local states = kwargs.states or kwargs.nodes
 		states = type(states) == 'table' and states or { }
 
 		local default_state = assertUI(states.normal or states[1], 'Requires a UI type object')

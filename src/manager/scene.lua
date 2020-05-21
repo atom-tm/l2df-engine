@@ -28,17 +28,17 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Load presset scene from file or scene object preserving the id
-	-- @param string|l2df.class.entity.scene filepath
+	-- @param string|l2df.class.entity.scene scene
 	-- @param mixed id
 	-- @return boolean
-	function Manager:add(filepath, id)
-		assert(filepath, 'You must specify the path to the file or pass the scene object')
-		if filepath.isInstanceOf and filepath:isInstanceOf(Scene) and id then
-			list[id] = filepath
-			self.root:attach(filepath)
+	function Manager:add(scene, id)
+		assert(scene, 'You must specify the path to the file or pass the scene object')
+		if scene.isInstanceOf and scene:isInstanceOf(Scene) and id then
+			list[id] = scene
+			self.root:attach(scene)
 			return true
 		end
-		local req, key = helper.requireFile(filepath)
+		local req, key = helper.requireFile(scene)
 		key = id or key
 		if req.isInstanceOf and req:isInstanceOf(Scene) then
 			list[key] = req
