@@ -21,6 +21,7 @@ local Snapshot = core.import 'manager.snapshot'
 local Input = core.import 'manager.input'
 local RM = core.import 'manager.resource'
 local SoundManager = core.import 'manager.sound'
+local FactoryManager = core.import 'manager.factory'
 
 local Script = core.import 'class.component.script'
 local World = core.import 'class.component.physix.world'
@@ -28,6 +29,11 @@ local World = core.import 'class.component.physix.world'
 local title = UI.Text {
 	text = 'Hello mother fucker!',
 	font = 24,
+}
+
+local etalon = UI.Image {
+	sprites = { 'sprites/test/test_menu.png', 100, 30, 1, 6 },
+	pic = 1
 }
 
 local menu1 = UI.Menu {
@@ -104,7 +110,7 @@ local menu1 = UI.Menu {
 RM:load("sounds/broken_block.wav")
 
 local room = Scene {
-	nodes = { menu1, title }
+	nodes = {}--{ menu1, title }
 }
 room:addComponent(World(), { friction = 0.05 })
 
@@ -117,6 +123,14 @@ EventManager:subscribe('keypressed', function (_, key)
 	end
 	if key == "f4" then
 		menu1:choice()
+	end
+	if key == "f5" then
+		local t = FactoryManager:create("text", "data/image.dat")
+		print(t.vars)
+		t.vars.x = math.random(1, 300)
+		t.vars.y = math.random(1, 300)
+		print(t.vars.x)
+		room:attach(t)
 	end
 end)
 

@@ -21,9 +21,16 @@ local unpack = _G.unpack or table.unpack
 local Manager = { }
 
 	local elements = { }
+	local cache = { }
 
 	local function isValidElement(obj)
 		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.__call) == 'function'
+	end
+
+	function Manager:getList()
+		for key, val in pairs(elements) do
+			print(key)
+		end
 	end
 
 	local function recursiveCreate(kwargs)
@@ -41,16 +48,22 @@ local Manager = { }
 	-- @param string class
 	-- @param string|table kwargs
 	function Manager:create(class, kwargs)
+		local filePath = false
 		class = class and strlower(class) or 0
 		if kwargs then
 			if type(kwargs) == 'string' then
+				filePath = kwargs
+				if cache[filePath] then
+					return cache[filePath]:clone()
+				end
 				kwargs = parser:parseFile(kwargs) or { }
 			end
 			kwargs = recursiveCreate(kwargs)
 			if not elements[class] then
 				return kwargs
 			end
-			return elements[class]:new(kwargs, unpack(kwargs))
+			cache[filePath] = filePath and elements[class]:new(kwargs, unpack(kwargs))
+			return filePath and cache[filePath]:clone() or elements[class]:new(kwargs, unpack(kwargs))
 		end
 		return elements[class] and elements[class]:new() or nil
 	end

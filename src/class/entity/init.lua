@@ -47,12 +47,25 @@ local Entity = Class:extend()
 
 	--- Create copy of current object (with all attached nodes)
 	function Entity:clone()
-		local entity = self:new()
-		entity.nodes = Storage:new()
-		local nodes = self:getNodes()
-		for id, key in self.nodes:enum(true) do
-			entity:attach(key:clone())
+	    local entity = self:___getInstance()
+	    entity.nodes = Storage:new()
+	    entity.components = Storage:new()
+	    entity.vars = { }
+	    for key, val in pairs(self.vars) do
+	    	entity.vars[key] = val
 		end
+	    for id, node in self.nodes:enum(true) do
+	        node = node:clone()
+	        node.id = id
+	        entity:attach(node)
+	    end
+	    for id, component in self.components:enum(true) do
+	    	local c = component:new()
+	    	c.entity = entity
+	    	entity.vars[c] = self.vars[component]
+	    	entity.components:add(c)
+	    end
+	    return entity
 	end
 
 	--- Adding an inheritor to an object
