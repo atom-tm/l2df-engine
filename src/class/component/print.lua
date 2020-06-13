@@ -18,7 +18,7 @@ local Print = Component:extend({ unique = false })
 	--- Set params for printing
 	-- @param table kwargs
 	function Print:set(kwargs)
-		local vars = self:vars()
+		local vars = self.entity.vars
 		kwargs = kwargs or { }
 
 		vars.text = kwargs.text or self.text or ''
@@ -63,7 +63,7 @@ local Print = Component:extend({ unique = false })
 		if not entity then return false end
 		self.super.added(self, entity)
 
-		local vars = self:vars()
+		local vars = self.entity.vars
 
 		vars.x = kwargs.x or vars.x or 0
 		vars.y = kwargs.y or vars.y or 0
@@ -81,7 +81,7 @@ local Print = Component:extend({ unique = false })
 	--- Post-update event
 	function Print:postUpdate()
 		if not self.entity then return end
-		local vars = self:vars()
+		local vars = self.entity.vars
 		if not vars.hidden then
 			RenderManager:add({
 				text = vars.text,
