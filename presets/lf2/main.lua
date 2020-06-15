@@ -15,7 +15,7 @@ local parser = l2df.import 'class.parser.lffs2'
 local Factory = l2df.import 'manager.factory'
 local SceneManager = l2df.import 'manager.scene'
 local KindsManager = l2df.import 'manager.kinds'
-local StatesManager = l2df.import 'manager.states'
+--local StatesManager = l2df.import 'manager.states'
 local InputManager = l2df.import 'manager.input'
 local SnapshotManager = l2df.import 'manager.snapshot'
 local RenderManager = l2df.import 'manager.render'
@@ -40,7 +40,7 @@ function love.load()
 		}
 	})
 
-	StatesManager:load('data/states')
+	--StatesManager:load('data/states')
 	KindsManager:load('data/kinds')
 
 	local sceneData = parser:parse(roomData)

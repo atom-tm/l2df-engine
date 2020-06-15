@@ -72,7 +72,7 @@ local UI = Entity:extend()
 	UI.Image = UI:extend({ name = 'image' })
 	function UI.Image:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Render(), kwargs.sprites)
+		self:addComponent(Render(), kwargs.sprites, kwargs)
 		self.vars.pic = kwargs.pic or self.vars.pic or 1
 	end
 
@@ -80,8 +80,8 @@ local UI = Entity:extend()
 	UI.Animation = UI:extend({ name = 'animation' })
 	function UI.Animation:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Render(), kwargs.sprites)
-		self:addComponent(Frames(), 1, kwargs.nodes)
+		self:addComponent(Render(), kwargs.sprites, kwargs)
+		self:addComponent(Frames(), 1, kwargs.frames, kwargs)
 	end
 
 

@@ -1,1 +1,11 @@
-x: 0  y: 0  text: "GAME_START"
+<sprite> "sprites/test/test_menu.png" x: 1 y: 6  w: 100 h: 30 </sprite>
+pic: 3  x: 0  y: 0  frame: 25
+
+<frame> 5
+ pic: 6 wait: 1000 next: 25
+ x: 50
+</frame>
+<frame> 25
+ pic: 5 wait: 1000 next: 5
+ x: 25
+</frame>

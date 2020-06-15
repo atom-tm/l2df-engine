@@ -25,7 +25,7 @@ local Object = Entity:extend({ name = 'object' })
         self.vars.pic = kwargs.pic or 1
         self.vars.hidden = kwargs.hidden or false
 
-        self:addComponent(Frames(), 1, kwargs.nodes)
+        self:addComponent(Frames(), 1, kwargs.frames)
         self:addComponent(States(), kwargs)
         self:addComponent(Physix(), kwargs)
         self:addComponent(Transform())

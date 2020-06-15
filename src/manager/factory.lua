@@ -27,12 +27,6 @@ local Manager = { }
 		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.__call) == 'function'
 	end
 
-	function Manager:getList()
-		for key, val in pairs(elements) do
-			print(key)
-		end
-	end
-
 	local function recursiveCreate(kwargs)
 		local obj = { }
 		for k, v in pairs(kwargs) do

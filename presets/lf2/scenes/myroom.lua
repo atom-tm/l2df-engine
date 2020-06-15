@@ -125,11 +125,9 @@ EventManager:subscribe('keypressed', function (_, key)
 		menu1:choice()
 	end
 	if key == "f5" then
-		local t = FactoryManager:create("text", "data/image.dat")
-		print(t.vars)
+		local t = FactoryManager:create("animation", "data/image.dat")
 		t.vars.x = math.random(1, 300)
 		t.vars.y = math.random(1, 300)
-		print(t.vars.x)
 		room:attach(t)
 	end
 end)

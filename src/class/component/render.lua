@@ -60,7 +60,7 @@ local Render = Component:extend({ unique = true })
         vars.facing = vars.facing or 1
 
         vars.hidden = vars.hidden or false
-        vars.pic = vars.pic or 1
+        vars.pic = vars.pic or kwargs.pic or 1
 
         vars[self].color = kwargs.color and {
             (kwargs.color[1] or 255) / 255,
@@ -152,7 +152,6 @@ local Render = Component:extend({ unique = true })
 
         local vars = entity.vars
         if vars.hidden then return end
-
         local pic = vars[self].pics[vars.pic]
         if pic then
             RenderManager:add({

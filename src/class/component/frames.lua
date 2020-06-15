@@ -20,11 +20,17 @@ local Frames = Component:extend({ unique = true })
     -- @param l2df.class.entity entity
 	-- @param number starting
 	-- @param table frames
-	function Frames:added(entity, starting, frames)
+	function Frames:added(entity, starting, frames, kwargs)
 		if not entity then return false end
+		kwargs = kwargs or { }
 		self.entity = entity
 
 		local vars = entity.vars
+
+		entity.vars[self] = {
+			list = { },
+			map = { }
+		}
 
 		starting = starting or 1
 		frames = frames or { }
@@ -34,10 +40,13 @@ local Frames = Component:extend({ unique = true })
 		vars.next = starting
 		vars.counter = 0
 
-		self.list = { }
-		self.map = { }
 		for i = 1, #frames do
 			self:add(frames[i], i)
+		end
+
+		if kwargs.frame then
+		print(kwargs.frame)
+			self:set(kwargs.frame)
 		end
 	end
 
@@ -58,15 +67,17 @@ local Frames = Component:extend({ unique = true })
 	-- @param l2df.class.entity.frame frame
 	-- @param number id
 	function Frames:add(frame, id)
-		frame.id = frame.id or id
-		if not (frame.isInstanceOf and frame:isInstanceOf(Frame) and frame.id) then
+		local storage = self.entity.vars[self]
+
+		frame.id = frame.id or frame[1] or id
+		if not (type(frame) == "table") then
 			return
 		end
 
 		if frame.keyword then
-			self.map[frame.keyword] = frame
+			storage.map[frame.keyword] = frame
 		end
-		self.list[frame.id] = frame
+		storage.list[frame.id] = frame
 	end
 
 	--- Change current frame
@@ -75,13 +86,15 @@ local Frames = Component:extend({ unique = true })
 	function Frames:set(id, remain)
 		if not self.entity then return end
 
-		local nextFrame = self.list[id] or self.map[id] or self.list[next(self.list)]
+		local storage = self.entity.vars[self]
+
+		local nextFrame = storage.list[id] or storage.map[id] or storage.list[next(storage.list)]
 		if not nextFrame then return end
 
 		local vars = self.entity.vars
 		vars.frame = nextFrame
 		vars.next = nextFrame.next
-		vars.wait = nextFrame.wait
+		vars.wait = nextFrame.wait or 0
 		vars.counter = remain or 0
 		if nextFrame.keyword then
 			self.map[nextFrame.keyword] = nextFrame
@@ -100,8 +113,8 @@ local Frames = Component:extend({ unique = true })
 			self:set(vars.next, vars.counter)
 		end
 
-		if not (vars.frame and vars.frame.vars) then return end
-		for k, v in pairs(vars.frame.vars) do
+		if not (type(vars.frame) == "table") then return end
+		for k, v in pairs(vars.frame) do
 			vars[k] = v
 		end
 		vars.counter = vars.wait > 0 and vars.counter + dt * 1000 or 0
