@@ -22,6 +22,7 @@ local core = l2df
 	local InputManager = core.import 'manager.input'
 	local NetworkManager = core.import 'manager.network'
 	local PhysixManager = core.import 'manager.physix'
+	local Recorder = core.import 'manager.recorder'
 
 	local Entity = core.import 'class.entity'
 
@@ -52,6 +53,7 @@ local core = l2df
 		EventManager:subscribe('update', ResourceManager.update, EventManager, ResourceManager)
 		EventManager:subscribe('postupdate', InputManager.advance, EventManager, InputManager)
 		EventManager:subscribe('postupdate', SyncManager.commit, EventManager, SyncManager)
+		EventManager:subscribe('postupdate', Recorder.update, EventManager, Recorder)
 		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
 	end
 
