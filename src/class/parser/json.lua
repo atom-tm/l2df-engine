@@ -7,7 +7,7 @@ local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'JsonParser works only with l2df v1.0 and higher')
 
 local json = core.import 'external.json'
-local BaseParser = core.import 'class.parser.base'
+local BaseParser = core.import 'class.parser'
 
 local JsonParser = BaseParser:extend()
 
@@ -22,9 +22,9 @@ local JsonParser = BaseParser:extend()
 	--- Method for dumping table to json format
 	-- @param table data  Table for dumping
 	-- @return string
-	function JsonParser:dump(data)
+	function JsonParser:dump(data, noprettify)
 		assert(type(data) == 'table', 'Parameter "data" must be a table.')
-		return json:encode_pretty(data)
+		return not noprettify and json:encode_pretty(data) or json:encode(data)
 	end
 
 return JsonParser

@@ -1,37 +1,28 @@
 --- Configs and settings
 -- @module l2df.config
--- @author Kasai, Abelidze
+-- @author Abelidze
+-- @author Kasai
 -- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Config works only with l2df v1.0 and higher')
 
 local DatParser = core.import 'class.parser.dat'
+local LffsParser = core.import 'class.parser.lffs2'
 
-local strgmatch = string.gmatch
 local type = _G.type
+local strgmatch = string.gmatch
 
 local config = {
-	global = {
-		data_path = 'data/data.txt',		-- Путь до data.txt (список объектов и карт движка)
-		frames_path = 'data/frames.dat',	-- Путь до frames.dat (список кадров по умолчанию)
-		combos_path = 'data/combos.dat',	-- Путь до combos.dat (список переходов по комбинациям клавиш)
-		dtypes_path = 'data/dtypes.dat',	-- Путь до dtypes.dat (список поведения при разных типах урона)
-		system_path = 'data/system.dat',	-- Путь до system.dat
-		rooms_path = '/rooms/',				-- Папка с файлами комнат
-		states_path = '/data/states/',		-- Папка с файлами стейтов
-		kinds_path = '/data/kinds/',		-- Папка с файлами типов взаимодействий
-		langs_path = '/data/langs',			-- Папка с файлами локализаций
-		ui_path = '/sprites/UI/',			-- Папка с элементами оформления
-
-		lang = 'en',						-- Язык локализации
-		resolution = 3,						-- Текущее разрешение холста
-		difficulty = 2, 					-- Сложность игры (от 1 до 3)
-		width = 854, 						-- Ширина окна игры
-		height = 480, 						-- Высота окна игры
-		music_volume = 50,					-- Громкость музыки
-		sound_volume = 100,					-- Громкость звука
-		debug = true,						-- Показ отладочной информации
+	graphic = {								-- Настройки графической составляющей игры
+		fpsLimit = 60,							-- Ограничение FPS
+		fullscreen = false,						-- Полный экран
+		vsync = false,							-- Вертикальная синхронизация
+		shadows = true,							-- Детализированные тени
+		reflections = true,						-- Отражения
+		smoothing = true,						-- Фильтрация текстур
+		effects = true,							-- Количество эффектов и частиц
+		details = true,							-- Показ необязательных элементов
 	},
 
 	resolutions = {							-- Доступные разрешения холста игры
@@ -44,21 +35,6 @@ local config = {
 	},
 
 	file = 'data/settings.dat',				-- Путь файла настроек игры
-	gameWidth = 0, 							-- Ширина холста игры
-	gameHeight = 0, 						-- Высота холста игры
-
-	graphic = {								-- Настройки графической составляющей игры
-		fpsLimit = 60,							-- Ограничение FPS
-		fullscreen = false,						-- Полный экран
-		vsync = false,							-- Вертикальная синхронизация
-		shadows = true,							-- Детализированные тени
-		reflections = true,						-- Отражения
-		smoothing = true,						-- Фильтрация текстур
-		effects = true,							-- Количество эффектов и частиц
-		details = true,							-- Показ необязательных элементов
-	},
-
-	keys = { 'up', 'down', 'left', 'right', 'attack', 'jump', 'defend', 'special1' },
 }
 
 local Module = { }
@@ -87,11 +63,11 @@ local Module = { }
 
 	function Module:load(filepath)
 		config.file = filepath or config.file
-		config = DatParser:parseFile(config.file, config)
+		config = LffsParser:parseFile(config.file, config)
 	end
 
 	function Module:save()
-		DatParser:dumpToFile(config.file, config)
+		DatParser:dumpToFile(config.file .. '.dat', config)
 		-- if input.controls ~= config.controls then
 		-- 	input:updateMappings(config.controls)
 		-- end

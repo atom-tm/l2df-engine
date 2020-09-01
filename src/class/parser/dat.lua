@@ -195,15 +195,16 @@ local DatParser = BaseParser:extend()
 						end
 					else
 						parent = stack[head]
-						plural_param = plural(param)
-						if parent[plural_param] then
-							parent[plural_param][#parent[plural_param] + 1] = self:parseScalar(strjoin(value))
-						elseif parent[param] then
-							parent[plural_param] = { parent[param], self:parseScalar(strjoin(value)) }
-							parent[param] = nil
-						else
-							parent[param] = self:parseScalar(strjoin(value))
-						end
+						parent[param] = self:parseScalar(strjoin(value))
+						-- plural_param = plural(param)
+						-- if parent[plural_param] then
+						-- 	parent[plural_param][#parent[plural_param] + 1] = self:parseScalar(strjoin(value))
+						-- elseif parent[param] then
+						-- 	parent[plural_param] = { parent[param], self:parseScalar(strjoin(value)) }
+						-- 	parent[param] = nil
+						-- else
+						-- 	parent[param] = self:parseScalar(strjoin(value))
+						-- end
 						break
 					end
 					value = { }

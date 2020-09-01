@@ -24,7 +24,7 @@ local Manager = { }
 	local cache = { }
 
 	local function isValidElement(obj)
-		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.__call) == 'function'
+		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.new) == 'function'
 	end
 
 	local function recursiveCreate(kwargs)

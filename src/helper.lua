@@ -122,7 +122,7 @@ local helper = { }
 			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
 			local modulepath = core.modulepath(folderpath)
 			local files = fs.getDirectoryItems(folderpath)
-			local parser = core.import 'class.parser.lffs'
+			local parser = core.import 'class.parser.lffs2'
 			local id, file
 			for i = 1, #files do
 				if not pattern or strfind(files[i], pattern) then
@@ -184,17 +184,18 @@ local helper = { }
 		result = result or { }
 		if type(result) ~= 'table' then
 			return result
-		end
-		if type(table) ~= 'table' then
+		elseif type(table) ~= 'table' then
 			return table
 		end
-
 		for key, val in pairs(table) do
 			if type(val) == 'table' and val.___class == nil then
-				result[key] = helper.copyTable(val, result[key])
+				result[key] = helper.copyTable(val, not val.___shallow and result[key] or nil)
 			else
 				result[key] = val
 			end
+		end
+		for i = #table + 1, #result do
+			result[i] = nil
 		end
 		return result
 	end
@@ -215,11 +216,19 @@ local helper = { }
 		return str .. 's'
 	end
 
+	--- Determine if object is an instance of a specified class
+	-- @param table object
+	-- @param table class
+	-- @return boolean
+	function helper.isClass(object, class)
+        return type(object) == 'table' and object.isInstanceOf and object:isInstanceOf(class) or false
+    end
+
 	--- Determine if object is array or not
 	-- @param mixed obj  Object to check
 	-- @return boolean
 	function helper.isArray(obj)
-		return type(obj) == 'table' and (obj[1] ~= nil or next(obj) == nil)
+		return type(obj) == 'table' and (obj[1] ~= nil or next(obj) == nil) or false
 	end
 
 	--- Convert iterator to array

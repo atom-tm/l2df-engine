@@ -37,6 +37,8 @@ local strfind = string.find
 local strmatch = string.match
 local strreverse = string.reverse
 
+local ZERO = strchar(0)
+
 local packer = { }
 
 function packer.pack(format, ...)
@@ -110,7 +112,7 @@ function packer.pack(format, ...)
       end
     elseif opt == 's' then
       stream[#stream + 1] = tostring(tremove(vars, 1))
-      stream[#stream + 1] = strchar(0)
+      stream[#stream + 1] = ZERO
     elseif opt == 'c' then
       local n = strmatch(strsub(format, i + 1), '%d+')
       local length = tonumber(n)
@@ -190,7 +192,7 @@ function packer.unpack(format, stream, pos)
     elseif opt == 's' then
       local bytes = { }
       for j = iterator, strlen(stream) do
-        if strsub(stream, j, j) == strchar(0) then
+        if strsub(stream, j, j) == ZERO then
           break
         end
 

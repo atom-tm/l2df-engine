@@ -102,8 +102,7 @@ local Manager = { }
 	function Manager:addById(id, resource, temp)
 		if not id then return self:add(resource, temp) end
 		if resource == nil then return false end
-		if temp then list.temp:addById(resource, id, true)
-		else list.global:addById(resource, id, true) end
+		list[temp and 'temp' or 'global']:addById(resource, id, true)
 		return id
 	end
 

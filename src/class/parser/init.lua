@@ -50,14 +50,12 @@ local Parser = Class:extend()
 	function Parser:parseScalar(str)
 		-- TODO: make stronger regex
 		assert(type(str) == 'string', 'Parameter "str" must be a string.')
-		if tonumber(str) then
-			return tonumber(str)
-		elseif strmatch(str, 'true') then
+		if strmatch(str, 'true') then
 			return true
 		elseif strmatch(str, 'false') then
 			return false
 		end
-		return str
+		return tonumber(str) or str
 	end
 
 	--- Method for converting scalar value to string.

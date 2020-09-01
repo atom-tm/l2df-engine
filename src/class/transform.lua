@@ -14,6 +14,8 @@ local cos = math.cos
 local rad = math.rad
 local acos = math.acos
 
+local mulMatrix = helper.mulMatrix
+
 local Transform = Class:extend()
 
 	--- Init
@@ -68,7 +70,7 @@ local Transform = Class:extend()
 			{     0,      0, sz,                             z },
 			{     0,      0,  0,                             1 },
 		}
-		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.matrix = mulMatrix(m, self.matrix)
 		self.sx = sx
 		self.sy = sy
 		self.sz = sz
@@ -80,7 +82,7 @@ local Transform = Class:extend()
 	-- @return boolean
 	function Transform:append(transform)
 	if not transform:isInstanceOf(Transform) then return false end
-		self.matrix = helper.mulMatrix(transform.matrix, self.matrix)
+		self.matrix = mulMatrix(transform.matrix, self.matrix)
 		self.sx = self.sx * transform.sx
 		self.sy = self.sy * transform.sy
 		self.sz = self.sz * transform.sz
@@ -100,7 +102,7 @@ local Transform = Class:extend()
 			{ z },
 			{ 1 },
 		}
-		return helper.mulMatrix(self.matrix, m)
+		return mulMatrix(self.matrix, m)
 	end
 
 	--- Clone transform
@@ -125,7 +127,7 @@ local Transform = Class:extend()
 			{  0,  0, sz, 0 },
 			{  0,  0,  0, 1 },
 		}
-		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.matrix = mulMatrix(m, self.matrix)
 		self.sx = self.sx * sx
 		self.sy = self.sy * sy
 		self.sz = self.sz * sz
@@ -149,7 +151,7 @@ local Transform = Class:extend()
 			{ 0, 0, 1, dz },
 			{ 0, 0, 0, 1 },
 		}
-		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.matrix = mulMatrix(m, self.matrix)
 	end
 
 	--- Rotate transform around point
@@ -168,7 +170,7 @@ local Transform = Class:extend()
 			{ 0,       0,      1, 0 },
 			{ 0,       0,      0, 1 },
 		}
-		self.matrix = helper.mulMatrix(m, self.matrix)
+		self.matrix = mulMatrix(m, self.matrix)
 		self.r = a
 	end
 

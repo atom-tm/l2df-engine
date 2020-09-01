@@ -15,7 +15,7 @@ local getinfo = debug.getinfo
 local source = nil
 local gsource = nil
 
-local core = { version = 1.0 }
+local core = { version = 1.0, tickrate = 1 / 60 }
 
 	--- Wrapper on standart 'require', imports engine's components
 	-- automatically adding required module's prefix
@@ -55,7 +55,7 @@ local core = { version = 1.0 }
 	-- @param[opt] table info
 	-- @return string
 	function core.fullpath(path, depth, info)
-		if gsource and fs then
+		if gsource then
 			info = info or getinfo(depth or 2, 'Sn')
 			local prefix = info.source
 				:sub(2, -1)
