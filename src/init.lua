@@ -9,8 +9,6 @@ l2df = require((...) .. '.core')
 local love = _G.love
 local math = _G.math
 
-local tickrate = 1 / 60
-
 local core = l2df
 
 	local log = core.import 'class.logger'
@@ -20,7 +18,7 @@ local core = l2df
 	local RenderManager = core.import 'manager.render'
 	local SoundManager = core.import 'manager.sound'
 	local ResourceManager = core.import 'manager.resource'
-	local SnapshotManager = core.import 'manager.snapshot'
+	local SyncManager = core.import 'manager.sync'
 	local InputManager = core.import 'manager.input'
 	local NetworkManager = core.import 'manager.network'
 	local PhysixManager = core.import 'manager.physix'
@@ -32,10 +30,7 @@ local core = l2df
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
 		Factory:scan(core.root() .. 'class/entity')
-		tickrate = 1 / (fps or 60)
-		love.graphics.setDefaultFilter('nearest', 'nearest')
-
-		if love.timer then math.randomseed(love.timer.getTime()) end
+		self.tickrate = 1 / (fps or 60)
 
 		EventManager:monitoring(love, love.handlers)
 		EventManager:monitoring(love, 'update', 'rawupdate')
@@ -46,28 +41,37 @@ local core = l2df
 		EventManager:subscribe('new', EventManager.classInit, Entity, EventManager)
 		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
 		EventManager:subscribe('resize', RenderManager.resize, love, RenderManager)
-		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
 		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
 		EventManager:subscribe('rawupdate', EventManager.update, love, EventManager)
+		EventManager:subscribe('preupdate', SyncManager.persist, EventManager, SyncManager)
 		EventManager:subscribe('preupdate', InputManager.update, EventManager, InputManager)
 		EventManager:subscribe('preupdate', RenderManager.clear, EventManager, RenderManager)
 		EventManager:subscribe('update', SoundManager.play, EventManager, SoundManager)
 		EventManager:subscribe('update', PhysixManager.update, EventManager, PhysixManager)
 		EventManager:subscribe('update', ResourceManager.update, EventManager, ResourceManager)
+		EventManager:subscribe('postupdate', InputManager.advance, EventManager, InputManager)
+		EventManager:subscribe('postupdate', SyncManager.commit, EventManager, SyncManager)
 		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
 	end
 
 	--- Engine's game loop
 	-- @return function
-	function core:gameloop()
+	function core.gameloop()
 		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
-		if love.timer then love.timer.step() end
+		if love.timer then
+			math.randomseed(love.timer.getTime())
+			love.timer.step()
+		end
 
+		local tickrate = core.tickrate
 		local accumulate = 0
+		local throttle = 0
 		local delta = 0
-		local time = 0
+		local diff = 0
+		local sync = false
 		local draw = false
+		local min = math.min
 		return function()
 			-- Events
 			if love.event then
@@ -83,17 +87,21 @@ local core = l2df
 			end
 
 			-- Network and rollbacks
-			delta = love.timer and love.timer.step() or tickrate
+			tickrate = core.tickrate
+			delta = (love.timer and love.timer.step() or tickrate)
 			NetworkManager:update(delta)
-			if InputManager.time < SnapshotManager.time then
-				accumulate = accumulate + SnapshotManager:rollback(InputManager.time)
-				time = InputManager.time
-				InputManager.time = SnapshotManager.time
-				log:debug('ROLLBACK %s -> %s', time, InputManager.time)
+			sync, diff, throttle = SyncManager:sync(InputManager.frame)
+			-- if sync then
+			-- 	InputManager.frame = SyncManager.frame
+			-- end
+			if SyncManager.desync then
+				SyncManager.desync = false
+				love.window.showMessageBox("Alert", "Rollback Desync Detected", "warning", true)
+				if love.timer then love.timer.step() end
 			end
 
 			-- Update
-			accumulate = accumulate + delta
+			accumulate = accumulate + delta + diff - throttle
 			if love.update then
 				draw = false
 				while accumulate >= tickrate do
@@ -107,17 +115,15 @@ local core = l2df
 			end
 
 			-- Draw
-			if draw and love.graphics and love.graphics.isActive() then
+			if (draw or not RenderManager.vsync) and love.graphics and love.graphics.isActive() then
 				love.graphics.origin()
 				love.graphics.clear(love.graphics.getBackgroundColor())
-
 				if love.draw then love.draw() end
-
 				love.graphics.present()
 			end
 
+			-- Throttle = tickrate - accumulate
 			if love.timer then love.timer.sleep(0.001) end
-			-- if love.timer then love.timer.sleep(self.tickrate - accumulate) end
 		end
 	end
 

@@ -6,14 +6,44 @@
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'InputManager works only with l2df v1.0 and higher')
 
+local log = core.import 'class.logger'
 local helper = core.import 'helper'
 
+local min = math.min
+local max = math.max
+local ceil = math.ceil
 local setKeyRepeat = love.keyboard.setKeyRepeat
 
 local inputs = { }
 
 local function bit(p)
   return 2 ^ (p - 1)
+end
+
+local function bitor(x, y)
+    local k, c = 1, 0
+    while x + y > 0 do
+        local rx, ry = x % 2, y % 2
+        if rx + ry > 0 then c = c + k end
+        x, y, k = (x - rx) / 2, (y - ry) / 2, k * 2
+    end
+    return c
+end
+
+local function bitxor(x, y)
+    local k, c = 1, 0
+    while x > 0 and y > 0 do
+        local rx, ry = x % 2, y % 2
+        if rx ~= ry then c = c + k end
+        x, y, k = (x - rx) / 2, (y - ry) / 2, k * 2
+    end
+    x = x < y and y or x
+    while x > 0 do
+        local rx = x % 2
+        if rx > 0 then c = c + k end
+        x, k = (x - rx) / 2, k * 2
+    end
+    return c
 end
 
 local function hasbit(x, p)
@@ -28,7 +58,14 @@ local function clearbit(x, p)
   return hasbit(x, p) and x - p or x
 end
 
-local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
+local function newInput()
+	return { data = 0, frame = 0, changes = 0 }
+end
+
+local tickrate = core.tickrate or 1
+local double_timer = max(3, ceil(0.2 / tickrate))
+
+local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
 
 	--- Init
 	-- @param table keys
@@ -48,12 +85,37 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 
 	--- Reset all inputs and timer of manager
 	function Manager:reset()
-		self.time = 0
+		self.timer = 0
+		self.frame = 0
+		self.delay = 0
 		self.remoteplayers = 0
+		tickrate = core.tickrate or tickrate
+		double_timer = max(3, ceil(0.2 / tickrate))
 		inputs = { }
 		for p = 1, self.localplayers do
 			self.buttons[p] = { }
-			inputs[p] = { data = 0, time = 0 }
+			inputs[p] = newInput()
+		end
+	end
+
+	--- Advance timer and frame
+	function Manager:advance()
+		self.frame = self.frame + 1
+		self.timer = max(self.timer, self.frame + self.delay)
+	end
+
+	--- Update inputs and advance timer
+	function Manager:update()
+		for i = 1, self.localplayers + self.remoteplayers do
+			local it = inputs[i]
+			while it.prev and it.frame >= self.frame do
+				it = it.prev
+			end
+			while it.next and it.next.frame <= self.frame do
+				it = it.next
+			end
+			-- log:info('B%02d F%02d [%04x|%05d] -> [%04x|%05d] -> [%04x|%05d]', b, f, it.prev.data, it.prev.frame, it.data, it.frame, it.next.data, it.next.frame)
+			inputs[i] = it
 		end
 	end
 
@@ -61,7 +123,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	-- @return number  player's id
 	function Manager:newRemotePlayer()
 		self.remoteplayers = self.remoteplayers + 1
-		inputs[self.localplayers + self.remoteplayers] = { data = 0, time = 0 }
+		inputs[self.localplayers + self.remoteplayers] = newInput()
 		return self.localplayers + self.remoteplayers
 	end
 
@@ -71,7 +133,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		self.mapping = { }
 		self.localplayers = #controls
 		for p = 1, self.localplayers do
-			inputs[p] = { data = 0, time = 0 }
+			inputs[p] = newInput()
 			self.buttons[p] = { }
 			for k, v in pairs(controls[p]) do
 				if self.keymap[k] then
@@ -81,7 +143,27 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		end
 	end
 
-	--- Check if button is pressed
+	--- Check if button was pressed at this frame
+	-- @param string button  Hitted button
+	-- @param number player  Player to check or nil to check any local player
+	-- @return boolean
+	-- @return number
+	function Manager:hitted(button, player)
+		local index = self.keymap[button]
+		if index then
+			index = self.keys[index][2]
+			local input = nil
+			for p = player or 1, player or self.localplayers do
+				input = inputs[p]
+				if input and input.frame == self.frame and hasbit(input.data, index) then
+					return true, p
+				end
+			end
+		end
+		return false
+	end
+
+	--- Check if button was pressed
 	-- @param string button  Pressed button
 	-- @param number player  Player to check or nil to check any local player
 	-- @return boolean
@@ -91,10 +173,41 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 		if index then
 			index = self.keys[index][2]
 			local input = nil
-			for i = player or 1, player or self.localplayers do
-				input = inputs[i]
+			for p = player or 1, player or self.localplayers do
+				input = inputs[p]
 				if input and hasbit(input.data, index) then
-					return true, i
+					return true, p
+				end
+			end
+		end
+		return false
+	end
+
+	--- Check if button was double pressed
+	-- @param string button  Doubled button
+	-- @param number player  Player to check or nil to check any local player
+	-- @return boolean
+	-- @return number
+	function Manager:doubled(button, player)
+		local index = self.keymap[button]
+		if index then
+			index = self.keys[index][2]
+			local timer, c, a, b, it = self.frame - double_timer
+			for p = player or 1, player or self.localplayers do
+				it, c, a, b = inputs[p], 0, true, false
+				while it and it.frame >= timer do
+					if hasbit(it.data, index) then
+						if not a then break end
+						c = c + 1
+						a, b = b, a
+					elseif b then
+						c = c + 1
+						a, b = b, a
+					end
+					it = it.prev
+				end
+				if c > 2 then
+					return true, p
 				end
 			end
 		end
@@ -115,57 +228,112 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	-- @return number
 	function Manager:lastinput(player)
 		local input = inputs[player or 1]
-		return input and input.data or 0
+		return input-- and input.data or 0
 	end
 
-	--- Persist input
+	local function debuginput(player, timer)
+		local it, data, behind = inputs[player], { }, 0
+		while it.next do
+			it = it.next
+			behind = behind + 1
+		end
+		for i = 1, 6 do
+			data[i] = string.format('[%02d][%05d]', it.data, it.frame)
+			if not it.prev then break end
+			it = it.prev
+		end
+		print(string.format('INPUT[%s] %s | %05d', player, table.concat(data, ' '), timer))
+		print(string.rep('_', 7 + 12 * behind) .. '/')
+	end
+
+	--- Persist raw input data
 	-- @param number input
-	-- @param number player
-	-- @param number time
+	-- @param number[opt] player  Default is 1.
+	-- @param number[opt] timer   Default is current timer.
 	-- @return l2df.manager.input
-	function Manager:addinput(input, player, time)
+	function Manager:addinput(input, player, timer)
 		player = player or 1
-		time = time or self.time
+		if player > self.localplayers + self.remoteplayers then
+			return self
+		end
+		timer = timer or self.timer
 		local left = inputs[player]
 		local right = left and left.next
-		if time < self.time then
-			while left and left.time > time do
-				right = left
-				left = left.prev
+		while left and left.frame > timer do
+			right, left = left, left.prev
+		end
+		while right and right.frame <= timer do
+			left, right = right, right.next
+		end
+		if left and left.frame == timer then
+			local xor = bitxor(left.data, input)
+			local changes = bitxor(xor, left.changes)
+			if bitor(xor, changes) == changes then
+				left.data = input
+				left.changes = changes
+				log:info('INPUT[%05d] for player %s WAS MERGED at %05d!!!', input, player, timer)
+				-- debuginput(player, timer)
+				return self
 			end
-		else
-			while left and left.next and left.next.time < time do
-				left = left.next
-			end
-			right = left and left.next
+			return self:addinput(input, player, timer + 1)
+		elseif left and left.data == input then
+			return self
 		end
 		local new = {
 			prev = left,
 			next = right,
-			time = time,
-			data = input
+			data = input,
+			changes = input,
+			frame = timer,
 		}
-		if left then left.next = new end
-		if right then right.prev = new end
-		if time <= self.time then
-			inputs[player] = new
-			self.time = time
+		if left then
+			new.changes = bitxor(left.data, input)
+			left.next = new
+		end
+		if right then
+			right.prev = new
+		end
+		-- inputs[player] = new
+		self.timer = timer
+		self.frame = min(timer, self.frame)
+		-- debuginput(player, timer)
+		return self
+	end
+
+	--- Save input data for local player
+	-- @param[opt] number player ...
+	-- @param[opt] number frame   Default is current timer.
+	-- @return number
+	function Manager:saveinput(player, frame)
+		for p = player or 1, player or self.localplayers do
+			self:addinput(self:rawinput(p), p, frame)
 		end
 		return self
 	end
 
-	--- Save input for local player
-	-- @param number player
-	-- @param number time
-	-- @return number
-	function Manager:saveinput(player, time)
-		return self:addinput(self:getinput(player), player, time)
+	---
+	-- @return number  Input data
+	-- @return number  Frame number
+	function Manager:stream(player)
+		local it = { }
+		local from, to = player or 1, player or (self.localplayers + self.remoteplayers)
+		for p = 1, to do
+			it[p] = inputs[p]
+		end
+		return function ()
+			for p = from, to do
+				if it[p].next and it[p].next.frame < self.timer then
+					it[p] = it[p].next
+					return p, it[p].frame, it[p].data
+				end
+			end
+		end
 	end
 
-	--- Get input for local player
+	--- Get raw input data for local player
 	-- @param number player
 	-- @return number
-	function Manager:getinput(player)
+	function Manager:rawinput(player)
 		local buttons = self.buttons[player or 1]
 		if not buttons then return 0 end
 
@@ -185,6 +353,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	function Manager:press(button, player)
 		player = player or 1
 		self.buttons[player][button] = true
+		self:saveinput(player)
 	end
 
 	--- Button released event
@@ -193,22 +362,7 @@ local Manager = { time = 0, buttons = { }, mapping = { }, keys = { }, keymap = {
 	function Manager:release(button, player)
 		player = player or 1
 		self.buttons[player][button] = false
-	end
-
-	--- Hook for update
-	-- @param number dt
-	function Manager:update(dt)
-		self.time = self.time + dt
-		for i = 1, #inputs do
-			local it = inputs[i]
-			while it.prev and it.prev.time > self.time do
-				it = it.prev
-			end
-			while it.next and it.next.time < self.time do
-				it = it.next
-			end
-			inputs[i] = it
-		end
+		self:saveinput(player)
 	end
 
 	--- Hook for love.keypressed
