@@ -1,7 +1,8 @@
 --- L2DF engine
 -- @module l2df
--- @author Abelidze, Kasai
--- @copyright Atom-TM 2019
+-- @author Abelidze
+-- @author Kasai
+-- @copyright Atom-TM 2020
 
 l2df = require((...) .. '.core')
 
@@ -13,8 +14,6 @@ local tickrate = 1 / 60
 local core = l2df
 
 	local log = core.import 'class.logger'
-	local parser = core.import 'class.parser.lffs'
-
 	local Factory = core.import 'manager.factory'
 	local EventManager = core.import 'manager.event'
 	local GroupManager = core.import 'manager.group'
@@ -24,6 +23,7 @@ local core = l2df
 	local SnapshotManager = core.import 'manager.snapshot'
 	local InputManager = core.import 'manager.input'
 	local NetworkManager = core.import 'manager.network'
+	local PhysixManager = core.import 'manager.physix'
 
 	local Entity = core.import 'class.entity'
 
@@ -31,7 +31,6 @@ local core = l2df
 	-- @param number fps
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
-		parser:scan(core.root() .. 'class/entity')
 		Factory:scan(core.root() .. 'class/entity')
 		tickrate = 1 / (fps or 60)
 		love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -39,22 +38,24 @@ local core = l2df
 		if love.timer then math.randomseed(love.timer.getTime()) end
 
 		EventManager:monitoring(love, love.handlers)
-		EventManager:monitoring(love, 'update')
+		EventManager:monitoring(love, 'update', 'rawupdate')
 		EventManager:monitoring(love, 'draw')
-		EventManager:monitoring(Entity, 'new', true)
+		EventManager:monitoring(Entity, 'new', nil, true)
+		EventManager:monitoring(NetworkManager, 'update', 'netupdate')
 
 		EventManager:subscribe('new', EventManager.classInit, Entity, EventManager)
 		EventManager:subscribe('new', GroupManager.classInit, Entity, GroupManager)
 		EventManager:subscribe('resize', RenderManager.resize, love, RenderManager)
-		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
-		EventManager:subscribe('update', InputManager.update, love, InputManager)
-		EventManager:subscribe('update', SoundManager.play, love, SoundManager)
-		EventManager:subscribe('update', RenderManager.clear, love, RenderManager) -- this order
-		EventManager:subscribe('update', EventManager.update, love, EventManager) -- is important
-		EventManager:subscribe('update', ResourceManager.update, love, ResourceManager)
 		EventManager:subscribe('update', SnapshotManager.update, love, SnapshotManager)
 		EventManager:subscribe('keypressed', InputManager.keypressed, love, InputManager)
 		EventManager:subscribe('keyreleased', InputManager.keyreleased, love, InputManager)
+		EventManager:subscribe('rawupdate', EventManager.update, love, EventManager)
+		EventManager:subscribe('preupdate', InputManager.update, EventManager, InputManager)
+		EventManager:subscribe('preupdate', RenderManager.clear, EventManager, RenderManager)
+		EventManager:subscribe('update', SoundManager.play, EventManager, SoundManager)
+		EventManager:subscribe('update', PhysixManager.update, EventManager, PhysixManager)
+		EventManager:subscribe('update', ResourceManager.update, EventManager, ResourceManager)
+		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
 	end
 
 	--- Engine's game loop

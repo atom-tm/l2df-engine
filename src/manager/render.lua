@@ -18,6 +18,7 @@ local loveGetColor = love.graphics.getColor
 local loveSetColor = love.graphics.setColor
 local loveSetCanvas = love.graphics.setCanvas
 local loveNewCanvas = love.graphics.newCanvas
+local loveSetDefaultFilter = love.graphics.setDefaultFilter
 local loveCircle = love.graphics.circle
 local loveRect = love.graphics.rectangle
 
@@ -33,19 +34,19 @@ local drawables = { { } }
 
 local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L2DF_DEBUG') or false }
 
-	function Manager:init(zlevels, cellsize)
-		self.resX, self.resY = 640, 360
-		self.gameW, self.gameH = love.window.getMode()
-		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
+	function Manager:init(width, height, depth, cellsize)
 		self.cellsize = cellsize or 1
-
-		self.canvas = loveNewCanvas(self.resX, self.resY)
-		self:setMaxZIndex(zlevels or 10)
+		self:setGameSize(width or 640, height or 360, depth or 10)
+		self:resize()
+		loveSetDefaultFilter('nearest', 'nearest')
 	end
 
-	function Manager:setMaxZIndex(index)
+	function Manager:setGameSize(width, height, depth)
+		self.game_width = width
+		self.game_height = height
+		self.canvas = loveNewCanvas(self.game_width, self.game_height)
 		drawables = { }
-		for i = 1, index do
+		for i = 1, depth do
 			drawables[i] = { }
 		end
 	end
@@ -54,14 +55,15 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L
 		if not input then return end
 
 		local levels = #drawables
-		local index = floor(((input.z or 0) + (input.l or 0)) / self.cellsize) + 1
+		local index = floor(((input.z or 0) + (input.d or 0)) / self.cellsize) + 1
 		index = index > 0 and index < #drawables and index or 1
 		drawables[index][#drawables[index] + 1] = input
 	end
 
 	function Manager:resize(w, h)
-		self.gameW, self.gameH = w, h
-		self.scaleX, self.scaleY = self.gameW / self.resX, self.gameH / self.resY
+		self.resx, self.resy, self.info = love.window.getMode()
+		self.scalex, self.scaley = self.resx / self.game_width, self.resy / self.game_height
+		self.vsync = true --self.info.vsync == 1
 	end
 
 	function Manager:layersClear()
@@ -83,7 +85,7 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L
 		loveSetCanvas(self.canvas)
 		self:render()
 		loveSetCanvas()
-		loveDraw(self.canvas, 0, 0, 0, self.scaleX, self.scaleY)
+		loveDraw(self.canvas, 0, 0, 0, self.scalex, self.scaley)
 	end
 
 	function Manager:render()
@@ -98,26 +100,26 @@ local Manager = { canvas = nil, scalex = nil, scaley = nil, DEBUG = os.getenv('L
 				end
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
-						loveDraw(input.object, input.quad, round(input.x), round(input.y + input.z), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.quad, round(input.x), round(input.z - input.y), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					else
-						loveDraw(input.object, round(input.x), round(input.y + input.z), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, round(input.x), round(input.z - input.y), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 					end
 				elseif input.rect then
 					loveRect(input.rect, round(input.x), round(input.y), input.w or 1, input.h or 1)
 				elseif input.cube then
 					setAlpha(r2, g2, b2, a2, 0.3)
-					loveRect('fill', input.x, input.y + input.z + input.l, input.w, input.h)
+					loveRect('fill', input.x, input.z - input.y + input.d, input.w, input.h)
 
 					setAlpha(r2, g2, b2, a2, 1)
-					loveRect('line', input.x, input.y + input.z + input.l, input.w, input.h)
+					loveRect('line', input.x, input.z - input.y + input.d, input.w, input.h)
 
 					setAlpha(r2, g2, b2, a2, 0.5)
-					loveRect('fill', input.x, input.y + input.z, input.w, input.l)
+					loveRect('fill', input.x, input.z - input.y, input.w, input.d)
 
 					setAlpha(r2, g2, b2, a2, 1)
-					loveRect('line', input.x, input.y + input.z, input.w, input.l)
+					loveRect('line', input.x, input.z - input.y, input.w, input.d)
 				elseif input.circle then
-					loveCircle(input.circle, round(input.x), round(input.y + input.z), input.r or 4)
+					loveCircle(input.circle, round(input.x), round(input.z - input.y), input.r or 4)
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
