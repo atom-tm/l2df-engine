@@ -17,7 +17,7 @@ local Storage = Class:extend()
 
 	--- Reset storage flushing all stored data
 	function Storage:reset()
-		self.list = { }
+		self.data = { }
 		self.keys = { }
 		self.map = { }
 		self.free = { }
@@ -31,7 +31,7 @@ local Storage = Class:extend()
 	-- @return number
 	-- @return mixed
 	function Storage:add(object, reload)
-		local id = self:has(object)
+		local id = self.map[object]
 		if id and not reload then return id, object end
 
 		if #self.free > 0 then
@@ -42,7 +42,7 @@ local Storage = Class:extend()
 			id = self.length
 		end
 
-		self.list[id] = object
+		self.data[id] = object
 		self.map[object] = id
 		self.count = self.count + 1
 		return id, object
@@ -57,9 +57,9 @@ local Storage = Class:extend()
 	function Storage:addById(object, id, reload)
 		local obj = self:getById(id)
 		if obj and not reload then return id, obj
-		elseif obj then self:remove(obj) end
+		elseif obj then self.map[obj] = nil end
 
-		self.list[id] = object
+		self.data[id] = object
 		self.map[object] = id
 
 		self.count = self.count + 1
@@ -75,7 +75,7 @@ local Storage = Class:extend()
 	function Storage:addByKey(object, key, reload)
 		local obj, id = self:getByKey(key)
 		if obj and not reload then return self.keys[key], obj
-		elseif obj then self:remove(obj) end
+		elseif obj then self.map[obj] = nil end
 
 		id, obj = self:add(object)
 		self.keys[key] = id
@@ -84,40 +84,40 @@ local Storage = Class:extend()
 
 	--- Remove object from storage
 	-- @param mixed object
-	-- @return boolean
+	-- @return number
 	function Storage:remove(object)
 		local id = self.map[object]
 		if not id then return false end
-		self.list[id] = nil
+		self.data[id] = nil
 		self.map[object] = nil
 		if id == self.length then
 			self.length = self.length - 1
 		else
 			self.free[#self.free + 1] = id
 		end
-		return true
+		return id
 	end
 
 	--- Remove object from storage by Id
 	-- @param number id
-	-- @return boolean
+	-- @return number
 	function Storage:removeById(id)
-		if not self.list[id] then return false end
-		self.map[self.list[id]] = nil
-		self.list[id] = nil
+		if not self.data[id] then return false end
+		self.map[self.data[id]] = nil
+		self.data[id] = nil
 		if id == self.length then
 			self.length = self.length - 1
 		else
 			self.free[#self.free + 1] = id
 		end
-		return true
+		return id
 	end
 
 	--- Return object from storage by id
 	-- @param number id
 	-- @return mixed
 	function Storage:getById(id)
-		return self.list[id] or false
+		return self.data[id] or false
 	end
 
 	--- Return object from storage by key
@@ -125,7 +125,7 @@ local Storage = Class:extend()
 	-- @return mixed
 	function Storage:getByKey(key)
 		key = self.keys[key]
-		return key and self.list[key] or false
+		return key and self.data[key] or false
 	end
 
 	--- Checks for object in storage
@@ -143,8 +143,8 @@ local Storage = Class:extend()
 		return function ()
 			while id < self.length do
 				id = id + 1
-				if not skipNil or self.list[id] ~= nil then
-					return id, self.list[id]
+				if not skipNil or self.data[id] ~= nil then
+					return id, self.data[id]
 				end
 			end
 			return nil
@@ -157,7 +157,7 @@ local Storage = Class:extend()
 	function Storage:pairs(skipNil)
 		local index, object
 		return function ()
-			index, object = next(self.list, index)
+			index, object = next(self.data, index)
 			if not skipNil or object ~= nil then
 				return index, object
 			end
@@ -168,7 +168,7 @@ local Storage = Class:extend()
 	-- @return mixed
 	function Storage:first()
 		for i = 1, self.length do
-			if self.list[i] then return self.list[i] end
+			if self.data[i] then return self.data[i] end
 		end
 		return false
 	end
@@ -176,7 +176,7 @@ local Storage = Class:extend()
 	--- Get last stored element
 	-- @return mixed
 	function Storage:last()
-		return self.list[self.length] or false
+		return self.data[self.length] or false
 	end
 
 return Storage

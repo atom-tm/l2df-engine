@@ -33,8 +33,8 @@ also have plans to support [CoronaSDK](https://github.com/coronalabs/corona) and
 * Fast physics / collision detection - perfect for fighting games!
 * Frames based architecture - have a full control of your objects in each single frame.
 * Number of presets which you can use to rapidly start making your game.
-* Integrated Peer-to-Peer network support.
-* UDP-holepunching and master-server to exclude requirement of using VPN, Hamachi and other software to initialize connection under NAT.
+* Integrated Peer-to-Peer network support to bring you smooth, fast and responsive gameplay.
+* NAT traversal which excludes requirement of using VPN, Hamachi and other software to initialize connection under NAT.
 * "GGPO like" rollback networking instead of lockstep to make you feel an excellent netplay experience.
 
 
@@ -93,20 +93,22 @@ It's still in-progress but already covers some basics of development with our en
 This project also uses some parts of third-party libraries listed below.
 
 ```
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
-| Project            | Distribution Files                   | Modificated | Copyright Holder    | License   |
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
-| gamera             | src/external/gamera.lua              |      -      | Enrique García Cota | MIT       |
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
-| lua-struct         | src/external/packer.lua              |      +      | Iryont              | MIT       |
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
-| JSON Encode/Decode | src/external/json.lua                |      -      | Jeffrey Friedl      | CC BY 3.0 |
-| in pure Lua        |                                      |             |                     |           |
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
-| bump-3dpd          | src/class/component/physix/cube.lua  |      +      | Enrique García Cota | MIT       |
-|                    | src/class/component/physix/grid.lua  |      +      |                     |           |
-|                    | src/class/component/physix/world.lua |      +      |                     |           |
-|--------------------|--------------------------------------|-------------|---------------------|-----------|
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| Project            | Distribution Files                   | Modificated | Copyright Holder    | License       |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| lua-rbtree         | src/external/rbtree.lua              |      +      | Soojin Nam          | Public Domain |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| gamera             | src/external/gamera.lua              |      -      | Enrique García Cota | MIT           |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| lua-struct         | src/external/packer.lua              |      +      | Iryont              | MIT           |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| JSON Encode/Decode | src/external/json.lua                |      -      | Jeffrey Friedl      | CC BY 3.0     |
+| in pure Lua        |                                      |             |                     |               |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
+| bump-3dpd          | src/class/component/physix/cube.lua  |      +      | Enrique García Cota | MIT           |
+|                    | src/class/component/physix/grid.lua  |      +      |                     |               |
+|                    | src/class/component/physix/world.lua |      +      |                     |               |
+|--------------------|--------------------------------------|-------------|---------------------|---------------|
 ```
 
 You can find full license text for this software in `THIRD-PARTY-LICENSE` file.
