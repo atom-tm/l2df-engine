@@ -16,8 +16,11 @@ local fopen = io.open
 local asctime = os.date
 local getenv = os.getenv
 local strsub = string.sub
+local strgsub = string.gsub
 local strformat = string.format
+local traceback = debug.traceback
 local getline = core.getline
+local errhandler = love and (love.errorhandler or love.errhand) or nil
 
 local colors = not getenv('L2DF_NOCOLOR')
 local loggers = { }
@@ -28,7 +31,7 @@ local methods = {
     { 'success','\027[32m', false },
     { 'warn',   '\027[33m', false },
     { 'error',  '\027[91m', true },
-    { 'crit',   '\027[31m', true },
+    { 'crit',   '\027[31m', false },
 }
 
 io.stdout:setvbuf('no') -- don't touch it
@@ -96,7 +99,20 @@ local Logger = Class:extend({ name = '', level = getenv('L2DF_LOGLEVEL') or 'deb
                     log:close()
                 end
             end
+            return msg
         end
     end
+
+if love then
+    function love.errhand(msg)
+        Logger:crit(strgsub(traceback(msg, 3), '\n[^\n]+$', ''))
+        return errhandler and errhandler(msg)
+    end
+
+    function love.errorhandler(msg)
+        Logger:crit(strgsub(traceback(msg, 3), '\n[^\n]+$', ''))
+        return errhandler and errhandler(msg)
+    end
+end
 
 return Logger
