@@ -13,8 +13,8 @@ local States = core.import 'class.component.states'
 local Print = core.import 'class.component.print'
 local Video = core.import 'class.component.video'
 local Transform = core.import 'class.component.transform'
+local Behaviour = core.import 'class.component.behaviour'
 local Physix = core.import 'class.component.physix'
-local Script = core.import 'class.component.script'
 local Sound = core.import 'class.component.sound'
 
 local dummy = function () return nil end
@@ -22,11 +22,14 @@ local dummy = function () return nil end
 local UI = Entity:extend()
 
 	function UI:init(kwargs)
-		self:addComponent(Transform())
-		local vars = self.vars
-		vars.x = kwargs.x or vars.x
-		vars.y = kwargs.y or vars.y
-		vars.hidden = kwargs.hidden
+		self:addComponent(Transform)
+		local data = self.data
+		data.x = kwargs.x or data.x
+		data.y = kwargs.y or data.y
+        data.r = math.rad(kwargs.r or 0)
+        data.scalex = kwargs.scalex or 1
+        data.scaley = kwargs.scaley or 1
+		data.hidden = kwargs.hidden or false
 	end
 
 	function UI:on(event, callback)
@@ -43,17 +46,17 @@ local UI = Entity:extend()
 	end
 
 	function UI:hide()
-		self.vars.hidden = true
+		self.data.hidden = true
 		return self
 	end
 
 	function UI:show()
-		self.vars.hidden = false
+		self.data.hidden = false
 		return self
 	end
 
 	function UI:toggle()
-		self.vars.hidden = not self.vars.hidden
+		self.data.hidden = not self.data.hidden
 		return self
 	end
 
@@ -65,46 +68,46 @@ local UI = Entity:extend()
 	UI.Text = UI:extend({ name = 'text' })
 	function UI.Text:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Print(), kwargs)
+		self:addComponent(Print, kwargs)
 	end
 
 
 	UI.Image = UI:extend({ name = 'image' })
 	function UI.Image:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Render(), kwargs.sprites, kwargs)
-		self.vars.pic = kwargs.pic or self.vars.pic or 1
+		self:addComponent(Render, kwargs.sprites, kwargs)
+		self.data.pic = kwargs.pic or self.data.pic or 1
 	end
 
 
 	UI.Animation = UI:extend({ name = 'animation' })
 	function UI.Animation:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Render(), kwargs.sprites, kwargs)
-		self:addComponent(Frames(), 1, kwargs.frames, kwargs)
+		self:addComponent(Render, kwargs.sprites, kwargs)
+		self:addComponent(Frames, kwargs)
 	end
 
 
 	UI.Video = UI:extend({ name = 'video' })
 	function UI.Video:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Video(), kwargs)
+		self:addComponent(Video, kwargs)
 	end
 
 	function UI.Video:play()
-		self:getComponent(Video):setState('play')
+		self:getComponent(Video).setState('play')
 	end
 
 	function UI.Video:pause()
-		self:getComponent(Video):setState('pause')
+		self:getComponent(Video).setState('pause')
 	end
 
 	function UI.Video:stop()
-		self:getComponent(Video):setState('stop')
+		self:getComponent(Video).setState('stop')
 	end
 
 	function UI.Video:invert()
-		self:getComponent(Video):setState('invert')
+		self:getComponent(Video).setState('invert')
 	end
 
 
@@ -116,63 +119,64 @@ local UI = Entity:extend()
 		states = type(states) == 'table' and states or { }
 
 		local default_state = assertUI(states.normal or states[1], 'Requires a UI type object')
-		self.vars.states = {
+		self.data.states = {
 			default_state,
 			assertUI(states.focus or states[2] or default_state, 'Requires a UI type object'),
 			assertUI(states.hover or states[3] or default_state, 'Requires a UI type object'),
 			assertUI(states.click or states[4] or default_state, 'Requires a UI type object'),
+			nil,
 		}
 
-		self.vars.state = 1
-		self.vars.last_state = 1
-		self:attach(self.vars.states[1])
+		self.data.state = 1
+		self.data.last_state = 0
+		self:attachMultiple(self.data.states)
 
 		self:setAction(kwargs.action or kwargs[2])
 
-		self.vars.cooldown = 0
-		self.vars.max_cooldown = kwargs.cooldown or 0
+		self.data.cooldown = 0
+		self.data.max_cooldown = kwargs.cooldown or 0
 
-		self:addComponent(Sound(), kwargs.sounds)
-		self:addComponent(Script(), function ()
-			if self.vars.state ~= self.vars.last_state then
-				if self.vars.last_state == 1 and self.vars.state == 2 then
-					self.vars.sound = 'focus'
+		self:addComponent(Sound, kwargs.sounds)
+		self:addComponent(Behaviour, function ()
+			if self.data.state ~= self.data.last_state then
+				if self.data.last_state == 1 and self.data.state == 2 then
+					self.data.sound = 'focus'
 					self:change()
-				elseif self.vars.last_state == 1 and self.vars.state == 3 then
-					self.vars.sound = 'hover'
+				elseif self.data.last_state == 1 and self.data.state == 3 then
+					self.data.sound = 'hover'
 					self:change()
 				end
-				self.vars.last_state = self.vars.state
+				self.data.last_state = self.data.state
 				self:detachAll()
-				self:attach(self.vars.states[self.vars.state])
+				self:attach(self.data.states[self.data.state])
 			end
-			self.vars.state = self.vars.cooldown == 0 and 1 or self.vars.state
-			self.vars.cooldown = self.vars.cooldown > 0 and self.vars.cooldown - 1 or self.vars.cooldown
+			self.data.state = self.data.cooldown == 0 and 1 or self.data.state
+			self.data.cooldown = self.data.cooldown > 0 and self.data.cooldown - 1 or self.data.cooldown
 		end)
 	end
 
 	function UI.Button:setAction(func)
-		self.vars.action = type(func) == 'function' and func or dummy
+		self.data.action = type(func) == 'function' and func or dummy
 	end
 
 	function UI.Button:change()
-		self.vars.sound = 'change'
+		self.data.sound = 'change'
 	end
 
 	function UI.Button:focus()
-		self.vars.state = self.vars.state < 2 and 2 or self.vars.state
+		self.data.state = self.data.state < 2 and 2 or self.data.state
 	end
 
 	function UI.Button:hover()
-		self.vars.state = self.vars.state < 3 and 3 or self.vars.state
+		self.data.state = self.data.state < 3 and 3 or self.data.state
 	end
 
 	function UI.Button:click()
-		if self.vars.state == 4 then return end
-		self.vars.state = 4
-		self.vars.action(self)
-		self.vars.cooldown = self.vars.max_cooldown
-		self.vars.sound = 'click'
+		if self.data.state == 4 then return end
+		self.data.state = 4
+		self.data.action(self)
+		self.data.cooldown = self.data.max_cooldown
+		self.data.sound = 'click'
 	end
 
 
@@ -181,8 +185,8 @@ local UI = Entity:extend()
 		self:super(kwargs)
 		self.selected = 1
 		self:attachMultiple(kwargs.nodes or list)
-		self:addComponent(Sound(), kwargs.sounds)
-		self:addComponent(Script(), function ()
+		self:addComponent(Sound, kwargs.sounds)
+		self:addComponent(Behaviour, function ()
 			local list = self:getNodes()
 			list[self.selected]:focus()
 		end)
@@ -191,23 +195,24 @@ local UI = Entity:extend()
 	function UI.Menu:next()
 		self.selected = self.selected == self.nodes.count and 1 or self.selected + 1
 		self:change()
-		self.vars.sound = 'next'
+		self.data.sound = 'next'
 	end
 
 	function UI.Menu:prev()
 		self.selected = self.selected == 1 and self.nodes.count or self.selected - 1
 		self:change()
-		self.vars.sound = 'prev'
+		self.data.sound = 'prev'
 	end
 
 	function UI.Menu:change()
-		self.vars.sound = 'change'
+		self.data.sound = 'change'
 	end
 
 	function UI.Menu:choice()
 		local list = self:getNodes()
-		list[self.selected]:click()
-		self.vars.sound = 'choice'
+		local action = list[self.selected].click
+		local _ = type(action) == 'function' and action(list[self.selected])
+		self.data.sound = 'choice'
 	end
 
 return setmetatable({ UI.Text, UI.Image, UI.Animation, UI.Video, UI.Button, UI.Menu }, { __index = UI })

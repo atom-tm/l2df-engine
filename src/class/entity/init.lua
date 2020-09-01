@@ -17,55 +17,54 @@ local dummy = function () return nil end
 local Entity = Class:extend()
 
 	--- Creating a entity instance
-	function Entity:new(kwargs, id, ...)
+	function Entity:new(kwargs, key, ...)
 		local obj = self:___getInstance()
-		obj.id = id
+		obj.key = key
 		obj.nodes = Storage:new()
 		obj.components = Storage:new()
 		obj.components.class = { }
 		obj.parent = nil
 		obj.active = true
-		obj.vars = { }
+		obj.data = { ___shallow = true }
+		obj.___meta = { }
+		obj.C = { }
 		obj.R = setmetatable({ }, {
-			__index = function (t, key)
-				if obj[key] then
-					return obj[key]
+			__index = function (t, k)
+				if obj[k] then
+					return obj[k]
 				end
-				local x = obj.nodes:getByKey(key)
+				local x = obj.nodes:getByKey(k)
 				return x and x.R or nil -- t.R
 			end,
-			__newindex = function (t, key, value)
-				obj[key] = value
+			__newindex = function (t, k, v)
+				obj[k] = v
 			end,
 			__call = function ()
 				return obj
 			end
 		})
-		obj:init(kwargs, id, ...)
+		obj:init(kwargs, key, ...)
 		return obj
 	end
 
 	--- Create copy of current object (with all attached nodes)
 	function Entity:clone()
-	    local entity = self:___getInstance()
-	    entity.nodes = Storage:new()
-	    entity.components = Storage:new()
-	    entity.vars = { }
-	    for key, val in pairs(self.vars) do
-	    	entity.vars[key] = val
+		local entity = self:___getInstance()
+		entity.nodes = Storage:new()
+		entity.components = Storage:new()
+		entity.data = copyTable(self.data)
+		for id, node in self.nodes:enum(true) do
+			node = node:clone()
+			node.id = id
+			entity:attach(node)
 		end
-	    for id, node in self.nodes:enum(true) do
-	        node = node:clone()
-	        node.id = id
-	        entity:attach(node)
-	    end
-	    for id, component in self.components:enum(true) do
-	    	local c = component:new()
-	    	c.entity = entity
-	    	entity.vars[c] = self.vars[component]
-	    	entity.components:add(c)
-	    end
-	    return entity
+		for id, component in self.components:enum(true) do
+			local c = component:new()
+			c.entity = entity
+			entity.data[c] = self.data[component]
+			entity.components:add(c)
+		end
+		return entity
 	end
 
 	--- Adding an inheritor to an object
@@ -74,8 +73,10 @@ local Entity = Class:extend()
 		if entity.parent == self or self:isDescendant(entity) then return false end
 		if entity.parent then entity.parent:detach(entity) end
 		entity.parent = self
-		if entity.id then
-			return self.nodes:addByKey(entity, entity.id, true)
+		if entity.key then
+			return self.nodes:addByKey(entity, entity.key, true)
+		elseif entity.id then
+			return self.nodes:addById(entity, entity.id, true)
 		end
 		return self.nodes:add(entity)
 	end
@@ -98,8 +99,8 @@ local Entity = Class:extend()
 	end
 
 	function Entity:detachAll()
-		for id, key in self.nodes:enum(true) do
-			self:detach(key)
+		for id, node in self.nodes:enum(true) do
+			self:detach(node)
 		end
 	end
 
@@ -109,6 +110,12 @@ local Entity = Class:extend()
 			self.parent:detach(self)
 		end
 		return true
+	end
+
+	--- Destory object
+	function Entity:destroy()
+		self:clearComponents()
+		self:detachParent()
 	end
 
 	--- Getting a list of object inheritors
@@ -126,18 +133,18 @@ local Entity = Class:extend()
 	end
 
 	--- Backup / restore entity
-	function Entity:sync(data)
-		if not data then
+	function Entity:sync(state)
+		if not state then
 			return {
 				active = self.active,
 				parent = self.parent,
-				vars = copyTable(self.vars)
+				data = copyTable(self.data)
 			}
 		end
-		if data.parent then
-			data.parent:attach(self)
+		if state.parent then
+			state.parent:attach(self)
 		end
-		copyTable(data, self)
+		copyTable(state, self)
 	end
 
 	--- Check for inheritance from an object
@@ -166,7 +173,7 @@ local Entity = Class:extend()
 	function Entity:addComponent(component, ...)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self:hasComponent(component) then return false end
-		if component.unique and self:hasComponentClass(component.___class) then return false end
+		-- if component.unique and self:hasComponentClass(component.___class) then return false end
 		self.components.class[component.___class] = self.components.class[component.___class] and self.components.class[component.___class] + 1 or 1
 		return self.components:add(component), component, component.added and component:added(self, ...)
 	end
@@ -219,7 +226,7 @@ local Entity = Class:extend()
 		assert(componentClass, 'no component specified')
 		for id, value in self.components:enum() do
 			if value:isInstanceOf(componentClass) then
-				return value
+				return value:wrap(self)
 			end
 		end
 		return nil
@@ -230,7 +237,7 @@ local Entity = Class:extend()
 		local list = {}
 		for id, value in self.components:enum() do
 			if not componentClass or value:isInstanceOf(componentClass) then
-				list[#list + 1] = value
+				list[#list + 1] = value:wrap(self)
 			end
 		end
 		return list

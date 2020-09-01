@@ -53,12 +53,12 @@ local Class = { }
 
 	---
 	function Class.isTypeOf(obj, cls)
-		return obj and (obj.___class == cls)
+		return obj and (obj == cls or obj.___class == cls)
 	end
 
 	---
 	function Class.isInstanceOf(obj, cls)
-		return obj and (obj.___class == cls or Class.isInstanceOf(obj.___class, cls))
+		return obj and (obj == cls or obj.___class == cls or Class.isInstanceOf(obj.___class, cls))
 	end
 
 return Class

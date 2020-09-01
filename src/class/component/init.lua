@@ -1,7 +1,8 @@
 --- Component class
 -- @classmod l2df.class.component
+-- @author Abelidze
 -- @author Kasai
--- @copyright Atom-TM 2019
+-- @copyright Atom-TM 2020
 
 local core = l2df or require((...):match('(.-)class.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
@@ -10,43 +11,58 @@ local Class = core.import 'class'
 
 local Component = Class:extend()
 
-	--- Init
-	function Component:init()
-		self.entity = nil
-		self.__meta = nil
-	end
-
 	--- Get entity's variables proxy table
+	-- @param l2df.class.entity obj
 	-- @return table
-	function Component:vars()
-		if not self.entity then return nil end
-		local vars = self.entity.vars
-		if not self.__meta and vars then
-			vars[self] = vars[self] or { }
-			self.__meta = setmetatable({ }, {
+	function Component:data(obj)
+		if type(obj) ~= 'table' then return nil end
+		local meta = obj.___meta
+		if meta and obj.data and not meta[self] then
+			obj.data[self] = obj.data[self] or { }
+			meta[self] = setmetatable({ }, {
 				__index = function (_, key)
-					return vars[self][key] or vars[key]
+					return obj.data[self][key] or obj.data[key]
 				end,
 				__newindex = function (_, key, value)
-					vars[self][key] = value
+					obj.data[self][key] = value
 				end
 			})
 		end
-		return self.__meta
+		return meta and meta[self]
+	end
+
+	function Component:wrap(obj)
+		self.wrappers = self.wrappers or { } --setmetatable({ }, { __mode = 'k' })
+		self.wrappers[obj] = self.wrappers[obj] or { }
+		return setmetatable({ }, {
+			__index = function (t, k)
+				if k == 'object' then
+					return obj
+				elseif self.wrappers[obj][k] then
+					return self.wrappers[obj][k]
+				elseif type(self[k]) == 'function' then
+					local wrap = function (...) return self[k](self, obj, ...) end
+					self.wrappers[obj][k] = wrap
+					return wrap
+				end
+				return self[k]
+			end,
+			__call = function ()
+				return self
+			end
+		})
 	end
 
 	--- Component added to l2df.class.entity
-	-- @param l2df.class.entity entity
-	function Component:added(entity)
-		self.entity = entity
-		self.__meta = nil
+	-- @param l2df.class.entity obj
+	function Component:added(obj)
+		--
 	end
 
 	--- Component removed from l2df.class.entity
-	-- @param l2df.class.entity entity
-	function Component:removed(entity)
-		self.entity = entity
-		self.__meta = nil
+	-- @param l2df.class.entity obj
+	function Component:removed(obj)
+		--
 	end
 
 return Component

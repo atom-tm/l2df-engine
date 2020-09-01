@@ -15,70 +15,54 @@ local stack = { CTransform:new() }
 
 local Transform = Component:extend({ unique = true })
 
-    function Transform:init()
-        self.entity = nil
+    function Transform:added(obj, kwargs)
+        if not obj then return false end
+
+        local data = obj.data
+        kwargs = kwargs or { }
+
+        data.x = kwargs.x or data.x or 0
+        data.y = kwargs.y or data.y or 0
+        data.z = kwargs.z or data.z or 0
+        data.r = kwargs.r and math.rad(kwargs.r) or data.r or 0
+
+        data.facing = kwargs.facing or data.facing or 1
+        data.scalex = kwargs.scalex or data.scalex or 1
+        data.scaley = kwargs.scaley or data.scaley or 1
+        data.scalez = kwargs.scalez or data.scalez or 1
+        data.centerx = kwargs.centerx or data.centerx or 0
+        data.centery = kwargs.centery or data.centery or 0
+
+        data.globalX = data.globalX or 0
+        data.globalY = data.globalY or 0
+        data.globalZ = data.globalZ or 0
+        data.globalR = data.globalR or 0
+
+        data.globalScaleX = data.globalScaleX or 1
+        data.globalScaleY = data.globalScaleY or 1
+        data.globalScaleZ = data.globalScaleZ or 1
     end
 
-    function Transform:added(entity)
-        if not entity then return false end
+    function Transform:update(obj)
+        local data = obj.data
+        local m = stack[#stack]:vector(data.x, data.y, data.z)
+        data.globalX, data.globalY, data.globalZ = m[1][1], m[2][1], m[3][1]
 
-        self.entity = entity
-        local vars = entity.vars
+        data.globalScaleX = data.scalex * stack[#stack].sx
+        data.globalScaleY = data.scaley * stack[#stack].sy
+        data.globalScaleZ = data.scalez * stack[#stack].sz
 
-        vars.x = vars.x or 0
-        vars.y = vars.y or 0
-        vars.z = vars.z or 0
-        vars.r = vars.r or 0
-
-        vars.globalX = vars.globalX or 0
-        vars.globalY = vars.globalY or 0
-        vars.globalZ = vars.globalZ or 0
-        vars.globalR = vars.globalR or 0
-
-        vars.globalScaleX = vars.globalScaleX or 1
-        vars.globalScaleY = vars.globalScaleY or 1
-        vars.globalScaleZ = vars.globalScaleZ or 1
-
-        vars.scaleX = vars.scaleX or 1
-        vars.scaleY = vars.scaleY or 1
-        vars.scaleZ = vars.scaleZ or 1
-        vars.facing = vars.facing or 1
-
-        vars.centerX = vars.centerX or 0
-        vars.centerY = vars.centerY or 0
+        data.globalR = data.r + stack[#stack].r
     end
 
-    function Transform:removed(entity)
-        if self.entity ~= entity then return end
-
-        entity.vars.globalScaleX = nil
-        entity.vars.globalScaleY = nil
-        entity.vars.globalScaleZ = nil
-        entity.vars.globalR = nil
-    end
-
-    function Transform:update()
-        if not self.entity then return end
-
-        local vars = self.entity.vars
-        local m = stack[#stack]:vector(vars.x, vars.y, vars.z)
-        vars.globalX, vars.globalY, vars.globalZ = m[1][1], m[2][1], m[3][1]
-
-        vars.globalScaleX = vars.scaleX * stack[#stack].sx
-        vars.globalScaleY = vars.scaleY * stack[#stack].sy
-        vars.globalScaleZ = vars.scaleZ * stack[#stack].sz
-
-        vars.globalR = vars.r + stack[#stack].r
-    end
-
-    function Transform:push()
-        local v = self.entity.vars
-        local transform = CTransform:new(v.x, v.y, v.z, v.scaleX * v.facing, v.scaleY, v.scaleZ, v.r, v.centerX, v.centerY)
+    function Transform:liftdown(obj)
+        local v = obj.data
+        local transform = CTransform:new(v.x, v.y, v.z, v.scalex * v.facing, v.scaley, v.scalez, v.r, v.centerx, v.centery)
         transform:append(stack[#stack])
         stack[#stack + 1] = transform
     end
 
-    function Transform:pop()
+    function Transform:liftup(obj)
         stack[#stack] = nil
     end
 

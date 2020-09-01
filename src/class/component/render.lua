@@ -7,6 +7,7 @@ local core = l2df or require((...):match('(.-)class.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
 local Component = core.import 'class.component'
+local Physix = core.import 'class.component.physix'
 
 local log = core.import 'class.logger'
 local Event = core.import 'manager.event'
@@ -16,70 +17,63 @@ local ResourceManager = core.import 'manager.resource'
 local ceil = math.ceil
 local newQuad = love.graphics.newQuad
 
-local greenColor = { 0, 1, 0, 0.5 }
+local greenColor = { 0, 1, 0, 0.3 }
+local yellowColor = { 0, 1, 1, 0.5 }
 local redColor = { 1, 0, 0, 0.5 }
 
 local Render = Component:extend({ unique = true })
 
-    --- Init
-    function Render:init()
-        self.entity = nil
-    end
-
     --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
+    -- @param l2df.class.entity obj
     -- @param table sprites
-    function Render:added(entity, sprites, kwargs)
-        if not entity then return false end
+    function Render:added(obj, sprites, kwargs)
+        if not obj then return false end
 
-        self.entity = entity
-        local vars = entity.vars
-        vars[self] = { }
+        local data = obj.data
+        local odata = self:data(obj)
 
         kwargs = kwargs or { }
 
-        vars[self].pics = { }
+        odata.pics = { }
         if not (sprites and type(sprites) == 'table') then
             log:warn 'Created object without render support'
-            return entity:removeComponent(self)
+            return obj:removeComponent(self)
         end
         sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
 
+        data.x = data.x or 0
+        data.y = data.y or 0
+        data.z = data.z or 0
+        data.r = data.r or 0
 
-        vars.x = vars.x or 0
-        vars.y = vars.y or 0
-        vars.z = vars.z or 0
-        vars.r = vars.r or 0
+        data.scalex = data.scalex or 1
+        data.scaley = data.scaley or 1
 
-        vars.scaleX = vars.scaleX or 1
-        vars.scaleY = vars.scaleY or 1
+        data.centerx = data.centerx or 0
+        data.centery = data.centery or 0
 
-        vars.centerX = vars.centerX or 0
-        vars.centerY = vars.centerY or 0
+        data.facing = data.facing or 1
 
-        vars.facing = vars.facing or 1
+        data.hidden = data.hidden or false
+        data.pic = data.pic or kwargs.pic or 1
 
-        vars.hidden = vars.hidden or false
-        vars.pic = vars.pic or kwargs.pic or 1
-
-        vars[self].color = kwargs.color and {
+        odata.color = kwargs.color and {
             (kwargs.color[1] or 255) / 255,
             (kwargs.color[2] or 255) / 255,
             (kwargs.color[3] or 255) / 255,
-            (kwargs.color[4] or 255) / 255 }
-        or { 1,1,1,1 }
+            (kwargs.color[4] or 255) / 255
+        } or { 1,1,1,1 }
 
         for i = 1, #sprites do
-            self:addSprite(sprites[i])
+            self:addSprite(obj, sprites[i])
         end
     end
 
 
     --- Add new sprite-list
     -- @param table sprite
-    function Render:addSprite(sprite)
-
-        local vars = self.entity.vars
+    function Render:addSprite(obj, sprite)
+        local data = obj.data
 
         --[[
             res - ссылка на ресурс спрайт-листа
@@ -90,8 +84,7 @@ local Render = Component:extend({ unique = true })
             ox, oy - смещение ячеек в листе
         ]]
 
-        local entity = self.entity
-        local vars = entity.vars
+        local odata = self:data(obj)
 
         sprite.res = sprite.res or sprite[1] or nil
         sprite.w = sprite.w or sprite[2] or nil
@@ -112,14 +105,14 @@ local Render = Component:extend({ unique = true })
         sprite.f = sprite.f or sprite[7] or count
         sprite.ox = sprite.ox or sprite[8] or 0
         sprite.oy = sprite.oy or sprite[9] or 0
-        sprite.ord = sprite.ord or sprite[10] or #vars[self].pics
+        sprite.ord = sprite.ord or sprite[10] or #odata.pics
 
         local num = 0
         for y = 1, sprite.y do
             for x = 1, sprite.x do
                 num = num + 1
                 if (sprite.s <= num) and (num <= sprite.f) then
-                    vars[self].pics[sprite.ord + (num - sprite.s) + 1] = false
+                    odata.pics[sprite.ord + (num - sprite.s) + 1] = false
                 end
             end
         end
@@ -130,7 +123,7 @@ local Render = Component:extend({ unique = true })
                 for x = 1, sprite.x do
                     num = num + 1
                     if (sprite.s <= num) and (num <= sprite.f) then
-                        vars[self].pics[sprite.ord + (num - sprite.s) + 1] = {
+                        odata.pics[sprite.ord + (num - sprite.s) + 1] = {
                             sprite.res,
                             newQuad((x-1) * sprite.w + sprite.ox, (y-1) * sprite.h + sprite.oy, sprite.w, sprite.h, img:getDimensions())
                         }
@@ -146,24 +139,25 @@ local Render = Component:extend({ unique = true })
     --- Post-update event
     -- @param number dt
     -- @param boolean islast
-    function Render:postUpdate(dt, islast)
-        local entity = self.entity
-        if not (entity and islast) then return end
+    function Render:postupdate(obj, dt, islast)
+        if not (obj and islast) then return end
 
-        local vars = entity.vars
-        if vars.hidden then return end
-        local pic = vars[self].pics[vars.pic]
+        local data = obj.data
+        if data.hidden then return end
+        local pic = data[self].pics[data.pic]
         if pic then
             RenderManager:add({
                 object = ResourceManager:get(pic[1]),
                 quad = pic[2],
-                x = vars.globalX or vars.x,
-                y = vars.globalY or vars.y,
-                z = vars.globalZ or vars.z,
-                r = vars.globalR or vars.r,
-                sx = vars.facing * (vars.globalScaleX or vars.scaleX),
-                sy = vars.globalScaleY or vars.scaleY,
-                color = vars[self].color
+                x = data.globalX or data.x,
+                y = data.globalY or data.y,
+                z = data.globalZ or data.z,
+                r = data.globalR or data.r,
+                sx = data.facing * (data.globalScaleX or data.scalex),
+                sy = data.globalScaleY or data.scaley,
+                ox = data.centerx,
+                oy = data.centery,
+                color = data[self].color
             })
         end
 
@@ -171,37 +165,41 @@ local Render = Component:extend({ unique = true })
 
         RenderManager:add({
             circle = 'fill',
-            x = vars.globalX or vars.x,
-            y = vars.globalY or vars.y,
-            z = vars.globalZ or vars.z,
-            color = vars[self].color
+            x = data.globalX or data.x,
+            y = data.globalY or data.y,
+            z = data.globalZ or data.z,
+            color = data[self].color
         })
 
-        if vars.body then
-            RenderManager:add({
-                cube = true,
-                x = (vars.globalX or vars.x) + vars.body.x,
-                y = (vars.globalY or vars.y) + vars.body.y,
-                z = (vars.globalZ or vars.z) + vars.body.z,
-                w = vars.body.w,
-                h = vars.body.h,
-                l = vars.body.l,
-                color = greenColor
-            })
+        local bodies, body = data.bodies
+        if bodies then
+            for i = 1, #bodies do
+                body = bodies[i]
+                RenderManager:add({
+                    cube = true,
+                    x = (data.globalX or data.x) + body.x,
+                    y = (data.globalY or data.y) - body.y,
+                    z = (data.globalZ or data.z) + body.z,
+                    w = body.w,
+                    h = body.h,
+                    d = body.d,
+                    color = greenColor
+                })
+            end
         end
 
-        local itrs, itr = vars.itrs
+        local itrs, itr = data.itrs
         if itrs then
             for i = 1, #itrs do
                 itr = itrs[i]
                 RenderManager:add({
                     cube = true,
-                    x = (vars.globalX or vars.x) + itr.x * vars.facing + itr.w * (vars.facing - 1) / 2,
-                    y = (vars.globalY or vars.y) + itr.y,
-                    z = (vars.globalZ or vars.z) + itr.z,
+                    x = (data.globalX or data.x) + itr.x * data.facing + itr.w * (data.facing - 1) / 2,
+                    y = (data.globalY or data.y) - itr.y,
+                    z = (data.globalZ or data.z) + itr.z,
                     w = itr.w,
                     h = itr.h,
-                    l = itr.l,
+                    d = itr.d,
                     color = redColor
                 })
             end

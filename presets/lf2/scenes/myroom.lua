@@ -1,6 +1,5 @@
 local core = l2df
 
-local Frame = core.import 'class.entity.frame'
 local Scene = core.import 'class.entity.scene'
 local Object = core.import 'class.entity.object'
 local UI = core.import 'class.entity.ui'
@@ -23,7 +22,6 @@ local RM = core.import 'manager.resource'
 local SoundManager = core.import 'manager.sound'
 local FactoryManager = core.import 'manager.factory'
 
-local Script = core.import 'class.component.script'
 local World = core.import 'class.component.physix.world'
 
 local title = UI.Text {
@@ -150,10 +148,10 @@ local titleC = title:getComponent(Print)
 
 local ballData = {
 	sprites = { 'sprites/test/ball.png', 50, 50, 1, 1 },
-	nodes = {
-		Frame {
-			itr = { kind = 'Scream', w = 32, h = 12, y = -16, text = 'ORA' },
-			body = { w = 50, h = 50, l = 32 }
+	frames = {
+		{
+			itrs = {{ kind = 'Scream', w = 32, h = 12, y = -16, text = 'ORA' }},
+			bodies = {{ w = 50, h = 50, l = 32 }}
 		}
 	},
 	states = { { 'MoveBoyMove' } },

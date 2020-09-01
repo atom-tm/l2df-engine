@@ -6,118 +6,126 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
+local log = core.import 'class.logger'
+local helper = core.import 'helper'
 local Component = core.import 'class.component'
-local Frame = core.import 'class.entity.frame'
+
+local type = _G.type
+local pairs = _G.pairs
+local clone = helper.copyTable
+
+local added_data = { }
+local ignored = { id = 1, keyword = 1 }
 
 local Frames = Component:extend({ unique = true })
 
-	--- Init
-	function Frames:init()
-		self.entity = nil
-	end
-
     --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
-	-- @param number starting
-	-- @param table frames
-	function Frames:added(entity, starting, frames, kwargs)
-		if not entity then return false end
+    -- @param l2df.class.entity obj
+	-- @param table kwargs
+	function Frames:added(obj, kwargs)
+		if not obj then return false end
 		kwargs = kwargs or { }
-		self.entity = entity
 
-		local vars = entity.vars
+		local data = obj.data
+		obj.data[self] = { list = { }, map = { }, counter = 0 }
 
-		entity.vars[self] = {
-			list = { },
-			map = { }
-		}
+		obj.C.frames = self:wrap(obj)
+		added_data[obj] = { }
 
-		starting = starting or 1
-		frames = frames or { }
+		kwargs.frame = kwargs.frame or 1
+		kwargs.frames = kwargs.frames or { }
 
-		vars.frame = nil
-		vars.wait = 0
-		vars.next = starting
-		vars.counter = 0
+		data.frame = { }
+		data.wait = 0
+		data.next = kwargs.frame
 
-		for i = 1, #frames do
-			self:add(frames[i], i)
+		for i = 1, #kwargs.frames do
+			self:add(obj, kwargs.frames[i], i)
 		end
-
-		if kwargs.frame then
-		print(kwargs.frame)
-			self:set(kwargs.frame)
-		end
+		self:set(obj, kwargs.frame)
 	end
 
-    --- Component removed from l2df.class.entity
-    -- @param l2df.class.entity entity
-	function Frames:removed(entity)
-		local vars = entity.vars
-
-		vars.frame = nil
-		vars.wait = nil
-		vars.counter = nil
-		vars.next = nil
-
-		self.entity = nil
+	function Frames:removed(obj)
+		obj.C.frames = nil
+		added_data[obj] = nil
 	end
 
     --- Add new frame with specified id
-	-- @param l2df.class.entity.frame frame
+	-- @param table frame
 	-- @param number id
-	function Frames:add(frame, id)
-		local storage = self.entity.vars[self]
-
+	function Frames:add(obj, frame, id)
+		local storage = self:data(obj)
 		frame.id = frame.id or frame[1] or id
-		if not (type(frame) == "table") then
+		frame.keyword = frame.keyword or frame[2]
+		if not type(frame) == 'table' then
 			return
 		end
-
 		if frame.keyword then
-			storage.map[frame.keyword] = frame
+			storage.map[frame.keyword] = frame.id
 		end
 		storage.list[frame.id] = frame
+	end
+
+	function Frames:stats(obj)
+		local storage = self:data(obj)
+		local size = 0
+		for x in pairs(storage.list) do
+			size = size + 1
+		end
+		local frame = obj.data.frame
+		return size, frame.wait, frame.id, frame.next, storage.counter
 	end
 
 	--- Change current frame
 	-- @param number id
 	-- @param number remain
-	function Frames:set(id, remain)
-		if not self.entity then return end
-
-		local storage = self.entity.vars[self]
-
-		local nextFrame = storage.list[id] or storage.map[id] or storage.list[next(storage.list)]
-		if not nextFrame then return end
-
-		local vars = self.entity.vars
-		vars.frame = nextFrame
-		vars.next = nextFrame.next
-		vars.wait = nextFrame.wait or 0
-		vars.counter = remain or 0
+	function Frames:set(obj, id, remain)
+		local storage = self:data(obj)
+		local nextFrame =
+			storage.list[id] or
+			(storage.map[id] and storage.list[storage.map[id]]) or
+			storage.list[next(storage.list)]
+		if not nextFrame then
+			if obj.data.frame.id then
+				log:warn('Frame not found: %s[%s]', obj.name, obj.key)
+			end
+			return
+		end
+		local data = obj.data
+		data.frame = clone(nextFrame)
+		data.next = nextFrame.next
+		data.wait = nextFrame.wait or 0
+		storage.counter = remain or 0
 		if nextFrame.keyword then
-			self.map[nextFrame.keyword] = nextFrame
-			-- TODO: this can break sync, fix it in future with list's ids
+			storage.map[nextFrame.keyword] = nextFrame.id
 		end
 	end
 
 	--- Pre-update event
 	-- @param number dt
-	function Frames:preUpdate(dt)
-		if not self.entity.active then return end
-
-		local vars = self.entity.vars
-		if vars.counter >= vars.wait then
-			vars.counter = vars.counter - vars.wait
-			self:set(vars.next, vars.counter)
+	function Frames:preupdate(obj, dt)
+		local data = obj.data
+		local storage = self:data(obj)
+		if storage.counter >= data.wait then
+			storage.counter = storage.counter - data.wait
+			self:set(obj, data.next, storage.counter)
 		end
-
-		if not (type(vars.frame) == "table") then return end
-		for k, v in pairs(vars.frame) do
-			vars[k] = v
+		if not data.frame.id then
+			return
 		end
-		vars.counter = vars.wait > 0 and vars.counter + dt * 1000 or 0
+		local storage = self:data(obj)
+		local adata = added_data[obj]
+		for i = 1, #adata do
+			data[adata[i][1]] = adata[i][2]
+			adata[i] = nil
+		end
+		for k, v in pairs(data.frame) do
+			if not ignored[k] then
+				adata[#adata + 1] = { k, data[k] }
+				data[k] = v
+			end
+		end
+		storage.counter = data.wait > 0 and storage.counter + dt * 1000 or 0
 	end
 
 return Frames

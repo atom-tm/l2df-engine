@@ -6,49 +6,54 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Controller works only with l2df v1.0 and higher')
 
+local pairs = _G.pairs
+
 local Component = core.import 'class.component'
+local InputManager = core.import 'manager.input'
 
-local Controller = Component:extend({ unique = true })
+local Controller = Component:extend()
 
-	--- Check if button is pressed
-	-- @param string button  Pressed button
+	--- Component added to l2df.class.entity
+	-- @param l2df.class.entity obj
+	-- @param number player
 	-- @return boolean
-	function Controller:pressed(button)
-		return false
+	function Controller:added(obj, player)
+		if not obj then return false end
+		obj.C.controller = self:wrap(obj)
+		local data = obj.data
+		data.player = player or data.player or 0
+		-- TODO: add FSM for combos?
+		return true
 	end
 
-    --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
-    -- @param number player
-    function Controller:added(entity, player)
-        if not entity then return false end
-
-        self.entity = entity
-        local vars = entity.vars
-        vars.player = player or vars.player or 0
-        -- TODO: add FSM for combos?
-        return true
-    end
-
-	--- Check if button's timer is executed
-	-- @param string button  Pressed button
-	-- @return boolean
-	function Controller:timer(button)
-		return self.key_timer[button] > 0
+	---
+	-- @param l2df.class.entity obj
+	function Controller:removed(obj)
+		obj.C.controller = nil
 	end
 
-	--- Check if button's double_timer is executed
+	--- Check if button was pressed
+	-- @param l2df.class.entity obj
 	-- @param string button  Pressed button
 	-- @return boolean
-	function Controller:double_timer(button)
-		return self.double_key_timer[button] > 0
+	function Controller:pressed(obj, button)
+		return InputManager:pressed(button, obj.data.player)
 	end
 
-	--- Check if button's double_timer is ended
-	-- @param string button  Pressed button
+	--- Check if button was double pressed
+	-- @param l2df.class.entity obj
+	-- @param string button  Double pressed button
 	-- @return boolean
-	function Controller:hit(button)
-		return self.key_timer[button] == control.key_timer
+	function Controller:doubled(obj, button)
+		return InputManager:doubled(button, obj.data.player)
+	end
+
+	--- Check if button was pressed at current frame
+	-- @param l2df.class.entity obj
+	-- @param string button  Hitted button
+	-- @return boolean
+	function Controller:hitted(obj, button)
+		return InputManager:hitted(button, obj.data.player)
 	end
 
 	--- Process the keys and combos

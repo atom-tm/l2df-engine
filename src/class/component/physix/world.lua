@@ -119,12 +119,11 @@ local World = Component:extend({ unique = true })
     ---
     function World:init(cellSize)
         self.entity = nil
+        self.active = true
         self.cellSize = type(cellSize) == 'number' and cellSize or 64
 
-        self.cubes = { }
-        self.cells = { }
+        self.borders = { }
         self.responses = { }
-        self.nonEmptyCells = { }
 
         self:addResponse('touch', touch)
         self:addResponse('cross', cross)
@@ -133,50 +132,48 @@ local World = Component:extend({ unique = true })
     end
 
     ---
-    function World:added(entity, kwargs)
-        if not entity then return false end
+    function World:added(obj, kwargs)
+        if not obj then return false end
         kwargs = kwargs or { }
 
-        self.entity = entity
-        local vars = entity.vars
+        self.entity = obj
+        self.active = not kwargs.inactive
 
-        vars.cubes = { }
-        vars.cells = { }
-        vars.nonEmptyCells = { }
-
-        self.cubes = vars.cubes
-        self.cells = vars.cells
-        self.nonEmptyCells = vars.nonEmptyCells
-
-        vars.gravity = kwargs.gravity or 0
-        vars.friction = bound(kwargs.friction, 0, 1) or 0
+        local data = self:data(obj)
+        self.borders = kwargs.borders or self.borders
+        data.cubes = { }
+        data.cells = { }
+        data.nonEmptyCells = { }
+        data.gravity = kwargs.gravity or 0
+        data.friction = bound(kwargs.friction, 0, 1) or 0
     end
 
-    function World:removed(entity)
-        entity.vars.cubes = nil
-        entity.vars.cells = nil
-        entity.vars.nonEmptyCells = nil
-        entity.vars.gravity = nil
+    ---
+    function World:removed(obj)
+        local data = self:data(obj)
+        data.cubes = nil
+        data.cells = nil
+        data.nonEmptyCells = nil
+        data.gravity = nil
 
         self.entity = nil
-        self.cubes = { }
-        self.cells = { }
-        self.nonEmptyCells = { }
     end
 
+    ---
     function World:data()
-        return self.entity and self.entity.vars or { gravity = 0, friction = 0 }
+        return self.super.data(self, self.entity) or { gravity = 0, friction = 0 }
     end
 
     ---
     function World:add(item, x, y, z, w, h, d)
-        local cube = self.cubes[item]
+        if not self.entity then return end
+        local cube = self:data(self.entity).cubes[item]
         if cube then
             error('Item ' .. tostring(item) .. ' added to the world twice.')
         end
         Cube:assert(x, y, z, w, h, d)
 
-        self.cubes[item] = { x = x, y = y, z = z, w = w, h = h, d = d }
+        self:data(self.entity).cubes[item] = { x = x, y = y, z = z, w = w, h = h, d = d }
 
         local cl, ct, cs, cw, ch, cd = Grid:toCellCube(self.cellSize, x, y, z, w, h, d)
         for cz = cs, cs + cd - 1 do
@@ -191,9 +188,10 @@ local World = Component:extend({ unique = true })
 
     ---
     function World:remove(item)
+        if not self.entity then return end
         local x, y, z, w, h, d = self:getCube(item)
 
-        self.cubes[item] = nil
+        self:data(self.entity).cubes[item] = nil
         local cl, ct, cs, cw, ch, cd = Grid:toCellCube(self.cellSize, x, y, z, w, h, d)
         for cz = cs, cs + cd - 1 do
             for cy = ct, ct + ch - 1 do
@@ -206,6 +204,7 @@ local World = Component:extend({ unique = true })
 
     ---
     function World:translate(item, x2, y2, z2, w2, h2, d2)
+        if not self.entity then return end
         local x1, y1, z1, w1, h1, d1 = self:getCube(item)
         w2 = w2 or w1
         h2 = h2 or h1
@@ -253,29 +252,37 @@ local World = Component:extend({ unique = true })
             end
         end
 
-        local cube = self.cubes[item]
+        local cube = self:data(self.entity).cubes[item]
         cube.x, cube.y, cube.z, cube.w, cube.h, cube.d = x2, y2, z2, w2, h2, d2
     end
 
+    ---
     function World:move(item, goalX, goalY, goalZ, filter)
+        if not self.entity then return end
         local actualX, actualY, actualZ, cols, len = self:check(item, goalX, goalY, goalZ, filter)
         self:translate(item, actualX, actualY, actualZ)
         return actualX, actualY, actualZ, cols, len
     end
 
+    ---
     function World:moveRelative(item, dx, dy, dz, filter)
+        if not self.entity then return end
         local x, y, z, w, h, d = self:getCube(item)
         local actualX, actualY, actualZ, cols, len = self:projectMove(item, x, y, z, w, h, d, x + dx, y + dy, z + dz, filter)
         self:translate(item, actualX, actualY, actualZ)
         return actualX - x, actualY - y, actualZ - z, cols, len
     end
 
+    ---
     function World:check(item, goalX, goalY, goalZ, filter)
+        if not self.entity then return end
         local x, y, z, w, h, d = self:getCube(item)
         return self:projectMove(item, x, y, z, w, h, d, goalX, goalY, goalZ, filter)
     end
 
+    ---
     function World:queryCube(x, y, z, w, h, d, filter)
+        if not self.entity then return end
         Cube:assert(x, y, z, w, h, d)
 
         local cx, cy, cz, cw, ch, cd = Grid:toCellCube(self.cellSize, x, y, z, w, h, d)
@@ -283,9 +290,9 @@ local World = Component:extend({ unique = true })
 
         local items, len = nil, 0
 
-        local cube
+        local cubes, cube = self:data(self.entity).cubes
         for item, _ in pairs(dictItemsInCellCube) do
-            cube = self.cubes[item]
+            cube = cubes[item]
             if (not filter or filter(item))
             and Cube:isIntersecting(x,y,z,w,h,d, cube.x, cube.y, cube.z, cube.w, cube.h, cube.d)
             then
@@ -301,14 +308,16 @@ local World = Component:extend({ unique = true })
         return items, len
     end
 
+    ---
     function World:queryPoint(x, y, z, filter)
+        if not self.entity then return end
         local cx, cy, cz = self:toCell(x,y,z)
         local dictItemsInCellCube = getDictItemsInCellCube(self, cx, cy, cz, 1, 1, 1)
         local items, len = { }, 0
 
-        local cube
+        local cubes, cube = self:data(self.entity).cubes
         for item,_ in pairs(dictItemsInCellCube) do
-            cube = self.cubes[item]
+            cube = cubes[item]
             if (not filter or filter(item))
             and Cube:containsPoint(cube.x, cube.y, cube.z, cube.w, cube.h, cube.d, x, y, z)
             then
@@ -321,7 +330,9 @@ local World = Component:extend({ unique = true })
         return items, len
     end
 
+    ---
     function World:querySegment(x1, y1, z1, x2, y2, z2, filter)
+        if not self.entity then return end
         local itemInfo, len = getInfoAboutItemsTouchedBySegment(self, x1, y1, z1, x2, y2, z2, filter)
 
         local items = {}
@@ -333,7 +344,9 @@ local World = Component:extend({ unique = true })
         return items, len
     end
 
+    ---
     function World:querySegmentWithCoords(x1, y1, z1, x2, y2, z2, filter)
+        if not self.entity then return end
         local itemInfo, len = getInfoAboutItemsTouchedBySegment(self, x1, y1, z1, x2, y2, z2, filter)
         local dx, dy, dz = x2 - x1, y2 - y1, z2 - z1
         local info, ti1, ti2
@@ -353,25 +366,31 @@ local World = Component:extend({ unique = true })
         return itemInfo, len
     end
 
+    ---
     function World:addResponse(name, response)
         -- TODO: add support for callable tables
         self.responses[name] = assert(type(response) == 'function' and response, 'World\'s response must be a function')
     end
 
-    function World:push()
+    ---
+    function World:liftdown()
         stack[#stack + 1] = self
     end
 
-    function World:pop()
+    ---
+    function World:liftup()
         if #stack < 1 then return end
         stack[#stack] = nil
     end
 
     addItemToCell = function (self, item, cx, cy, cz)
-        self.cells[cz] = self.cells[cz] or { }
-        self.cells[cz][cy] = self.cells[cz][cy] or setmetatable({ }, {__mode = 'v'})
-        if self.cells[cz][cy][cx] == nil then
-            self.cells[cz][cy][cx] = {
+        if not self.entity then return end
+        local cells = self:data(self.entity).cells
+        local nonEmptyCells = self:data(self.entity).nonEmptyCells
+        cells[cz] = cells[cz] or { }
+        cells[cz][cy] = cells[cz][cy] or setmetatable({ }, {__mode = 'v'})
+        if cells[cz][cy][cx] == nil then
+            cells[cz][cy][cx] = {
                 itemCount = 0,
                 x = cx,
                 y = cy,
@@ -380,8 +399,8 @@ local World = Component:extend({ unique = true })
             }
         end
 
-        local cell = self.cells[cz][cy][cx]
-        self.nonEmptyCells[cell] = true
+        local cell = cells[cz][cy][cx]
+        nonEmptyCells[cell] = true
         if not cell.items[item] then
             cell.items[item] = true
             cell.itemCount = cell.itemCount + 1
@@ -389,29 +408,34 @@ local World = Component:extend({ unique = true })
     end
 
     removeItemFromCell = function (self, item, cx, cy, cz)
-        if not self.cells[cz]
-            or not self.cells[cz][cy]
-            or not self.cells[cz][cy][cx]
-            or not self.cells[cz][cy][cx].items[item]
+        if not self.entity then return end
+        local cells = self:data(self.entity).cells
+        local nonEmptyCells = self:data(self.entity).nonEmptyCells
+        if not cells[cz]
+            or not cells[cz][cy]
+            or not cells[cz][cy][cx]
+            or not cells[cz][cy][cx].items[item]
         then
             return false
         end
 
-        local cell = self.cells[cz][cy][cx]
+        local cell = cells[cz][cy][cx]
         cell.items[item] = nil
 
         cell.itemCount = cell.itemCount - 1
         if cell.itemCount == 0 then
-            self.nonEmptyCells[cell] = nil
+            nonEmptyCells[cell] = nil
         end
         return true
     end
 
     getDictItemsInCellCube = function (self, cx, cy, cz, cw, ch, cd)
+        if not self.entity then return end
         local items_dict = newTable()
+        local cells = self:data(self.entity).cells
 
         for z = cz, cz + cd - 1 do
-            local plane = self.cells[z]
+            local plane = cells[z]
             if plane then
                 for y = cy, cy + ch - 1 do
                     local row = plane[y]
@@ -433,10 +457,12 @@ local World = Component:extend({ unique = true })
     end
 
     getCellsTouchedBySegment = function (self, x1, y1, z1, x2, y2, z2)
+        if not self.entity then return end
+        local vcells = self:data(self.entity).cells
         local cells, cellsLen, visited = { }, 0, { }
 
-        Grid:traverse(self.cellSize, x1,y1,z1,x2,y2,z2, function(cx, cy, cz)
-            local plane = self.cells[cz]
+        Grid:traverse(self.cellSize, x1, y1, z1, x2, y2, z2, function(cx, cy, cz)
+            local plane = vcells[cz]
             if not plane then
                 return
             end
@@ -460,8 +486,10 @@ local World = Component:extend({ unique = true })
     end
 
     getInfoAboutItemsTouchedBySegment = function (self, x1, y1, z1, x2 ,y2, z2, filter)
-        local cells, len = getCellsTouchedBySegment(self, x1,y1,z1,x2,y2,z2)
-        local cell, cube, x,y,z,w,h,d, ti1, ti2, tii0, tii1
+        if not self.entity then return end
+        local cubes = self:data(self.entity).cubes
+        local cells, len = getCellsTouchedBySegment(self, x1, y1, z1, x2, y2, z2)
+        local cell, cube, x, y, z, w, h, d, ti1, ti2, tii0, tii1
         local visited, itemInfo, itemInfoLen = newTable(), newTable(), 0
 
         for i = 1, len do
@@ -470,7 +498,7 @@ local World = Component:extend({ unique = true })
                 if not visited[item] then
                     visited[item] = true
                     if (not filter or filter(item)) then
-                        cube = self.cubes[item]
+                        cube = cubes[item]
                         x, y, z, w, h, d = cube.x, cube.y, cube.z, cube.w, cube.h, cube.d
 
                         ti1, ti2 = cubeSegmentIntersectionIndices(x, y, z, w, h, d, x1, y1, z1, x2, y2, z2, 0, 1)
@@ -496,6 +524,7 @@ local World = Component:extend({ unique = true })
     end
 
     function World:projectMove(item, x, y, z, w, h, d, goalX, goalY, goalZ, filter)
+        if not self.entity then return end
         filter = filter or defaultFilter
 
         local projected_cols, projected_len = self:project(item, x, y, z, w, h, d, goalX, goalY, goalZ, filter)
@@ -525,6 +554,7 @@ local World = Component:extend({ unique = true })
     end
 
     function World:project(item, x, y, z, w, h, d, goalX, goalY, goalZ, filter, alreadyVisited)
+        if not self.entity then return end
         Cube:assert(x, y, z, w, h, d)
 
         goalX = goalX or x
@@ -532,8 +562,7 @@ local World = Component:extend({ unique = true })
         goalZ = goalZ or z
         filter = filter or defaultFilter
 
-        local collisions, len = nil, 0
-
+        local collisions, len = { }, 0
         local visited = newTable()
         if item ~= nil then
             visited[item] = true
@@ -556,7 +585,7 @@ local World = Component:extend({ unique = true })
 
                 local responseName = filter(item, other)
                 if responseName then
-                    local ox,oy,oz,ow,oh,od = self:getCube(other)
+                    local ox, oy, oz, ow, oh, od = self:getCube(other)
                     local col = Cube:detectCollision(x,y,z,w,h,d, ox,oy,oz,ow,oh,od, goalX, goalY, goalZ)
 
                     if col then
@@ -565,28 +594,23 @@ local World = Component:extend({ unique = true })
                         col.type  = responseName
 
                         len = len + 1
-                        if collisions == nil then
-                            collisions = {}
-                        end
                         collisions[len] = col
                     end
                 end
             end
         end
-
         freeTable(visited)
         freeTable(dictItemsInCellCube)
-
-        if collisions ~= nil then
+        if len > 0 then
             sort(collisions, sortByTiAndDistance)
         end
-
-        return collisions or { }, len
+        return collisions, len
     end
 
     function World:countCells()
+        if not self.entity then return end
         local count = 0
-        for _, plane in pairs(self.cells) do
+        for _, plane in pairs(self:data(self.entity).cells) do
             for _, row in pairs(plane) do
                 for _,_ in pairs(row) do
                     count = count + 1
@@ -597,12 +621,13 @@ local World = Component:extend({ unique = true })
     end
 
     function World:hasItem(item)
-        return not not self.cubes[item]
+        return self.entity and not not self:data(self.entity).cubes[item]
     end
 
     function World:getItems()
+        if not self.entity then return end
         local items, len = { }, 0
-        for item,_ in pairs(self.cubes) do
+        for item,_ in pairs(self:data(self.entity).cubes) do
             len = len + 1
             items[len] = item
         end
@@ -610,13 +635,17 @@ local World = Component:extend({ unique = true })
     end
 
     function World:countItems()
+        if not self.entity then return end
         local len = 0
-        for _ in pairs(self.cubes) do len = len + 1 end
+        for _ in pairs(self:data(self.entity).cubes) do
+            len = len + 1
+        end
         return len
     end
 
     function World:getCube(item)
-        local cube = self.cubes[item]
+        if not self.entity then return end
+        local cube = self:data(self.entity).cubes[item]
         if not cube then
             error('Item ' .. tostring(item) .. ' must be added to the world before getting its cube. Use world:add(item, x,y,z,w,h,d) to add it first.')
         end

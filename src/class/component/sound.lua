@@ -13,56 +13,46 @@ local ResourceManager = core.import 'manager.resource'
 
 local Sound = Component:extend({ unique = false })
 
-    --- Init
-    -- @param table kwargs
-    function Sound:init()
-        self.entity = nil
-    end
-
     --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
-    function Sound:added(entity, kwargs)
-        if not entity then return false end
-        self.entity = entity
-        local vars = self.entity.vars
+    -- @param l2df.class.entity obj
+    function Sound:added(obj, kwargs)
+        if not obj then return false end
+        local data = obj.data
+        local odata = self:data(obj)
         kwargs = type(kwargs) == "table" and kwargs or { }
-        vars[self] = { }
 
-        vars.x = vars.x or 0
-        vars.y = vars.y or 0
-        vars.z = vars.z or 0
+        data.sound = data.sound or nil
+        data.hidden = data.hidden or false
 
-        vars.sound = vars.sound or nil
-        vars.hidden = vars.hidden or false
-
-        vars[self].sound_map = { }
+        odata.sound_map = { }
         for id, key in pairs(kwargs) do
             if (type(id) == "string" or type(id) == "key") and type(key) == "string" then
-                vars[self].sound_map[id] = ResourceManager:loadAsync(key)
+                odata.sound_map[id] = ResourceManager:loadAsync(key)
             end
         end
     end
 
-    function Sound:add(file, id)
-        id = id or (#vars[self].sound_map + 1)
-        vars[self].sound_map[id] = ResourceManager:load(file)
+    function Sound:add(obj, file, id)
+        local odata = self:data(obj)
+        id = id or (#odata.sound_map + 1)
+        odata.sound_map[id] = ResourceManager:load(file)
     end
 
-    function Sound:play(id)
-        self.entity.vars.sound = id
+    function Sound:play(obj, id)
+        obj.data.sound = id
     end
 
     --- Post-update event
-    function Sound:postUpdate()
-        if not self.entity then return end
-        local vars = self.entity.vars
+    function Sound:postupdate(obj)
+        local data = obj.data
+        local odata = self:data(obj)
 
-        if not vars.hidden and type(vars.sound) == "string" then
+        if not data.hidden and type(data.sound) == "string" then
             SoundManager:add({
-                resource = ResourceManager:get(vars[self].sound_map[vars.sound])
+                resource = ResourceManager:get(odata.sound_map[data.sound])
             })
         end
-        vars.sound = nil
+        data.sound = nil
     end
 
 return Sound

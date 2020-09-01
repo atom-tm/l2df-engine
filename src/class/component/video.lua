@@ -1,5 +1,5 @@
 --- Video component
--- @classmod l2df.class.component.print
+-- @classmod l2df.class.component.video
 -- @author Kasai
 -- @copyright Atom-TM 2019
 
@@ -13,108 +13,103 @@ local ResourceManager = core.import 'manager.resource'
 
 local Video = Component:extend({ unique = false })
 
-    --- Init
-    -- @param table kwargs
-    function Video:init()
-        self.entity = nil
-    end
-
     --- Component added to l2df.class.entity
-    -- @param l2df.class.entity entity
-    function Video:added(entity, kwargs)
-        if not entity then return false end
-        self.entity = entity
-        local vars = self.entity.vars
+    -- @param l2df.class.entity obj
+    function Video:added(obj, kwargs)
+        if not obj then return false end
+        local data = obj.data
+        local odata = self:data(obj)
         kwargs = kwargs or { }
-        vars[self] = {}
 
-        vars[self].played = kwargs.autoplay
-        vars[self].looped = kwargs.loop
-        vars[self].hiding = kwargs.hiding
+        odata.played = kwargs.autoplay
+        odata.looped = kwargs.loop
+        odata.hiding = kwargs.hiding
 
-        vars.x = vars.x or 0
-        vars.y = vars.y or 0
-        vars.z = vars.z or 0
-        vars.r = vars.r or 0
+        data.x = data.x or 0
+        data.y = data.y or 0
+        data.z = data.z or 0
+        data.r = data.r or 0
 
-        vars.scaleX = vars.scaleX or 1
-        vars.scaleY = vars.scaleY or 1
-        vars.hidden = vars.hidden or false
+        data.scalex = data.scalex or 1
+        data.scaley = data.scaley or 1
+        data.hidden = data.hidden or false
 
-        local resource = kwargs.resource.resource or kwargs.resource[1]
-
-        ResourceManager:loadAsync(resource, function (id, video)
-            vars[self].resource = video
-            if vars[self].played then
-                vars[self].resource:play()
+        ResourceManager:loadAsync(kwargs.resource, function (id, video)
+            odata.resource = video
+            if odata.played then
+                odata.resource:play()
             end
         end)
 
-        vars[self].color = kwargs.color and {
+        odata.color = kwargs.color and {
             (kwargs.color[1] or 255) / 255,
             (kwargs.color[2] or 255) / 255,
             (kwargs.color[3] or 255) / 255,
-            (kwargs.color[4] or 255) / 255 }
-        or { 1,1,1,1 }
-
+            (kwargs.color[4] or 255) / 255
+        } or { 1,1,1,1 }
     end
 
-    function Video:setState(state)
-        local vars = self.entity.vars
-        if state == "play" then
-            if vars[self].resource then vars[self].resource:play() end
-            vars[self].played = true
-        elseif state == "stop" then
-            if vars[self].resource then
-                vars[self].resource:pause()
-                vars[self].resource:rewind()
+    ---
+    -- @param l2df.class.entity obj
+    -- @param string state
+    function Video:setState(obj, state)
+        local data = obj.data
+        local odata = self:data(obj)
+        if state == 'play' then
+            if odata.resource then odata.resource:play() end
+            odata.played = true
+        elseif state == 'stop' then
+            if odata.resource then
+                odata.resource:pause()
+                odata.resource:rewind()
             end
-            vars[self].played = false
-        elseif state == "pause" then
-            if vars[self].resource then vars[self].resource:pause() end
-            vars[self].played = false
-        elseif state == "invert" then
-            if vars[self].resource then
-                if vars[self].resource:isPlaying() then
-                    vars[self].resource:pause()
+            odata.played = false
+        elseif state == 'pause' then
+            if odata.resource then odata.resource:pause() end
+            odata.played = false
+        elseif state == 'invert' then
+            if odata.resource then
+                if odata.resource:isPlaying() then
+                    odata.resource:pause()
                 else
-                    vars[self].resource:play()
+                    odata.resource:play()
                 end
             end
-            vars[self].played = not vars[self].played
+            odata.played = not odata.played
         else
             return false
         end
         return true
     end
 
-
     --- Post-update event
-    function Video:postUpdate()
-        if not self.entity then return end
-        local vars = self.entity.vars
+    function Video:postupdate(obj)
+        local data = obj.data
+        local odata = self:data(obj)
 
-        if vars[self].resource then
-            if vars[self].looped and vars[self].played and not vars[self].resource:isPlaying() then
-                vars[self].resource:rewind()
-                vars[self].resource:play()
-            else
-                if vars[self].hiding and not vars[self].resource:isPlaying() then return end
-            end
-        else return end
+        if not odata.resource then
+            return
+        elseif odata.looped and odata.played and not odata.resource:isPlaying() then
+            odata.resource:rewind()
+            odata.resource:play()
+            return
+        elseif odata.hiding and not odata.resource:isPlaying() then
+            return
+        end
 
-
-        if not vars.hidden then
+        if not data.hidden then
             RenderManager:add({
-                object = vars[self].resource,
+                object = odata.resource,
 
-                z = vars.globalZ or vars.z,
-                x = vars.globalX or vars.x,
-                y = vars.globalY or vars.y,
-                r = vars.r,
+                z = data.globalZ or data.z,
+                x = data.globalX or data.x,
+                y = data.globalY or data.y,
+                r = data.r,
 
-                color = vars[self].color,
+                sx = data.scalex,
+                sy = data.scaley,
 
+                color = odata.color,
             })
         end
     end
