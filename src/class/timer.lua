@@ -23,6 +23,7 @@ local Timer = Class:extend()
     -- @param number dt
     -- @param boolean islast
     function Timer:update(dt, islast)
+    	if not islast then return end
         self.i = self.i + 1
         if self.i >= self.tick then
             EventManager:invoke('timer', self)

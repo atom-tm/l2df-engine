@@ -13,6 +13,7 @@ local helper = core.import 'helper'
 local Component = core.import 'class.component'
 local Grid = core.import 'class.component.physix.grid'
 local Cube = core.import 'class.component.physix.cube'
+local Render = core.import 'manager.render'
 
 local setmetatable = _G.setmetatable
 local pairs = _G.pairs
@@ -112,11 +113,6 @@ local World = Component:extend({ unique = true })
     local getDictItemsInCellCube, getCellsTouchedBySegment, getInfoAboutItemsTouchedBySegment, getResponseByName
 
     ---
-    function World.getFromContext()
-        return stack[#stack]
-    end
-
-    ---
     function World:init(cellSize)
         self.entity = nil
         self.active = true
@@ -141,6 +137,10 @@ local World = Component:extend({ unique = true })
 
         local data = self:data(obj)
         self.borders = kwargs.borders or self.borders
+        data.width = kwargs.width or 0
+        data.height = kwargs.height or 0
+        data.lights = kwargs.lights or { }
+        data.zoom = kwargs.zoom or 1
         data.cubes = { }
         data.cells = { }
         data.nonEmptyCells = { }
@@ -160,8 +160,24 @@ local World = Component:extend({ unique = true })
     end
 
     ---
-    function World:data()
-        return self.super.data(self, self.entity) or { gravity = 0, friction = 0 }
+    function World:data(obj)
+        return self.super.data(self, obj) or { gravity = 0, friction = 0 }
+    end
+
+    ---
+    function World.getFromContext()
+        return stack[#stack]
+    end
+
+    ---
+    function World:liftdown(obj)
+        stack[#stack + 1] = self:wrap(obj)
+    end
+
+    ---
+    function World:liftup(obj)
+        if #stack < 1 then return end
+        stack[#stack] = nil
     end
 
     ---
@@ -370,17 +386,6 @@ local World = Component:extend({ unique = true })
     function World:addResponse(name, response)
         -- TODO: add support for callable tables
         self.responses[name] = assert(type(response) == 'function' and response, 'World\'s response must be a function')
-    end
-
-    ---
-    function World:liftdown()
-        stack[#stack + 1] = self
-    end
-
-    ---
-    function World:liftup()
-        if #stack < 1 then return end
-        stack[#stack] = nil
     end
 
     addItemToCell = function (self, item, cx, cy, cz)

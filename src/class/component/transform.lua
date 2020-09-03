@@ -13,7 +13,7 @@ local Event = core.import 'manager.event'
 
 local stack = { CTransform:new() }
 
-local Transform = Component:extend({ unique = true })
+local Transform = Component:extend({ unique = true, ignore_postlift = true })
 
     function Transform:added(obj, kwargs)
         if not obj then return false end

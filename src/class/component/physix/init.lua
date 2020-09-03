@@ -2,7 +2,7 @@
 -- @classmod l2df.class.component.physix
 -- @author Abelidze
 -- @author Kasai
--- @copyright Atom-TM 2019
+-- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
@@ -59,7 +59,7 @@ local Physix = Component:extend({ unique = true })
 		local data, world = obj.data, World.getFromContext()
 		if not world or data.static then return end
 
-		local wdata = world:data()
+		local wdata = world.data()
 
 		data.vx = data.vx - convert(data.vx * wdata.friction) * dt
 		data.vx = data.dvx ~= 0 and convert(data.dvx) or data.vx

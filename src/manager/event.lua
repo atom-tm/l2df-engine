@@ -201,6 +201,10 @@ local Manager = { active = true }
 
 			-- lift down
 			if nodes and #nodes > 0 then
+				c = object and object:getComponents() or emptyTable
+				for j = 1, #c do
+					_ = not c[j].ignore_postlift and c[j].liftdown and c[j].liftdown(...)
+				end
 				current[2] = i
 				current = { nodes, 0, #nodes }
 				depth = depth + 1
@@ -213,6 +217,10 @@ local Manager = { active = true }
 				current = tasks[depth]
 				i = current[2]
 				object = current[1][i]
+				c = object and object:getComponents() or emptyTable
+				for j = 1, #c do
+					_ = not c[j].ignore_postlift and c[j].liftup and c[j].liftup(...)
+				end
 			end
 		end
 		self:invoke('postupdate', self, ...)

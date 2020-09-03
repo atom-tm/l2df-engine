@@ -24,8 +24,6 @@ local lovePop = love.graphics.pop
 local loveScale = love.graphics.scale
 local loveTranslate = love.graphics.translate
 local loveRotate = love.graphics.rotate
-local loveGetWidth = love.graphics.getWidth
-local loveGetHeight = love.graphics.getHeight
 
 local function clamp(x, minX, maxX)
   return x < minX and minX or (x > maxX and maxX or x)
@@ -87,17 +85,14 @@ end
 
 -- Public interface
 
-function gamera.new(l, t, w, h)
-  local sw, sh = loveGetWidth(), loveGetHeight()
-
+function gamera.new(sw, sh)
   local cam = setmetatable({
     x=0, y=0,
     scale=1,
     angle=0, sin=msin(0), cos=mcos(0),
     l=0, t=0, w=sw, h=sh, w2=sw*0.5, h2=sh*0.5
   }, gameraMt)
-
-  cam:setWorld(l, t, w, h)
+  cam:setWorld(0, 0, sw, sh)
   return cam
 end
 
