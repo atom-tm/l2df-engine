@@ -12,6 +12,7 @@ local math = _G.math
 local core = l2df
 
 	local log = core.import 'class.logger'
+	local Entity = core.import 'class.entity'
 	local Factory = core.import 'manager.factory'
 	local EventManager = core.import 'manager.event'
 	local GroupManager = core.import 'manager.group'
@@ -23,8 +24,6 @@ local core = l2df
 	local NetworkManager = core.import 'manager.network'
 	local PhysixManager = core.import 'manager.physix'
 	local Recorder = core.import 'manager.recorder'
-
-	local Entity = core.import 'class.entity'
 
 	--- Engine's standart entry point
 	-- @param number fps
@@ -71,7 +70,6 @@ local core = l2df
 		local throttle = 0
 		local delta = 0
 		local diff = 0
-		local sync = false
 		local draw = false
 		local min = math.min
 		return function()
@@ -92,10 +90,7 @@ local core = l2df
 			tickrate = core.tickrate
 			delta = (love.timer and love.timer.step() or tickrate)
 			NetworkManager:update(delta)
-			sync, diff, throttle = SyncManager:sync(InputManager.frame)
-			-- if sync then
-			-- 	InputManager.frame = SyncManager.frame
-			-- end
+			diff, throttle = SyncManager:sync(InputManager.frame)
 			if SyncManager.desync then
 				SyncManager.desync = false
 				love.window.showMessageBox("Alert", "Rollback Desync Detected", "warning", true)
@@ -103,7 +98,7 @@ local core = l2df
 			end
 
 			-- Update
-			accumulate = accumulate + delta + diff - throttle
+			accumulate = min(accumulate + delta + diff - throttle, 1 / tickrate)
 			if love.update then
 				draw = false
 				while accumulate >= tickrate do

@@ -62,7 +62,10 @@ local Component = Class:extend()
 	--- Component removed from l2df.class.entity
 	-- @param l2df.class.entity obj
 	function Component:removed(obj)
-		--
+		obj.data[self] = nil
+		if obj.___meta then
+			obj.___meta[self] = nil
+		end
 	end
 
 return Component

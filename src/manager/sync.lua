@@ -83,21 +83,24 @@ local Manager = { time = 0, size = 1, desync = false }
 
 	---
 	-- @param number frame
-	-- @return boolean
+	-- @return number
 	-- @return number
 	function Manager:sync(frame)
-		local throttle = advantage < min_advantage and 0 or (frame - last_throttle > 40) and min(advantage, max_advantage) or 0
-		advantage = advantage - throttle
+		local throttle = advantage >= min_advantage and self.frame - last_throttle > 40 and min(advantage, max_advantage) or 0
+		if throttle > 0 then
+			advantage = advantage - throttle
+			last_throttle = self.frame
+		end
 		if frame < self.frame then
 			local diff = self:rollback(frame)
 			if diff > 0 then
 				log:debug('ROLLBACK Timer: %s Size: [%s/%s][%.3f] Advantage: %.3f Throttle: %.3f',
 					self.frame, diff, self.size, diff * tickrate, advantage, throttle
 				)
-				return true, diff * tickrate, throttle
+				return diff * tickrate, throttle
 			end
 		end
-		return false, 0, throttle
+		return 0, throttle
 	end
 
 	--- Persist state

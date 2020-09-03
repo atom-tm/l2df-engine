@@ -15,7 +15,7 @@ local pairs = _G.pairs
 local clone = helper.copyTable
 
 local added_data = { }
-local ignored = { id = 1, keyword = 1 }
+local ignored = { 1, 2, id = 1, keyword = 1 }
 
 local Frames = Component:extend({ unique = true })
 
@@ -27,10 +27,9 @@ local Frames = Component:extend({ unique = true })
 		kwargs = kwargs or { }
 
 		local data = obj.data
-		obj.data[self] = { list = { }, map = { }, counter = 0 }
+		obj.data[self] = { added = { }, list = { }, map = { }, counter = 0 }
 
 		obj.C.frames = self:wrap(obj)
-		added_data[obj] = { }
 
 		kwargs.frame = kwargs.frame or 1
 		kwargs.frames = kwargs.frames or { }
@@ -46,8 +45,8 @@ local Frames = Component:extend({ unique = true })
 	end
 
 	function Frames:removed(obj)
+		self.super.removed(self, obj)
 		obj.C.frames = nil
-		added_data[obj] = nil
 	end
 
     --- Add new frame with specified id
@@ -113,8 +112,7 @@ local Frames = Component:extend({ unique = true })
 		if not data.frame.id then
 			return
 		end
-		local storage = self:data(obj)
-		local adata = added_data[obj]
+		local adata = storage.added
 		for i = 1, #adata do
 			data[adata[i][1]] = adata[i][2]
 			adata[i] = nil

@@ -5,7 +5,7 @@
 -- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
-assert(type(core) == 'table' and core.version >= 1.0, 'PhysixManager works only with l2df v1.0 and higher')
+assert(type(core) == 'table' and core.version >= 1.0, 'Collisions works only with l2df v1.0 and higher')
 
 local helper = core.import 'helper'
 local Component = core.import 'class.component'
