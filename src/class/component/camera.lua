@@ -8,8 +8,7 @@ local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Camera works only with l2df v1.0 and higher')
 
 local Component = core.import 'class.component'
-local World = core.import 'class.component.physix.world'
-local RenderManager = core.import 'manager.render'
+local Renderer = core.import 'manager.render'
 
 local min = math.min
 local max = math.max
@@ -30,25 +29,27 @@ local Camera = Component:extend({ unique = true })
 		data.centery = data.centery or 0
 
 		local storage = self:data(obj)
+		storage.priority = kwargs.priority or storage.priority or 1
 		storage.kx = kwargs.kx or storage.kx or 0
 		storage.ky = kwargs.ky or storage.ky or 0
 		storage.ox = data.centerx or 0
 		storage.oy = data.centery or 0
 	end
 
-	function Camera:postupdate(obj)
-		local world = World.getFromContext()
-		if not world then return end
-		local storage, wdata = self:data(obj), world.data()
+	function Camera:postupdate(obj, dt, islast)
+		if not (obj and islast) then return end
+
+		local storage = self:data(obj)
 		storage.ox, storage.oy = max(storage.ox, storage.centerx), max(storage.oy, storage.centery)
-		RenderManager:setWorldSize(wdata.width, wdata.height, wdata.zoom)
-		RenderManager:track(
+		Renderer:track(
+			storage.layer,
 			storage.globalX,
 			storage.globalZ - storage.globalY,
-			2 * storage.ox * storage.globalScaleX,
-			0.5 * storage.oy * storage.globalScaleY,
+			storage.ox * storage.globalScaleX,
+			storage.oy * storage.globalScaleY,
 			storage.kx,
-			storage.ky
+			storage.ky,
+			storage.priority
 		)
 	end
 

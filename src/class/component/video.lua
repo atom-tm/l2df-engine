@@ -98,17 +98,15 @@ local Video = Component:extend({ unique = false })
         end
 
         if not data.hidden then
-            RenderManager:add({
+            RenderManager:draw({
+                -- layer = data.layer,
                 object = odata.resource,
-
                 z = data.globalZ or data.z,
                 x = data.globalX or data.x,
                 y = data.globalY or data.y,
                 r = data.r,
-
                 sx = data.scalex,
                 sy = data.scaley,
-
                 color = odata.color,
             })
         end

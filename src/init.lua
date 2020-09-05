@@ -53,7 +53,7 @@ local core = l2df
 		EventManager:subscribe('postupdate', InputManager.advance, EventManager, InputManager)
 		EventManager:subscribe('postupdate', SyncManager.commit, EventManager, SyncManager)
 		EventManager:subscribe('postupdate', Recorder.update, EventManager, Recorder)
-		EventManager:subscribe('draw', RenderManager.draw, love, RenderManager)
+		EventManager:subscribe('draw', RenderManager.render, love, RenderManager)
 	end
 
 	--- Engine's game loop
@@ -66,6 +66,7 @@ local core = l2df
 		end
 
 		local tickrate = core.tickrate
+		local fps = 1 / tickrate
 		local accumulate = 0
 		local throttle = 0
 		local delta = 0
@@ -98,7 +99,7 @@ local core = l2df
 			end
 
 			-- Update
-			accumulate = min(accumulate + delta + diff - throttle, 1 / tickrate)
+			accumulate = min(accumulate + delta + diff - throttle, fps)
 			if love.update then
 				draw = false
 				while accumulate >= tickrate do

@@ -13,7 +13,7 @@ local helper = core.import 'helper'
 local Component = core.import 'class.component'
 local Grid = core.import 'class.component.physix.grid'
 local Cube = core.import 'class.component.physix.cube'
-local Render = core.import 'manager.render'
+local Renderer = core.import 'manager.render'
 
 local setmetatable = _G.setmetatable
 local pairs = _G.pairs
@@ -139,6 +139,8 @@ local World = Component:extend({ unique = true })
         self.borders = kwargs.borders or self.borders
         data.width = kwargs.width or 0
         data.height = kwargs.height or 0
+        data.depth = kwargs.depth
+        data.layer = kwargs.layer
         data.lights = kwargs.lights or { }
         data.zoom = kwargs.zoom or 1
         data.cubes = { }
@@ -167,6 +169,13 @@ local World = Component:extend({ unique = true })
     ---
     function World.getFromContext()
         return stack[#stack]
+    end
+
+    ---
+    function World:update(obj, dt, islast)
+        if not (obj and islast) then return end
+        local data = self:data(obj)
+        Renderer:updateLayerWorld(data.layer, data.width, data.height, data.depth, data.zoom)
     end
 
     ---

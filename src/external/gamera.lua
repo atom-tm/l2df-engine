@@ -161,8 +161,8 @@ function gamera:getAngle()
   return self.angle
 end
 
-function gamera:getVisible()
-  local w, h = getVisibleArea(self)
+function gamera:getVisible(scale)
+  local w, h = getVisibleArea(self, scale)
   return self.x - w*0.5, self.y - h*0.5, w, h
 end
 
@@ -177,7 +177,7 @@ function gamera:getVisibleCorners()
   return x1, y1, x2, y2, x3, y3, x4, y4
 end
 
-function gamera:draw(f)
+function gamera:draw(f, ...)
   local sx, sy, sw, sh = loveGetScissor()
   loveSetScissor(self:getWindow())
 
@@ -189,7 +189,8 @@ function gamera:draw(f)
     loveRotate(-self.angle)
     loveTranslate(-self.x, -self.y)
 
-    f(self:getVisible())
+    local l, t, w, h = self:getVisible()
+    f(l, t, w, h, ...)
   lovePop()
 
   loveSetScissor(sx, sy, sw, sh)

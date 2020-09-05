@@ -15,13 +15,11 @@ local Resources = core.import 'manager.resource'
 
 local min = math.min
 local ceil = math.ceil
-local sqrt = math.sqrt
 local newQuad = love.graphics.newQuad
 
 local greenColor = { 0, 1, 0, 0.3 }
 local yellowColor = { 0, 1, 1, 0.5 }
 local redColor = { 1, 0, 0, 0.5 }
-local blackColor = { 0, 0, 0, 1 }
 
 local Render = Component:extend({ unique = true })
 
@@ -58,6 +56,10 @@ local Render = Component:extend({ unique = true })
 
 		data.hidden = data.hidden or false
 		data.pic = data.pic or kwargs.pic or 1
+
+		data.lights = kwargs.lights or { }
+		data.shadow = kwargs.shadow and true or false
+		data.layer = kwargs.layer
 
 		odata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
@@ -138,6 +140,29 @@ local Render = Component:extend({ unique = true })
 		end
 	end
 
+	function Render:update(obj, dt, islast)
+		if not (obj and islast) then return end
+
+		local data = self:data(obj)
+		local world = World.getFromContext()
+		local wdata = world and world.data()
+		local ground = world and world.borders.y1 or nil
+		local lights = data.lights
+		obj.data.layer = wdata and wdata.layer or data.layer
+		for i = 1, #lights do
+			local light = lights[i]
+			Renderer:addLight {
+				x = (data.globalX or data.x) + light.x or 0,
+				y = (data.globalY or data.y) + light.y or 0,
+				z = (data.globalZ or data.z) + light.z or 0,
+				r = light.r or 0,
+				f = light.f,
+				shadow = light.shadow,
+				ground = ground,
+			}
+		end
+	end
+
 	--- Post-update event
 	-- @param number dt
 	-- @param boolean islast
@@ -146,78 +171,42 @@ local Render = Component:extend({ unique = true })
 
 		local data = obj.data
 		if data.hidden then return end
-		local world = World.getFromContext()
 		local pic = data[self].pics[data.pic]
 		if pic then
-			local sprite, wd = Resources:get(pic[1]), world and world.data()
-			-- Push shadow to render chain
-			local lights = not data.noshadow and wd and #wd.lights or 0
-			for i = 1, Renderer.shadow_level < 2 and min(Renderer.shadow_level, lights) or lights do
-				local light = wd.lights[i]
-				if light.shadow then
-					local dx, dy, dz = data.x - light.x, data.y - light.y, data.z - light.z
-					local distance = dx * dx + dy * dy + dz * dz
-					if distance < light.r * light.r then
-						blackColor[4] = light.f - sqrt(distance) / light.r - data.y * 1e-3 -- intensity
-						Renderer:add({
-							shadow = sprite,
-							quad = pic[2],
-							x = data.globalX or data.x,
-							y = (data.globalY or data.y) * 0.25 + world.borders.y1 or 0,
-							z = data.globalZ or data.z,
-							r = data.globalR or data.r,
-							sx = data.facing * (data.globalScaleX or data.scalex),
-							sy = -dz / light.r * (data.globalScaleY or data.scaley),
-							ox = data.centerx,
-							oy = data.centery,
-							shear = -dx / light.r * data.facing,
-							color = blackColor
-						})
-					end
-				end
-			end
-
-			-- Push sprite to render chain
-			Renderer:add({
-				object = sprite,
+			Renderer:draw {
+				layer = data.layer,
+				object = Resources:get(pic[1]),
 				quad = pic[2],
 				x = data.globalX or data.x,
 				y = data.globalY or data.y,
 				z = data.globalZ or data.z,
 				r = data.globalR or data.r,
-				sx = data.facing * (data.globalScaleX or data.scalex),
-				sy = data.globalScaleY or data.scaley,
+				sx = (data.globalScaleX or data.scalex) * data.facing,
+				sy = (data.globalScaleY or data.scaley),
 				ox = data.centerx,
 				oy = data.centery,
+				shadow = data.shadow,
 				color = data[self].color
-			})
+			}
 		end
-
-		-- if map.shadow_direction > 0 then
-		-- 	shadow_sizey = data.globalScaleX * map.shadow_size + data.globalY * 0.001 + ((map.area - data.globalZ) * 0.001) + math.abs(shear) * 0.1
-		-- 	if shadow_sizey < 0.1 then shadow_sizey = 0.1 end
-		-- 	shadow_y = map.border_up - data.globalY * 0.3 + data.globalZ - frame.centery * shadow_sizey
-		-- else
-		-- 	shadow_sizey = -(data.globalScaleX * map.shadow_size + data.globalY * 0.001 + (data.globalZ * 0.001)) + math.abs(shear) * 0.1
-		-- 	if shadow_sizey > -0.1 then shadow_sizey = -0.1 end
-		-- 	shadow_y = map.border_up + data.globalY * 0.3 + data.globalZ - frame.centery * shadow_sizey
-		-- end
 
 		if not Renderer.DEBUG then return end
 
-		Renderer:add({
+		Renderer:draw {
+			layer = data.layer,
 			circle = 'fill',
 			x = data.globalX or data.x,
 			y = data.globalY or data.y,
 			z = data.globalZ or data.z,
 			color = data[self].color
-		})
+		}
 
 		local bodies, body = data.bodies
 		if bodies then
 			for i = 1, #bodies do
 				body = bodies[i]
-				Renderer:add({
+				Renderer:draw {
+					layer = data.layer,
 					cube = true,
 					x = (data.globalX or data.x) + body.x,
 					y = (data.globalY or data.y) - body.y,
@@ -226,7 +215,7 @@ local Render = Component:extend({ unique = true })
 					h = body.h,
 					d = body.d,
 					color = greenColor
-				})
+				}
 			end
 		end
 
@@ -234,7 +223,8 @@ local Render = Component:extend({ unique = true })
 		if itrs then
 			for i = 1, #itrs do
 				itr = itrs[i]
-				Renderer:add({
+				Renderer:draw {
+					layer = data.layer,
 					cube = true,
 					x = (data.globalX or data.x) + itr.x * data.facing + itr.w * (data.facing - 1) / 2,
 					y = (data.globalY or data.y) - itr.y,
@@ -243,7 +233,7 @@ local Render = Component:extend({ unique = true })
 					h = itr.h,
 					d = itr.d,
 					color = redColor
-				})
+				}
 			end
 		end
 	end

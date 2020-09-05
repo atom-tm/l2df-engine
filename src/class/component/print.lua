@@ -70,7 +70,7 @@ local Print = Component:extend({ unique = false })
 		local cdata = obj.data
 		local data = self:data(obj)
 		if not cdata.hidden then
-			RenderManager:add({
+			RenderManager:draw({
 				text = data.text,
 				font = data.font,
 				limit = data.limit,

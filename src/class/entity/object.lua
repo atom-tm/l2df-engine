@@ -23,7 +23,7 @@ local Object = Entity:extend({ name = 'object' })
         self:addComponent(States, kwargs)
         self:addComponent(Physix, kwargs)
         self:addComponent(Collision, kwargs)
-        self:addComponent(Render, kwargs.sprites)
+        self:addComponent(Render, kwargs.sprites, kwargs)
     end
 
 return Object
