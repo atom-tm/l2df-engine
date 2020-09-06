@@ -200,7 +200,7 @@ local helper = { }
 		return result
 	end
 
-	--- Get the plural form of a word
+	--- Get the plural form of the word
 	-- @param string str
 	-- @return string
 	function helper.plural(str)
@@ -214,6 +214,27 @@ local helper = { }
 			return str .. 'es'
 		end
 		return str .. 's'
+	end
+
+	--- Get the singular form of the word
+	-- @param string str
+	-- @return string
+	function helper.singular(str)
+		if type(str) ~= 'string' then
+			return str
+		end
+		local len = #str
+		local l1 = strsub(str, len - 0, -1)
+		local l2 = strsub(str, len - 1, -2)
+		local l3 = strsub(str, len - 2, -3)
+		if l1 ~= 's' then
+			return str
+		elseif l2 == 'e' and l3 == 'i' then
+			return strsub(str, 1, -4) .. 'y'
+		elseif l2 == 'e' and (l3 == 'x' or l3 == 'o' or l3 == 'z' or l3 == 's' or l3 == 'h') then
+			return strsub(str, 1, -4)
+		end
+		return strsub(str, 1, -2)
 	end
 
 	--- Determine if object is an instance of a specified class

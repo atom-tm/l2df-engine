@@ -58,7 +58,7 @@ local Module = { }
 			end
 			lastKey = k
 		end
-		result[lastKey] = val
+		if lastKey then result[lastKey] = val end
 	end
 
 	function Module:load(filepath)
