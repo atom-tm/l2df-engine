@@ -30,6 +30,7 @@ local isArray = helper.isArray
 
 local LffsParser = BaseParser:extend()
 
+	LffsParser.COMMENT_SYMBOL = '#'
 	LffsParser.PARAM_SYMBOL = ':'
 	LffsParser.QUOTE_SYMBOL = '"'
 	LffsParser.CLOSE_SYMBOL = strbyte('/')
@@ -60,6 +61,7 @@ local LffsParser = BaseParser:extend()
 		local token = nil
 		local parent = nil
 		local foobar = nil
+		local prev = nil
 		local char = nil
 		local byte = nil
 		local pos = 0
@@ -74,11 +76,12 @@ local LffsParser = BaseParser:extend()
 		local is_param = false
 		local is_string = false
 		local is_concat = false
+		local is_comment = false
 
 		while pos < len do
 			while pos < len do
 				pos = pos + 1
-				char = strsub(str, pos, pos)
+				prev, char = char, strsub(str, pos, pos)
 
 				if not is_concat then
 					-- Previous token was param
@@ -94,6 +97,12 @@ local LffsParser = BaseParser:extend()
 								head = head - 1
 							end
 						end
+						break
+
+					-- Skip the rest of the line if comment was met
+					elseif char == self.COMMENT_SYMBOL and (not prev or strmatch(prev, self.VALUE_END_PATTERN)) then
+						is_concat = '\n'
+						is_comment = true
 						break
 
 					-- Start collecting quoted string
@@ -150,18 +159,20 @@ local LffsParser = BaseParser:extend()
 					end
 					is_concat = false
 					is_string = false
+					is_comment = false
 					break
 				end
 
 				-- Collecting token
 				if not is_concat and strmatch(char, self.VALUE_END_PATTERN) then
 					break
-				else
+				elseif not is_comment then
 					bufsize = bufsize + 1
 					buffer[bufsize] = char
 				end
 			end -- while
 
+			-- Fetch token from buffer and process it
 			if bufsize > 0 then
 				-- Prune buffer
 				for j = oldsize, bufsize + 1, -1 do
@@ -235,14 +246,14 @@ local LffsParser = BaseParser:extend()
 		offset = offset or 0
 		local tv = type(data)
 		if tv ~= 'table' then
-			return strformat(tv == 'string' and '"%s"' or '%s', data), false
+			return strformat(tv == 'string' and ' "%s"' or ' %s', tostring(data)), false
 		end
 		local head, j, is_array = { }, 1, true
-		local spacing = strrep(' ', 4 * offset)
+		local tab = strrep(' ', 4 * offset)
 		for k = 1, #data do
 			local tv = type(data[k])
 			if tv ~= 'table' then
-				head[j] = strformat(tv == 'string' and ' "%s"' or ' %s', data[k])
+				head[j] = strformat(tv == 'string' and ' "%s"' or ' %s', tostring(data[k]))
 				j = j + 1
 			end
 		end
@@ -258,18 +269,18 @@ local LffsParser = BaseParser:extend()
 				for l = 1, #v do
 					local r, isarr = self:dump(v[l], offset + 1)
 					local t = v[l]._type or (v[l].___class and v[l].name) or nil
-                    body[i] = strformat('%s<%s%s%s>%s%s%s</%s>', spacing, k, t and ':' or '', t or '', r, isarr and ' ' or '\n', spacing, k)
+                    body[i] = strformat('%s<%s%s>%s%s</%s>', tab, k, t and (':'..t) or '', r, isarr and ' ' or ('\n'..tab), k)
                     i = i + 1
 				end
 			else
 				is_array = false
 				local r, isarr = self:dump(v, offset + 1)
 				if isarr or tv ~= 'table' then
-					head[j] = strformat('%s%s: %s', spacing, k, r)
+					head[j] = strformat('%s%s:%s', tab, k, r)
 					j = j + 1
 				else
 					local t = v._type or (v.___class and v.name) or nil
-					body[i] = strformat('\n%s[%s%s%s]%s\n%s[/%s]', spacing, k, t and ':' or '', t or '', r, spacing, k)
+					body[i] = strformat('\n%s[%s%s]%s\n%s[/%s]', tab, k, t and (':'..t) or '', r, tab, k)
 					i = i + 1
 				end
 			end

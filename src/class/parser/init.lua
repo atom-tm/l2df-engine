@@ -8,6 +8,9 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Parsers works only with l
 
 local Class = core.import 'class'
 
+local type = _G.type
+local assert = _G.assert
+local tostring = _G.tostring
 local strmatch = string.match
 local fopen = io.open
 local fs = love and love.filesystem
