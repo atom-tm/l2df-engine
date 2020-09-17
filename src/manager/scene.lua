@@ -38,11 +38,11 @@ local Manager = { root = Scene { active = true } }
 			self.root:attach(scene)
 			return true
 		end
-		local req, key = helper.requireFile(scene)
+		local v, key = helper.requireFile(scene)
 		key = id or key
-		if req.isInstanceOf and req:isInstanceOf(Scene) then
-			list[key] = req
-			self.root:attach(req)
+		if v.isInstanceOf and v:isInstanceOf(Scene) then
+			list[key] = v
+			self.root:attach(v)
 			return true
 		end
 		return false
@@ -56,6 +56,25 @@ local Manager = { root = Scene { active = true } }
 		self.root:detach(list[id])
 		list[id] = nil
 		return true
+	end
+
+	---
+	-- @param mixed id
+	-- @return boolean
+	function Manager:inStack(id)
+		local scene = assert(id and list[id], 'Room with provided id does not exist')
+		for i = #history, 1, -1 do
+			if history[i] == scene then
+				return true
+			end
+		end
+		return false
+	end
+
+	---
+	-- @return l2df.class.entity.scene
+	function Manager:current()
+		return history[#history]
 	end
 
 	--- Setting the current scene
@@ -74,20 +93,22 @@ local Manager = { root = Scene { active = true } }
 	-- @param mixed id
 	-- @return boolean
 	function Manager:push(id, ...)
-		local scene = assert(list[id], 'Room with provided id does not exist')
+		local scene = history[#history]
+		local _ = scene and scene.disable and scene:disable(...)
+		scene = assert(id and list[id], 'Room with provided id does not exist')
 		history[#history + 1] = scene
-		local _ = scene.enter and scene:enter(...)
-		return scene:setActive(true)
+		return scene:setActive(true) and scene.enter and scene:enter(...) or true
 	end
 
 	--- Removing last scene from current list
 	-- @return boolean
 	function Manager:pop(...)
-		if not (#history > 0) then return false end
+		if not #history > 0 then return false end
 		local scene = history[#history]
-		scene:setActive(false)
+		local _ = not scene:setActive(false) and scene.leave and scene:leave(...)
 		history[#history] = nil
-		return scene.leave and scene:leave(...) or true
+		scene = history[#history]
+		return scene and scene:setActive(true) and scene.enable and scene:enable(...) or true
 	end
 
 return Manager
