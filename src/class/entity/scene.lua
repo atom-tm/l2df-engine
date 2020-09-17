@@ -18,8 +18,8 @@ local Scene = Entity:extend({ name = 'scene' })
 		for i = 1, #layers do
 			Renderer:addLayer(layers[i][1], layers[i])
 		end
+		self.active = not not kwargs.active
 		self.nodes = Storage:new()
-		self.active = kwargs.active and true or false
 		self:attachMultiple(kwargs.nodes)
 	end
 

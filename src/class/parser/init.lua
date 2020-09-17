@@ -67,7 +67,6 @@ local Parser = Class:extend()
 	function Parser:dumpScalar(value)
 		local t = type(value)
 		assert(t ~= 'function', 'Parameter "value" can\'t be a function.')
-
 		if t == 'string' then
 			return '\"' .. tostring(value) .. '\"'
 		end
@@ -80,12 +79,7 @@ local Parser = Class:extend()
 	-- @return table
 	function Parser:dumpToFile(filepath, data)
 		assert(type(filepath) == 'string', 'Parameter "filepath" must be a string.')
-
 		data = self:dump(data)
-		if fs then
-			filepath = fs.getSource() .. '/' .. filepath
-		end
-
 		local f = fopen(filepath, 'w')
 		if f then
 			f:write(data)

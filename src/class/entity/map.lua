@@ -15,14 +15,14 @@ local Transform = core.import 'class.component.transform'
 
 local Map = Scene:extend({ name = 'map' })
 
-    function Map:init(kwargs)
-    	self:super(kwargs)
-        self.data.hidden = kwargs.hidden or false
-        self:addComponent(Transform, kwargs)
-        self:addComponent(Frames, kwargs)
-        self:addComponent(States, kwargs)
-        self:addComponent(Render, kwargs.sprites, kwargs)
-        self:addComponent(World(), kwargs)
-    end
+	function Map:init(kwargs)
+		self:super(kwargs)
+		self.data.hidden = kwargs.hidden or false
+		self:addComponent(Transform, kwargs)
+		self:addComponent(Frames, kwargs)
+		self:addComponent(States, kwargs)
+		self:addComponent(Render, kwargs.sprites, kwargs)
+		self:addComponent(World(), kwargs)
+	end
 
 return Map

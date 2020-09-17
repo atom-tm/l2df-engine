@@ -38,19 +38,19 @@ local Behaviour = Component:extend({ unique = true })
 				id = data.behave[1]:add(list[i][1])
 				data.params[1][id] = list[i][2]
 			end
-			data.head = 1
+			data.size = 1
 		end
 
 		data.params = data.params or { }
 		data.behave = data.behave or { }
-		data.head = data.head or 0
+		data.size = data.size or 0
 		data.list = data.list or { }
 	end
 
 	function Behaviour:invoke(obj, method, ...)
 		local data = self:data(obj)
-		if data.head < 1 then return end
-		local behave = data.behave[data.head]
+		if data.size < 1 then return end
+		local behave = data.behave[data.size]
 		for id, obj in behave:enum() do
 			if type(obj[method]) == 'function' then
 				obj[method](obj, ...)
@@ -63,8 +63,8 @@ local Behaviour = Component:extend({ unique = true })
 			return false
 		end
 		local data = self:data(obj)
-		local id = data.behave[data.head]:add(item)
-		data.params[data.head][id] = params
+		local id = data.behave[data.size]:add(item)
+		data.params[data.size][id] = params
 		return true
 	end
 
@@ -73,8 +73,8 @@ local Behaviour = Component:extend({ unique = true })
 			return false
 		end
 		local data = self:data(obj)
-		local id = data.behave[data.head]:remove(item)
-		if id then data.params[data.head][id] = nil end
+		local id = data.behave[data.size]:remove(item)
+		if id then data.params[data.size][id] = nil end
 		return true
 	end
 
@@ -83,17 +83,17 @@ local Behaviour = Component:extend({ unique = true })
 		local data = self:data(obj)
 		local behave = data.behave
 		local params = data.params
-		for i = data.head, till + 1, -1 do
+		for i = data.size, till + 1, -1 do
 			behave[i] = nil
 			params[i] = nil
 		end
-		data.head = till
+		data.size = till
 		return true
 	end
 
 	function Behaviour:has(obj, item)
 		local data = self:data(obj)
-		local behave = data.behave[data.head]
+		local behave = data.behave[data.size]
 		return behave and behave:has(item) or false
 	end
 
@@ -114,41 +114,41 @@ local Behaviour = Component:extend({ unique = true })
 			return false
 		end
 		local data = self:data(obj)
-		data.head = data.head + 1
+		data.size = data.size + 1
 		local behave = Storage:new()
 		local id = behave:add(item)
-		data.behave[data.head] = behave
-		data.params[data.head] = { [id] = params }
+		data.behave[data.size] = behave
+		data.params[data.size] = { [id] = params }
 		return true
 	end
 
 	function Behaviour:pop(obj)
 		local data = self:data(obj)
-		if data.head > 0 then
-			data.behave[data.head] = nil
-			data.params[data.head] = nil
-			data.head = data.head - 1
+		if data.size > 0 then
+			data.behave[data.size] = nil
+			data.params[data.size] = nil
+			data.size = data.size - 1
 		end
 	end
 
 	function Behaviour:preupdate(obj, dt)
 		local data = self:data(obj)
-		if data.head > 0 then
-			self:invoke(obj, 'preupdate', dt, data.params[data.head])
+		if data.size > 0 then
+			self:invoke(obj, 'preupdate', dt, data.params[data.size])
 		end
 	end
 
 	function Behaviour:update(obj, dt)
 		local data = self:data(obj)
-		if data.head > 0 then
-			self:invoke(obj, 'update', dt, data.params[data.head])
+		if data.size > 0 then
+			self:invoke(obj, 'update', dt, data.params[data.size])
 		end
 	end
 
 	function Behaviour:postupdate(obj, dt)
 		local data = self:data(obj)
-		if data.head > 0 then
-			self:invoke(obj, 'postupdate', dt, data.params[data.head])
+		if data.size > 0 then
+			self:invoke(obj, 'postupdate', dt, data.params[data.size])
 		end
 	end
 

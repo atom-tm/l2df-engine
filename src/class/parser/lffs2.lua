@@ -41,7 +41,7 @@ local LffsParser = BaseParser:extend()
 	LffsParser.BLOCK_LBRACKET = '['
 	LffsParser.BLOCK_RBRACKET = ']'
 	LffsParser.VALUE_END_PATTERN = '[;,%s]'
-	LffsParser.BLOCK_PATTERN = '([%w_]+):?([%w_]*)'
+	LffsParser.BLOCK_PATTERN = '([%w-_]+):?([%w-_]*)'
 
 	--- Method for parsing lffs formatted string
 	-- You can extend existing object by passing it as second parameter
@@ -242,6 +242,7 @@ local LffsParser = BaseParser:extend()
 	--- Method for dumping table to lffs format
 	-- @param table data  Table for dumping
 	-- @return string
+	-- @return boolean
 	function LffsParser:dump(data, offset)		
 		offset = offset or 0
 		local tv = type(data)

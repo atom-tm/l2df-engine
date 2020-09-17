@@ -1,7 +1,8 @@
 --- Core module
 -- @module l2df.core
--- @author Abelidze, Kasai
--- @copyright Atom-TM 2019
+-- @author Abelidze
+-- @author Kasai
+-- @copyright Atom-TM 2020
 
 local __DIR__ = (...):match('(.-)[^%.]+$')
 
@@ -28,16 +29,16 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 	--- Important function to determine engine's location
 	-- First call to core.root() always should be in core.init
 	-- @return string
-	function core.root()
+	function core.root(depth)
 		gsource = gsource or fs and fs.getSource():gsub('%-', '%%%-')
-		source = source or core.fullpath('', 3)
+		source = source or core.fullpath('', depth or 3)
 		return source
 	end
 
 	--- Return information about line where this function was executed
-	-- @param[opt] number i
-	function core.getline(i)
-		i = i or getinfo(3, 'Sl')
+	-- @return string
+	function core.getline()
+		local i = getinfo(3, 'Sl')
 		return strformat('%s:%s', gsource and strgsub(i.source, gsource .. '/?', '') or i.short_src, i.currentline)
 	end
 
@@ -51,7 +52,7 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 
 	--- Converts the path relative to the game's entry point
 	-- @param string path
-	-- @param[opt] number depth
+	-- @param[opt=2] number depth
 	-- @param[opt] table info
 	-- @return string
 	function core.fullpath(path, depth, info)

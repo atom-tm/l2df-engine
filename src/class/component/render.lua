@@ -66,7 +66,7 @@ local Render = Component:extend({ unique = true })
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255
-		} or { 1,1,1,1 }
+		} or { 1, 1, 1, 1 }
 
 		for i = 1, #sprites do
 			self:addSprite(obj, sprites[i])

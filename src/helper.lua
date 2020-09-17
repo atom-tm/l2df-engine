@@ -113,8 +113,8 @@ local helper = { }
 
 	--- Require all scripts from specified directory. Returns table with them
 	-- @param string folderpath  Scripts folderpath
-	-- @param boolean keys  Use filenames instead of autoincremental indexes as table's keys
-	-- @param string pattern  If specified only scripts that match pattern would be loaded
+	-- @param[opt=false] boolean keys  Use filenames instead of autoincremental indexes as table's keys
+	-- @param[opt] string pattern  If specified only scripts that match pattern would be loaded
 	-- @return table
 	function helper.requireFolder(folderpath, keys, pattern)
 		local result = { }

@@ -11,6 +11,7 @@ local Class = core.import 'class'
 local Component = core.import 'class.component'
 local Storage = core.import 'class.storage'
 
+local default = helper.notNil
 local copyTable = helper.copyTable
 local dummy = function () return nil end
 
@@ -24,7 +25,7 @@ local Entity = Class:extend()
 		obj.components = Storage:new()
 		obj.components.class = { }
 		obj.parent = nil
-		obj.active = true
+		obj.active = default(kwargs.active, true)
 		obj.data = { ___shallow = true }
 		obj.___meta = { }
 		obj.C = { }
@@ -158,10 +159,17 @@ local Entity = Class:extend()
 	end
 
 	---
-	function Entity:setActive(bool)
-		local active = bool
-		if bool == nil then active = not self.active end
-		if self.parent and not (self.parent.active) and active then return false end
+	-- @param boolean active
+	-- @param[opt=false] boolean propagate
+	function Entity:setActive(active, propagate)
+		if active == nil then active = not self.active end
+		if not propagate then
+			self.active = active
+			return true
+		end
+		if self.parent and not (self.parent.active) and active then
+			return false
+		end
 		for object in self:enum() do
 			object.active = active
 		end
