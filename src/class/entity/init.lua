@@ -120,10 +120,13 @@ local Entity = Class:extend()
 	end
 
 	--- Getting a list of object inheritors
-	function Entity:getNodes()
+	-- @param[opt] function filter
+	function Entity:getNodes(filter)
 		local list = { }
-		for id, key in self.nodes:enum(true) do
-			list[#list + 1] = key
+		for id, node in self.nodes:enum(true) do
+			if not filter or filter(node) then
+				list[#list + 1] = node
+			end
 		end
 		return list
 	end

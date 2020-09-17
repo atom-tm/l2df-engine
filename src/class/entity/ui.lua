@@ -1,11 +1,13 @@
 --- UI entities module
 -- @classmod l2df.class.entity.ui
+-- @author Abelidze
 -- @author Kasai
--- @copyright Atom-TM 2019
+-- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
+local utf8 = require 'utf8'
 local Entity = core.import 'class.entity'
 local Render = core.import 'class.component.render'
 local Frames = core.import 'class.component.frames'
@@ -17,7 +19,11 @@ local Behaviour = core.import 'class.component.behaviour'
 local Physix = core.import 'class.component.physix'
 local Sound = core.import 'class.component.sound'
 
+local min = math.min
+local strsub = string.sub
+
 local dummy = function () return nil end
+local selectButtons = function (node) return node.name == 'button' end
 
 local UI = Entity:extend()
 
@@ -189,34 +195,38 @@ local UI = Entity:extend()
 	function UI.Menu:init(kwargs, list)
 		self:super(kwargs)
 		self.selected = 1
+		self.buttons = { }
 		self:attachMultiple(kwargs.nodes or list)
 		self:addComponent(Sound, kwargs.sounds)
 		self:addComponent(Behaviour, function ()
-			local list = self:getNodes()
-			list[self.selected]:focus()
+			self.buttons = self:getNodes(selectButtons)
+			self.selected = min(self.selected, #self.buttons)
+			local _ = self.selected > 0 and self.buttons[self.selected]:focus()
 		end)
 	end
 
+	function UI.Menu:select(index)
+		self.selected = (index - 1) % #self.buttons + 1
+	end
+
 	function UI.Menu:next()
-		self.selected = self.selected == self.nodes.count and 1 or self.selected + 1
-		self:change()
+		self.selected = self.selected == #self.buttons and 1 or self.selected + 1
 		self.data.sound = 'next'
 	end
 
 	function UI.Menu:prev()
-		self.selected = self.selected == 1 and self.nodes.count or self.selected - 1
-		self:change()
+		self.selected = self.selected == 1 and #self.buttons or self.selected - 1
 		self.data.sound = 'prev'
 	end
 
-	function UI.Menu:change()
-		self.data.sound = 'change'
+	function UI.Menu:current()
+		return self.buttons[self.selected] or { }
 	end
 
-	function UI.Menu:choice()
-		local list = self:getNodes()
-		local action = list[self.selected].click
-		local _ = type(action) == 'function' and action(list[self.selected])
+	function UI.Menu:choice(...)
+		local button = self:current()
+		local action = button.click
+		local _ = type(action) == 'function' and action(button, ...)
 		self.data.sound = 'choice'
 	end
 
