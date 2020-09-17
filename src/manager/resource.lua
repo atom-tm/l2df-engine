@@ -14,8 +14,14 @@ local Plug = core.import 'class.plug'
 local helper = core.import 'helper'
 local notNil = helper.notNil
 
+local type = _G.type
 local fs = love and love.filesystem
 local min = math.min
+local strmatch = string.match
+local loveNewImage = love.graphics.newImage
+local loveNewVideo = love.graphics.newVideo
+local loveNewSound = love.audio.newSource
+local loveNewFont = love.graphics.newFont
 
 local asyncList = { }
 local asyncChannel = love.thread.getChannel('asyncChannel')
@@ -24,6 +30,7 @@ local asyncLoader = love.thread.newThread([[
 	require 'love.image'
 	require 'love.video'
 	local extensions = ...
+	local strformat = string.format
 	local asyncChannel = love.thread.getChannel('asyncChannel')
 	local asyncReturn = love.thread.getChannel('asyncReturn')
 	local continuation = true
@@ -41,7 +48,7 @@ local asyncLoader = love.thread.newThread([[
 				resource = love.video.newVideoStream(file)
 			elseif extensions.sound[extension] then
 				resource = id
-			else print("error extensions") end
+			else print(strformat('Cant load "%s": unsupported resource type', file)) end
 			if resource then
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
 			end
@@ -55,7 +62,7 @@ local list = {
 	global = Storage:new()
 }
 
---- List of extensions for the file download function
+--- List of supported extensions by resource type
 local extensions = {
 	image = {
 		['.png'] = true,
@@ -144,7 +151,7 @@ local Manager = { }
 	-- @return mixed resource
 	-- @return boolean is the resource marked temporary
 	function Manager:get(id)
-		return list.global:getById(id) or list.temp:getById(id) or nil
+		return id and (list.global:getById(id) or list.temp:getById(id)) or nil
 	end
 
 	--- Adds a supported file type to the Manager by loading it from a path
@@ -152,25 +159,25 @@ local Manager = { }
 	-- @param boolean reload
 	-- @param mixed id
 	-- @param boolean temp
-	-- @return mixed id
-	-- @return mixed resource
+	-- @return mixed  ResourceId
+	-- @return mixed  ResourceData
 	function Manager:load(filepath, reload, id, temp, ...)
 		local id = id or filepath
 		if not reload and self:get(id) then return id end
 		if not fs.getInfo(filepath) then return false end
 		local resource = nil
-		local extension = filepath:match('^.+(%..+)$')
+		local extension = strmatch(filepath, '^.+(%..+)$')
 		if extensions.image[extension] then
-			resource = love.graphics.newImage(filepath, ...)
+			resource = loveNewImage(filepath, ...)
 		elseif extensions.video[extension] then
-			resource = love.graphics.newVideo(filepath, ...)
+			resource = loveNewVideo(filepath, ...)
 		elseif extensions.sound[extension] then
-			resource = love.audio.newSource(filepath, "static", ...)
+			resource = loveNewSource(filepath, 'static', ...)
 		elseif extensions.font[extension] then
-			resource = love.graphics.newFont(filepath, ...)
+			resource = loveNewFont(filepath, ...)
 		else return false end
 		id = self:addById(id, resource, temp)
-		return id
+		return id, resource
 	end
 
 	--- Update event
@@ -185,11 +192,11 @@ local Manager = { }
 		if asyncReturn:getCount() > 0 then
 			local returned = asyncReturn:pop()
 			if extensions.image[returned.extension] then
-				returned.resource = love.graphics.newImage(returned.resource)
+				returned.resource = loveNewImage(returned.resource)
 			elseif extensions.video[returned.extension] then
-				returned.resource = love.graphics.newVideo(returned.resource)
+				returned.resource = loveNewVideo(returned.resource)
 			elseif extensions.sound[returned.extension] then
-				returned.resource = love.audio.newSource(returned.resource, "stream")
+				returned.resource = loveNewSource(returned.resource, 'stream')
 			end
 			self:addById(returned.id, returned.resource, returned.temp)
 			local c = callbacks[returned.id]
@@ -205,10 +212,10 @@ local Manager = { }
 
 	--- Add new file to queue for async loading or return already loaded resource's id
 	-- @param string filepath
-	-- @param function callback
-	-- @param boolean reload
-	-- @param number id
-	-- @param boolean temp
+	-- @param[opt] function callback
+	-- @param[opt=false] boolean reload
+	-- @param[opt] number id
+	-- @param[opt=false] boolean temp
 	-- @return number
 	function Manager:loadAsync(filepath, callback, reload, id, temp)
 		id = id or filepath
@@ -223,11 +230,10 @@ local Manager = { }
 			return id
 		end
 		if not fs.getInfo(filepath) then return false end
-		local extension = filepath:match('^.+(%..+)$')
+		local extension = strmatch(filepath, '^.+(%..+)$')
 		if callback then callbacks[id] = { callback } end
 		asyncList[#asyncList + 1] = { id, filepath, extension, temp }
-		id = self:addById(id, Plug:new(), temp)
-		return id
+		return self:addById(id, Plug:new(), temp)
 	end
 
 	--- Async loading of multiple resources
@@ -278,13 +284,13 @@ local asyncLoader = function (self)
 		local file = object[2]
 		local extension = object[3]
 
-		if file:open("r") then
+		if file:open('r') then
 			current_file = {
 				id = id,
 				file = file,
 				extension = extension,
 				size = file:getSize(),
-				data = "",
+				data = '',
 				object = object
 			}
 		else asyncList:remove(object) end
@@ -307,7 +313,7 @@ local asyncLoader = function (self)
 
 			self:addById(current_file.id, resource, true)
 			current_file = nil
-			print("end")
+			print('end')
 		end
 	end
 end
