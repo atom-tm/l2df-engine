@@ -111,9 +111,10 @@ local Manager = { active = true }
 			local object = current[1][i]
 			local nodes = nil
 
-			-- update components for current item
+			-- pre-update object components for current item
 			if object and object.active then
 				nodes = object:getNodes()
+				_ = object.preupdate and object:preupdate(...)
 				c = object:getComponents() or emptyTable
 				for j = 1, #c do
 					_ = c[j].preupdate and c[j].preupdate(...)
@@ -145,9 +146,10 @@ local Manager = { active = true }
 			local object = current[1][i]
 			local nodes = nil
 
-			-- update components for current item
+			-- update object and components for current item
 			if object and object.active then
 				nodes = object:getNodes()
+				_ = object.update and object:update(...)
 				c = object:getComponents() or emptyTable
 				for j = 1, #c do
 					_ = c[j].update and c[j].update(...)
@@ -190,9 +192,10 @@ local Manager = { active = true }
 			local object = current[1][i]
 			local nodes = nil
 
-			-- update components for current item
+			-- post-update object components for current item
 			if object and object.active then
 				nodes = object:getNodes()
+				_ = object.postupdate and object:postupdate(...)
 				c = object:getComponents() or emptyTable
 				for j = 1, #c do
 					_ = c[j].postupdate and c[j].postupdate(...)
