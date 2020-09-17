@@ -24,7 +24,11 @@ local Class = { }
 		cls.super = setmetatable({ }, {
 				__index = self,
 				__call = function (_, child, ...)
-					return self.init(child, ...)
+					local s = child.super
+					child.super = self.super
+					local r = self.init(child, ...)
+					child.super = s
+					return r
 				end
 			})
 		for _, param in pairs{...} do
