@@ -62,6 +62,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		kwargs.depth = kwargs.depth or self.depth or 1
 
 		local width, height, info = loveGetMode()
+		self.DEBUG = default(kwargs.debug, self.DEBUG)
 		self.vsync = default(kwargs.vsync, info.vsync == 1)
 		self.resizable = default(kwargs.resizable, info.resizable)
 		self.fullscreen = default(kwargs.fullscreen, info.fullscreen)
@@ -141,7 +142,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		kwargs.height = kwargs.height or self.height
 		kwargs.depth = kwargs.depth or self.depth
 		kwargs.index = kwargs.index or (#layers > 0 and layers[#layers].index or 0)
-		kwargs.background = kwargs.background or { 0, 0, 0, 100 }
+		kwargs.background = kwargs.background or { 0, 0, 0, 255 }
 
 		local layer = {
 			name = name,
@@ -149,7 +150,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				(kwargs.background[1] or 0) / 255,
 				(kwargs.background[2] or 0) / 255,
 				(kwargs.background[3] or 0) / 255,
-				(kwargs.background[4] or 0) / 100,
+				(kwargs.background[4] or 0) / 255,
 			},
 			x = kwargs.x,
 			y = kwargs.y,

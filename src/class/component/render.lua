@@ -53,6 +53,7 @@ local Render = Component:extend({ unique = true })
 		data.centery = data.centery or 0
 
 		data.facing = data.facing or 1
+		data.yorientation = kwargs.yorientation or data.yorientation or 1
 
 		data.hidden = data.hidden or false
 		data.pic = data.pic or kwargs.pic or 1
@@ -172,14 +173,15 @@ local Render = Component:extend({ unique = true })
 		local data = obj.data
 		if data.hidden then return end
 		local pic = data[self].pics[data.pic]
+		local x, y, z = data.globalX or data.x, (data.globalY or data.y) * data.yorientation, data.globalZ or data.z
 		if pic then
 			Renderer:draw {
 				layer = data.layer,
 				object = Resources:get(pic[1]),
 				quad = pic[2],
-				x = data.globalX or data.x,
-				y = data.globalY or data.y,
-				z = data.globalZ or data.z,
+				x = x,
+				y = y,
+				z = z,
 				r = data.globalR or data.r,
 				sx = (data.globalScaleX or data.scalex) * data.facing,
 				sy = (data.globalScaleY or data.scaley),
@@ -195,9 +197,9 @@ local Render = Component:extend({ unique = true })
 		Renderer:draw {
 			layer = data.layer,
 			circle = 'fill',
-			x = data.globalX or data.x,
-			y = data.globalY or data.y,
-			z = data.globalZ or data.z,
+			x = x,
+			y = y,
+			z = z,
 			color = data[self].color
 		}
 
@@ -208,9 +210,9 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = (data.globalX or data.x) + body.x,
-					y = (data.globalY or data.y) - body.y,
-					z = (data.globalZ or data.z) + body.z,
+					x = x + body.x,
+					y = y - body.y * data.yorientation,
+					z = z + body.z,
 					w = body.w,
 					h = body.h,
 					d = body.d,
@@ -226,9 +228,9 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = (data.globalX or data.x) + itr.x * data.facing + itr.w * (data.facing - 1) / 2,
-					y = (data.globalY or data.y) - itr.y,
-					z = (data.globalZ or data.z) + itr.z,
+					x = x + itr.x * data.facing + itr.w * (data.facing - 1) / 2,
+					y = y - itr.y * data.yorientation,
+					z = z + itr.z,
 					w = itr.w,
 					h = itr.h,
 					d = itr.d,

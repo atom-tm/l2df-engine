@@ -27,6 +27,7 @@ local UI = Entity:extend()
 		data.x = kwargs.x or data.x
 		data.y = kwargs.y or data.y
         data.r = math.rad(kwargs.r or 0)
+		data.yorientation = kwargs.yorientation or -1
         data.scalex = kwargs.scalex or 1
         data.scaley = kwargs.scaley or 1
 		data.hidden = kwargs.hidden or false
