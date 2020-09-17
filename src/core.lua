@@ -50,6 +50,28 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 		return strgsub(strgsub(path, source, __DIR__), '/', '.')
 	end
 
+	--- Convert path relative to current working directory to absolute
+	-- @param[opt] string path
+	-- @return string
+	function core.workpath(path)
+		assert(fs, 'core.workdir function currently doesn\'t work without LOVE')
+		if path then
+			return strformat('%s/%s', fs.getWorkingDirectory(), path)
+		end
+		return fs.getWorkingDirectory()
+	end
+
+	--- Convert path relative to current save directory to absolute
+	-- @param[opt] string path
+	-- @return string
+	function core.savepath(path)
+		assert(fs, 'core.savepath function currently doesn\'t work without LOVE')
+		if path then
+			return strformat('%s/%s', fs.getSaveDirectory(), path)
+		end
+		return fs.getSaveDirectory()
+	end
+
 	--- Converts the path relative to the game's entry point
 	-- @param string path
 	-- @param[opt=2] number depth
