@@ -1,7 +1,7 @@
 --- Print component
 -- @classmod l2df.class.component.print
 -- @author Kasai
--- @copyright Atom-TM 2019
+-- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
@@ -23,6 +23,7 @@ local Print = Component:extend({ unique = false })
 		kwargs = kwargs or { }
 
 		cdata.text = kwargs.text or self.text or ''
+		cdata.placeholder = kwargs.placeholder or ''
 
 		if type(kwargs.font) == 'number' then
 			cdata.font = loveNewFont(kwargs.font)
@@ -33,13 +34,18 @@ local Print = Component:extend({ unique = false })
 		end
 
 		cdata.limit = kwargs.limit or cdata.font:getWidth(cdata.text)
-
 		cdata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255 }
-		or { 1,1,1,1 }
+		or { 1, 1, 1, 1 }
+		cdata.pcolor = kwargs.pcolor and {
+			(kwargs.pcolor[1] or 255) / 255,
+			(kwargs.pcolor[2] or 255) / 255,
+			(kwargs.pcolor[3] or 255) / 255,
+			(kwargs.pcolor[4] or 255) / 255 }
+		or cdata.color
 	end
 
 	--- Component added to l2df.class.entity
@@ -70,11 +76,15 @@ local Print = Component:extend({ unique = false })
 		local cdata = obj.data
 		local data = self:data(obj)
 		if not cdata.hidden then
+			local text, color = data.text, data.color
+			if #text == 0 then
+				text, color = data.placeholder, data.pcolor
+			end
 			RenderManager:draw({
-				text = data.text,
+				text = text,
 				font = data.font,
 				limit = data.limit,
-				color = data.color,
+				color = color,
 
 				x = cdata.globalX or cdata.x,
 				y = cdata.globalY or cdata.y,
