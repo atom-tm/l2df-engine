@@ -94,6 +94,10 @@ local UI = Entity:extend()
 		self:addComponent(Video, kwargs)
 	end
 
+	function UI.Video:isPlaying()
+		return self:getComponent(Video).isPlaying()
+	end
+
 	function UI.Video:play()
 		self:getComponent(Video).setState('play')
 	end

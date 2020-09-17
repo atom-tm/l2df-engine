@@ -82,6 +82,12 @@ local Video = Component:extend({ unique = false })
         return true
     end
 
+    ---
+    function Video:isPlaying(obj)
+        local odata = self:data(obj)
+        return odata.played and odata.resource:isPlaying()
+    end
+
     --- Post-update event
     function Video:postupdate(obj)
         local data = obj.data
