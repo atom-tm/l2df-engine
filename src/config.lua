@@ -7,101 +7,109 @@
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Config works only with l2df v1.0 and higher')
 
-local DatParser = core.import 'class.parser.dat'
-local LffsParser = core.import 'class.parser.lffs2'
+local helper = core.import 'helper'
+local Parser = core.import 'class.parser.lffs2'
 
 local type = _G.type
+local pairs = _G.pairs
+local select = _G.select
 local strgmatch = string.gmatch
+local copy = helper.copyTable
 
-local config = {
-	graphic = {								-- Настройки графической составляющей игры
-		fpsLimit = 60,							-- Ограничение FPS
-		fullscreen = false,						-- Полный экран
-		vsync = false,							-- Вертикальная синхронизация
-		shadows = true,							-- Детализированные тени
-		reflections = true,						-- Отражения
-		smoothing = true,						-- Фильтрация текстур
-		effects = true,							-- Количество эффектов и частиц
-		details = true,							-- Показ необязательных элементов
-	},
-
-	resolutions = {							-- Доступные разрешения холста игры
-		{ width = 854, height = 480 },			-- 854х480
-		{ width = 1024, height = 576 },			-- 1024х576
-		{ width = 1280, height = 720 },			-- 1280х720
-		{ width = 1366, height = 768 },			-- 1366х768
-		{ width = 1600, height = 900 },			-- 1600х900
-		{ width = 1920, height = 1080 },		-- 1920х1080
-	},
-
-	file = 'data/settings.dat',				-- Путь файла настроек игры
-}
+local config = { }
+local groups = { }
 
 local Module = { }
 
-	function Module:get(str)
-		str = type(str) == 'string' and str or ''
+	---
+	-- @param[opt] string group
+	-- @return table
+	function Module:all(group)
+		local g = group and groups[group] or nil
+		if not g then
+			return config
+		end
+		local data = { }
+		for i = 1, #g do
+			data[g[i]] = config[g[i]]
+		end
+		return data
+	end
+
+	---
+	-- @param string group
+	-- @param {string, ...} ...
+	function Module:group(group, ...)
+		local data = groups[group] or { }
+		for i = 1, select('#', ...) do
+			data[#data + 1] = select(i, ...)
+		end
+		groups[group] = data
+	end
+
+	---
+	-- @param string key
+	-- @return mixed
+	function Module:get(key)
+		key = type(key) == 'string' and key or ''
 		local result
-		for k in strgmatch(str, '[^%.]+') do
+		for k in strgmatch(key, '[^%.]+') do
 			result = result and result[k] or config[k]
 		end
 		return result or config
 	end
 
-	function Module:set(str, val)
-		str = type(str) == 'string' and str or ''
-		local lastKey, result = nil, config
-		for k in strgmatch(str, '[^%.]+') do
+	---
+	-- @param string key
+	-- @param mixed value
+	-- @param[opt] string group
+	function Module:set(key, value, group)
+		key = type(key) == 'string' and key or ''
+		group = group and groups[group] or nil
+		local result, firstKey, lastKey = config
+		for k in strgmatch(key, '[^%.]+') do
 			if lastKey then
-				result[lastKey] = type(result[lastKey]) == 'table' and result[lastKey] or {}
+				result[lastKey] = type(result[lastKey]) == 'table' and result[lastKey] or { }
 				result = result[lastKey]
 			end
-			lastKey = k
+			lastKey, firstKey = k, firstKey or k
 		end
-		if lastKey then result[lastKey] = val end
+		if firstKey and group then
+			group[#group + 1] = firstKey
+		end
+		if lastKey then
+			result[lastKey] = value
+		end
 	end
 
-	function Module:load(filepath)
-		config.file = filepath or config.file
-		config = LffsParser:parseFile(config.file, config)
-	end
-
-	function Module:save()
-		DatParser:dumpToFile(config.file .. '.dat', config)
-		-- if input.controls ~= config.controls then
-		-- 	input:updateMappings(config.controls)
-		-- end
-	end
-
-	function Module:apply()
-		print('Saved')
-		--[[
-			math.randomseed(love.timer.getTime())
-			love.graphics.setDefaultFilter('nearest', 'nearest')
-
-			self.gameWidth = self.private.resolutions[self.global.resolution].width
-			self.gameHeight = self.private.resolutions[self.global.resolution].height
-
-			love.window.setMode(self.gameWidth, self.gameHeight, {
-					fullscreen = self.graphic.fullscreen,
-					vsync = self.graphic.vsync,
-					msaa = 0,
-					depth = 0,
-					minwidth = self.private.resolutions[1].width,
-					minheight = self.private.resolutions[1].height,
-					resizable = true
-				})
-
-			if self.graphic.fullscreen then
-				self.global.width, self.global.height = love.window.getMode()
-			else
-				self.global.width, self.global.height = self.gameWidth, self.gameHeight
-				love.resize(self.gameWidth, self.gameHeight)
+	---
+	-- @param string filepath
+	-- @param[opt] string group
+	-- @param[opt=false] boolean reset
+	function Module:load(filepath, group, reset)
+		group = group and groups[group] or nil
+		if reset then
+			config = { }
+		end
+		local data = Parser:parseFile(filepath)
+		if not data then return end
+		if group then
+			for i = 1, #group do
+				config[group[i]] = copy(data[group[i]], config[group[i]])
 			end
-		]]
+		else
+			config = copy(data, config)
+		end
+	end
+
+	---
+	-- @param string filepath
+	-- @param[opt] string group
+	function Module:save(filepath, group)
+		Parser:dumpToFile(filepath, self:all(group))
 	end
 
 return setmetatable(Module, {
 	__index = config,
-	__call = function (self, k, v) return v and self:set(k, v) or self:get(k) end
+	__call = function (self, k, v, group) return v ~= nil and self:set(k, v, group) or self:get(k) end
 })
