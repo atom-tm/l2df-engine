@@ -47,7 +47,7 @@ local core = l2df
 		EventManager:subscribe('preupdate', SyncManager.persist, EventManager, SyncManager)
 		EventManager:subscribe('preupdate', InputManager.update, EventManager, InputManager)
 		EventManager:subscribe('preupdate', RenderManager.clear, EventManager, RenderManager)
-		EventManager:subscribe('update', SoundManager.play, EventManager, SoundManager)
+		EventManager:subscribe('update', SoundManager.update, EventManager, SoundManager)
 		EventManager:subscribe('update', PhysixManager.update, EventManager, PhysixManager)
 		EventManager:subscribe('update', ResourceManager.update, EventManager, ResourceManager)
 		EventManager:subscribe('postupdate', InputManager.advance, EventManager, InputManager)
