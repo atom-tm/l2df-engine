@@ -14,6 +14,12 @@ local unpack = table.unpack or unpack
 
 local subscribers = { }
 local handlers = { }
+local updateEvents = {
+	{'preupdate','beforepreupdate'},
+	{'update','beforeupdate', true},
+	{'postupdate','beforepostupdate'},
+	{'lastupdate','beforelastupdate'}
+}
 
 local Manager = { active = true }
 
@@ -93,132 +99,66 @@ local Manager = { active = true }
 		end
 	end
 
-	local function initUpdate()
+	local function initUpdate(event)
 		local beginner = { SceneManager.root }
 		local current = { beginner, 0, #beginner }
-		return { current }, beginner, current, 0, 1
+		return event[2] or 'before' .. event[1], event[1], not not event[3], { current }, beginner, current, 0, 1
 	end
 
 	--- Update event
 	function Manager:update(...)
 		local emptyTable, c, _ = { }
+		for k = 1, #updateEvents do
+			local before, event, dolift, tasks, beginner, current, i, depth = initUpdate(updateEvents[k])
+			self:invoke(before, self, ...)
+			while i < current[3] or depth > 1 do
+				i = i + 1
+				local object = current[1][i]
+				local nodes = nil
 
-		-- pre-update
-		self:invoke('preupdate', self, ...)
-		local tasks, beginner, current, i, depth = initUpdate()
-		while i < current[3] or depth > 1 do
-			i = i + 1
-			local object = current[1][i]
-			local nodes = nil
+				-- update object components for current item
+				if object and object.active then
+					nodes = object:getNodes()
+					_ = object[event] and object[event](object, ...)
+					c = object:getComponents() or emptyTable
+					for j = 1, #c do
+						_ = c[j][event] and c[j][event](...)
+					end
+				end
 
-			-- pre-update object components for current item
-			if object and object.active then
-				nodes = object:getNodes()
-				_ = object.preupdate and object:preupdate(...)
-				c = object:getComponents() or emptyTable
-				for j = 1, #c do
-					_ = c[j].preupdate and c[j].preupdate(...)
+				-- lift down
+				if nodes and #nodes > 0 then
+					if dolift then
+						c = object and object:getComponents() or emptyTable
+						for j = 1, #c do
+							_ = c[j].liftdown and c[j].liftdown(...)
+						end
+					end
+					current[2] = i
+					current = { nodes, 0, #nodes }
+					depth = depth + 1
+					tasks[depth] = current
+					i = 0
+
+				-- lift up
+				elseif i >= current[3] and depth > 1 then
+					depth = depth - 1
+					current = tasks[depth]
+					i = current[2]
+					object = current[1][i]
+					if dolift then
+						c = object and object:getComponents() or emptyTable
+						for j = 1, #c do
+							_ = c[j].liftup and c[j].liftup(...)
+						end
+					end
+
+				-- bottom layer
+				-- else
 				end
 			end
-
-			-- lift down
-			if nodes and #nodes > 0 then
-				current[2] = i
-				current = { nodes, 0, #nodes }
-				depth = depth + 1
-				tasks[depth] = current
-				i = 0
-
-			-- lift up
-			elseif i >= current[3] and depth > 1 then
-				depth = depth - 1
-				current = tasks[depth]
-				i = current[2]
-				object = current[1][i]
-			end
+			self:invoke(event, self, ...)
 		end
-
-		-- update
-		self:invoke('beforeupdate', self, ...)
-		tasks, beginner, current, i, depth = initUpdate()
-		while i < current[3] or depth > 1 do
-			i = i + 1
-			local object = current[1][i]
-			local nodes = nil
-
-			-- update object and components for current item
-			if object and object.active then
-				nodes = object:getNodes()
-				_ = object.update and object:update(...)
-				c = object:getComponents() or emptyTable
-				for j = 1, #c do
-					_ = c[j].update and c[j].update(...)
-				end
-			end
-
-			-- lift down
-			if nodes and #nodes > 0 then
-				c = object and object:getComponents() or emptyTable
-				for j = 1, #c do
-					_ = c[j].liftdown and c[j].liftdown(...)
-				end
-				current[2] = i
-				current = { nodes, 0, #nodes }
-				depth = depth + 1
-				tasks[depth] = current
-				i = 0
-
-			-- lift up
-			elseif i >= current[3] and depth > 1 then
-				depth = depth - 1
-				current = tasks[depth]
-				i = current[2]
-				object = current[1][i]
-				c = object and object:getComponents() or emptyTable
-				for j = 1, #c do
-					_ = c[j].liftup and c[j].liftup(...)
-				end
-
-			-- bottom layer
-			-- else
-			end
-		end
-		self:invoke('update', self, ...)
-
-		-- post-update
-		tasks, beginner, current, i, depth = initUpdate()
-		while i < current[3] or depth > 1 do
-			i = i + 1
-			local object = current[1][i]
-			local nodes = nil
-
-			-- post-update object components for current item
-			if object and object.active then
-				nodes = object:getNodes()
-				_ = object.postupdate and object:postupdate(...)
-				c = object:getComponents() or emptyTable
-				for j = 1, #c do
-					_ = c[j].postupdate and c[j].postupdate(...)
-				end
-			end
-
-			-- lift down
-			if nodes and #nodes > 0 then
-				current[2] = i
-				current = { nodes, 0, #nodes }
-				depth = depth + 1
-				tasks[depth] = current
-				i = 0
-
-			-- lift up
-			elseif i >= current[3] and depth > 1 then
-				depth = depth - 1
-				current = tasks[depth]
-				i = current[2]
-				object = current[1][i]
-			end
-		end
-		self:invoke('postupdate', self, ...)
 	end
 
 return Manager
