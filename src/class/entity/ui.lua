@@ -82,7 +82,7 @@ local UI = Entity:extend()
 	UI.Image = UI:extend({ name = 'image' })
 	function UI.Image:init(kwargs)
 		self:super(kwargs)
-		self:addComponent(Render, kwargs.sprites, kwargs)
+		self:addComponent(Render, kwargs)
 		self.data.pic = kwargs.pic or self.data.pic or 1
 	end
 

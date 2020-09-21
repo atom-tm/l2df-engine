@@ -21,7 +21,7 @@ local Map = Scene:extend({ name = 'map' })
 		self:addComponent(Transform, kwargs)
 		self:addComponent(Frames, kwargs)
 		self:addComponent(States, kwargs)
-		self:addComponent(Render, kwargs.sprites, kwargs)
+		self:addComponent(Render, kwargs)
 		self:addComponent(World(), kwargs)
 	end
 

@@ -25,21 +25,21 @@ local Render = Component:extend({ unique = true })
 
 	--- Component added to l2df.class.entity
 	-- @param l2df.class.entity obj
-	-- @param table sprites
-	function Render:added(obj, sprites, kwargs)
+	-- @param table kwargs
+	-- @param table kwargs.sprites
+	function Render:added(obj, kwargs)
 		if not obj then return false end
 
-		local data = obj.data
-		local odata = self:data(obj)
-
 		kwargs = kwargs or { }
-
-		odata.pics = { }
+		local sprites = type(kwargs.sprites) == 'table' and kwargs.sprites or nil
+		local bgcolor = type(kwargs.bgcolor) == 'table' and kwargs.bgcolor or nil
 		if not (sprites and type(sprites) == 'table') then
 			log:warn 'Created object without render support'
 			return obj:removeComponent(self)
 		end
-		sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
+
+		local data = obj.data
+		local cdata = self:data(obj)
 
 		data.x = data.x or 0
 		data.y = data.y or 0
@@ -62,15 +62,19 @@ local Render = Component:extend({ unique = true })
 		data.shadow = kwargs.shadow and true or false
 		data.layer = kwargs.layer
 
-		odata.color = kwargs.color and {
+		cdata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255
 		} or { 1, 1, 1, 1 }
 
-		for i = 1, #sprites do
-			self:addSprite(obj, sprites[i])
+		cdata.pics = { }
+		if sprites then
+			sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
+			for i = 1, #sprites do
+				self:addSprite(obj, sprites[i])
+			end
 		end
 	end
 
@@ -79,17 +83,7 @@ local Render = Component:extend({ unique = true })
 	-- @param table sprite
 	function Render:addSprite(obj, sprite)
 		local data = obj.data
-
-		--[[
-			res - ссылка на ресурс спрайт-листа
-			w,h - ширина и высота одной ячейки
-			x,y - количество ячеек в спрай-листе
-			s - ячейка с которой начнётся считывание спрайтов
-			f - ячейка на которой закончится считывание спрайтов
-			ox, oy - смещение ячеек в листе
-		]]
-
-		local odata = self:data(obj)
+		local cdata = self:data(obj)
 
 		sprite.res = sprite.res or sprite[1] or nil
 		sprite.w = sprite.w or sprite[2] or nil
@@ -104,20 +98,20 @@ local Render = Component:extend({ unique = true })
 		sprite.y = sprite.y or sprite[5] or 1
 
 		local count = sprite.x * sprite.y
-		if (count) == 0 then return end
+		if count <= 0 then return end
 
 		sprite.s = sprite.s or sprite[6] or 1
 		sprite.f = sprite.f or sprite[7] or count
 		sprite.ox = sprite.ox or sprite[8] or 0
 		sprite.oy = sprite.oy or sprite[9] or 0
-		sprite.ord = sprite.ord or sprite[10] or #odata.pics
+		sprite.ord = sprite.ord or sprite[10] or #cdata.pics
 
 		local num = 0
 		for y = 1, sprite.y do
 			for x = 1, sprite.x do
 				num = num + 1
 				if (sprite.s <= num) and (num <= sprite.f) then
-					odata.pics[sprite.ord + (num - sprite.s) + 1] = false
+					cdata.pics[sprite.ord + (num - sprite.s) + 1] = false
 				end
 			end
 		end
@@ -128,7 +122,7 @@ local Render = Component:extend({ unique = true })
 				for x = 1, sprite.x do
 					num = num + 1
 					if (sprite.s <= num) and (num <= sprite.f) then
-						odata.pics[sprite.ord + (num - sprite.s) + 1] = {
+						cdata.pics[sprite.ord + (num - sprite.s) + 1] = {
 							sprite.res,
 							newQuad((x-1) * sprite.w + sprite.ox, (y-1) * sprite.h + sprite.oy, sprite.w, sprite.h, img:getDimensions())
 						}
@@ -171,9 +165,11 @@ local Render = Component:extend({ unique = true })
 		if not (obj and islast) then return end
 
 		local data = obj.data
+		local cdata = self:data(obj)
 		if data.hidden then return end
-		local pic = data[self].pics[data.pic]
 		local x, y, z = data.globalX or data.x, (data.globalY or data.y) * data.yorientation, data.globalZ or data.z
+		local sx, sy = (data.globalScaleX or data.scalex), (data.globalScaleY or data.scaley)
+		local pic = cdata.pics[data.pic]
 		if pic then
 			Renderer:draw {
 				layer = data.layer,
@@ -183,12 +179,12 @@ local Render = Component:extend({ unique = true })
 				y = y,
 				z = z,
 				r = data.globalR or data.r,
-				sx = (data.globalScaleX or data.scalex) * data.facing,
-				sy = (data.globalScaleY or data.scaley),
+				sx = sx * data.facing,
+				sy = sy,
 				ox = data.centerx,
 				oy = data.centery,
 				shadow = data.shadow,
-				color = data[self].color
+				color = cdata.color
 			}
 		end
 
@@ -200,7 +196,7 @@ local Render = Component:extend({ unique = true })
 			x = x,
 			y = y,
 			z = z,
-			color = data[self].color
+			color = cdata.color
 		}
 
 		local bodies, body = data.bodies
