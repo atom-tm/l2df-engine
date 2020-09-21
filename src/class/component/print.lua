@@ -7,10 +7,10 @@ local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
 local Component = core.import 'class.component'
-
 local RenderManager = core.import 'manager.render'
 local ResourceManager = core.import 'manager.resource'
 
+local max = math.max
 local loveNewFont = love.graphics.newFont
 
 local Print = Component:extend({ unique = false })
@@ -22,8 +22,9 @@ local Print = Component:extend({ unique = false })
 		local cdata = self:data(obj)
 		kwargs = kwargs or { }
 
-		cdata.text = kwargs.text or self.text or ''
-		cdata.placeholder = kwargs.placeholder or ''
+		local udata = kwargs.unique and cdata or obj.data
+		udata.text = kwargs.text or ''
+		udata.placeholder = kwargs.placeholder or ''
 
 		if type(kwargs.font) == 'number' then
 			cdata.font = loveNewFont(kwargs.font)
@@ -33,14 +34,16 @@ local Print = Component:extend({ unique = false })
 			cdata.font = loveNewFont()
 		end
 
-		cdata.limit = kwargs.limit or cdata.font:getWidth(cdata.text)
+		local fnt = cdata.font
+		cdata.align = kwargs.align
+		cdata.limit = kwargs.limit or max(fnt:getWidth(cdata.text), fnt:getWidth(cdata.placeholder))
 		cdata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255 }
 		or { 1, 1, 1, 1 }
-		cdata.pcolor = kwargs.pcolor and {
+		udata.pcolor = kwargs.pcolor and {
 			(kwargs.pcolor[1] or 255) / 255,
 			(kwargs.pcolor[2] or 255) / 255,
 			(kwargs.pcolor[3] or 255) / 255,
@@ -73,23 +76,25 @@ local Print = Component:extend({ unique = false })
 	--- Post-update event
 	-- @param l2df.class.entity obj
 	function Print:postupdate(obj)
-		local cdata = obj.data
-		local data = self:data(obj)
-		if not cdata.hidden then
-			local text, color = data.text, data.color
+		local data = obj.data
+		local cdata = self:data(obj)
+		if not data.hidden then
+			local text, color = cdata.text, cdata.color
 			if #text == 0 then
-				text, color = data.placeholder, data.pcolor
+				text, color = cdata.placeholder, cdata.pcolor
 			end
+			if #text == 0 then return end
 			RenderManager:draw({
 				text = text,
-				font = data.font,
-				limit = data.limit,
+				font = cdata.font,
+				align = cdata.align,
+				limit = cdata.limit,
 				color = color,
 
-				x = cdata.globalX or cdata.x,
-				y = cdata.globalY or cdata.y,
-				z = cdata.globalZ or cdata.z,
-				r = cdata.r,
+				x = data.globalX or data.x,
+				y = data.globalY or data.y,
+				z = data.globalZ or data.z,
+				r = data.r,
 			})
 		end
 	end
