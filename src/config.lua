@@ -111,5 +111,6 @@ local Module = { }
 
 return setmetatable(Module, {
 	__index = config,
+	__newindex = Module.set,
 	__call = function (self, k, v, group) return v ~= nil and self:set(k, v, group) or self:get(k) end
 })
