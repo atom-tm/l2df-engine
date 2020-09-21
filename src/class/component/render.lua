@@ -33,8 +33,9 @@ local Render = Component:extend({ unique = true })
 		kwargs = kwargs or { }
 		local sprites = type(kwargs.sprites) == 'table' and kwargs.sprites or nil
 		local bgcolor = type(kwargs.bgcolor) == 'table' and kwargs.bgcolor or nil
-		if not (sprites and type(sprites) == 'table') then
-			log:warn 'Created object without render support'
+		local bcolor = type(kwargs.bcolor) == 'table' and kwargs.bcolor or nil
+		if not (sprites or bgcolor or bcolor) then
+			-- log:warn('Removed RenderComponent from "%s": empty render data', obj.name)
 			return obj:removeComponent(self)
 		end
 
@@ -46,14 +47,20 @@ local Render = Component:extend({ unique = true })
 		data.z = data.z or 0
 		data.r = data.r or 0
 
+		data.w = data.w or kwargs.w or 0
+		data.h = data.h or kwargs.h or 0
+
 		data.scalex = data.scalex or 1
 		data.scaley = data.scaley or 1
 
 		data.centerx = data.centerx or 0
 		data.centery = data.centery or 0
 
+		data.radiusx = data.radiusx or kwargs.radiusx or 0
+		data.radiusy = data.radiusy or kwargs.radiusy or 0
+
 		data.facing = data.facing or 1
-		data.yorientation = kwargs.yorientation or data.yorientation or 1
+		data.yorientation = data.yorientation or kwargs.yorientation or 1
 
 		data.hidden = data.hidden or false
 		data.pic = data.pic or kwargs.pic or 1
@@ -69,6 +76,21 @@ local Render = Component:extend({ unique = true })
 			(kwargs.color[4] or 255) / 255
 		} or { 1, 1, 1, 1 }
 
+		cdata.bgcolor = bgcolor and {
+			(bgcolor[1] or 255) / 255,
+			(bgcolor[2] or 255) / 255,
+			(bgcolor[3] or 255) / 255,
+			(bgcolor[4] or 255) / 255
+		} or nil
+
+		cdata.bcolor = bcolor and {
+			(bcolor[1] or 255) / 255,
+			(bcolor[2] or 255) / 255,
+			(bcolor[3] or 255) / 255,
+			(bcolor[4] or 255) / 255
+		} or nil
+
+		cdata.border = kwargs.border or 1
 		cdata.pics = { }
 		if sprites then
 			sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
@@ -169,6 +191,33 @@ local Render = Component:extend({ unique = true })
 		if data.hidden then return end
 		local x, y, z = data.globalX or data.x, (data.globalY or data.y) * data.yorientation, data.globalZ or data.z
 		local sx, sy = (data.globalScaleX or data.scalex), (data.globalScaleY or data.scaley)
+		if cdata.bgcolor then
+			Renderer:draw {
+				layer = data.layer,
+				rect = 'fill',
+				x = x,
+				y = z - y,
+				w = data.w * sx,
+				h = data.h * sy,
+				rx = data.radiusx,
+				ry = data.radiusy,
+				color = cdata.bgcolor
+			}
+		end
+		if cdata.bcolor then
+			Renderer:draw {
+				layer = data.layer,
+				rect = 'line',
+				x = x,
+				y = z - y,
+				w = data.w * sx,
+				h = data.h * sy,
+				rx = data.radiusx,
+				ry = data.radiusy,
+				color = cdata.bcolor,
+				border = cdata.border
+			}
+		end
 		local pic = cdata.pics[data.pic]
 		if pic then
 			Renderer:draw {

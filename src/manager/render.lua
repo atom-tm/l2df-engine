@@ -28,6 +28,8 @@ local loveClear = love.graphics.clear
 local lovePrintf = love.graphics.printf
 local loveGetColor = love.graphics.getColor
 local loveSetColor = love.graphics.setColor
+local loveGetLineWidth = love.graphics.getLineWidth
+local loveSetLineWidth = love.graphics.setLineWidth
 local loveSetCanvas = love.graphics.setCanvas
 local loveNewCanvas = love.graphics.newCanvas
 local loveSetDefaultFilter = love.graphics.setDefaultFilter
@@ -292,12 +294,13 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		if clear then
 			loveClear(unpack(layer.background))
 		end
-		local input, r1, g1, b1, a1, r2, g2, b2, a2
+		local input, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
 		local drawables = layer.z
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
 				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
+				bwidth = loveGetLineWidth()
 				-- Draw shadows
 				if input.shadow and Manager.shadows > 0 then
 					local object = Manager.shadows > 1 and input.object or nil
@@ -337,6 +340,10 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 					r2, g2, b2, a2 = input.color[1] or 1, input.color[2] or 1, input.color[3] or 1, input.color[4] or 1
 					loveSetColor(r2, g2, b2, a2)
 				end
+				-- Set border width
+				if input.border then
+					loveSetLineWidth(input.border)
+				end
 				-- Accept object draw request
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
@@ -346,7 +353,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 					end
 				-- Accept rectangle draw request
 				elseif input.rect then
-					loveRect(input.rect, round(input.x), round(input.y), input.w or 1, input.h or 1)
+					loveRect(input.rect, round(input.x), round(input.y), input.w or 1, input.h or 1, input.rx, input.ry)
 				-- Accept cube draw request
 				elseif input.cube then
 					setAlpha(r2, g2, b2, a2, 0.3)
@@ -367,8 +374,9 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
 				end
-				-- Restore color
+				-- Restore color and border
 				loveSetColor(r1, g1, b1, a1)
+				loveSetLineWidth(bwidth)
 			end
 		end
 	end
