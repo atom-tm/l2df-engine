@@ -8,6 +8,7 @@ local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Entities works only with l2df v1.0 and higher')
 
 local utf8 = require 'utf8'
+local helper = core.import 'helper'
 local Entity = core.import 'class.entity'
 local Render = core.import 'class.component.render'
 local Frames = core.import 'class.component.frames'
@@ -20,6 +21,7 @@ local Physix = core.import 'class.component.physix'
 local Sound = core.import 'class.component.sound'
 
 local min = math.min
+local strtrim = helper.trim
 local strsub = string.sub
 
 local dummy = function () return nil end
@@ -84,14 +86,6 @@ local UI = Entity:extend()
 		self:super(kwargs)
 		self:addComponent(Render, kwargs)
 		self.data.pic = kwargs.pic or self.data.pic or 1
-	end
-
-
-	UI.Animation = UI:extend({ name = 'animation' })
-	function UI.Animation:init(kwargs)
-		self:super(kwargs)
-		self:addComponent(Render, kwargs.sprites, kwargs)
-		self:addComponent(Frames, kwargs)
 	end
 
 
@@ -191,12 +185,64 @@ local UI = Entity:extend()
 	end
 
 
-	UI.Menu = UI:extend({ name = 'menu' })
-	function UI.Menu:init(kwargs, list)
+	UI.Input = UI.Text:extend({ name = 'input' })
+	function UI.Input:init(kwargs)
 		self:super(kwargs)
+		self.trim = not not kwargs.trim
+		self.maxlen = kwargs.maxlength or Print:data(self).limit or 256
+	end
+
+	function UI.Input:getText()
+		return Print:data(self).text
+	end
+
+	function UI.Input:append(text)
+		local data = Print:data(self)
+		text = data.text .. text
+		if self.trim then
+			text = strtrim(text)
+		end
+		if #text <= self.maxlen then
+			data.text = text
+		end
+		return #data.text
+	end
+
+	function UI.Input:erase(count)
+		local data = Print:data(self)
+		local byteoffset = utf8.offset(data.text, -(count or 1)) or 1
+		data.text = strsub(data.text, 1, byteoffset - 1)
+		return #data.text
+	end
+
+	function UI.Input:length()
+		local data = Print:data(self)
+		return #data.text
+	end
+
+
+	UI.Animation = UI.Input:extend({ name = 'animation' })
+	function UI.Animation:init(kwargs)
+		self:super(kwargs)
+		self:addComponent(Frames, kwargs)
+		self:addComponent(States, kwargs)
+		self:addComponent(Render, kwargs)
+	end
+
+
+	UI.Group = UI:extend({ name = 'group' })
+	function UI.Group:init(kwargs, list)
+		self:super(kwargs)
+		self:attachMultiple(kwargs.nodes or list)
+		self:addComponent(Render, kwargs)
+	end
+
+
+	UI.Menu = UI.Group:extend({ name = 'menu' })
+	function UI.Menu:init(kwargs, list)
+		self:super(kwargs, list)
 		self.selected = 1
 		self.buttons = { }
-		self:attachMultiple(kwargs.nodes or list)
 		self:addComponent(Sound, kwargs.sounds)
 		self:addComponent(Behaviour, function ()
 			self.buttons = self:getNodes(selectButtons)
@@ -230,4 +276,4 @@ local UI = Entity:extend()
 		self.data.sound = 'choice'
 	end
 
-return setmetatable({ UI.Text, UI.Image, UI.Animation, UI.Video, UI.Button, UI.Menu }, { __index = UI })
+return setmetatable({ UI.Text, UI.Image, UI.Animation, UI.Video, UI.Input, UI.Button, UI.Group, UI.Menu }, { __index = UI })
