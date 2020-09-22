@@ -11,13 +11,17 @@ local Class = core.import 'class'
 local Component = core.import 'class.component'
 local Storage = core.import 'class.storage'
 
+local assert = _G.assert
+local require = _G.require
+local setmetatable = _G.setmetatable
 local default = helper.notNil
 local copyTable = helper.copyTable
+local isArray = helper.isArray
 local dummy = function () return nil end
 
 local Entity = Class:extend()
 
-	--- Creating a entity instance
+	--- Creating an entity instance
 	function Entity:new(kwargs, key, ...)
 		local obj = self:___getInstance()
 		obj.key = key
@@ -45,6 +49,16 @@ local Entity = Class:extend()
 			end
 		})
 		obj:init(kwargs, key, ...)
+		local components = kwargs.components
+		if isArray(components) then
+			for i = 1, #components do
+				if components[i][2] then
+					obj:createComponent(require(components[i][1] or components[i]), kwargs)
+				else
+					obj:addComponent(require(components[i][1] or components[i]), kwargs)
+				end
+			end
+		end
 		return obj
 	end
 
@@ -179,6 +193,11 @@ local Entity = Class:extend()
 		return true
 	end
 
+	--- Create new component and add to this entity
+	function Entity:createComponent(class, ...)
+		return self:addComponent(class:new(...), ...)
+	end
+
 	--- Add component to entity
 	-- @param Component component
 	function Entity:addComponent(component, ...)
@@ -187,11 +206,6 @@ local Entity = Class:extend()
 		-- if component.unique and self:hasComponentClass(component.___class) then return false end
 		self.components.class[component.___class] = self.components.class[component.___class] and self.components.class[component.___class] + 1 or 1
 		return self.components:add(component), component, component.added and component:added(self, ...)
-	end
-
-	--- Create new component and add to manager
-	function Entity:createComponent(class, ...)
-		return self:addComponent(class:new(...), ...)
 	end
 
 	--- Remove component from entity
@@ -205,7 +219,7 @@ local Entity = Class:extend()
 		return false
 	end
 
-	---
+	--- Remove all components added to entity
 	function Entity:clearComponents()
 		for _, component in self.components:enum() do
 			self:removeComponent(component)
@@ -213,6 +227,14 @@ local Entity = Class:extend()
 		self.components:reset()
 		self.components.class = { }
 		return true
+	end
+
+	--- Floats up existing component of the object like a bubble. Can be used to reorder components execution
+	function Entity:upComponent(component)
+		assert(component:isInstanceOf(Component), 'not a subclass of Component')
+		if not self:hasComponent(component) then return false end
+		self.components:remove(component)
+		return self.components:add(component), component
 	end
 
 	--- Check if component exists on entity

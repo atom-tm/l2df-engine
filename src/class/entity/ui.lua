@@ -89,6 +89,14 @@ local UI = Entity:extend()
 	end
 
 
+	UI.Animation = UI:extend({ name = 'animation' })
+	function UI.Animation:init(kwargs)
+		self:super(kwargs)
+		self:addComponent(Frames, kwargs)
+		self:addComponent(Render, kwargs)
+	end
+
+
 	UI.Video = UI:extend({ name = 'video' })
 	function UI.Video:init(kwargs)
 		self:super(kwargs)
@@ -221,26 +229,17 @@ local UI = Entity:extend()
 	end
 
 
-	UI.Animation = UI.Input:extend({ name = 'animation' })
-	function UI.Animation:init(kwargs)
-		self:super(kwargs)
-		self:addComponent(Frames, kwargs)
-		self:addComponent(States, kwargs)
-		self:addComponent(Render, kwargs)
-	end
-
-
 	UI.Group = UI:extend({ name = 'group' })
-	function UI.Group:init(kwargs, list)
+	function UI.Group:init(kwargs)
 		self:super(kwargs)
-		self:attachMultiple(kwargs.nodes or list)
+		self:attachMultiple(kwargs.nodes)
 		self:addComponent(Render, kwargs)
 	end
 
 
 	UI.Menu = UI.Group:extend({ name = 'menu' })
-	function UI.Menu:init(kwargs, list)
-		self:super(kwargs, list)
+	function UI.Menu:init(kwargs)
+		self:super(kwargs)
 		self.selected = 1
 		self.buttons = { }
 		self:addComponent(Sound, kwargs.sounds)
