@@ -17,14 +17,16 @@ local sound_list = { }
 
 local Manager = { sound_volume = 1, music_volume = 1 }
 
-	---
+	--- Configure @{l2df.manager.sound}
 	-- @param table kwargs
 	-- @param[opt=0.7] number kwargs.sound
 	-- @param[opt=0.3] number kwargs.music
+	-- @return l2df.manager.sound
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
 		self.sound_volume = kwargs.sound or 0.7
 		self.music_volume = kwargs.music or 0.3
+		return self
 	end
 
 	--- Set background music
@@ -87,4 +89,4 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 		end
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

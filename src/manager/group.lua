@@ -14,6 +14,14 @@ local classes = {}
 
 local Manager = { }
 
+	--- Configure @{l2df.manager.group}
+	-- @param table kwargs
+	-- @return l2df.manager.group
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
+	end
+
 	--- Embed references to Manager methods in the entity instance that you create
 	-- @param l2df.class.entity entity
 	function Manager:classInit(entity)
@@ -143,4 +151,4 @@ local Manager = { }
 		return result
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

@@ -18,6 +18,14 @@ local list = { }
 
 local Manager = { }
 
+	--- Configure @{l2df.manager.kinds}
+	-- @param table kwargs
+	-- @return l2df.manager.kinds
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
+	end
+
 	--- Adds the kind file to the list
 	-- @param string filepath
 	function Manager:add(filepath)
@@ -51,4 +59,4 @@ local Manager = { }
 		return list[kind] or nil
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

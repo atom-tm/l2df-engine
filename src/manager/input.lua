@@ -68,19 +68,27 @@ local double_timer = max(3, ceil(0.2 / tickrate))
 local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
 
 	--- Init
-	-- @param table keys
-	function Manager:init(keys)
-		keys = keys or { }
+	-- @param table kwargs
+	-- @param[opt] table kwargs.keys
+	-- @param[opt] table kwargs.mappings
+	-- @param[opt=false] boolean kwargs.key_repeat
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		setKeyRepeat(kwargs.key_repeat or false)
 		self.localplayers = 0
 		self.remoteplayers = 0
 		self.keys = { }
 		self.keymap = { }
 		self:reset()
-		setKeyRepeat(false)
+		local keys = kwargs.keys or { }
 		for i = 1, #keys do
 			self.keys[i] = { keys[i], bit(i) }
 			self.keymap[keys[i]] = i
 		end
+		if kwargs.mappings then
+			self:updateMappings(kwargs.mappings)
+		end
+		return self
 	end
 
 	--- Reset all inputs and timer of manager
@@ -128,14 +136,14 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 	end
 
 	--- Sync mappings with config
-	-- @param table controls
-	function Manager:updateMappings(controls)
+	-- @param table mappings
+	function Manager:updateMappings(mappings)
 		self.mapping = { }
-		self.localplayers = #controls
+		self.localplayers = #mappings
 		for p = 1, self.localplayers do
 			inputs[p] = newInput()
 			self.buttons[p] = { }
-			for k, v in pairs(controls[p]) do
+			for k, v in pairs(mappings[p]) do
 				if self.keymap[k] then
 					self.mapping[v] = { k, p }
 				end
@@ -383,4 +391,4 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

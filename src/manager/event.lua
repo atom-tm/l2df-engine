@@ -14,7 +14,7 @@ local unpack = table.unpack or unpack
 
 local subscribers = { }
 local handlers = { }
-local updateEvents = {
+local update_events = {
 	{'preupdate','beforepreupdate'},
 	{'update','beforeupdate', true},
 	{'postupdate','beforepostupdate'},
@@ -22,6 +22,16 @@ local updateEvents = {
 }
 
 local Manager = { active = true }
+
+	--- Configure @{l2df.manager.event}
+	-- @param table kwargs
+	-- @param[opt] kwargs.updates
+	-- @return l2df.manager.event
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		update_events = kwargs.updates or update_events
+		return self
+	end
 
 	--- Embed references to Manager methods in the entity instance that you create
 	-- @param l2df.class.entity entity
@@ -37,6 +47,7 @@ local Manager = { active = true }
 	-- @param string event
 	-- @param function handler
 	-- @param l2df.class.entity source
+	-- @return number  Subscription id. Can be used with @{l2df.manager.event.unsubscribeById}
 	function Manager.subscribe(subscriber, event, handler, source, ...)
 		if not (type(event) == 'string' and subscriber and type(handler) == 'function') then return end
 		subscribers[event] = subscribers[event] or Storage:new()
@@ -49,6 +60,7 @@ local Manager = { active = true }
 	--- Disables event tracking by objects using handler
 	-- @param string event
 	-- @param function handler
+	-- @return boolean
 	function Manager:unsubscribe(event, handler)
 		local id = handlers[event][handler]
 		return self:unsubscribeById(event, id)
@@ -57,6 +69,7 @@ local Manager = { active = true }
 	--- Disables event tracking by objects using Id
 	-- @param string event
 	-- @param number id
+	-- @return boolean
 	function Manager:unsubscribeById(event, id)
 		return (event and id and subscribers[event]:removeById(id)) or false
 	end
@@ -84,17 +97,17 @@ local Manager = { active = true }
 	-- @param l2df.class.entity source
 	-- @param table|string events
 	-- @param table|string alias
-	-- @param boolean saveResult  Whether to save the result of the function execution
-	function Manager:monitoring(source, events, alias, saveResult)
-		-- TODO: saveResult is not working, fix it
-		saveResult = saveResult and false --not not saveResult
+	-- @param boolean save_result  Whether to save the result of the function execution
+	function Manager:monitoring(source, events, alias, save_result)
+		-- TODO: save_result is not working, fix it
+		save_result = save_result and false --not not save_result
 		if type(events) == 'string' then
 			local event = alias or events
-			hook(source, events, function (...) Manager:invoke(event, source, ...) end, saveResult)
+			hook(source, events, function (...) Manager:invoke(event, source, ...) end, save_result)
 		elseif type(events) == 'table' then
 			for key in pairs(events) do
 				local event = alias and alias[key] or key
-				hook(source, key, function (...) Manager:invoke(event, source, ...) end, saveResult)
+				hook(source, key, function (...) Manager:invoke(event, source, ...) end, save_result)
 			end
 		end
 	end
@@ -107,9 +120,9 @@ local Manager = { active = true }
 
 	--- Update event
 	function Manager:update(...)
-		local emptyTable, c, _ = { }
-		for k = 1, #updateEvents do
-			local before, event, dolift, tasks, beginner, current, i, depth = initUpdate(updateEvents[k])
+		local empty_table, c, _ = { }
+		for k = 1, #update_events do
+			local before, event, dolift, tasks, beginner, current, i, depth = initUpdate(update_events[k])
 			self:invoke(before, self, ...)
 			while i < current[3] or depth > 1 do
 				i = i + 1
@@ -120,7 +133,7 @@ local Manager = { active = true }
 				if object and object.active then
 					nodes = object:getNodes()
 					_ = object[event] and object[event](object, ...)
-					c = object:getComponents() or emptyTable
+					c = object:getComponents() or empty_table
 					for j = 1, #c do
 						_ = c[j][event] and c[j][event](...)
 					end
@@ -129,7 +142,7 @@ local Manager = { active = true }
 				-- lift down
 				if nodes and #nodes > 0 then
 					if dolift then
-						c = object and object:getComponents() or emptyTable
+						c = object and object:getComponents() or empty_table
 						for j = 1, #c do
 							_ = c[j].liftdown and c[j].liftdown(...)
 						end
@@ -147,7 +160,7 @@ local Manager = { active = true }
 					i = current[2]
 					object = current[1][i]
 					if dolift then
-						c = object and object:getComponents() or emptyTable
+						c = object and object:getComponents() or empty_table
 						for j = 1, #c do
 							_ = c[j].liftup and c[j].liftup(...)
 						end
@@ -161,4 +174,4 @@ local Manager = { active = true }
 		end
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

@@ -53,7 +53,7 @@ local MAX_PEER_TIMEOUT = 4000
 local NETRECORD_PATTERN = '([^' .. strchar(29) .. ']+)'
 
 -- Client message codes
-local INIT = 1
+local LOGIN = 1
 local LIST = 2
 local FIND = 3
 local RELAY = 4
@@ -219,7 +219,7 @@ local MasterEvents = {
 			log:success('Connected to master: %s', host)
 			master.peer:last_round_trip_time(50)
 			master.peer:ping()
-			master.peer:send( strformat('%c%s%c%s', INIT, manager.ip, 29, manager:username()) )
+			master.peer:send( strformat('%c%s%c%s', LOGIN, manager.ip, 29, manager.username) )
 			master.peer:send( strformat('%c', LIST) )
 			master.initialized = true
 		end
@@ -233,7 +233,7 @@ local MasterEvents = {
 				if c.peer == master.peer then
 					log:info('Lost connection to relay for %s. Finding new one...', c.name)
 					Masters_connect()
-					if manager:username() > c.name then
+					if manager.username > c.name then
 						Relay_newRequest(c)
 					end
 				end
@@ -242,7 +242,7 @@ local MasterEvents = {
 			masters[host] = PENDING
 			if event.data == 228 then
 				log:warn 'Dropped by master. User with same username already exists.'
-			else
+			elseif not master.relayed then
 				log:warn 'Lost connection to master.'
 			end
 		end
@@ -321,27 +321,41 @@ local MasterEvents = {
 	end
 }
 
-local Manager = { }
+local Manager = { ip = '127.0.0.1' }
 
-	--- Init networking
-	-- @param string username
+	--- Configure @{l2df.manager.network}
+	-- @param table kwargs
+	-- @param string kwargs.username
+	-- @param[opt=1] number kwargs.relay_wait_time
+	-- @param[opt=10] number kwargs.relay_max_count
+	-- @param[opt=5] number kwargs.relay_client_attempts
+	-- @param[opt=8] number kwargs.relay_master_attempts
+	-- @param[opt=2000] number kwargs.min_peer_timeout
+	-- @param[opt=4000] number kwargs.max_peer_timeout
 	-- @return l2df.manager.network
-	function Manager:init(username)
-		if self:isReady() then return end
-		self.ip = '127.0.0.1'
-		self.name = assert(type(username) == 'string' and username, 'Username is required for NetworkManager')
-		self.tag = self.tag or rand(1000, 9999)
-		if sock then
-			sock:destroy()
-		end
-		sock = enet.host_create(nil, nil, RELAY_MAX_COUNT + 1)
-		Relay_reset()
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		RELAY_WAIT_TIME = kwargs.relay_wait_time or RELAY_WAIT_TIME
+		RELAY_MAX_COUNT = kwargs.relay_max_count or RELAY_MAX_COUNT
+		RELAY_CLIENT_ATTEMPTS = kwargs.relay_client_attempts or RELAY_CLIENT_ATTEMPTS
+		RELAY_MASTER_ATTEMPTS = kwargs.relay_master_attempts or RELAY_MASTER_ATTEMPTS
+		MIN_PEER_TIMEOUT = kwargs.min_peer_timeout or MIN_PEER_TIMEOUT
+		MAX_PEER_TIMEOUT = kwargs.max_peer_timeout or MAX_PEER_TIMEOUT
+		self.username = kwargs.username or self.username
+		return self:initSocket()
 	end
 
-	--- Get formatted username
-	-- @return string
-	function Manager:username()
-		return strformat('%s#%s', self.name, self.tag)
+	--- Init socket-communication stuff. Called internally and usually should not be used explicitly
+	-- @return l2df.manager.network
+	function Manager:initSocket()
+		if not self:isReady() then
+			if sock then
+				sock:destroy()
+			end
+			sock = enet.host_create(nil, nil, RELAY_MAX_COUNT + 1)
+			Relay_reset()
+		end
+		return self
 	end
 
 	--- Determine if manager is ready to setup connetions
@@ -388,10 +402,11 @@ local Manager = { }
 	end
 
 	--- Login to all registered masters and discover your public IP
-	-- @param string username
+	-- @param[opt] string username
 	-- @return l2df.manager.network
 	function Manager:login(username)
-		self:init(username or self.name)
+		username = username or self:initSocket().username
+		self.username = assert(type(username) == 'string' and username, 'Username is required for NetworkManager')
 		self.ip = discoverIP() or '127.0.0.1'
 		for id, c in pairs(clients) do
 			if not c:isConnected() then
@@ -451,6 +466,7 @@ local Manager = { }
 
 	--- Broadcast event to all connected clients
 	-- @param string event
+	-- @return boolean
 	function Manager:broadcast(event, ...)
 		event = event and ClientEventsMap[event] or 0
 		local format = ClientEvents[event]
@@ -467,6 +483,7 @@ local Manager = { }
 	-- @param string id
 	-- @param string name
 	-- @param table kwargs
+	-- @return l2df.class.client
 	function Manager:addClient(id, name, kwargs)
 		if players[name] then return end
 		kwargs = kwargs or { clocal = id, cstate = 'connected' }
@@ -552,7 +569,7 @@ local Manager = { }
 					log:success('Connected to %s', client.name or eid)
 				end
 				setClient(eid, client.name, client:connected(event))
-				client:send('l2df-verify', self:username())
+				client:send('l2df-verify', self.username)
 
 			elseif event.type == 'disconnect' then
 				-- Failed to connect via public
@@ -595,7 +612,7 @@ local Manager = { }
 							if c:isRelayed() then
 								log:info('Lost connection to relay for %s. Finding new one...', c.name)
 								Masters_connect()
-								if self:username() > c.name then
+								if self.username > c.name then
 									Relay_newRequest(c)
 								end
 							else
@@ -686,4 +703,4 @@ local Manager = { }
 	-- Reply from relay to both peers
 	Manager:event('l2df-relay-reply', 'sHB', Relay_acceptReply)
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

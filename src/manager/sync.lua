@@ -48,17 +48,18 @@ local history = { }
 
 local Manager = { time = 0, size = 1, desync = false }
 
-	--- Init
-	-- @param number size
+	--- Configure @{l2df.manager.sync}
+	-- @param table kwargs
+	-- @param[opt=10] number kwargs.size
 	-- @return l2df.manager.sync
-	function Manager:init(size)
-		maxsize = max(1, size or maxsize)
+	function Manager:init(kwargs)
+		maxsize = max(1, kwargs.size or maxsize)
 		self:reset()
 		return self
 	end
 
 	--- Reset manager and drop all snapshots
-	-- @param[opt] number zero  Default is 0.
+	-- @param[opt=0] number zero
 	function Manager:reset(zero)
 		self.desync = false
 		self.time = zero or 0
@@ -167,4 +168,4 @@ local Manager = { time = 0, size = 1, desync = false }
 		return size
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

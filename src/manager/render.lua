@@ -45,7 +45,7 @@ local layers_map = { }
 
 local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or false }
 
-	--- Initialize renderer
+	--- Configure @{l2df.manager.render}
 	-- @param table kwargs                         Table containing all settings parameters
 	-- @param[opt=640] number kwargs.width         Width of the game in pixels. It's independent from the width of the screen / window
 	-- @param[opt=360] number kwargs.height        Height of the game in pixels. It's independent from the height of the screen / window
@@ -57,6 +57,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 	-- @param[opt] boolean kwargs.fullscreen       Set to true to use fullscreen mode
 	-- @param[opt] boolean kwargs.resizable        Set to true to allow user manually resize game window
 	-- @param[opt] boolean kwargs.vsync            Set to true to use vertical synchronization
+	-- @return l2df.manager.render
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
 		kwargs.width = kwargs.width or self.width or 640
@@ -82,6 +83,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			minheight = height,
 		})
 		self:setResolution(kwargs.width, kwargs.height, kwargs.depth)
+		return self
 	end
 
 	---
@@ -426,4 +428,4 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		loveDraw(self.canvas, self.offsetx, self.offsety, 0, self.scalex, self.scaley)
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

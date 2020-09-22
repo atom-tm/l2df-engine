@@ -1,7 +1,7 @@
 --- States manager
 -- @classmod l2df.manager.states
 -- @author Kasai
--- @copyright Atom-TM 2019
+-- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)manager.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'StatesManager works only with l2df v1.0 and higher')
@@ -14,6 +14,14 @@ local pairs = _G.pairs
 local list = { }
 
 local Manager = { }
+
+	--- Configure @{l2df.manager.states}
+	-- @param table kwargs
+	-- @return l2df.manager.states
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
+	end
 
 	--- Adds the state file to the list
 	-- @param string filepath
@@ -48,4 +56,4 @@ local Manager = { }
 		return list[state] or nil
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

@@ -28,6 +28,14 @@ local traverse, collide, move
 
 local Manager = { }
 
+	--- Configure @{l2df.manager.physix}
+	-- @param table kwargs
+	-- @return l2df.manager.physix
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
+	end
+
 	---
 	-- @param string layer
 	-- @param table collider
@@ -137,4 +145,4 @@ local Manager = { }
 		data.dx, data.dy, data.dz = 0, 0, 0
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

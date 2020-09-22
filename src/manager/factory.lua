@@ -18,29 +18,47 @@ local type = _G.type
 local pairs = _G.pairs
 local unpack = _G.unpack or table.unpack
 
+local elements = { }
+local cache = { }
+
+local function isValidElement(obj)
+	return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.new) == 'function'
+end
+
+local function recursiveCreate(kwargs)
+	local obj = { }
+	for k, v in pairs(kwargs) do
+		obj[k] = type(v) == 'table' and recursiveCreate(v) or v
+	end
+	if obj._type and elements[obj._type] then
+		obj = elements[obj._type]:new(obj, unpack(obj))
+	end
+	return obj
+end
+
 local Manager = { }
 
-	local elements = { }
-	local cache = { }
-
-	local function isValidElement(obj)
-		return type(obj) == 'table' and type(obj.name) == 'string' and type(obj.new) == 'function'
+	--- Configure @{l2df.manager.factory}
+	-- @param table kwargs
+	-- @param[opt] string|table kwargs.scanpaths
+	-- @return l2df.manager.factory
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		local ts = type(kwargs.scanpaths)
+		if ts == 'string' then
+			self:scan(kwargs.scanpaths)
+		elseif ts == 'table' then
+			for i = 1, #kwargs.scanpaths do
+				self:scan(kwargs.scanpaths[i])
+			end
+		end
+		return self
 	end
 
-	local function recursiveCreate(kwargs)
-		local obj = { }
-		for k, v in pairs(kwargs) do
-			obj[k] = type(v) == 'table' and recursiveCreate(v) or v
-		end
-		if obj._type and elements[obj._type] then
-			obj = elements[obj._type]:new(obj, unpack(obj))
-		end
-		return obj
-	end
-
-	---
+	--- Create entity instance of the specified class
 	-- @param string class
 	-- @param string|table kwargs
+	-- @return l2df.class.entity
 	function Manager:create(class, kwargs)
 		local filePath = false
 		class = class and strlower(class) or 0
@@ -66,7 +84,6 @@ local Manager = { }
 	-- @param string path  Path
 	function Manager:scan(path)
 		assert(type(path) == 'string', 'Parameter "path" must be a string.')
-
 		local modules = requireFolder(path)
 		for i = 1, #modules do
 			local mod = modules[i]
@@ -90,4 +107,4 @@ local Manager = { }
 		return false
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

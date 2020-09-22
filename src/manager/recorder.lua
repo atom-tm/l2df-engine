@@ -48,19 +48,38 @@ local function hex2bin(n)
   return string.format('%04X', n):gsub(".", h2b)
 end
 
+local function dummyFunc() end
+
 local records = { }
 
 local Manager = { }
 
-	---
-	function Manager:start(path, metadata, stream, period)
-		local f = assert(fopen(path, 'wb'))
-		f:write(#metadata, metadata)
-		f:close()
-		records[path] = { timer = 0, stream = stream, freq = period or 1 }
+	--- Configure @{l2df.manager.recorder}
+	-- @param table kwargs
+	-- @return l2df.manager.recorder
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
 	end
 
 	---
+	-- @param string path
+	-- @param[opt] string metadata
+	-- @param[opt] function stream
+	-- @param[opt=1] number period
+	function Manager:start(path, metadata, stream, period)
+		local f = assert(fopen(path, 'wb'), 'Can not open "' .. path .. '" for recording')
+		if type(metadata) == 'string' then
+			f:write(#metadata, metadata)
+		else
+			f:write(0)
+		end
+		f:close()
+		records[path] = { timer = 0, stream = stream or dummyFunc, freq = period or 1 }
+	end
+
+	---
+	-- @param string path
 	function Manager:stop(path)
 		if path then
 			records[path] = nil
@@ -121,4 +140,4 @@ local Manager = { }
 		end
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

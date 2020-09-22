@@ -48,13 +48,20 @@ end
 
 local Manager = { }
 
-	---
-	function Manager:seed(offset, gstep, gsalt)
-		state = offset or state or 1
-		step = gstep or step or 1
-		salt = gsalt or salt or 1
+	--- Configure @{l2df.manager.gsid}
+	-- @param table kwargs
+	-- @param[opt=1] number kwargs.offset
+	-- @param[opt=1] number kwargs.gstep
+	-- @param[opt=1] number kwargs.gsalt
+	-- @return l2df.manager.gsid
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		state = kwargs.offset or state or 1
+		step = kwargs.gstep or step or 1
+		salt = kwargs.gsalt or salt or 1
 		counter = salt
 		accumulator = 0
+		return self
 	end
 
 	--- 
@@ -108,4 +115,4 @@ local Manager = { }
 		return a * 65536 + b
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })

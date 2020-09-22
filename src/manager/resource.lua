@@ -87,6 +87,14 @@ local callbacks = { }
 
 local Manager = { }
 
+	--- Configure @{l2df.manager.resource}
+	-- @param table kwargs
+	-- @return l2df.manager.resource
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		return self
+	end
+
 	--- Saves the resource to the Manager
 	-- @param mixed resource
 	-- @param boolean temp
@@ -253,26 +261,9 @@ local Manager = { }
 		return result == 0, result
 	end
 
-return Manager
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+return setmetatable(Manager, { __call = Manager.init })
 
 --[[
-
-
 local asyncLoader = function (self)
 
 	if not current_file then
@@ -317,6 +308,4 @@ local asyncLoader = function (self)
 		end
 	end
 end
-
-
 ]]

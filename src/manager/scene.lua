@@ -15,6 +15,22 @@ local history = { }
 
 local Manager = { root = Scene { active = true } }
 
+	--- Configure @{l2df.manager.scene}
+	-- @param table kwargs
+	-- @param[opt] string load
+	-- @param[opt] string set
+	-- @return l2df.manager.scene
+	function Manager:init(kwargs)
+		kwargs = kwargs or { }
+		if kwargs.load then
+			self:load(kwargs.load)
+		end
+		if kwargs.set then
+			self:set(kwargs.set)
+		end
+		return self
+	end
+
 	--- Load presset scenes from a specified folder
 	-- @param string folderpath
 	function Manager:load(folderpath)
@@ -111,4 +127,4 @@ local Manager = { root = Scene { active = true } }
 		return scene and scene:setActive(true) and scene.enable and scene:enable(...) or true
 	end
 
-return Manager
+return setmetatable(Manager, { __call = Manager.init })
