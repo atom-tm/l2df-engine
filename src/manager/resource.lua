@@ -15,6 +15,7 @@ local helper = core.import 'helper'
 local notNil = helper.notNil
 
 local type = _G.type
+local unpack = table.unpack or _G.unpack
 local fs = love and love.filesystem
 local min = math.min
 local strmatch = string.match
@@ -29,6 +30,7 @@ local asyncReturn = love.thread.getChannel('asyncReturn')
 local asyncLoader = love.thread.newThread([[
 	require 'love.image'
 	require 'love.video'
+	require 'love.filesystem'
 	local extensions = ...
 	local strformat = string.format
 	local asyncChannel = love.thread.getChannel('asyncChannel')
@@ -48,7 +50,9 @@ local asyncLoader = love.thread.newThread([[
 				resource = love.video.newVideoStream(file)
 			elseif extensions.sound[extension] then
 				resource = id
-			else print(strformat('Cant load "%s": unsupported resource type', file)) end
+			else
+				resource = love.filesystem.newFileData(file)
+			end
 			if resource then
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
 			end
@@ -83,6 +87,7 @@ local extensions = {
 	},
 }
 
+local arguments = { }
 local callbacks = { }
 
 local Manager = { }
@@ -173,9 +178,9 @@ local Manager = { }
 	function Manager:load(filepath, reload, id, temp, ...)
 		local id = id or filepath
 		if not reload and self:get(id) then return id end
-		if not fs.getInfo(filepath) then return false end
+		local path, extension = strmatch(filepath, '^(.+)(%..+)$')
+		if filepath and not (fs.getInfo(filepath) or path == '__default__') then return false end
 		local resource = nil
-		local extension = strmatch(filepath, '^.+(%..+)$')
 		if extensions.image[extension] then
 			resource = loveNewImage(filepath, ...)
 		elseif extensions.video[extension] then
@@ -183,7 +188,7 @@ local Manager = { }
 		elseif extensions.sound[extension] then
 			resource = loveNewSource(filepath, 'static', ...)
 		elseif extensions.font[extension] then
-			resource = loveNewFont(filepath, ...)
+			resource = path == '__default__' and loveNewFont(...) or loveNewFont(filepath, ...)
 		else return false end
 		id = self:addById(id, resource, temp)
 		return id, resource
@@ -202,12 +207,15 @@ local Manager = { }
 		if asyncReturn:getCount() > 0 then
 			local returned = asyncReturn:pop()
 			if extensions.image[returned.extension] then
-				returned.resource = loveNewImage(returned.resource)
+				returned.resource = loveNewImage(returned.resource, unpack(arguments[returned.id]))
 			elseif extensions.video[returned.extension] then
-				returned.resource = loveNewVideo(returned.resource)
+				returned.resource = loveNewVideo(returned.resource, unpack(arguments[returned.id]))
+			elseif extensions.font[returned.extension] then
+				returned.resource = loveNewFont(returned.resource, unpack(arguments[returned.id]))
 			elseif extensions.sound[returned.extension] then
 				returned.resource = loveNewSource(returned.resource, 'stream')
 			end
+			arguments[returned.id] = nil
 			self:addById(returned.id, returned.resource, returned.temp)
 			local c = callbacks[returned.id]
 			if c then
@@ -229,7 +237,7 @@ local Manager = { }
 	-- Defaults to `filepath` if not setted.
 	-- @param[opt=false] boolean temp  Set to true if the specified resource should be marked as @{Manager:clearTemp|temporary}.
 	-- @return number
-	function Manager:loadAsync(filepath, callback, reload, id, temp)
+	function Manager:loadAsync(filepath, callback, reload, id, temp, ...)
 		id = id or filepath
 		local res = self:get(id)
 		if not reload and res then
@@ -241,9 +249,14 @@ local Manager = { }
 			end
 			return id
 		end
+		local path, extension = strmatch(filepath, '^(.+)(%..+)$')
+		if path == '__default__' and callback then
+			callback(self:load(filepath, reload, id, temp, ...))
+			return id
+		end
 		if not fs.getInfo(filepath) then return false end
-		local extension = strmatch(filepath, '^.+(%..+)$')
 		if callback then callbacks[id] = { callback } end
+		arguments[id] = { ... }
 		asyncList[#asyncList + 1] = { id, filepath, extension, temp }
 		return self:addById(id, Plug:new(), temp)
 	end
