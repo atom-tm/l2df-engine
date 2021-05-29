@@ -22,22 +22,20 @@ local Sound = core.import 'class.component.sound'
 
 local min = math.min
 local strtrim = helper.trim
+local default = helper.notNil
 local strsub = string.sub
 
 local dummy = function () return nil end
-local selectButtons = function (node) return node.name == 'button' end
+local function selectButtons(node)
+	return node.name == 'button' or node.name == 'menu'
+end
 
 local UI = Entity:extend()
 
 	function UI:init(kwargs)
-		self:addComponent(Transform)
+		self:addComponent(Transform, kwargs)
 		local data = self.data
-		data.x = kwargs.x or data.x
-		data.y = kwargs.y or data.y
-        data.r = math.rad(kwargs.r or 0)
 		data.yorientation = kwargs.yorientation or -1
-        data.scalex = kwargs.scalex or 1
-        data.scaley = kwargs.scaley or 1
 		data.hidden = kwargs.hidden or false
 	end
 
@@ -77,6 +75,7 @@ local UI = Entity:extend()
 	UI.Text = UI:extend({ name = 'text' })
 	function UI.Text:init(kwargs)
 		self:super(kwargs)
+		self:addComponent(Render, kwargs)
 		self:addComponent(Print, kwargs)
 	end
 
@@ -131,20 +130,23 @@ local UI = Entity:extend()
 		local states = kwargs.states or kwargs.nodes
 		states = type(states) == 'table' and states or { }
 
-		local default_state = assertUI(states.normal or states[1], 'Requires a UI type object')
+		local default_state = assertUI(states.normal or states[1] or states, 'Requires a UI type object')
 		self.data.states = {
 			default_state,
 			assertUI(states.focus or states[2] or default_state, 'Requires a UI type object'),
 			assertUI(states.hover or states[3] or default_state, 'Requires a UI type object'),
 			assertUI(states.click or states[4] or default_state, 'Requires a UI type object'),
+			assertUI(states.disabled or states[5] or default_state, 'Requires a UI type object'),
 			nil,
 		}
 
 		self.data.state = 1
+		self.data.default_state = kwargs.disabled and 5 or 1
 		self.data.last_state = 0
 		self:attachMultiple(self.data.states)
 
-		self:setAction(kwargs.action or kwargs[2])
+		self:onClick(kwargs.click or kwargs[2])
+		self:onChange(kwargs.change or kwargs[3])
 
 		self.data.cooldown = 0
 		self.data.max_cooldown = kwargs.cooldown or 0
@@ -154,40 +156,57 @@ local UI = Entity:extend()
 			if self.data.state ~= self.data.last_state then
 				if self.data.last_state == 1 and self.data.state == 2 then
 					self.data.sound = 'focus'
-					self:change()
 				elseif self.data.last_state == 1 and self.data.state == 3 then
 					self.data.sound = 'hover'
-					self:change()
 				end
 				self.data.last_state = self.data.state
 				self:detachAll()
 				self:attach(self.data.states[self.data.state])
+				self:change()
 			end
-			self.data.state = self.data.cooldown == 0 and 1 or self.data.state
+			self.data.state = self.data.cooldown == 0 and self.data.default_state or self.data.state
 			self.data.cooldown = self.data.cooldown > 0 and self.data.cooldown - 1 or self.data.cooldown
 		end)
 	end
 
-	function UI.Button:setAction(func)
-		self.data.action = type(func) == 'function' and func or dummy
+	function UI.Button:onClick(func)
+		self.data.click = type(func) == 'function' and func or dummy
+		return self
+	end
+
+	function UI.Button:onChange(func)
+		self.data.change = type(func) == 'function' and func or dummy
+		return self
 	end
 
 	function UI.Button:change()
-		self.data.sound = 'change'
+		self.data.change(self)
+	end
+
+	function UI.Button:enable()
+		self.data.default_state = 1
+		return self
+	end
+
+	function UI.Button:disable()
+		self.data.default_state = 5
+		return self
 	end
 
 	function UI.Button:focus()
+		if self.data.state >= 4 then return end
 		self.data.state = self.data.state < 2 and 2 or self.data.state
 	end
 
 	function UI.Button:hover()
+		if self.data.state >= 4 then return end
 		self.data.state = self.data.state < 3 and 3 or self.data.state
 	end
 
 	function UI.Button:click()
-		if self.data.state == 4 then return end
+		if self.data.state >= 4 then return end
 		self.data.state = 4
-		self.data.action(self)
+		self.data.click(self)
 		self.data.cooldown = self.data.max_cooldown
 		self.data.sound = 'click'
 	end
@@ -204,15 +223,23 @@ local UI = Entity:extend()
 		return Print:data(self).text
 	end
 
+	function UI.Input:prepend(text)
+		local data = Print:data(self)
+		text = text .. data.text
+		if self.trim then
+			text = strtrim(text)
+		end
+		data.text = strsub(text, 1, self.maxlen)
+		return #data.text
+	end
+
 	function UI.Input:append(text)
 		local data = Print:data(self)
 		text = data.text .. text
 		if self.trim then
 			text = strtrim(text)
 		end
-		if #text <= self.maxlen then
-			data.text = text
-		end
+		data.text = strsub(text, 1, self.maxlen)
 		return #data.text
 	end
 
@@ -221,6 +248,10 @@ local UI = Entity:extend()
 		local byteoffset = utf8.offset(data.text, -(count or 1)) or 1
 		data.text = strsub(data.text, 1, byteoffset - 1)
 		return #data.text
+	end
+
+	function UI.Input:clear()
+		Print:data(self).text = ''
 	end
 
 	function UI.Input:length()
@@ -241,27 +272,56 @@ local UI = Entity:extend()
 	function UI.Menu:init(kwargs)
 		self:super(kwargs)
 		self.selected = 1
+		self.disabled = not not default(kwargs.disabled, false)
 		self.buttons = { }
 		self:addComponent(Sound, kwargs.sounds)
 		self:addComponent(Behaviour, function ()
 			self.buttons = self:getNodes(selectButtons)
 			self.selected = min(self.selected, #self.buttons)
-			local _ = self.selected > 0 and self.buttons[self.selected]:focus()
+			local btn = self.buttons[self.selected]
+			return btn and btn.focus and btn:focus()
 		end)
 	end
 
 	function UI.Menu:select(index)
-		self.selected = (index - 1) % #self.buttons + 1
+		if not self.disabled then
+			self.selected = (index - 1) % #self.buttons + 1
+		end
+		return self.selected
 	end
 
 	function UI.Menu:next()
-		self.selected = self.selected == #self.buttons and 1 or self.selected + 1
 		self.data.sound = 'next'
+		return self:select(self.selected + 1)
 	end
 
 	function UI.Menu:prev()
-		self.selected = self.selected == 1 and #self.buttons or self.selected - 1
 		self.data.sound = 'prev'
+		return self:select(self.selected - 1)
+	end
+
+	function UI.Menu:enable()
+		self.disabled = false
+		local buttons = self:getNodes(selectButtons)
+		for i = 1, #buttons do
+			buttons[i]:enable()
+		end
+	end
+
+	function UI.Menu:disable()
+		self.disabled = true
+		local buttons = self:getNodes(selectButtons)
+		for i = 1, #buttons do
+			buttons[i]:disable()
+		end
+	end
+
+	function UI.Menu:first()
+		return self.buttons[1] or { }
+	end
+
+	function UI.Menu:last()
+		return self.buttons[#self.buttons] or { }
 	end
 
 	function UI.Menu:current()
@@ -269,8 +329,9 @@ local UI = Entity:extend()
 	end
 
 	function UI.Menu:choice(...)
+		if self.disabled then return end
 		local button = self:current()
-		local action = button.click
+		local action = button.choice or button.click
 		local _ = type(action) == 'function' and action(button, ...)
 		self.data.sound = 'choice'
 	end

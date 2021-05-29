@@ -6,12 +6,13 @@
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
+local log = core.import 'class.logger'
 local Component = core.import 'class.component'
 local RenderManager = core.import 'manager.render'
-local ResourceManager = core.import 'manager.resource'
+local Resources = core.import 'manager.resource'
 
 local max = math.max
-local loveNewFont = love.graphics.newFont
+local type = _G.type
 local unpack = table.unpack or _G.unpack
 local strformat = string.format
 
@@ -57,24 +58,38 @@ local Print = Component:extend({ unique = false })
 		udata.text = kwargs.text or ''
 		udata.placeholder = kwargs.placeholder or ''
 
-		if type(kwargs.font) == 'number' then
-			cdata.font = loveNewFont(kwargs.font)
-		elseif kwargs.font and kwargs.font.typeOf and kwargs.font:typeOf('Font') then
-			cdata.font = kwargs.font
-		else
-			cdata.font = loveNewFont()
+		local fnt = kwargs.font
+		local tfont, font, size = type(fnt)
+		if tfont == 'table' then
+			font, size = unpack(fnt)
+		elseif tfont == 'string' then
+			font = fnt
+		elseif tfont == 'number' then
+			size = fnt
+		end
+		font = font or '__default__.ttf'
+		size = size or 12
+		if tfont == 'userdata' and fnt.typeOf and fnt:typeOf('Font') then
+			cdata.font = fnt
+			cdata.limit = kwargs.limit or max(fnt:getWidth(udata.text), fnt:getWidth(cdata.placeholder))
+		elseif not Resources:loadAsync(font, function (id, fnt)
+			if not id then return end
+			cdata.font = fnt
+			cdata.limit = kwargs.limit or max(fnt:getWidth(udata.text), fnt:getWidth(cdata.placeholder)) or cdata.limit
+		end, false, strformat('%s#%s', font, size), false, size) then
+			log:error('Font error: %s [%s]', font, size)
+			return
 		end
 
-		local fnt = cdata.font
 		cdata.align = kwargs.align
-		cdata.limit = kwargs.limit or max(fnt:getWidth(cdata.text), fnt:getWidth(cdata.placeholder))
+		cdata.limit = cdata.limit or 0
 		cdata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255 }
 		or { 1, 1, 1, 1 }
-		udata.pcolor = kwargs.pcolor and {
+		cdata.pcolor = kwargs.pcolor and {
 			(kwargs.pcolor[1] or 255) / 255,
 			(kwargs.pcolor[2] or 255) / 255,
 			(kwargs.pcolor[3] or 255) / 255,
