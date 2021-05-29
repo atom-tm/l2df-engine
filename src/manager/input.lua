@@ -10,6 +10,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'InputManager works only w
 local log = core.import 'class.logger'
 local helper = core.import 'helper'
 
+local pairs = _G.pairs
 local min = math.min
 local max = math.max
 local ceil = math.ceil
@@ -18,7 +19,7 @@ local setKeyRepeat = love.keyboard.setKeyRepeat
 local inputs = { }
 
 local function bit(p)
-  return 2 ^ (p - 1)
+	return 2 ^ (p - 1)
 end
 
 local function bitor(x, y)
@@ -48,15 +49,15 @@ local function bitxor(x, y)
 end
 
 local function hasbit(x, p)
-  return x % (p + p) >= p       
+	return x % (p + p) >= p
 end
 
 local function setbit(x, p)
-  return hasbit(x, p) and x or x + p
+	return hasbit(x, p) and x or x + p
 end
 
 local function clearbit(x, p)
-  return hasbit(x, p) and x - p or x
+	return hasbit(x, p) and x - p or x
 end
 
 local function newInput()
@@ -80,10 +81,12 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		self.remoteplayers = 0
 		self.keys = { }
 		self.keymap = { }
+		self.consumed = { }
 		self:reset()
 		local keys = kwargs.keys or { }
 		for i = 1, #keys do
 			self.keys[i] = { keys[i], bit(i) }
+			self.consumed[i] = { }
 			self.keymap[keys[i]] = i
 		end
 		if kwargs.mappings then
@@ -106,6 +109,9 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 			self.buttons[p] = { }
 			inputs[p] = newInput()
 		end
+		for p = self.localplayers + 1, self.localplayers + self.remoteplayers do
+			inputs[p] = newInput()
+		end
 	end
 
 	--- Advance timer and frame.
@@ -116,16 +122,21 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 
 	--- Update inputs.
 	function Manager:update()
-		for i = 1, self.localplayers + self.remoteplayers do
-			local it = inputs[i]
+		for p = 1, self.localplayers + self.remoteplayers do
+			local it = inputs[p]
 			while it.prev and it.frame >= self.frame do
 				it = it.prev
 			end
 			while it.next and it.next.frame <= self.frame do
 				it = it.next
 			end
+			if it ~= inputs[p] then
+				for k = 1, #self.consumed do
+					self.consumed[k][p] = nil
+				end
+			end
 			-- log:info('B%02d F%02d [%04x|%05d] -> [%04x|%05d] -> [%04x|%05d]', b, f, it.prev.data, it.prev.frame, it.data, it.frame, it.next.data, it.next.frame)
-			inputs[i] = it
+			inputs[p] = it
 		end
 	end
 
@@ -159,13 +170,42 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 	-- @return boolean
 	-- @return number
 	function Manager:hitted(button, player)
-		local index = self.keymap[button]
-		if index then
-			index = self.keys[index][2]
+		local keycode = self.keymap[button]
+		if keycode then
+			keycode = self.keys[keycode][2]
 			local input = nil
 			for p = player or 1, player or self.localplayers do
 				input = inputs[p]
-				if input and input.frame == self.frame and hasbit(input.data, index) then
+				local ishitted = input and input.frame == self.frame and hasbit(input.data, keycode)
+				local prev = input and input.prev
+				if ishitted and (not prev or prev.frame ~= self.frame and not hasbit(prev.data, keycode)) then
+					return true, p
+				end
+			end
+		end
+		return false
+	end
+
+	--- Check if button was pressed at this frame and consume it for next call.
+	-- @param string button  Hitted button.
+	-- @param number player  Player to check or nil to check any local player.
+	-- @return boolean
+	-- @return number
+	function Manager:consume(button, player)
+		local keycode = self.keymap[button]
+		if keycode then
+			local consumed = self.consumed[keycode]
+			local input = nil
+			keycode = self.keys[keycode][2]
+			for p = player or 1, player or self.localplayers do
+				if consumed[p] then
+					return false
+				end
+				input = inputs[p]
+				local ishitted = input and input.frame == self.frame and hasbit(input.data, keycode)
+				local prev = input and input.prev
+				if ishitted and (not prev or prev.frame ~= self.frame and not hasbit(prev.data, keycode)) then
+					consumed[p] = true
 					return true, p
 				end
 			end
@@ -276,7 +316,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 			left, right = right, right.next
 		end
 		if left and left.frame == timer then
-			local xor = bitxor(left.data, input)
+			-- TODO: fix this input merger
 			local changes = bitxor(xor, left.changes)
 			if bitor(xor, changes) == changes then
 				left.data = input
