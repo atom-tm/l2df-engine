@@ -1,4 +1,4 @@
---- Object entity
+--- Object entity. Inherited from @{l2df.class.entity|l2df.class.Entity} class.
 -- @classmod l2df.class.entity.object
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -16,6 +16,15 @@ local Transform = core.import 'class.component.transform'
 
 local Object = Entity:extend({ name = 'object' })
 
+	--- Object initialization. Components:
+	-- @{l2df.class.component.transform|Transform},
+	-- @{l2df.class.component.frames|Frames},
+	-- @{l2df.class.component.states|States},
+	-- @{l2df.class.component.physix|Physix},
+	-- @{l2df.class.component.collision|Collision},
+	-- @{l2df.class.component.render|Render}.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=false] boolean kwargs.hidden  Initial object hidden state.
     function Object:init(kwargs)
         self.data.hidden = kwargs.hidden or false
         self:addComponent(Transform)

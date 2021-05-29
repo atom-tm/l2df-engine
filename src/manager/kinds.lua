@@ -1,4 +1,4 @@
---- Kinds manager
+--- Kinds manager.
 -- @classmod l2df.manager.kinds
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -18,16 +18,26 @@ local list = { }
 
 local Manager = { }
 
-	--- Configure @{l2df.manager.kinds}
-	-- @param table kwargs
+	--- Kind is a function for handling collision events.
+	-- <br>It assepts these arguments:<br>
+	-- * `e1` (@{l2df.class.entity}) - the first entity for the triggered collision;<br>
+	-- * `e2` (@{l2df.class.entity}) - the second entity for the triggered collision;<br>
+	-- * `c1` (@{l2df.manager.physix.Collider}) - collider of the first entity;<br>
+	-- * `c2` (@{l2df.manager.physix.Collider}) - collider of the second entity.
+	-- @field function .Kind
+
+	--- Configure @{l2df.manager.kinds|KindsManager}.
+	-- Currently does nothing.
+	-- @param[opt] table kwargs  Keyword arguments. Not actually used yet.
 	-- @return l2df.manager.kinds
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
 		return self
 	end
 
-	--- Adds the kind file to the list
-	-- @param string filepath
+	--- Loads and adds the kind file to the local collection.
+	-- @param string filepath  Path to the `".lua"` file containing @{l2df.manager.kinds.Kind|kind-function}.
+	-- Name of the file will be used as kind's ID.
 	function Manager:add(filepath)
 		local req, key = requireFile(filepath)
 		if type(req) == 'function' then
@@ -35,10 +45,11 @@ local Manager = { }
 		end
 	end
 
-	--- Loads kind files from the specified folder
-	-- @param string folderpath
-	function Manager:load(folderpath)
-		local r = requireFolder(folderpath, true)
+	--- Loads kind files from the specified directory.
+	-- @param string directory  Directory to scan for `".lua"` files containing @{l2df.manager.kinds.Kind|kind-function}.
+	-- For each loaded script name of the file will be used as kind's ID.
+	function Manager:load(directory)
+		local r = requireFolder(directory, true)
 		for k, v in pairs(r) do
 			if type(v) == 'function' then
 				list[k] = v
@@ -46,15 +57,17 @@ local Manager = { }
 		end
 	end
 
-	--- Run specified kind with arguments
-	-- @param mixed kind
+	--- Runs specified kind with arguments.
+	-- @param number|string kind  ID / name of the kind
+	-- @param ... ...  Arguments to be passed to @{l2df.manager.kinds.Kind|kind-function}.
+	-- @return mixed|nil  Result of the @{l2df.manager.kinds.Kind|kind-function} execution.
 	function Manager:run(kind, ...)
 		return list[kind] and list[kind](...)
 	end
 
-	--- Gets a kind from the list by its key
-	-- @param mixed kind
-	-- @return l2df.class.kind
+	--- Gets a kind from the list by its key.
+	-- @param number|string kind  ID / name of the kind
+	-- @return l2df.manager.kinds.Kind|nil
 	function Manager:get(kind)
 		return list[kind] or nil
 	end

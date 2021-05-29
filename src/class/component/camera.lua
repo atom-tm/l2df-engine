@@ -1,4 +1,4 @@
---- Component for tracking objects by main camera
+--- Component for tracking objects by main camera. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.camera
 -- @author Abelidze
 -- @author Kasai
@@ -15,9 +15,18 @@ local max = math.max
 
 local Camera = Component:extend({ unique = true })
 
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- Adds `"camera"` key to the @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=1] number kwargs.priority  Priority of the object this camera was attached to.
+	-- @param[opt=0] number kwargs.kx  Width of the following camera window.
+	-- @param[opt=0] number kwargs.ky  Height of the following camera window.
 	function Camera:added(obj, kwargs)
 		if not obj then return false end
 		kwargs = kwargs or { }
+
+		obj.C.camera = self:wrap(obj)
 
 		local data = obj.data
 		data.globalScaleX = data.globalScaleX or 0
@@ -36,6 +45,18 @@ local Camera = Component:extend({ unique = true })
 		storage.oy = data.centery or 0
 	end
 
+	--- Component was removed from @{l2df.class.entity|Entity} event.
+	-- Removes `"camera"` key from @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	function Camera:removed(obj)
+		self.super.removed(self, obj)
+		obj.C.camera = nil
+	end
+
+	--- Camera post-update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number dt  Delta-time since last game tick.
+	-- @param boolean islast  Accepts only updates for the last drawn frame.
 	function Camera:postupdate(obj, dt, islast)
 		if not (obj and islast) then return end
 

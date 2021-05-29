@@ -1,4 +1,4 @@
---- Synchronization manager
+--- Synchronization manager.
 -- @classmod l2df.manager.sync
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -48,18 +48,32 @@ local history = { }
 
 local Manager = { time = 0, size = 1, desync = false }
 
-	--- Configure @{l2df.manager.sync}
-	-- @param table kwargs
-	-- @param[opt=10] number kwargs.size
+	--- Internal frame counter. Advances on each @{Manager:commit|SyncManager:commit()} call.
+	-- @field number Manager.frame
+
+	--- Time passed since start of the synchronization context.
+	-- @field number Manager.time
+
+	--- Size of the rollback window. It is the maximum count of taken snapshots.
+	-- @field number Manager.size
+
+	--- Value identifying that there was found a desync.
+	-- @field boolean Manager.desync
+
+	--- Configure @{l2df.manager.sync|SyncManager}.
+	-- @param[opr] table kwargs  Keyword arguments.
+	-- @param[opt=10] number kwargs.size  Maximum count of taken snapshots used for rollback.
+	-- @param[opt=0] number kwargs.zero  Initial @{Manager.time|SyncManager.time}.
 	-- @return l2df.manager.sync
 	function Manager:init(kwargs)
+		kwargs = kwargs or { }
 		maxsize = max(1, kwargs.size or maxsize)
 		self:reset()
 		return self
 	end
 
-	--- Reset manager and drop all snapshots
-	-- @param[opt=0] number zero
+	--- Reset manager and drop all snapshots.
+	-- @param[opt=0] number zero  Initial @{Manager.time|SyncManager.time}.
 	function Manager:reset(zero)
 		self.desync = false
 		self.time = zero or 0
@@ -76,18 +90,18 @@ local Manager = { time = 0, size = 1, desync = false }
 		history = data[1]
 	end
 
-	---
-	-- @param number timestamp  Advantage
+	--- Updates local simulation advantage value (difference in time between simulations).
+	-- @param number timestamp  Time of another simulation.
 	function Manager:updateAdvantage(timestamp)
 		advantage = max(advantage, self.time - timestamp)
 	end
 
-	---
-	-- @param number frame
-	-- @return number
-	-- @return number
+	--- Synchronize frame-counters between simulations.
+	-- @param number frame  Target frame for rollback.
+	-- @return number delta-time
+	-- @return number throttle
 	function Manager:sync(frame)
-		local throttle = advantage >= min_advantage and self.frame - last_throttle > 40 and min(advantage, max_advantage) or 0
+		local throttle = advantage >= min_advantage and self.frame - last_throttle > (maxsize -  self.size) * 2 and min(advantage, max_advantage) or 0
 		if throttle > 0 then
 			advantage = advantage - throttle
 			last_throttle = self.frame
@@ -104,8 +118,11 @@ local Manager = { time = 0, size = 1, desync = false }
 		return 0, throttle
 	end
 
-	--- Persist state
-	-- @param function|table callback
+	--- Register callback functions for persisting state or call all of them.
+	-- All of that functions would be called with next @{Manager.persist|SyncManager:persist(...)} call.
+	-- Usually you want to call it before start of each frame simulation.
+	-- @param[opt] function callback  State persisting function.
+	-- @param[opt] ... ...  Arguments passed to all stored callbacks.
 	function Manager.persist(callback, ...)
 		if type(callback) == 'function' then
 			callbacks[#callbacks + 1] = callback
@@ -119,16 +136,17 @@ local Manager = { time = 0, size = 1, desync = false }
 		end
 	end
 
-	--- Persist a function and its arguments to restore state during rollback
-	-- @param function f
+	--- Persist a function and its arguments to restore state during rollback.
+	-- @param function f  Restore-function which whould be used later to restore the initial state.
+	-- @param ... ...  Arguments passed to restore-function during rollback.
 	-- @return l2df.manager.sync
 	function Manager:stage(f, ...)
 		history[#history + 1] = { f, { ... } }
 		return self
 	end
 
-	--- Commit all staged functions and advance state
-	-- @param number dt
+	--- Commit all staged functions and advance state.
+	-- @param number dt  Delta-time since last game tick.
 	-- @return l2df.manager.sync
 	function Manager:commit(dt)
 		if self.size < maxsize then
@@ -140,9 +158,9 @@ local Manager = { time = 0, size = 1, desync = false }
 		return self
 	end
 
-	--- Rollback in history and execute persisted functions
-	-- @param number frame
-	-- @return number
+	--- Rollback in history and execute persisted functions.
+	-- @param number frame  Target frame for rollback.
+	-- @return number  Rollback size.
 	function Manager:rollback(frame)
 		local size = self.frame - frame
 		if size < 0 then

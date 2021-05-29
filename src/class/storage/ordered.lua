@@ -1,4 +1,4 @@
---- OrderedStorage class
+--- OrderedStorage class. Inherited from @{l2df.class.storage|l2df.class.Storage} class.
 -- @classmod l2df.class.storage.ordered
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -12,12 +12,12 @@ local GSID = core.import 'manager.gsid'
 
 local OrderedStorage = Storage:extend()
 
-	--- OrderedStorage initialization
+	--- OrderedStorage initialization.
 	function OrderedStorage:init()
 		self:reset()
 	end
 
-	--- Reset storage flushing all stored data
+	--- Reset storage flushing all stored data.
 	function OrderedStorage:reset()
 		self.data = rbtree.new()
 		self.keys = { }
@@ -25,9 +25,9 @@ local OrderedStorage = Storage:extend()
 		self.count = 0
 	end
 
-	--- Add new object to storage
+	--- Add new object to storage.
 	--  @param mixed object
-	--  @param[opt] boolean reload
+	--  @param[opt=false] boolean reload
 	-- @return number
 	-- @return mixed
 	function OrderedStorage:add(object, reload)
@@ -44,10 +44,10 @@ local OrderedStorage = Storage:extend()
 		return id, object
 	end
 
-	--- Add object to storage with provided id
+	--- Add object to storage with provided ID.
 	-- @param mixed object
 	-- @param number id
-	-- @param boolean reload
+	-- @param[opt=false] boolean reload
 	-- @return number
 	-- @return mixed
 	function OrderedStorage:addById(object, id, reload)
@@ -57,12 +57,11 @@ local OrderedStorage = Storage:extend()
 
 		self.data[id] = object
 		self.map[object] = id
-
 		self.count = self.count + 1
 		return id, object
 	end
 
-	--- Remove object from storage
+	--- Remove object from storage.
 	-- @param mixed object
 	-- @return boolean
 	function OrderedStorage:remove(object)
@@ -73,7 +72,7 @@ local OrderedStorage = Storage:extend()
 		return true
 	end
 
-	--- Remove object from storage by Id
+	--- Remove object from storage by ID.
 	-- @param number id
 	-- @return boolean
 	function OrderedStorage:removeById(id)
@@ -83,25 +82,25 @@ local OrderedStorage = Storage:extend()
 		return true
 	end
 
-	--- Enumerate storage data #1
+	--- Enumerate storage data #1.
 	-- @return function
 	function OrderedStorage:enum()
 		return self.data:iter()
 	end
 
-	--- Enumerate storage data #2
+	--- Enumerate storage data #2.
 	-- @return function
 	function OrderedStorage:pairs()
 		return self.data:iter()
 	end
 
-	--- Get first stored element
+	--- Get first stored element.
 	-- @return mixed
 	function OrderedStorage:first()
 		return self.data:minimum()
 	end
 
-	--- Get last stored element
+	--- Get last stored element.
 	-- @return mixed
 	function OrderedStorage:last()
 		return self.data:maximum()

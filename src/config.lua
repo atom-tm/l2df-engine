@@ -16,30 +16,30 @@ local select = _G.select
 local strgmatch = string.gmatch
 local copy = helper.copyTable
 
-local config = { }
+local cfdata = { }
 local groups = { }
 
-local Module = { }
+local Config = { }
 
-	---
-	-- @param[opt] string group
+	--- Combine and return full config for the specified group / all groups.
+	-- @param[opt] string group  Specified group.
 	-- @return table
-	function Module:all(group)
+	function Config:all(group)
 		local g = group and groups[group] or nil
 		if not g then
-			return config
+			return cfdata
 		end
 		local data = { }
 		for i = 1, #g do
-			data[g[i]] = config[g[i]]
+			data[g[i]] = cfdata[g[i]]
 		end
 		return data
 	end
 
-	---
-	-- @param string group
-	-- @param {string, ...} ...
-	function Module:group(group, ...)
+	--- Create new config's group and assign key-paths to it.
+	-- @param string group  Specified group.
+	-- @param {string,...} ...  Key-paths in format 'path.to.value'.
+	function Config:group(group, ...)
 		local data = groups[group] or { }
 		for i = 1, select('#', ...) do
 			data[#data + 1] = select(i, ...)
@@ -47,26 +47,26 @@ local Module = { }
 		groups[group] = data
 	end
 
-	---
-	-- @param string key
+	--- Get config value by key-path.
+	-- @param string key  Key-path in format 'path.to.value'.
 	-- @return mixed
-	function Module:get(key)
+	function Config:get(key)
 		key = type(key) == 'string' and key or ''
 		local result
 		for k in strgmatch(key, '[^%.]+') do
-			result = result and result[k] or config[k]
+			result = result and result[k] or cfdata[k]
 		end
-		return result or config
+		return result or cfdata
 	end
 
-	---
-	-- @param string key
-	-- @param mixed value
-	-- @param[opt] string group
-	function Module:set(key, value, group)
+	--- Update <key:value> pair in config and set assign it to specified group if needed.
+	-- @param string key  Key-path in format 'path.to.value'.
+	-- @param mixed value  Value.
+	-- @param[opt] string group  Specified group.
+	function Config:set(key, value, group)
 		key = type(key) == 'string' and key or ''
 		group = group and groups[group] or nil
-		local result, firstKey, lastKey = config
+		local result, firstKey, lastKey = cfdata
 		for k in strgmatch(key, '[^%.]+') do
 			if lastKey then
 				result[lastKey] = type(result[lastKey]) == 'table' and result[lastKey] or { }
@@ -82,35 +82,35 @@ local Module = { }
 		end
 	end
 
-	---
-	-- @param string filepath
-	-- @param[opt] string group
-	-- @param[opt=false] boolean reset
-	function Module:load(filepath, group, reset)
+	--- Load config to specified group / all groups from JSON file.
+	-- @param string filepath  Path to JSON config.
+	-- @param[opt] string group  Specified group.
+	-- @param[opt=false] boolean reset  Reset already loaded config.
+	function Config:load(filepath, group, reset)
 		group = group and groups[group] or nil
 		if reset then
-			config = { }
+			cfdata = { }
 		end
 		local data = Parser:parseFile(filepath)
 		if not data then return end
 		if group then
 			for i = 1, #group do
-				config[group[i]] = copy(data[group[i]], config[group[i]])
+				cfdata[group[i]] = copy(data[group[i]], cfdata[group[i]])
 			end
 		else
-			config = copy(data, config)
+			cfdata = copy(data, cfdata)
 		end
 	end
 
-	---
-	-- @param string filepath
-	-- @param[opt] string group
-	function Module:save(filepath, group)
+	--- Save config for specified group / all groups to JSON file.
+	-- @param string filepath  Path to JSON config.
+	-- @param[opt] string group  Specified group.
+	function Config:save(filepath, group)
 		Parser:dumpToFile(filepath, self:all(group))
 	end
 
-return setmetatable(Module, {
-	__index = config,
-	__newindex = Module.set,
+return setmetatable(Config, {
+	__index = cfdata,
+	__newindex = Config.set,
 	__call = function (self, k, v, group) return v ~= nil and self:set(k, v, group) or self:get(k) end
 })

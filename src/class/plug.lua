@@ -1,4 +1,4 @@
---- Plug class
+--- Plug class. It is used as a dummy object for async operations. Inherited from @{l2df.class|l2df.Class}.
 -- @classmod l2df.class.plug
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -10,6 +10,7 @@ local Class = core.import 'class'
 
 local Plug = Class:extend()
 
+	--- Init. Does nothing.
     function Plug:init()
 
     end

@@ -571,12 +571,12 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-danger {
-  color: #cc201c;
+  color: #cc201c !important;
   border-color: #cc201c;
 }
 
 .btn-outline-danger:hover {
-  color: #fff;
+  color: #fff !important;
   background-color: #cc201c;
   border-color: #cc201c;
 }

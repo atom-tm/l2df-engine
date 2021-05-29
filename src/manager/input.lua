@@ -1,4 +1,5 @@
---- Input manager
+--- Input manager.
+-- Controls all available input sources and converts them to internal representation for unified use.
 -- @classmod l2df.manager.input
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -67,8 +68,8 @@ local double_timer = max(3, ceil(0.2 / tickrate))
 
 local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { }, keys = { }, keymap = { } }
 
-	--- Init
-	-- @param table kwargs
+	--- Configure @{l2df.manager.input|InputManager}.
+	-- @param[opt] table kwargs  Keyword arguments.
 	-- @param[opt] table kwargs.keys
 	-- @param[opt] table kwargs.mappings
 	-- @param[opt=false] boolean kwargs.key_repeat
@@ -91,12 +92,13 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return self
 	end
 
-	--- Reset all inputs and timer of manager
-	function Manager:reset()
+	--- Reset all inputs and timer of manager.
+	-- @param[opt=0] number remote
+	function Manager:reset(remote)
 		self.timer = 0
 		self.frame = 0
 		self.delay = 0
-		self.remoteplayers = 0
+		self.remoteplayers = remote or 0
 		tickrate = core.tickrate or tickrate
 		double_timer = max(3, ceil(0.2 / tickrate))
 		inputs = { }
@@ -106,13 +108,13 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-	--- Advance timer and frame
+	--- Advance timer and frame.
 	function Manager:advance()
 		self.frame = self.frame + 1
 		self.timer = max(self.timer, self.frame + self.delay)
 	end
 
-	--- Update inputs and advance timer
+	--- Update inputs.
 	function Manager:update()
 		for i = 1, self.localplayers + self.remoteplayers do
 			local it = inputs[i]
@@ -127,7 +129,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-	--- Create input source for remote player
+	--- Create input source for remote player.
 	-- @return number  player's id
 	function Manager:newRemotePlayer()
 		self.remoteplayers = self.remoteplayers + 1
@@ -135,7 +137,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return self.localplayers + self.remoteplayers
 	end
 
-	--- Sync mappings with config
+	--- Sync mappings with config.
 	-- @param table mappings
 	function Manager:updateMappings(mappings)
 		self.mapping = { }
@@ -151,9 +153,9 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-	--- Check if button was pressed at this frame
-	-- @param string button  Hitted button
-	-- @param number player  Player to check or nil to check any local player
+	--- Check if button was pressed at this frame.
+	-- @param string button  Hitted button.
+	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
 	function Manager:hitted(button, player)
@@ -171,9 +173,9 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return false
 	end
 
-	--- Check if button was pressed
-	-- @param string button  Pressed button
-	-- @param number player  Player to check or nil to check any local player
+	--- Check if button was pressed.
+	-- @param string button  Pressed button.
+	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
 	function Manager:pressed(button, player)
@@ -191,9 +193,9 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return false
 	end
 
-	--- Check if button was double pressed
-	-- @param string button  Doubled button
-	-- @param number player  Player to check or nil to check any local player
+	--- Check if button was double pressed.
+	-- @param string button  Doubled button.
+	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
 	function Manager:doubled(button, player)
@@ -222,7 +224,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return false
 	end
 
-	--- Check if input data exists
+	--- Check if input data exists.
 	-- @param number data
 	-- @param number player
 	-- @return boolean
@@ -231,7 +233,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return input and hasbit(input.data, data) or false
 	end
 
-	--- Get last saved input for specific player
+	--- Get last saved input for specific player.
 	-- @param number player
 	-- @return number
 	function Manager:lastinput(player)
@@ -250,14 +252,14 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 			if not it.prev then break end
 			it = it.prev
 		end
-		print(string.format('INPUT[%s] %s | %05d', player, table.concat(data, ' '), timer))
+		log:info(string.format('INPUT[%s] %s | %05d', player, table.concat(data, ' '), timer))
 		print(string.rep('_', 7 + 12 * behind) .. '/')
 	end
 
-	--- Persist raw input data
+	--- Persist raw input data.
 	-- @param number input
-	-- @param number[opt] player  Default is 1.
-	-- @param number[opt] timer   Default is current timer.
+	-- @param[opt=1] number player
+	-- @param[opt] number timer   Default is current timer.
 	-- @return l2df.manager.input
 	function Manager:addinput(input, player, timer)
 		player = player or 1
@@ -308,7 +310,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return self
 	end
 
-	--- Save input data for local player
+	--- Save input data for local player.
 	-- @param[opt] number player ...
 	-- @param[opt] number frame   Default is current timer.
 	-- @return number
@@ -319,9 +321,12 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return self
 	end
 
-	---
-	-- @return number  Input data
-	-- @return number  Frame number
+	--- Stream-function which should be used in `for ... in stream` loops.
+	-- @param[opt=1] number player  
+	-- @return[1] function  Execution data of the returned function is listed below:
+	-- @return[2] number  Player ID.
+	-- @return[2] number  Frame number.
+	-- @return[2] number  Input data.
 	function Manager:stream(player)
 		local it = { }
 		local from, to = player or 1, player or (self.localplayers + self.remoteplayers)
@@ -338,7 +343,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-	--- Get raw input data for local player
+	--- Get raw input data for local player.
 	-- @param number player
 	-- @return number
 	function Manager:rawinput(player)
@@ -355,25 +360,25 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		return input
 	end
 
-	--- Button pressed event
-	-- @param string button  Pressed button
-	-- @param number player  Player index
+	--- Button pressed event.
+	-- @param string button  Pressed button.
+	-- @param number player  Player index.
 	function Manager:press(button, player)
 		player = player or 1
 		self.buttons[player][button] = true
 		self:saveinput(player)
 	end
 
-	--- Button released event
-	-- @param string button  Released button
-	-- @param number player  Player index
+	--- Button released event.
+	-- @param string button  Released button.
+	-- @param number player  Player index.
 	function Manager:release(button, player)
 		player = player or 1
 		self.buttons[player][button] = false
 		self:saveinput(player)
 	end
 
-	--- Hook for love.keypressed
+	--- Hook for love.keypressed.
 	-- @param string key
 	function Manager:keypressed(key)
 		local map = self.mapping[key]
@@ -382,7 +387,7 @@ local Manager = { frame = 0, delay = 0, timer = 0, buttons = { }, mapping = { },
 		end
 	end
 
-	--- Hook for love.keyreleased
+	--- Hook for love.keyreleased.
 	-- @param string key
 	function Manager:keyreleased(key)
 		local map = self.mapping[key]

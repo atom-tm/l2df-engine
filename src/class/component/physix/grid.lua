@@ -1,4 +1,4 @@
---- Grid helper
+--- Grid helper.
 -- @classmod l2df.class.component.physix.grid
 -- @author Abelidze
 -- @author oniietzschan
@@ -11,42 +11,90 @@ local floor = math.floor
 
 local Grid = { }
 
-    function Grid:toWorld(cellSize, cx, cy, cz)
+    --- Get left-top corner cell coordinates.
+    -- @param number cellsize  Size of the cell in pixels.
+    -- @param number cx  Cell X index.
+    -- @param number cy  Cell Y index.
+    -- @param number cz  Cell Z index.
+    -- @return number  X coordinate.
+    -- @return number  Y coordinate.
+    -- @return number  Z coordinate.
+    function Grid:toWorld(cellsize, cx, cy, cz)
         return
-            (cx - 1) * cellSize,
-            (cy - 1) * cellSize,
-            (cz - 1) * cellSize
+            (cx - 1) * cellsize,
+            (cy - 1) * cellsize,
+            (cz - 1) * cellsize
     end
 
-    function Grid:toCell(cellSize, x, y, z)
+    --- Convert left-top corner cell coordinates to cell indexes.
+    -- @param number cellsize  Size of the cell in pixels.
+    -- @param number x  X coordinate.
+    -- @param number y  Y coordinate.
+    -- @param number z  Z coordinate.
+    -- @return number  Cell X index.
+    -- @return number  Cell Y index.
+    -- @return number  Cell Z index.
+    function Grid:toCell(cellsize, x, y, z)
         return
-            floor(x / cellSize) + 1,
-            floor(y / cellSize) + 1,
-            floor(z / cellSize) + 1
+            floor(x / cellsize) + 1,
+            floor(y / cellsize) + 1,
+            floor(z / cellsize) + 1
     end
 
-    -- Grid:traverse* functions are based on "A Fast Voxel Traversal Algorithm for Ray Tracing",
-    -- by John Amanides and Andrew Woo - http://www.cse.yorku.ca/~amana/research/grid.pdf
-    -- It has been modified to include both cells when the ray "touches a grid corner",
-    -- and with a different exit condition
+    --- Convert cube from world to cell coordinates.
+    -- @param number cellsize  Size of the cell in pixels.
+    -- @param number x  Cube X coordinate.
+    -- @param number y  Cube Y coordinate.
+    -- @param number z  Cube Z coordinate.
+    -- @param number w  Cube width.
+    -- @param number h  Cube height.
+    -- @param number d  Cube depth.
+    -- @return number  Cell X index.
+    -- @return number  Cell Y index.
+    -- @return number  Cell Z index.
+    -- @return number  Cell width.
+    -- @return number  Cell height.
+    -- @return number  Cell depth.
+    function Grid:toCellCube(cellsize, x, y, z, w, h, d)
+        local cx, cy, cz = Grid:toCell(cellsize, x, y, z)
+        return
+            cx,
+            cy,
+            cz,
+            ceil((x + w) / cellsize) - cx + 1,
+            ceil((y + h) / cellsize) - cy + 1,
+            ceil((z + d) / cellsize) - cz + 1
+    end
 
-    function Grid:traverseInitStep(cellSize, ct, t1, t2)
+    local function traverseInitStep(cellsize, ct, t1, t2)
         local v = t2 - t1
         if v > 0 then
-            return 1, cellSize / v, ((ct + v) * cellSize - t1) / v
+            return 1, cellsize / v, ((ct + v) * cellsize - t1) / v
         elseif v < 0 then
-            return -1, -cellSize / v, ((ct + v - 1) * cellSize - t1) / v
+            return -1, -cellsize / v, ((ct + v - 1) * cellsize - t1) / v
         else
             return 0, math.huge, math.huge
         end
     end
 
-    function Grid:traverse(cellSize, x1, y1, z1, x2, y2, z2, f)
-        local cx1, cy1, cz1 = Grid:toCell(cellSize, x1, y1, z1)
-        local cx2, cy2, cz2 = Grid:toCell(cellSize, x2, y2, z2)
-        local stepX, dx, tx = Grid:traverseInitStep(cellSize, cx1, x1, x2)
-        local stepY, dy, ty = Grid:traverseInitStep(cellSize, cy1, y1, y2)
-        local stepZ, dz, tz = Grid:traverseInitStep(cellSize, cz1, z1, z2)
+    --- Function is based on "A Fast Voxel Traversal Algorithm for Ray Tracing",
+    -- by John Amanides and Andrew Woo - http://www.cse.yorku.ca/~amana/research/grid.pdf
+    -- It has been modified to include both cells when the ray "touches a grid corner",
+    -- and with a different exit condition.
+    -- @param number cellsize  Size of the cell in pixels.
+    -- @param number x1  Start X coordinate.
+    -- @param number y1  Start Y coordinate.
+    -- @param number z1  Start Z coordinate.
+    -- @param number x2  End X coordinate.
+    -- @param number y2  End Y coordinate.
+    -- @param number z2  End Z coordinate.
+    -- @param function f  Traverse function called for each cell in path.
+    function Grid:traverse(cellsize, x1, y1, z1, x2, y2, z2, f)
+        local cx1, cy1, cz1 = Grid:toCell(cellsize, x1, y1, z1)
+        local cx2, cy2, cz2 = Grid:toCell(cellsize, x2, y2, z2)
+        local stepX, dx, tx = traverseInitStep(cellsize, cx1, x1, x2)
+        local stepY, dy, ty = traverseInitStep(cellsize, cy1, y1, y2)
+        local stepZ, dz, tz = traverseInitStep(cellsize, cz1, z1, z2)
         local cx, cy, cz = cx1, cy1, cz1
 
         f(cx, cy, cz)
@@ -85,17 +133,6 @@ local Grid = { }
         if cx ~= cx2 or cy ~= cy2 or cz ~= cz2 then
             f(cx2, cy2, cz2)
         end
-    end
-
-    function Grid:toCellCube(cellSize, x, y, z, w, h, d)
-        local cx, cy, cz = Grid:toCell(cellSize, x, y, z)
-        return
-            cx,
-            cy,
-            cz,
-            ceil((x + w) / cellSize) - cx + 1,
-            ceil((y + h) / cellSize) - cy + 1,
-            ceil((z + d) / cellSize) - cz + 1
     end
 
 return Grid

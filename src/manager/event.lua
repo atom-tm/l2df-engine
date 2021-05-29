@@ -1,4 +1,4 @@
---- Event manager
+--- Event manager.
 -- @classmod l2df.manager.event
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -23,9 +23,31 @@ local update_events = {
 
 local Manager = { active = true }
 
-	--- Configure @{l2df.manager.event}
-	-- @param table kwargs
-	-- @param[opt] kwargs.updates
+	--- EventManager's enabled state. `true` by default.
+	-- It is not actually used yet.
+	-- @field boolean Manager.active
+
+	--- Default @{l2df.manager.event.UpdateEvent|update events} bindings.
+	-- These events are executed in the same order they are represented here (or at `kwargs.updates` passed to
+	-- @{l2df.manager.event.init|EventManager:init()}) on each @{l2df.manager.event.update|EventManager:update()} call.
+	-- @field {'preupdate','beforepreupdate',false} 1
+	-- @field {'update','beforeupdate',true} 2
+	-- @field {'postupdate','beforepostupdate',false} 3
+	-- @field {'lastupdate','beforelastupdate',false} 4
+	-- @table .DefaultUpdateEvents
+
+	--- Custom update event description.
+	-- @field string 1  `(event)` Name of the custom update event.
+	-- @field string 2  `(before_event)` Name of the event which
+	-- will be triggered before actual `event`.
+	-- @field boolean 3  `(lift_support)` Add support for "liftdown"
+	-- and "liftup" callbacks during this `event`. `false` by default.
+	-- @table .UpdateEvent
+
+	--- Configure @{l2df.manager.event|EventManager}.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt] {l2df.manager.event.UpdateEvent,...} kwargs.updates  Customizes update events.
+	-- Overrides @{l2df.manager.event.DefaultUpdateEvents|default bindings}.
 	-- @return l2df.manager.event
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
@@ -33,8 +55,10 @@ local Manager = { active = true }
 		return self
 	end
 
-	--- Embed references to Manager methods in the entity instance that you create
-	-- @param l2df.class.entity entity
+	--- Embed references to @{l2df.manager.event|EventManager's} methods in the entity instance that you create.
+	-- Embedded methods are:
+	-- @{Manager.subscribe|subscribe}, @{Manager:unsubscribe|unsubscribe} and @{Manager:unsubscribeById|unsubscribeById}.
+	-- @param l2df.class.entity entity  Entity's instance.
 	function Manager:classInit(entity)
 		if not entity:isInstanceOf(Entity) then return end
 		entity.subscribe = self.subscribe
@@ -42,12 +66,15 @@ local Manager = { active = true }
 		entity.unsubscribeById = self.unsubscribeById
 	end
 
-	--- Allows the object to listen events sent to the Manager
-	-- @param l2df.class.entity subscriber
-	-- @param string event
-	-- @param function handler
-	-- @param l2df.class.entity source
-	-- @return number  Subscription id. Can be used with @{l2df.manager.event.unsubscribeById}
+	--- Allows the object to listen events sent to the Manager.
+	-- @param l2df.class.entity|table subscriber  Subscriber object.
+	-- @param[opt=false] boolean subscriber.active  @{l2df.manager.event|EventManager} will watch for this property
+	-- on each @{l2df.manager.event.invoke|EventManager:invoke()} call. If `false` the fired event will be ignored
+	-- @param string event  Name of the event.
+	-- @param function handler  Callback function which would be called with an invoked event.
+	-- @param l2df.class.entity source  Source object of the calling event.
+	-- If event with the same name comes from another source it would be ignored.
+	-- @return number  Subscription ID. Can be used with @{l2df.manager.event.unsubscribeById|EventManager:unsubscribeById()}.
 	function Manager.subscribe(subscriber, event, handler, source, ...)
 		if not (type(event) == 'string' and subscriber and type(handler) == 'function') then return end
 		subscribers[event] = subscribers[event] or Storage:new()
@@ -57,26 +84,27 @@ local Manager = { active = true }
 		return id
 	end
 
-	--- Disables event tracking by objects using handler
-	-- @param string event
-	-- @param function handler
-	-- @return boolean
+	--- Disables event tracking by objects using handler.
+	-- @param string event  Name of the event.
+	-- @param function handler  Handler function which was @{l2df.manager.event.subscribe|subcribed}.
+	-- @return boolean  `true` if unsubscribed, `false` otherwise.
 	function Manager:unsubscribe(event, handler)
 		local id = handlers[event][handler]
 		return self:unsubscribeById(event, id)
 	end
 
-	--- Disables event tracking by objects using Id
-	-- @param string event
-	-- @param number id
-	-- @return boolean
+	--- Disables event tracking by objects using ID.
+	-- @param string event  Name of the event.
+	-- @param number id  ID returned by @{l2df.manager.event.subscribe|EventManager:subscribe()}.
+	-- @return boolean  `true` if unsubscribed, `false` otherwise.
 	function Manager:unsubscribeById(event, id)
 		return (event and id and subscribers[event]:removeById(id)) or false
 	end
 
-	--- Invoke an event for all active subscribers
-	-- @param string event
-	-- @param l2df.class.entity source
+	--- Invoke an event for all active subscribers.
+	-- @param string event  Name of the event.
+	-- @param l2df.class.entity source  Source object of the calling event.
+	-- It is used by @{l2df.manager.event.subscribe|EventManager:subscribe()} to filter out events depending on its source.
 	function Manager:invoke(event, source, ...)
 		if not subscribers[event] then return end
 		for key, val in subscribers[event]:enum(true) do
@@ -93,11 +121,13 @@ local Manager = { active = true }
 		end
 	end
 
-	--- Monitors whether an object calls certain functions
-	-- @param l2df.class.entity source
-	-- @param table|string events
-	-- @param table|string alias
-	-- @param boolean save_result  Whether to save the result of the function execution
+	--- Monitors whether an object calls certain functions.
+	-- @param l2df.class.entity|table source  Source object of the calling event.
+	-- It is used by @{l2df.manager.event.subscribe|EventManager:subscribe()} to filter out events depending on its source.
+	-- @param table|string events  Name(s) of the field(s) containing function to hook.
+	-- @param[opt] table|string alias  If setted makes an alias which would be passed to the.
+	-- @{l2df.manager.event.invoke|EventManager:invoke()} method instead of the original function name.
+	-- @param[opt=false] boolean save_result  Whether to save the result of the function execution.
 	function Manager:monitoring(source, events, alias, save_result)
 		-- TODO: save_result is not working, fix it
 		save_result = save_result and false --not not save_result
@@ -118,7 +148,10 @@ local Manager = { active = true }
 		return event[2] or 'before' .. event[1], event[1], not not event[3], { current }, beginner, current, 0, 1
 	end
 
-	--- Update event
+	--- Update event handler.
+	-- Executes @{l2df.manager.event.UpdateEvent|UpdateEvents} on each @{l2df.class.entity|entity} and its.
+	-- @{l2df.class.component|components} in the order they were passed to @{l2df.manager.event.init|EventManager:init()}.
+	-- @param ... ...  Passes all arguments to each update event and `liftdown` / `liftup` callbacks.
 	function Manager:update(...)
 		local empty_table, c, _ = { }
 		for k = 1, #update_events do

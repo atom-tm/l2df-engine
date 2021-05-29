@@ -1,5 +1,6 @@
---- Render component
+--- Render component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.render
+-- @author Abelidze
 -- @author Kasai
 -- @copyright Atom-TM 2019
 
@@ -18,15 +19,68 @@ local ceil = math.ceil
 local newQuad = love.graphics.newQuad
 
 local greenColor = { 0, 1, 0, 0.3 }
-local yellowColor = { 0, 1, 1, 0.5 }
+local yellowColor = { 1, 1, 0, 0.5 }
 local redColor = { 1, 0, 0, 0.5 }
 
 local Render = Component:extend({ unique = true })
 
-	--- Component added to l2df.class.entity
-	-- @param l2df.class.entity obj
-	-- @param table kwargs
-	-- @param table kwargs.sprites
+	--- Table describing &lt;sprite&gt; structure.
+	-- @field string res  File path to spritesheet / sprite resource
+	-- @field number w  Width of the image's area for clipping (<= full image width)
+	-- @field number h  Height of the image's area for clipping (<= full image height)
+	-- @field[opt=1] number x  Sprites' count per row
+	-- @field[opt=1] number y  Sprites' count per column
+	-- @field[opt=1] number s  Number of the first `S` sprites to skip
+	-- @field[opt=x*y] number f  Total count of sprites to add from the specified image file.
+	-- Currently also counts skipped sprites (would be fixed in future)
+	-- @field[opt=0] number ox  Clipping area's X-offset (the left upper corner)
+	-- @field[opt=0] number oy  Clipping area's Y-offset (the left upper corner)
+	-- @field[opt] number ord  Index of the first sprite to start from.
+	-- Used for appending new sprites to already existing collection
+	-- @table .Sprite
+
+	--- Blending color.
+	-- To access use @{l2df.class.component.data|Render:data()} function.
+	-- @field {0..1,0..1,0..1,0..1} Render.data.color
+
+	--- Background color.
+	-- To access use @{l2df.class.component.data|Render:data()} function.
+	-- @field {0..1,0..1,0..1,0..1} Render.data.bgcolor
+
+	--- Border color.
+	-- To access use @{l2df.class.component.data|Render:data()} function.
+	-- @field {0..1,0..1,0..1,0..1} Render.data.bcolor
+
+	--- Border width.
+	-- To access use @{l2df.class.component.data|Render:data()} function.
+	-- @number Render.data.border
+
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- Adds `"render"` key to the @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt] {l2df.class.component.render.Sprite,...} kwargs.sprites  Array of sprites to be added with @{l2df.class.component.render.addSprite|Render:addSprite()} method.
+	-- @param[opt=0] number kwargs.w  BBox width. Doesn't apply if entity already has width setted.
+	-- @param[opt=0] number kwargs.h  BBox height. Doesn't apply if entity already has height setted.
+	-- @param[opt=1] number kwargs.scalex  BBox X scale. Doesn't apply if entity already has scale setted.
+	-- @param[opt=1] number kwargs.scaley  BBox Y scale. Doesn't apply if entity already has scale setted.
+	-- @param[opt=0] number kwargs.centerx  BBox origin X position. Doesn't apply if entity already has origin setted.
+	-- @param[opt=0] number kwargs.centery  BBox origin Y position. Doesn't apply if entity already has origin setted.
+	-- @param[opt=0] number kwargs.radiusx  BBox X border smoothing. Doesn't apply if entity already has smoothing setted.
+	-- @param[opt=0] number kwargs.radiusy  BBox Y border smoothing. Doesn't apply if entity already has smoothing setted.
+	-- @param[opt=1] number kwargs.border  BBox border width.
+	-- @param[opt=1] number kwargs.facing  Entity's X orientation (not whole axis). Can be 1 or -1 (mirrored).
+	-- Used for mirroring rendered content. Doesn't apply if entity already has facing setted.
+	-- @param[opt=1] number kwargs.yorientation  Y axis sign. Can be 1 or -1 (for UI elements).
+	-- Used for corrent UI processing which has inverted Y axis. Doesn't apply if entity already has yorientation setted.
+	-- @param[opt=1] number kwargs.pic  Current drawing sprite's index. Doesn't apply if entity already has pic setted.
+	-- @param[opt=false] boolean kwargs.shadow  True if entity has drop-shadow effect. False otherwise.
+	-- @param[opt] {l2df.manager.render.Light} kwargs.lights  Array of @{l2df.manager.render.addLight|lights} used for shadows.
+	-- Usually you may add it for root @{l2df.class.entity.scene|scenes} / @{l2df.class.entity.map|maps} entities.
+	-- @param[opt] string kwargs.layer  @{l2df.manager.render.addLayer|Layer} for drawing. Careful: if setted it will change entity's layer.
+	-- @param[opt] {0..255,0..255,0..255,0..255} kwargs.color  RGBA color used for blending. Defaults to `{255, 255, 255, 255}` (white).
+	-- @param[opt] {0..255,0..255,0..255,0..255} kwargs.bgcolor  BBox background's RGBA color. Defaults to `nil` (transparent).
+	-- @param[opt] {0..255,0..255,0..255,0..255} kwargs.bcolor  BBox border's RGBA color. Defaults to `nil` (transparent).
 	function Render:added(obj, kwargs)
 		if not obj then return false end
 
@@ -42,6 +96,8 @@ local Render = Component:extend({ unique = true })
 		local data = obj.data
 		local cdata = self:data(obj)
 
+		obj.C.render = self:wrap(obj)
+
 		data.x = data.x or 0
 		data.y = data.y or 0
 		data.z = data.z or 0
@@ -50,16 +106,16 @@ local Render = Component:extend({ unique = true })
 		data.w = data.w or kwargs.w or 0
 		data.h = data.h or kwargs.h or 0
 
-		data.scalex = data.scalex or 1
-		data.scaley = data.scaley or 1
+		data.scalex = data.scalex or kwargs.scalex or 1
+		data.scaley = data.scaley or kwargs.scaley or 1
 
-		data.centerx = data.centerx or 0
-		data.centery = data.centery or 0
+		data.centerx = data.centerx or kwargs.centerx or 0
+		data.centery = data.centery or kwargs.centery or 0
 
 		data.radiusx = data.radiusx or kwargs.radiusx or 0
 		data.radiusy = data.radiusy or kwargs.radiusy or 0
 
-		data.facing = data.facing or 1
+		data.facing = data.facing or kwargs.facing or 1
 		data.yorientation = data.yorientation or kwargs.yorientation or 1
 
 		data.hidden = data.hidden or false
@@ -100,9 +156,17 @@ local Render = Component:extend({ unique = true })
 		end
 	end
 
+	--- Component was removed from @{l2df.class.entity|Entity} event.
+	-- Removes `"render"` key from @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	function Render:removed(obj)
+		self.super.removed(self, obj)
+		obj.C.render = nil
+	end
 
-	--- Add new sprite-list
-	-- @param table sprite
+	--- Adds single / multiple sprite(s) from a spritesheet.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param l2df.class.component.render.Sprite sprite  Table describing data to load.
 	function Render:addSprite(obj, sprite)
 		local data = obj.data
 		local cdata = self:data(obj)
@@ -146,7 +210,13 @@ local Render = Component:extend({ unique = true })
 					if (sprite.s <= num) and (num <= sprite.f) then
 						cdata.pics[sprite.ord + (num - sprite.s) + 1] = {
 							sprite.res,
-							newQuad((x-1) * sprite.w + sprite.ox, (y-1) * sprite.h + sprite.oy, sprite.w, sprite.h, img:getDimensions())
+							newQuad(
+								(x - 1) * sprite.w + sprite.ox,
+								(y - 1) * sprite.h + sprite.oy,
+								sprite.w,
+								sprite.h,
+								img:getDimensions()
+							)
 						}
 					end
 				end
@@ -157,6 +227,10 @@ local Render = Component:extend({ unique = true })
 		end
 	end
 
+	--- Component update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number dt  Delta-time since last game tick.
+	-- @param boolean islast  Draws only the last processed frame.
 	function Render:update(obj, dt, islast)
 		if not (obj and islast) then return end
 
@@ -180,9 +254,10 @@ local Render = Component:extend({ unique = true })
 		end
 	end
 
-	--- Post-update event
-	-- @param number dt
-	-- @param boolean islast
+	--- Component post-update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number dt  Delta-time since last game tick.
+	-- @param boolean islast  Draws only the last processed frame.
 	function Render:postupdate(obj, dt, islast)
 		if not (obj and islast) then return end
 
@@ -255,7 +330,7 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = x + body.x,
+					x = x + body.x * data.facing + body.w * (data.facing - 1) * 0.5,
 					y = y - body.y * data.yorientation,
 					z = z + body.z,
 					w = body.w,
@@ -273,7 +348,7 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = x + itr.x * data.facing + itr.w * (data.facing - 1) / 2,
+					x = x + itr.x * data.facing + itr.w * (data.facing - 1) * 0.5,
 					y = y - itr.y * data.yorientation,
 					z = z + itr.z,
 					w = itr.w,

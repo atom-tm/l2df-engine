@@ -1,4 +1,4 @@
---- Video component
+--- Video component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.video
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -13,17 +13,42 @@ local ResourceManager = core.import 'manager.resource'
 
 local Video = Component:extend({ unique = false })
 
-    --- Component added to l2df.class.entity
-    -- @param l2df.class.entity obj
+    --- Resource used to play the video.
+    -- To access use @{l2df.class.component.data|Video:data()} function.
+    -- @field love.graphics.Video Video.data.resource
+
+    --- True when video's playback is looped. False otherwise.
+    -- To access use @{l2df.class.component.data|Video:data()} function.
+    -- @field boolean Video.data.looped
+
+    --- True if the video is hidding when it's paused or stopped. False otherwise.
+    -- To access use @{l2df.class.component.data|Video:data()} function.
+    -- @field boolean Video.data.hidding
+
+    --- Blending color.
+    -- To access use @{l2df.class.component.data|Video:data()} function.
+    -- @field {0..1,0..1,0..1,0..1} Video.data.color
+
+    --- Component was added to @{l2df.class.entity|Entity} event.
+    -- Adds `"video"` key to the @{l2df.class.entity.C|Entity.C} table.
+    -- @param l2df.class.entity obj  Entity's instance.
+    -- @param table kwargs  Keyword arguments.
+    -- @param string kwargs.resource  Path to the video file. The only supported format is Ogg Theora.
+    -- @param[opt=false] boolean kwargs.autoplay  Autoplay video as soon as the component becomes active.
+    -- @param[opt=false] boolean kwargs.loop  True if component should loop the video. False otherwise.
+    -- @param[opt=false] boolean kwargs.hiding  Hide the video when it's paused or stopped.
+    -- @param[opt] {0..255,0..255,0..255,0..255} kwargs.color  RGBA color used for blending. Defaults to `{255, 255, 255, 255}` (white).
     function Video:added(obj, kwargs)
         if not obj then return false end
         local data = obj.data
         local odata = self:data(obj)
         kwargs = kwargs or { }
 
-        odata.played = kwargs.autoplay
-        odata.looped = kwargs.loop
-        odata.hiding = kwargs.hiding
+        obj.C.video = self:wrap(obj)
+
+        odata.played = not not kwargs.autoplay
+        odata.looped = not not kwargs.loop
+        odata.hiding = not not kwargs.hiding
 
         data.x = data.x or 0
         data.y = data.y or 0
@@ -46,12 +71,20 @@ local Video = Component:extend({ unique = false })
             (kwargs.color[2] or 255) / 255,
             (kwargs.color[3] or 255) / 255,
             (kwargs.color[4] or 255) / 255
-        } or { 1,1,1,1 }
+        } or { 1, 1, 1, 1 }
     end
 
-    ---
-    -- @param l2df.class.entity obj
-    -- @param string state
+    --- Component was removed from @{l2df.class.entity|Entity} event.
+    -- Removes `"video"` key from @{l2df.class.entity.C|Entity.C} table.
+    -- @param l2df.class.entity obj  Entity's instance.
+    function Video:removed(obj)
+        self.super.removed(self, obj)
+        obj.C.video = nil
+    end
+
+    --- Method to control video playback.
+    -- @param l2df.class.entity obj  Entity's instance.
+    -- @param string state  Action to do. One of: "play", "pause", "stop" or "toggle".
     function Video:setState(obj, state)
         local data = obj.data
         local odata = self:data(obj)
@@ -67,7 +100,7 @@ local Video = Component:extend({ unique = false })
         elseif state == 'pause' then
             if odata.resource then odata.resource:pause() end
             odata.played = false
-        elseif state == 'invert' then
+        elseif state == 'toggle' then
             if odata.resource then
                 if odata.resource:isPlaying() then
                     odata.resource:pause()
@@ -82,13 +115,16 @@ local Video = Component:extend({ unique = false })
         return true
     end
 
-    ---
+    --- Check video's playing state.
+    -- @param l2df.class.entity obj  Entity's instance.
+    -- @return boolean  True if the video is playing. False otherwise.
     function Video:isPlaying(obj)
         local odata = self:data(obj)
         return odata.played and odata.resource:isPlaying()
     end
 
-    --- Post-update event
+    --- Component post-update event handler.
+    -- @param l2df.class.entity obj  Entity's instance.
     function Video:postupdate(obj)
         local data = obj.data
         local odata = self:data(obj)

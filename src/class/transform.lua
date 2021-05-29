@@ -1,4 +1,4 @@
---- Transform class
+--- Transform class. Inherited from @{l2df.class|l2df.Class}.
 -- @classmod l2df.class.transform
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -18,16 +18,16 @@ local mulMatrix = helper.mulMatrix
 
 local Transform = Class:extend()
 
-	--- Init
-	-- @param[opt] number x
-	-- @param[opt] number y
-	-- @param[opt] number z
-	-- @param[opt] number sx
-	-- @param[opt] number sy
-	-- @param[opt] number sz
-	-- @param[opt] number r
-	-- @param[opt] number ox
-	-- @param[opt] number oy
+	--- Initialize transform.
+	-- @param[opt] number x  Position X component.
+	-- @param[opt] number y  Position Y component.
+	-- @param[opt] number z  Position Z component.
+	-- @param[opt] number sx  Scale X component.
+	-- @param[opt] number sy  Scale Y component.
+	-- @param[opt] number sz  Scale Z component.
+	-- @param[opt] number r  Rotation in radians.
+	-- @param[opt] number ox  Pivot offset X component.
+	-- @param[opt] number oy  Pivot offset Y component.
 	function Transform:init(...)
 		self.matrix = {
 			{ 1, 0, 0, 0 },
@@ -42,16 +42,16 @@ local Transform = Class:extend()
 		self:set(...)
 	end
 
-	--- Update transform
-	-- @param[opt] number x
-	-- @param[opt] number y
-	-- @param[opt] number z
-	-- @param[opt] number sx
-	-- @param[opt] number sy
-	-- @param[opt] number sz
-	-- @param[opt] number r
-	-- @param[opt] number ox
-	-- @param[opt] number oy
+	--- Update transform.
+	-- @param[opt] number x  Position X component.
+	-- @param[opt] number y  Position Y component.
+	-- @param[opt] number z  Position Z component.
+	-- @param[opt] number sx  Scale X component.
+	-- @param[opt] number sy  Scale Y component.
+	-- @param[opt] number sz  Scale Z component.
+	-- @param[opt] number r  Rotation in radians.
+	-- @param[opt] number ox  Pivot offset X component.
+	-- @param[opt] number oy  Pivot offset Y component.
 	function Transform:set(x, y, z, sx, sy, sz, r, ox, oy)
 		x = x or 0
 		y = y or 0
@@ -77,8 +77,8 @@ local Transform = Class:extend()
 		self.r = r
 	end
 
-	--- Apply another Transform to current
-	-- @param l2df.class.transform transform
+	--- Apply another @{l2df.class.transform|Transform} to current.
+	-- @param l2df.class.transform transform  Transform to apply.
 	-- @return boolean
 	function Transform:append(transform)
 	if not transform:isInstanceOf(Transform) then return false end
@@ -90,10 +90,10 @@ local Transform = Class:extend()
 		return true
 	end
 
-	--- Apply transform to vector and return new one
-	-- @param number x
-	-- @param number y
-	-- @param number z
+	--- Apply transform to vector and return new one.
+	-- @param number x  Position X component.
+	-- @param number y  Position Y component.
+	-- @param number z  Position Z component.
 	-- @return table
 	function Transform:vector(x, y, z)
 		local m = {
@@ -105,18 +105,18 @@ local Transform = Class:extend()
 		return mulMatrix(self.matrix, m)
 	end
 
-	--- Clone transform
-	-- @return l2df.class.transfor
+	--- Clone transform.
+	-- @return l2df.class.transform
 	function Transform:clone()
 		local t = Transform:new()
 		t:append(self)
 		return t
 	end
 
-	--- Apply scale to transform
-	-- @param[opt] number sx
-	-- @param[opt] number sy
-	-- @param[opt] number sz
+	--- Apply scale to transform.
+	-- @param[opt] number sx  Scale X component.
+	-- @param[opt] number sy  Scale Y component.
+	-- @param[opt] number sz  Scale Z component.
 	function Transform:scale(sx, sy, sz)
 		sy = sy or sx or 1
 		sz = sz or sx or 1
@@ -133,12 +133,12 @@ local Transform = Class:extend()
 		self.sz = self.sz * sz
 	end
 
-	--- Move transform
-	-- @param[opt] number dx
-	-- @param[opt] number dy
-	-- @param[opt] number dz
-	-- @param[opt] number ox
-	-- @param[opt] number oy
+	--- Move transform.
+	-- @param[opt] number dx  Movement vector X component.
+	-- @param[opt] number dy  Movement vector Y component.
+	-- @param[opt] number dz  Movement vector Z component.
+	-- @param[opt] number ox  Pivot offset X component.
+	-- @param[opt] number oy  Pivot offset Y component.
 	function Transform:translate(dx, dy, dz, ox, oy)
 		dx = dx or 0
 		dy = dy or 0
@@ -154,10 +154,10 @@ local Transform = Class:extend()
 		self.matrix = mulMatrix(m, self.matrix)
 	end
 
-	--- Rotate transform around point
-	-- @param[opt] number a
-	-- @param[opt] number x
-	-- @param[opt] number y
+	--- Rotate transform around point.
+	-- @param[opt] number a  Rotation angle in radians.
+	-- @param[opt] number x  Point X component.
+	-- @param[opt] number y  Point Y component.
 	function Transform:rotate(a, x, y)
 		a = a or 0
 		x = x or 0

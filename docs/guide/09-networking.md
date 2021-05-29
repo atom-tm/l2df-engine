@@ -20,7 +20,7 @@ multiplayer implementation. It does these two things:
 - initializes local player's username adding "#xxxx" suffix to it, so other players can find you later with this username;
 - initializes your socket<sup>[[4]](https://en.wikipedia.org/wiki/Network_socket)</sup> to connect masters and peers later.
 
-To get generated username use @{l2df.manager.network.username|NetworkManager:username} method.
+To get generated username use @{l2df.manager.network|NetworkManager.username} variable.
 
 To init it again you can destroy old socket and other stuff with @{l2df.manager.network.destroy|NetworkManager:destroy} method.
 
@@ -226,10 +226,10 @@ game with direct player interaction.
 
 ### How to implement
 
-@{l2df.manager.snapshot|SnapshotManager} - provides you a transactional storage with commit / rollback support. <br />
+@{l2df.manager.sync|SyncManager} - provides you a transactional storage with commit / rollback support. <br />
 @{l2df.manager.input|InputManager} - saves 'timestamp' for all your inputs which is used internally to rollback with
-@{l2df.manager.snapshot|SnapshotManager} <br />
-@{l2df.class.entity.sync|Entity:sync} - can be used in pair with @{l2df.manager.snapshot.stage|SnapshotManager:stage} to
+@{l2df.manager.sync|SyncManager} <br />
+@{l2df.class.entity.sync|Entity:sync} - can be used in pair with @{l2df.manager.sync.stage|SyncManager:stage} to
 persist entity's state for future rollbacks.
 
 For more detailed information on implementation see @{02-presets.md|LF2's preset}.

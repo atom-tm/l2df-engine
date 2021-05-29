@@ -1,4 +1,4 @@
---- Resource manager
+--- Resource manager.
 -- @classmod l2df.manager.resource
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -87,50 +87,50 @@ local callbacks = { }
 
 local Manager = { }
 
-	--- Configure @{l2df.manager.resource}
-	-- @param table kwargs
+	--- Configure @{l2df.manager.resource|ResourceManager}.
+	-- @param[opt] table kwargs  Keyword arguments. Not actually used.
 	-- @return l2df.manager.resource
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
 		return self
 	end
 
-	--- Saves the resource to the Manager
-	-- @param mixed resource
-	-- @param boolean temp
-	-- @return number id
+	--- Saves the resource to the @{l2df.manager.resource|ResourceManager}.
+	-- @param mixed resource  Resource handler.
+	-- @param[opt=false] boolean temp  Set to true if the specified resource should be marked as @{Manager:clearTemp|temporary}.
+	-- @return number|boolean id
 	-- @return mixed resource
 	function Manager:add(resource, temp)
 		if resourse == nil then return false end
 		local id = nil
 		if temp then id = list.temp:add(resource, true)
 		else id = list.global:add(resource, true) end
-		return id
+		return id, resource
 	end
 
-	--- Stores the resource in the Manager using a unique identifier
-	-- @param mixed id
-	-- @param mixed resource
-	-- @param boolean temp
-	-- @return mixed id
+	--- Stores the resource in the @{l2df.manager.resource|ResourceManager} using an unique identifier.
+	-- @param number|string id  Unique identifier for accessing resource later.
+	-- @param mixed resource  Resource handler.
+	-- @param[opt=false] boolean temp  Set to true if the specified resource should be marked as @{Manager:clearTemp|temporary}.
+	-- @return number|string|boolean id
 	-- @return mixed resource
 	function Manager:addById(id, resource, temp)
 		if not id then return self:add(resource, temp) end
 		if resource == nil then return false end
 		list[temp and 'temp' or 'global']:addById(resource, id, true)
-		return id
+		return id, resource
 	end
 
-	--- Removes the specified resource from the Manager
-	-- @param mixed resource
+	--- Removes the specified resource from the @{l2df.manager.resource|ResourceManager}.
+	-- @param mixed resource  Resource handler.
 	-- @return boolean success
 	function Manager:remove(resource)
 		list.temp:remove(resource)
 		return list.global:remove(resource)
 	end
 
-	--- Removes the specified resource from the Manager by Id
-	-- @param mixed id
+	--- Removes the specified resource from the @{l2df.manager.resource|ResourceManager} by its ID.
+	-- @param number|string id  Resource's unique identifier.
 	-- @return boolean success
 	function Manager:removeById(id)
 		local res = list.global:getById(id)
@@ -139,7 +139,7 @@ local Manager = { }
 		return list.global:removeById(id)
 	end
 
-	--- Removes all resources marked as temporary from the Manager
+	--- Removes all resources marked as temporary from the @{l2df.manager.resource|ResourceManager}.
 	function Manager:clearTemp()
 		for k, val in list.temp:enum(true) do
 			list.global:remove(val)
@@ -147,28 +147,29 @@ local Manager = { }
 		list.temp = Storage:new()
 	end
 
-	--- Gets the resource Id from the Manager
-	-- @param mixed resource
-	-- @return mixed id
+	--- Gets the resource Id from the @{l2df.manager.resource|ResourceManager}.
+	-- @param mixed resource  Resource handler.
+	-- @return number|string id
 	function Manager:getId(resource)
 		return list.global:has(resource)
 	end
 
-	--- Returns a resource from the Manager by Id
-	-- @param mixed id
-	-- @return mixed resource
+	--- Returns a resource from the @{l2df.manager.resource|ResourceManager} by its ID.
+	-- @param number|string id  Resource's unique identifier.
+	-- @return mixed resource  Resource handler.
 	-- @return boolean is the resource marked temporary
 	function Manager:get(id)
 		return id and (list.global:getById(id) or list.temp:getById(id)) or nil
 	end
 
-	--- Adds a supported file type to the Manager by loading it from a path
-	-- @param string filepath
-	-- @param boolean reload
-	-- @param mixed id
-	-- @param boolean temp
-	-- @return mixed  ResourceId
-	-- @return mixed  ResourceData
+	--- Adds a supported file type to the @{l2df.manager.resource|ResourceManager} by loading it from a path.
+	-- @param string filepath  Path to the resource file.
+	-- @param[opt=false] boolean reload  Set to true if you want to reload previously loaded resource.
+	-- @param[opt] number|string id  Resource's unique identifier for accessing it later.
+	-- Defaults to `filepath` if not setted.
+	-- @param[opt=false] boolean temp  Set to true if the specified resource should be marked as @{Manager:clearTemp|temporary}.
+	-- @return mixed id
+	-- @return mixed resource
 	function Manager:load(filepath, reload, id, temp, ...)
 		local id = id or filepath
 		if not reload and self:get(id) then return id end
@@ -188,7 +189,8 @@ local Manager = { }
 		return id, resource
 	end
 
-	--- Update event
+	--- Update event handler.
+	-- Checks async loaders and triggers callbacks if they are finished.
 	function Manager:update()
 		if #asyncList > 0 then
 			for i = 1, #asyncList do
@@ -218,12 +220,14 @@ local Manager = { }
 		else asyncReturn:clear() end
 	end
 
-	--- Add new file to queue for async loading or return already loaded resource's id
-	-- @param string filepath
-	-- @param[opt] function callback
-	-- @param[opt=false] boolean reload
-	-- @param[opt] number id
-	-- @param[opt=false] boolean temp
+	--- Add new file to queue for async loading or return already loaded resource's ID.
+	-- @param string filepath  Path to the resource file.
+	-- @param[opt] function callback  Callback function which would be triggered on resource loading finished.
+	-- Arguments for that function are: `(id, number|string)` and `(resource, mixed)`.
+	-- @param[opt=false] boolean reload  Set to true if you want to reload previously loaded resource.
+	-- @param[opt] number|string id  Resource's unique identifier for accessing it later.
+	-- Defaults to `filepath` if not setted.
+	-- @param[opt=false] boolean temp  Set to true if the specified resource should be marked as @{Manager:clearTemp|temporary}.
 	-- @return number
 	function Manager:loadAsync(filepath, callback, reload, id, temp)
 		id = id or filepath
@@ -244,7 +248,7 @@ local Manager = { }
 		return self:addById(id, Plug:new(), temp)
 	end
 
-	--- Async loading of multiple resources
+	--- Async loading of multiple resources.
 	-- @param table files
 	-- @return boolean
 	-- @return number

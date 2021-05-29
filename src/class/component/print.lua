@@ -1,4 +1,4 @@
---- Print component
+--- Print component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.print
 -- @author Kasai
 -- @copyright Atom-TM 2020
@@ -12,12 +12,43 @@ local ResourceManager = core.import 'manager.resource'
 
 local max = math.max
 local loveNewFont = love.graphics.newFont
+local unpack = table.unpack or _G.unpack
+local strformat = string.format
 
 local Print = Component:extend({ unique = false })
 
+	--- Text alignment: `"left"`, `"right"`, `"center"`.
+	-- To access use @{l2df.class.component.data|Print:data()} function.
+	-- @string Print.data.align
+
+	--- Text max width.
+	-- To access use @{l2df.class.component.data|Print:data()} function.
+	-- @string Print.data.limit
+
+	--- Text font.
+	-- To access use @{l2df.class.component.data|Print:data()} function.
+	-- @string Print.data.font
+
+	--- Text color.
+	-- To access use @{l2df.class.component.data|Print:data()} function.
+	-- @field {0..1,0..1,0..1,0..1} Print.data.color
+
+	--- Placeholder color.
+	-- To access use @{l2df.class.component.data|Print:data()} function.
+	-- @field {0..1,0..1,0..1,0..1} Print.data.pcolor
+
 	--- Set params for printing
-	-- @param l2df.class.entity obj
-	-- @param table kwargs
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=""] string kwargs.text  Text to display.
+	-- @param[opt=""] string kwargs.placeholder  Placeholder text to display.
+	-- @param[opt={"Arial.ttf";12}] string|number|{string,number}|userdata kwargs.font  Font used for displaying text.
+	-- Can be a font name, font size, table-combination of both or even `userdata` with ready-to-use font instance.
+	-- @param[opt] string kwargs.limit  Max width of the one-line text string. Defaults to the text's length with setted font.
+	-- @param[opt='left'] string kwargs.center  Text alignment: `"left"`, `"right"`, `"center"`.
+	-- Used in pair with `kwargs.limit` to align text after line breaks.
+	-- @param[opt] {0..255,0..255,0..255,0..255} kwargs.color  Text's RGBA color. Defaults to `{255, 255, 255, 255}` (white).
+	-- @param[opt] {0..255,0..255,0..255,0..255} kwargs.pcolor  Text placeholder's RGBA color. Defaults to the value of `kwargs.color`.
 	function Print:set(obj, kwargs)
 		local cdata = self:data(obj)
 		kwargs = kwargs or { }
@@ -51,8 +82,18 @@ local Print = Component:extend({ unique = false })
 		or cdata.color
 	end
 
-	--- Component added to l2df.class.entity
-	-- @param l2df.class.entity obj
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments. See @{l2df.class.component.print.set|Print:set()} for additional description.
+	-- @param[opt=false] boolean kwargs.hidden  Text's hidden state. Applies to entity's hidden state.
+	-- @param[opt=0] number kwargs.x  Text's X position. Careful: if setted it will change entity's position.
+	-- @param[opt=0] number kwargs.y  Text's Y position. Careful: if setted it will change entity's position.
+	-- @param[opt=0] number kwargs.z  Text's Z position. Careful: if setted it will change entity's position.
+	-- @param[opt=0] number kwargs.r  Text's rotation in radians. Careful: if setted it will change entity's rotation.
+	-- @param[opt=1] number kwargs.scalex  Text's X scale. Careful: if setted it will change entity's scale.
+	-- @param[opt=1] number kwargs.scaley  Text's Y scale. Careful: if setted it will change entity's scale.
+	-- @param[opt=0] number kwargs.centerx  Text's origin X position. Doesn't apply if entity already has origin setted.
+	-- @param[opt=0] number kwargs.centery  Text's origin Y position. Doesn't apply if entity already has origin setted.
 	function Print:added(obj, kwargs)
 		if not obj then return false end
 
@@ -68,17 +109,20 @@ local Print = Component:extend({ unique = false })
 		data.scalex = kwargs.scalex or data.scalex or 1
 		data.scaley = kwargs.scaley or data.scaley or 1
 
+		data.centerx = data.centerx or kwargs.centerx or 0
+		data.centery = data.centery or kwargs.centery or 0
+
 		data.hidden = kwargs.hidden or data.hidden or false
 
 		self:set(obj, kwargs)
 	end
 
-	--- Post-update event
-	-- @param l2df.class.entity obj
+	--- Component post-update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
 	function Print:postupdate(obj)
 		local data = obj.data
 		local cdata = self:data(obj)
-		if not data.hidden then
+		if not data.hidden and cdata.font then
 			local text, color = cdata.text, cdata.color
 			if #text == 0 then
 				text, color = cdata.placeholder, cdata.pcolor
@@ -95,6 +139,11 @@ local Print = Component:extend({ unique = false })
 				y = data.globalY or data.y,
 				z = data.globalZ or data.z,
 				r = data.r,
+
+				sx = data.scalex,
+				sy = data.scaley,
+				ox = data.centerx,
+				oy = data.centery,
 			})
 		end
 	end

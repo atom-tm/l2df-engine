@@ -1,4 +1,4 @@
---- Physics component
+--- Physics component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.physix
 -- @author Abelidze
 -- @author Kasai
@@ -21,7 +21,14 @@ local EPS = 1e-5
 
 local Physix = Component:extend({ unique = true })
 
-	---
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=1] number kwargs.facing  Entity's X orientation (not whole axis). Can be 1 or -1 (mirrored)..
+	-- Used for mirroring rendered content. Doesn't apply if entity already has facing setted.
+	-- @param[opt=false] boolean kwargs.gravity  True if entity uses gravity acceleration, false otherwise.
+	-- @param[opt=false] boolean kwargs.static  Disables physics simulation if set to true.
+	-- @param[opt=true] boolean kwargs.solid  Makes object solid. Solid objects collide with each other.
 	function Physix:added(obj, kwargs)
 		if not obj then return false end
 		kwargs = kwargs or { }
@@ -54,7 +61,9 @@ local Physix = Component:extend({ unique = true })
 		return true
 	end
 
-	---
+	--- Physics update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number dt  Delta-time since last game tick.
 	function Physix:update(obj, dt)
 		local data, world = obj.data, World.getFromContext()
 		if not world or data.static then return end

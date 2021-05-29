@@ -1,4 +1,4 @@
---- Map object
+--- Map object. Inherited from @{l2df.class.entity.scene|l2df.class.entity.Scene} class.
 -- @classmod l2df.class.entity.map
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -15,6 +15,14 @@ local Transform = core.import 'class.component.transform'
 
 local Map = Scene:extend({ name = 'map' })
 
+	--- Map initialization. Components:
+	-- @{l2df.class.component.transform|Transform},
+	-- @{l2df.class.component.frames|Frames},
+	-- @{l2df.class.component.states|States},
+	-- @{l2df.class.component.render|Render},
+	-- @{l2df.class.component.physix.world|World} (instance).
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=false] boolean kwargs.hidden  Initial map hidden state.
 	function Map:init(kwargs)
 		self:super(kwargs)
 		self.data.hidden = kwargs.hidden or false

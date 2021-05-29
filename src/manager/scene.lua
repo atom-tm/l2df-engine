@@ -1,4 +1,4 @@
---- Scene manager
+--- Scene manager.
 -- @classmod l2df.manager.scene
 -- @author Kasai
 -- @copyright Atom-TM 2019
@@ -15,10 +15,10 @@ local history = { }
 
 local Manager = { root = Scene { active = true } }
 
-	--- Configure @{l2df.manager.scene}
-	-- @param table kwargs
-	-- @param[opt] string load
-	-- @param[opt] string set
+	--- Configure @{l2df.manager.scene|SceneManager}.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt] string kwargs.load  Path to the directory containing scene presets to @{Manager:load|load}.
+	-- @param[opt] number|string kwargs.set  Scene ID of the initial scene to @{Manager:set|set}.
 	-- @return l2df.manager.scene
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
@@ -31,8 +31,8 @@ local Manager = { root = Scene { active = true } }
 		return self
 	end
 
-	--- Load presset scenes from a specified folder
-	-- @param string folderpath
+	--- Load preset scenes from a specified folder.
+	-- @param string folderpath  Path to the directory containing scene presets.
 	function Manager:load(folderpath)
 		local r = helper.requireFolder(folderpath, true)
 		for k, v in pairs(r) do
@@ -43,10 +43,11 @@ local Manager = { root = Scene { active = true } }
 		end
 	end
 
-	--- Load presset scene from file or scene object preserving the id
-	-- @param string|l2df.class.entity.scene scene
-	-- @param mixed id
-	-- @return boolean
+	--- Load preset scene from file or scene object preserving the id.
+	-- @param string|l2df.class.entity.scene scene  Path to the scene file or @{l2df.class.entity.scene|Scene} object.
+	-- @param[opt] number|string id  Scene ID.
+	-- If `scene` is a string, the default value is a name of the scene's file.
+	-- @return boolean  `true` if scene was successfully added. `false` otherwise.
 	function Manager:add(scene, id)
 		assert(scene, 'You must specify the path to the file or pass the scene object')
 		if scene.isInstanceOf and scene:isInstanceOf(Scene) and id then
@@ -65,7 +66,7 @@ local Manager = { root = Scene { active = true } }
 	end
 
 	--- Deleting a scene from the Manager by Id
-	-- @param mixed id
+	-- @param number|string id  Scene ID.
 	-- @return boolean
 	function Manager:remove(id)
 		if not id then return false end
@@ -74,9 +75,9 @@ local Manager = { root = Scene { active = true } }
 		return true
 	end
 
-	---
-	-- @param mixed id
-	-- @return boolean
+	--- Check whether a scene with the specified id is @{Manager:set|setted} / @{Manager:push|pushed} to stack.
+	-- @param number|string id  Scene ID.
+	-- @return boolean  `true` if the scene is in stack. `false` otherwise.
 	function Manager:inStack(id)
 		local scene = assert(id and list[id], 'Room with provided id does not exist')
 		for i = #history, 1, -1 do
@@ -87,14 +88,15 @@ local Manager = { root = Scene { active = true } }
 		return false
 	end
 
-	---
+	--- Returns the topmost scene in @{Manager:push|stack}.
 	-- @return l2df.class.entity.scene
 	function Manager:current()
 		return history[#history]
 	end
 
-	--- Setting the current scene
-	-- @param mixed id
+	--- Setting the current scene.
+	-- @param number|string id  Scene ID.
+	-- @param ... ...  Passes all arguments to `enter` / `leave` / `disable` callbacks of the @{l2df.class.entity.scene|scene}.
 	-- @return boolean
 	function Manager:set(id, ...)
 		for i = #history, 1, -1 do
@@ -105,8 +107,9 @@ local Manager = { root = Scene { active = true } }
 		return self:push(id, ...)
 	end
 
-	--- Adding scene to current list
-	-- @param mixed id
+	--- Adding scene to current list.
+	-- @param number|string id  Scene ID.
+	-- @param ... ...  Passes all arguments to `enter` / `disable` callbacks of the @{l2df.class.entity.scene|scene}.
 	-- @return boolean
 	function Manager:push(id, ...)
 		local scene = history[#history]
@@ -116,8 +119,9 @@ local Manager = { root = Scene { active = true } }
 		return scene:setActive(true) and scene.enter and scene:enter(...) or true
 	end
 
-	--- Removing last scene from current list
-	-- @return boolean
+	--- Removing last scene from current list.
+	-- @param ... ...  Passes all arguments to `enable` / `leave` callbacks of the @{l2df.class.entity.scene|scene}.
+	-- @return boolean  `true` if there were one or more scenes in stack. `false` otherwise.
 	function Manager:pop(...)
 		if not #history > 0 then return false end
 		local scene = history[#history]

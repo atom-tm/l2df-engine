@@ -1,0 +1,127 @@
+html[data-theme='dark'] {
+    background-color: #111621;
+    color: #e6eeff;
+
+    body {
+        background-color: #111621;
+    }
+
+    a {
+        color: #ee7070;
+
+        &:target + * {
+            color: #123e10;
+        }
+    }
+
+    hr {
+        color: #e6eeff;
+        background: #1a2233;
+    }
+
+    h2 {
+        border-bottom-color: #505663;
+    }
+
+    #container, {
+        background-color: #111621;
+    }
+
+    .header {
+        background-color: #111621;
+        border-bottom-color: #1a2233;
+
+        .header__nav .nav__link {
+            font-weight: bold;
+        }
+
+        .header__nav .nav__link:hover,
+        .header__nav .nav__link__active .nav__link {
+            color: #cc201c;
+        }
+
+        .header__logo a {
+            background: url(img/logo-dark.png);
+        }
+
+        .header__theme .theme {
+            background-color: #393d40;
+        }
+    }
+
+    #navigation.nav {
+        background-color: #1a2233;
+        border-right-color: #1a2233;
+        h2 {
+            color: #e6eeff;
+            border-bottom-color: #505663;
+        }
+    }
+
+    dl.table dt,
+    dl.function dt {
+        border-color: #505663;
+    }
+
+    table.module_list,
+    table.function_list {
+        td { border-color: #393d40; }
+        td.name { background-color: #242830; }
+    }
+
+    .info-table td {
+        border-color: #393d40;
+    }
+
+    .state-num {
+        background: #242830;
+    }
+
+    /* LUA-CODE */
+    pre {
+        border-color: #393d40;
+        background-color: #1a2233;
+        color: #e6eeff;
+
+        .keyword { color: #f92569; }
+        .global { color: #67d8ef; }
+        .user-keyword { color: #67d8ef; }
+        .string { color: #e7db74; }
+        .constant { color: #ac80ff; }
+        .number { color: #ac80ff; }
+    }
+
+    /* DC-CODE */
+    .dc-code {
+        border-color: #393d40;
+        background: #1a2233;
+        color: #e6eeff;
+
+        .tags { color: #fd9620; }
+        .value { color: #ac80ff; }
+        .bdy { color: #67d8ef; }
+        .itr { color: #e7db74; }
+        .key-words { color: #f92569; }
+        .key-words2 { color: #2bc7b9; }
+
+        .tag-name { color: #777777; }
+        .opoint { color: #BABC14; }
+        .wpoint { color: #3F931A; }
+        .mpoint { color: #AD2CAF; }
+        .b { color: #2C5AAF; }
+        .comment { color: #757575; background: #eeeef6; }
+        .comment2 { color: #666666; }
+    }
+
+    ::-webkit-scrollbar {
+      background-color: #19171c;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #cc201c;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background-color: #cc201c;
+    }
+}

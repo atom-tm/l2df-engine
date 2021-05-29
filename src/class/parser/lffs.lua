@@ -1,7 +1,8 @@
---- Parser for LittleFighterForever syntax
+--- Parser for LittleFighterForever syntax. Inherited from @{l2df.class.parser.dat|l2df.class.parser.DatParser} class.
 -- @classmod l2df.class.parser.lffs
 -- @author Abelidze
 -- @copyright Atom-TM 2019
+-- @deprecated
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'JsonParser works only with l2df v1.0 and higher')
@@ -37,10 +38,10 @@ local LffsParser = DatParser:extend()
 	--'<([%w_]+)>([^<>]*)</[%w_]+>'
 	LffsParser.ARGS_PATTERN = '([^<:>])'
 
-	--- Method for parsing lffs formatted string
-	-- You can extend existing object by passing it as second parameter
-	-- @param string str  String for parsing
-	-- @param table obj   Object to extend, optional
+	--- Method for parsing lffs formatted string.
+	-- You can extend existing object by passing it as second parameter.
+	-- @param string str  String for parsing.
+	-- @param[opt] table obj  Object to extend.
 	-- @return table
 	function LffsParser:parse(str, obj)
 		assert(type(str) == 'string', 'Parameter "str" must be a string.')
@@ -115,10 +116,10 @@ local LffsParser = DatParser:extend()
 		return result.nodes[1]
 	end
 
-	--- Method for parsing arguments from string on defined range
-	-- @param string str
-	-- @param number from
-	-- @param number to
+	--- Method for parsing arguments from string on defined range.
+	-- @param string str  Source string.
+	-- @param number from  Start index.
+	-- @param number to  End index.
 	-- @return table
 	-- @return number
 	function LffsParser:parseArguments(str, from, to)
@@ -176,8 +177,8 @@ local LffsParser = DatParser:extend()
 		return result, to + 1
 	end
 
-	--- Method for loading markup elements' classes
-	-- @param string path  Path
+	--- Method for loading markup elements' classes.
+	-- @param string path  Path to the classes' directory.
 	function LffsParser:scan(path)
 		assert(type(path) == 'string', 'Parameter "path" must be a string.')
 
@@ -193,8 +194,9 @@ local LffsParser = DatParser:extend()
 		end
 	end
 
-	--- Method for adding new element to parser's engine
-	-- @param table element
+	--- Method for adding new element to parser's engine.
+	-- @param table element  Source element.
+	-- @param string element.name  Name of the element. Used for its identification.
 	-- @return boolean
 	function LffsParser:add(element)
 		if isValidElement(element) then
@@ -204,8 +206,8 @@ local LffsParser = DatParser:extend()
 		return false
 	end
 
-	--- Method for dumping table to lffs format
-	-- @param table data  Table for dumping
+	--- Method for dumping table to lffs format.
+	-- @param table data  Table for dumping.
 	-- @return string
 	function LffsParser:dump(data)
 		assert(type(data) == 'table', 'Parameter "data" must be a table.')

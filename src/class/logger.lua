@@ -1,4 +1,4 @@
---- Logger class
+--- Logger class. Inherited from @{l2df.class|l2df.Class}.
 -- @classmod l2df.class.logger
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -50,19 +50,23 @@ io.stdout:setvbuf('no') -- don't touch it
 
 local Logger = Class:extend({ name = '', level = getenv('L2DF_LOGLEVEL') or 'debug', file = getenv('L2DF_LOGFILE') })
 
-    --- Get logger by name
+    --- Get logger by name.
     -- @param string name
     -- @return l2df.class.logger
     function Logger.get(name)
         return assert(loggers[name], 'Logger not found')
     end
 
-    --- Disable colors in console
+    --- Disable colors in console.
     function Logger.disableColors()
         colors = false
     end
 
-    --- Init
+    --- Initialize logger.
+    -- @param string name  Name assigned to the created logger.
+    -- @param[opt] table kwargs  Keyword arguments.
+    -- @param[opt='debug'] string kwargs.level  Debug level. One of: debug, info, success, warn, error, crit.
+    -- @param[opt] string kwargs.file  Path to the file for writting logs.
     function Logger:init(name, kwargs)
         assert(not (name and loggers[name]), 'Logger already exists')
         kwargs = kwargs or { }

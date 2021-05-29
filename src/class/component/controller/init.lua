@@ -1,4 +1,4 @@
---- Controller component
+--- Controller component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.controller
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -13,9 +13,10 @@ local InputManager = core.import 'manager.input'
 
 local Controller = Component:extend()
 
-	--- Component added to l2df.class.entity
-	-- @param l2df.class.entity obj
-	-- @param number player
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- Adds `"controller"` key to the @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number player  ID of the player attached to that controller.
 	-- @return boolean
 	function Controller:added(obj, player)
 		if not obj then return false end
@@ -26,37 +27,38 @@ local Controller = Component:extend()
 		return true
 	end
 
-	---
-	-- @param l2df.class.entity obj
+	--- Component was removed from @{l2df.class.entity|Entity} event.
+	-- Removes `"controller"` key from @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
 	function Controller:removed(obj)
 		obj.C.controller = nil
 	end
 
-	--- Check if button was pressed
-	-- @param l2df.class.entity obj
-	-- @param string button  Pressed button
+	--- Check if button was pressed.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param string button  Pressed button.
 	-- @return boolean
 	function Controller:pressed(obj, button)
 		return InputManager:pressed(button, obj.data.player)
 	end
 
-	--- Check if button was double pressed
-	-- @param l2df.class.entity obj
-	-- @param string button  Double pressed button
+	--- Check if button was double pressed.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param string button  Double pressed button.
 	-- @return boolean
 	function Controller:doubled(obj, button)
 		return InputManager:doubled(button, obj.data.player)
 	end
 
-	--- Check if button was pressed at current frame
-	-- @param l2df.class.entity obj
-	-- @param string button  Hitted button
+	--- Check if button was pressed at current frame.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param string button  Hitted button.
 	-- @return boolean
 	function Controller:hitted(obj, button)
 		return InputManager:hitted(button, obj.data.player)
 	end
 
-	--- Process the keys and combos
+	--- Process the keys and combos.
 	function Controller:keysCheck()
 		local combo_len = #self.hit_code
 		local i = 0

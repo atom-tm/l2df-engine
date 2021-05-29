@@ -1,4 +1,4 @@
---- L2DF engine
+--- L2DF engine.
 -- @module l2df
 -- @author Abelidze
 -- @author Kasai
@@ -25,7 +25,7 @@ local core = l2df
 	local PhysixManager = core.import 'manager.physix'
 	local Recorder = core.import 'manager.recorder'
 
-	--- Engine's standart entry point
+	--- Engine's standart entry point.
 	-- @param number fps
 	function core:init(fps)
 		-- First call to core.root() always should be in core.init
@@ -56,7 +56,7 @@ local core = l2df
 		EventManager:subscribe('draw', RenderManager.render, love, RenderManager)
 	end
 
-	--- Engine's game loop
+	--- Engine's game loop.
 	-- @return function
 	function core.gameloop()
 		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end

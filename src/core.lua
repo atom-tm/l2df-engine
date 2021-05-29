@@ -18,16 +18,17 @@ local gsource = nil
 
 local core = { version = 1.0, tickrate = 1 / 60 }
 
-	--- Wrapper on standart 'require', imports engine's components
-	-- automatically adding required module's prefix
-	-- @param string name  Name of the module/class to import from l2df
+	--- Wrapper on standart 'require', imports engine's components.
+	-- automatically adding required module's prefix.
+	-- @param string name  Name of the module/class to import from l2df.
 	-- @return function
 	function core.import(name)
 		return require(__DIR__ .. name)
 	end
 
-	--- Important function to determine engine's location
-	-- First call to core.root() always should be in core.init
+	--- Important function to determine engine's location.
+	-- First call to core.root() always should be in core.init.
+	-- @param[opt=3] number depth  Depth passed to debug.getinfo method.
 	-- @return string
 	function core.root(depth)
 		gsource = gsource or fs and fs.getSource():gsub('%-', '%%%-')
@@ -35,7 +36,7 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 		return source
 	end
 
-	--- Return information about line where this function was executed
+	--- Return information about line where this function was executed.
 	-- @return string
 	function core.getline()
 		local i = getinfo(3, 'Sl')
@@ -43,15 +44,15 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 	end
 
 	--- Convert path to module's path.
-	-- Useful to require .lua scripts by their path
-	-- @param string path
+	-- Useful to require .lua scripts by their path.
+	-- @param string path  Source path.
 	-- @return string
 	function core.modulepath(path)
 		return strgsub(strgsub(path, source, __DIR__), '/', '.')
 	end
 
-	--- Convert path relative to current working directory to absolute
-	-- @param[opt] string path
+	--- Convert path relative to current working directory to absolute.
+	-- @param[opt] string path  Source path.
 	-- @return string
 	function core.workpath(path)
 		assert(fs, 'core.workdir function currently doesn\'t work without LOVE')
@@ -61,8 +62,8 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 		return fs.getWorkingDirectory()
 	end
 
-	--- Convert path relative to current save directory to absolute
-	-- @param[opt] string path
+	--- Convert path relative to current save directory to absolute.
+	-- @param[opt] string path  Source path.
 	-- @return string
 	function core.savepath(path)
 		assert(fs, 'core.savepath function currently doesn\'t work without LOVE')
@@ -72,10 +73,10 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 		return fs.getSaveDirectory()
 	end
 
-	--- Converts the path relative to the game's entry point
-	-- @param string path
-	-- @param[opt=2] number depth
-	-- @param[opt] table info
+	--- Converts the path relative to the game's entry point.
+	-- @param string path  Source path.
+	-- @param[opt=2] number depth  Depth passed to debug.getinfo method.
+	-- @param[opt] table info  Stack Information table (may be provided by calling debug.getinfo).
 	-- @return string
 	function core.fullpath(path, depth, info)
 		if gsource then

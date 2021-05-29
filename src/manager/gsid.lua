@@ -1,4 +1,5 @@
---- Global Synchronized Identifier
+--- Global Synchronized Identifier generator.
+-- Its main advantages are simplicity and ability to revert its inner state.
 -- @classmod l2df.manager.gsid
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -48,24 +49,29 @@ end
 
 local Manager = { }
 
-	--- Configure @{l2df.manager.gsid}
-	-- @param table kwargs
-	-- @param[opt=1] number kwargs.offset
-	-- @param[opt=1] number kwargs.gstep
-	-- @param[opt=1] number kwargs.gsalt
+	--- Configure @{l2df.manager.gsid|GSID} manager.
+	-- @param[opt] table kwargs
+	-- @param[opt=1] number kwargs.seed  Generator needs a number to start with (a `seed` value), to be able
+	-- to generate GSID's sequences.
+	-- @param[opt=1] number kwargs.step  Generator's fixed step value for updating the inner state by calling
+	-- @{Manager:advance|GSID:advance()} method.
+	-- @param[opt=1] number kwargs.salt  Additional salt used in hash generation. Can be used to generate different
+	-- GSID's sequences for the same initial `seed`.
 	-- @return l2df.manager.gsid
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
-		state = kwargs.offset or state or 1
-		step = kwargs.gstep or step or 1
-		salt = kwargs.gsalt or salt or 1
+		state = kwargs.seed or state or 1
+		step = kwargs.step or step or 1
+		salt = kwargs.salt or salt or 1
 		counter = salt
 		accumulator = 0
 		return self
 	end
 
-	--- 
-	-- @param number dt
+	--- Advances inner counter used for generation of GSIDs.
+	-- Note that it doesn't affect generator's state immediately because it updates with the @{Manager:init|fixed step}.
+	-- So the specified delta will be accumulated and applied to the state as soon as it achieves the step value.
+	-- @param number dt  Delta value to advance the inner generator's counter. Could be a positive or negative number.
 	function Manager:advance(dt)
 		accumulator = accumulator + dt
 		local delta = 0
@@ -82,8 +88,8 @@ local Manager = { }
 		end
 	end
 
-	---
-	-- @return string
+	--- Generates next GSID @{Manager:hash|hash} value from the inner state.
+	-- @return string  HEX representation of the generated GSID.
 	function Manager:generate()
 		local h = self:hash(state, counter)
 		counter = counter + 1
@@ -100,15 +106,17 @@ local Manager = { }
 		return state, salt
 	end
 
-	--- 
-	-- @return string
+	--- Generates new GSID hash value using specified `state` and `salt`.
+	-- @param number state  Source state value. Must be greater than `zero`.
+	-- @param number salt  Additional salt value. Must be greater than `zero`.
+	-- @return string  HEX representation of the generated GSID.
 	function Manager:hash(state, salt)
 		state, salt = hash(state, salt)
 		return i2h(floor(state / 65536)) .. i2h(state % 65536) .. i2h(salt)
 	end
 
-	--- 
-	-- @return number
+	--- Generates random GSID.
+	-- @return number  Number representation of the generated GSID.
 	function Manager:rand()
 		local a, b = hash(state, counter)
 		counter = counter + 1

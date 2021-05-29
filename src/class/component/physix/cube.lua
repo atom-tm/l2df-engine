@@ -1,4 +1,4 @@
---- Cube helper
+--- BBox cube intersections helper functions.
 -- @classmod l2df.class.component.physix.cube
 -- @author Abelidze
 -- @author oniietzschan
@@ -20,23 +20,67 @@ local EPS = 1e-10
 
 local Cube = { }
 
-    function Cube:assert(x, y, z, w, h, l)
+    --- Collision description table.
+    -- @field boolean overlaps  True if one of the cubes was overlapping another before movement.
+    -- @field number ti  The negative volume of intersection.
+    -- @field {x=number,y=number,z=number} move  Movement vector table.
+    -- @field {x=number,y=number,z=number} normal  Normal of collision vector table.
+    -- @field {x=number,y=number,z=number} touch  Resulting position of the first cube after moving and possible collision.
+    -- @field number distance  Distance between cubes after movement.
+    -- See @{l2df.class.component.physix.cube.getCubeDistance|Cube:getCubeDistance()} for details.
+    -- @table .Collision
+
+    --- Asserts that passed dimensions form a corrent cube.
+    -- @param number x  BBox X position.
+    -- @param number y  BBox Y position.
+    -- @param number z  BBox Z position.
+    -- @param number w  BBox width.
+    -- @param number h  BBox height.
+    -- @param number d  BBox depth.
+    function Cube:assert(x, y, z, w, h, d)
         assert(type(x) == 'number', 'x must be a number')
-        assert(type(x) == 'number', 'y must be a number')
-        assert(type(x) == 'number', 'z must be a number')
+        assert(type(y) == 'number', 'y must be a number')
+        assert(type(z) == 'number', 'z must be a number')
         assert(type(w) == 'number' and w > 0, 'w must be a positive number')
         assert(type(h) == 'number' and h > 0, 'h must be a positive number')
-        assert(type(l) == 'number' and l > 0, 'l must be a positive number')
+        assert(type(d) == 'number' and d > 0, 'd must be a positive number')
     end
 
-    function Cube:nearestCorner(x, y, z, w, h, l, px, py, pz)
-        return nearest(px, x, x + w), nearest(py, y, y + h), nearest(pz, z, z + l)
+    --- Returns nearest corner position to the point.
+    -- @param number x  BBox X position.
+    -- @param number y  BBox Y position.
+    -- @param number z  BBox Z position.
+    -- @param number w  BBox width.
+    -- @param number h  BBox height.
+    -- @param number d  BBox depth.
+    -- @param number px  Point's X position.
+    -- @param number py  Point's Y position.
+    -- @param number pz  Point's Z position.
+    -- @return number  Nearest X position.
+    -- @return number  Nearest Y position.
+    -- @return number  Nearest Z position.
+    function Cube:nearestCorner(x, y, z, w, h, d, px, py, pz)
+        return nearest(px, x, x + w), nearest(py, y, y + h), nearest(pz, z, z + d)
     end
 
-    -- This is a generalized implementation of the liang-barsky algorithm, which also returns
+    --- This is a generalized implementation of the liang-barsky algorithm, which also returns
     -- the normals of the sides where the segment intersects.
-    -- Returns nil if the segment never touches the cube
-    -- Notice that normals are only guaranteed to be accurate when initially ti1, ti2 == -math.huge, math.huge
+    -- Returns nil if the segment never touches the cube.
+    -- Notice that normals are only guaranteed to be accurate when initially ti1, ti2 == -math.huge, math.huge.
+    -- @param number x  BBox X position.
+    -- @param number y  BBox Y position.
+    -- @param number z  BBox Z position.
+    -- @param number w  BBox width.
+    -- @param number h  BBox height.
+    -- @param number d  BBox depth.
+    -- @param number x1  Segment's start X position.
+    -- @param number y1  Segment's start Y position.
+    -- @param number z1  Segment's start Z position.
+    -- @param number x2  Segment's end X position.
+    -- @param number y2  Segment's end Y position.
+    -- @param number z2  Segment's end Z position.
+    -- @param[opt=0] number ti1  Minimum starting value of the variable parameter.
+    -- @param[opt=1] number ti2  Maximum starting value of the variable parameter.
     function Cube:segmentIntersectionIndices(x, y, z, w, h, d, x1, y1, z1, x2, y2, z2, ti1, ti2)
         ti1, ti2 = ti1 or 0, ti2 or 1
         local dx = x2 - x1
@@ -86,7 +130,25 @@ local Cube = { }
         return ti1, ti2, nx1, ny1, nz1, nx2, ny2, nz2
     end
 
-    --- Calculates the minkowsky difference between 2 cubes, which is another cube
+    --- Calculates the minkowsky difference between 2 cubes, which is another cube.
+    -- @param number x1  The first BBox X position.
+    -- @param number y1  The first BBox Y position.
+    -- @param number z1  The first BBox Z position.
+    -- @param number w1  The first BBox width.
+    -- @param number h1  The first BBox height.
+    -- @param number d1  The first BBox depth.
+    -- @param number x2  The second BBox X position.
+    -- @param number y2  The second BBox Y position.
+    -- @param number z2  The second BBox Z position.
+    -- @param number w2  The second BBox width.
+    -- @param number h2  The second BBox height.
+    -- @param number d2  The second BBox depth.
+    -- @return number  Difference BBox X position.
+    -- @return number  Difference BBox Y position.
+    -- @return number  Difference BBox Z position.
+    -- @return number  Difference BBox width.
+    -- @return number  Difference BBox height.
+    -- @return number  Difference BBox depth.
     function Cube:getDiff(x1, y1, z1, w1, h1, d1, x2, y2, z2, w2, h2, d2)
         return
             x2 - x1 - w1,
@@ -97,6 +159,17 @@ local Cube = { }
             d1 + d2
     end
 
+    --- Check if the point is inside cube.
+    -- @param number x  BBox X position.
+    -- @param number y  BBox Y position.
+    -- @param number z  BBox Z position.
+    -- @param number w  BBox width.
+    -- @param number h  BBox height.
+    -- @param number d  BBox depth.
+    -- @param number px  Point's X position.
+    -- @param number py  Point's Y position.
+    -- @param number pz  Point's Z position.
+    -- @return boolean
     function Cube:containsPoint(x, y, z, w, h, d, px, py, pz)
         return
             px - x > EPS and
@@ -107,6 +180,20 @@ local Cube = { }
             z + d - pz > EPS
     end
 
+    --- Check if two cubes are intersecting.
+    -- @param number x1  The first BBox X position.
+    -- @param number y1  The first BBox Y position.
+    -- @param number z1  The first BBox Z position.
+    -- @param number w1  The first BBox width.
+    -- @param number h1  The first BBox height.
+    -- @param number d1  The first BBox depth.
+    -- @param number x2  The second BBox X position.
+    -- @param number y2  The second BBox Y position.
+    -- @param number z2  The second BBox Z position.
+    -- @param number w2  The second BBox width.
+    -- @param number h2  The second BBox height.
+    -- @param number d2  The second BBox depth.
+    -- @return boolean
     function Cube:isIntersecting(x1, y1, z1, w1, h1, d1, x2, y2, z2, w2, h2, d2)
         return
             x1 < x2 + w2 and x2 < x1 + w1 and
@@ -114,6 +201,20 @@ local Cube = { }
             z1 < z2 + d2 and z2 < z1 + d1
     end
 
+    --- Get the distance between two cubes.
+    -- @param number x1  The first BBox X position.
+    -- @param number y1  The first BBox Y position.
+    -- @param number z1  The first BBox Z position.
+    -- @param number w1  The first BBox width.
+    -- @param number h1  The first BBox height.
+    -- @param number d1  The first BBox depth.
+    -- @param number x2  The second BBox X position.
+    -- @param number y2  The second BBox Y position.
+    -- @param number z2  The second BBox Z position.
+    -- @param number w2  The second BBox width.
+    -- @param number h2  The second BBox height.
+    -- @param number d2  The second BBox depth.
+    -- @return number
     function Cube:getCubeDistance(x1, y1, z1, w1, h1, d1, x2, y2, z2, w2, h2, d2)
         local dx = x1 - x2 + (w1 - w2) / 2
         local dy = y1 - y2 + (h1 - h2) / 2
@@ -121,6 +222,25 @@ local Cube = { }
         return (dx * dx) + (dy * dy) + (dz * dz)
     end
 
+    --- Detect collision of the two cubes one of which could be moving.
+    -- If goal position is not setted we expect colliding two static cubes (with no movement).
+    -- Returns table describing all collision details.
+    -- @param number x1  The first BBox X position.
+    -- @param number y1  The first BBox Y position.
+    -- @param number z1  The first BBox Z position.
+    -- @param number w1  The first BBox width.
+    -- @param number h1  The first BBox height.
+    -- @param number d1  The first BBox depth.
+    -- @param number x2  The second BBox X position.
+    -- @param number y2  The second BBox Y position.
+    -- @param number z2  The second BBox Z position.
+    -- @param number w2  The second BBox width.
+    -- @param number h2  The second BBox height.
+    -- @param number d2  The second BBox depth.
+    -- @param[opt] number goalX  Goal X movement position of the first BBox.
+    -- @param[opt] number goalY  Goal Y movement position of the first BBox.
+    -- @param[opt] number goalZ  Goal Z movement position of the first BBox.
+    -- @return l2df.class.component.physix.cube.Collision
     function Cube:detectCollision(x1, y1, z1, w1, h1, d1, x2, y2, z2, w2, h2, d2, goalX, goalY, goalZ)
         goalX = goalX or x1
         goalY = goalY or y1

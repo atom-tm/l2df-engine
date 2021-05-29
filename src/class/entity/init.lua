@@ -1,6 +1,7 @@
---- Entity class
+--- Entity class. Inherited from @{l2df.class|l2df.Class}.
 -- @classmod l2df.class.entity
--- @author Abelidze, Kasai
+-- @author Abelidze
+-- @author Kasai
 -- @copyright Atom-TM 2019
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
@@ -21,8 +22,43 @@ local dummy = function () return nil end
 
 local Entity = Class:extend()
 
-	--- Creating an entity instance
+	--- Meta-table for performing search in sub-nodes of the entity object.
+	-- @field function __index  Doing search. Ex.: `local btn_ref = Entity.R.MENU.BUTTON`
+	-- @field function __newindex  Set object key after search. Ex.: `Entity.R.MENU.BUTTON.text = 'Click'`
+	-- @field function __call  Returns "clear" @{l2df.class.entity|entity} object.
+	-- Important cuz @{l2df.class.entity.R|Entity.R} variable is not an actual entity. Ex.: `local btn = Entity.R.MENU.BUTTON()`
+	-- @table Entity.R
+
+	--- Table containing components for easy access.
+	-- Components must manually add / remove them from this list if it is required.
+	-- @table Entity.C
+
+	--- Entity's public storage for all variables and user data.
+	-- It is important to use this and do not garbage actual entity's table since:<br>
+	-- 1. It's more secure;<br>
+	-- 2. It's used by all the components to store and transfer data;<br>
+	-- 3. It's a part of rollback system;<br>
+	-- 4. Networking doesn't work without this!
+	-- @table Entity.data
+
+	--- Key string. Used for searching via @{l2df.class.entity.R|Entity.R}.
+	-- @string Entity.key
+
+	--- Parent entity. Can be `nil` meaning no parent attached.
+	-- @field l2df.class.entity Entity.parent
+
+	--- Entity's state.
+	-- If false entity would not receive any update and draw events.
+	-- @field boolean Entity.active
+
+	--- Constructor for eating an entity instance.
+	-- @param[opt] table kwargs  Keyword arguments. Also passed to all adding components.
+	-- @param[opt=true] boolean kwargs.active  See @{l2df.class.entity.active|Entity.active}.
+	-- @param[opt] table kwargs.components  Array of @{l2df.class.component|components} to add on entity creation.
+	-- @param[opt] string key  String key used for performing entity-search via @{l2df.class.entity.R|Entity.R} meta-variable.
+	-- @param ... ...  Arguments redirected to @{l2df.class.init|Entity:init()} function.
 	function Entity:new(kwargs, key, ...)
+		kwargs = kwargs or { }
 		local obj = self:___getInstance()
 		obj.key = key
 		obj.nodes = Storage:new()
@@ -62,7 +98,8 @@ local Entity = Class:extend()
 		return obj
 	end
 
-	--- Create copy of current object (with all attached nodes)
+	--- Create copy of current object (with all attached nodes).
+	-- @return l2df.class.entity
 	function Entity:clone()
 		local entity = self:___getInstance()
 		entity.nodes = Storage:new()
@@ -82,7 +119,10 @@ local Entity = Class:extend()
 		return entity
 	end
 
-	--- Adding an inheritor to an object
+	--- Adding an inheritor to an entity.
+	-- @param l2df.class.entity entity  Entity to attach.
+	-- @return number|boolean
+	-- @return l2df.class.entity|nil
 	function Entity:attach(entity)
 		assert(entity:isInstanceOf(Entity), 'not a subclass of Entity')
 		if entity.parent == self or self:isDescendant(entity) then return false end
@@ -96,7 +136,8 @@ local Entity = Class:extend()
 		return self.nodes:add(entity)
 	end
 
-	--- Adding some inheritors to an object
+	--- Adding some inheritors to an entity.
+	-- @param table array  Array of @{l2df.class.entity|entities} to attach.
 	function Entity:attachMultiple(array)
 		array = array or { }
 		for i = 1, #array do
@@ -106,35 +147,40 @@ local Entity = Class:extend()
 		end
 	end
 
-	--- Removing an inheritor from object
+	--- Removing an inheritor from entity.
+	-- @param l2df.class.entity entity  Inheritor to remove.
 	function Entity:detach(entity)
 		assert(entity:isInstanceOf(Entity), 'not a subclass of Entity')
 		self.nodes:remove(entity)
 		entity.parent = nil
 	end
 
+	--- Remove all nodes attached to the entity.
 	function Entity:detachAll()
 		for id, node in self.nodes:enum(true) do
 			self:detach(node)
 		end
 	end
 
-	--- Removing object from inheritors list of his parent
+	--- Removing entity from inheritors list of his parent.
+	-- @return l2df.class.entity
 	function Entity:detachParent()
-		if self.parent then
-			self.parent:detach(self)
+		local parent = self.parent
+		if parent then
+			parent:detach(self)
 		end
-		return true
+		return parent
 	end
 
-	--- Destory object
+	--- Destroy entity.
 	function Entity:destroy()
 		self:clearComponents()
 		self:detachParent()
 	end
 
-	--- Getting a list of object inheritors
-	-- @param[opt] function filter
+	--- Getting a list of entity's inheritors.
+	-- @param[opt] function filter  Filter predicate function.
+	-- @return table
 	function Entity:getNodes(filter)
 		local list = { }
 		for id, node in self.nodes:enum(true) do
@@ -145,12 +191,16 @@ local Entity = Class:extend()
 		return list
 	end
 
-	--- Option to obtain a parent using the function
+	--- Option to obtain a parent using the function.
+	-- @return l2df.class.entity
 	function Entity:getParent()
 		return self.parent
 	end
 
-	--- Backup / restore entity
+	--- Backup / restore entity.
+	-- @param[opt] table state  Table containing snapshot of the entity's state:
+	-- <pre>{ active = [boolean], parent = [@{l2df.class.entity}], data = [table] }</pre>.
+	-- @return table|nil
 	function Entity:sync(state)
 		if not state then
 			return {
@@ -165,7 +215,9 @@ local Entity = Class:extend()
 		copyTable(state, self)
 	end
 
-	--- Check for inheritance from an object
+	--- Check for inheritance from an object.
+	-- @param l2df.class.entity entity  Source entity.
+	-- @return boolean
 	function Entity:isDescendant(entity)
 		local object = self
 		while object do
@@ -175,9 +227,10 @@ local Entity = Class:extend()
 		return false
 	end
 
-	---
-	-- @param boolean active
-	-- @param[opt=false] boolean propagate
+	--- Set / toggle active state of this entity.
+	-- @param[opt] boolean active  Active state to set. Toggles current if not setted.
+	-- @param[opt=false] boolean propagate  Propagates state to subnodes if setted to true.
+	-- @return boolean
 	function Entity:setActive(active, propagate)
 		if active == nil then active = not self.active end
 		if not propagate then
@@ -193,13 +246,22 @@ local Entity = Class:extend()
 		return true
 	end
 
-	--- Create new component and add to this entity
+	--- Create new component and add to this entity.
+	-- @param l2df.class.component class  Component's class.
+	-- @param ... ...  Arguments for @{l2df.class.component.added}.
+	-- @return number
+	-- @return l2df.class.component
+	-- @return boolean
 	function Entity:createComponent(class, ...)
 		return self:addComponent(class:new(...), ...)
 	end
 
-	--- Add component to entity
-	-- @param Component component
+	--- Add component to entity.
+	-- @param l2df.class.component component  Component's instance.
+	-- @param ... ...  Arguments for @{l2df.class.component.added}.
+	-- @return number
+	-- @return l2df.class.component
+	-- @return boolean
 	function Entity:addComponent(component, ...)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self:hasComponent(component) then return false end
@@ -208,8 +270,10 @@ local Entity = Class:extend()
 		return self.components:add(component), component, component.added and component:added(self, ...)
 	end
 
-	--- Remove component from entity
-	-- @param Component component
+	--- Remove component from entity.
+	-- @param l2df.class.component component  Component's instance.
+	-- @param ... ...  Arguments for @{l2df.class.component.removed}.
+	-- @return boolean
 	function Entity:removeComponent(component, ...)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if self.components:remove(component) then
@@ -219,7 +283,8 @@ local Entity = Class:extend()
 		return false
 	end
 
-	--- Remove all components added to entity
+	--- Remove all components added to entity.
+	-- @return boolean
 	function Entity:clearComponents()
 		for _, component in self.components:enum() do
 			self:removeComponent(component)
@@ -229,7 +294,10 @@ local Entity = Class:extend()
 		return true
 	end
 
-	--- Floats up existing component of the object like a bubble. Can be used to reorder components execution
+	--- Floats up existing component of the object like a bubble. Can be used to reorder components execution.
+	-- @param l2df.class.component component  Component's instance.
+	-- @return number|boolean
+	-- @return l2df.class.component|nil
 	function Entity:upComponent(component)
 		assert(component:isInstanceOf(Component), 'not a subclass of Component')
 		if not self:hasComponent(component) then return false end
@@ -237,24 +305,30 @@ local Entity = Class:extend()
 		return self.components:add(component), component
 	end
 
-	--- Check if component exists on entity
-	-- @param Component component
+	--- Check if component exists on entity.
+	-- @param l2df.class.component component  Component to check.
+	-- @return boolean
 	function Entity:hasComponent(component)
 		return self.components:has(component)
 	end
 
-	--- Check if component exists on entity
-	-- @param Component componentClass
+	--- Check if component exists on entity,
+	-- @param l2df.class.component componentClass  Component's class to check.
+	-- @return boolean
 	function Entity:hasComponentClass(componentClass)
 		return self.components.class[componentClass] and self.components.class[componentClass] > 0 or false
 	end
 
-	--- Get attached component by id
+	--- Get attached component by ID,
+	-- @param number id  Component's ID.
+	-- @return l2df.class.component
 	function Entity:getComponentById(id)
 		return self.components:getById(id)
 	end
 
-	--- Get a single attached component of given class
+	--- Get a single attached component of given class.
+	-- @param l2df.class.component componentClass  Component's class
+	-- @return l2df.class.component|nil
 	function Entity:getComponent(componentClass)
 		assert(componentClass, 'no component specified')
 		for id, value in self.components:enum() do
@@ -265,9 +339,11 @@ local Entity = Class:extend()
 		return nil
 	end
 
-	--- Get a list of attached components of given class
+	--- Get a list of attached components of given class.
+	-- @param l2df.class.component componentClass  Component's class.
+	-- @return table
 	function Entity:getComponents(componentClass)
-		local list = {}
+		local list = { }
 		for id, value in self.components:enum() do
 			if not componentClass or value:isInstanceOf(componentClass) then
 				list[#list + 1] = value:wrap(self)
@@ -276,10 +352,10 @@ local Entity = Class:extend()
 		return list
 	end
 
-	--- Enumeration entities' tree
-	--  @param boolean active  enumerate only active nodes
-	--  @param boolean skipped  skip self in enumeration
-	--  @return function
+	--- Enumerate entities' tree.
+	-- @param[opt=false] boolean active  Enumerate only active nodes.
+	-- @param[opt=false] boolean skipped  Skip self in enumeration.
+	-- @return function
 	function Entity:enum(active, skipped)
 		local beginner = self
 		if not (beginner and (beginner.nodes or beginner.getNodes)) then return dummy end

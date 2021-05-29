@@ -1,4 +1,4 @@
---- Collisions component
+--- Collisions component. Inherited from @{l2df.class.component|l2df.class.Component} class.
 -- @classmod l2df.class.component.collision
 -- @author Abelidze
 -- @author Kasai
@@ -19,13 +19,16 @@ local copy = helper.copyTable
 
 local Collision = Component:extend({ unique = true })
 
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments. Not actually used.
 	function Collision:added(obj, kwargs)
 		if not obj then return false end
 		kwargs = kwargs or { }
 
 		local data = obj.data
-		data.itrs = { }
-		data.bodies = { }
+		data.itrs = { ___shallow = true }
+		data.bodies = { ___shallow = true }
 
 		data.facing = data.facing or 1
 
@@ -41,9 +44,22 @@ local Collision = Component:extend({ unique = true })
 		data.centery = data.centery or 0
 	end
 
-	function Collision:collider(obj, dt, col, f)
-		--_r.r = col.r or col.w * col.h * col.d > 0 and sqrt(col.w ^ 2 + col.h ^ 2 + col.d ^ 2) / 2 or 0
+	--- Wrap collider with @{l2df.class.entity|entity} and callback function.
+	-- Generates new @{l2df.manager.physix.Collider|Collider's} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param table col  Collider's description table.
+	-- @param[opt=0] number|string col.kind  ID / name of the kind associated with this collider.
+	-- @param[opt=0] number col.x  Collider's box X position.
+	-- @param[opt=0] number col.y  Collider's box Y position.
+	-- @param[opt=0] number col.z  Collider's box Z position.
+	-- @param[opt=0] number col.w  Collider's box width.
+	-- @param[opt=0] number col.h  Collider's box height.
+	-- @param[opt=0] number col.d  Collider's box depth.
+	-- @param[opt] function action  Callback called when collider is triggered.
+	-- @return l2df.manager.physix.Collider
+	function Collision:collider(obj, col, action)
 		local data = obj.data
+		--local r = col.r or col.w * col.h * col.d > 0 and sqrt(col.w ^ 2 + col.h ^ 2 + col.d ^ 2) / 2 or 0
 		local x_1 = data.x + (col.x or 0) * data.facing
 		local x_2 = x_1 + (col.w or 0) * data.facing
 		local y_1 = (col.y or 0) - data.y
@@ -63,7 +79,7 @@ local Collision = Component:extend({ unique = true })
 		collider.owner = obj
 		collider.data = data
 		collider.col = col
-		collider.action = f
+		collider.action = action
 		collider.w = x2 - x1
 		collider.h = y2 - y1
 		collider.d = z2 - z1
@@ -73,18 +89,21 @@ local Collision = Component:extend({ unique = true })
 		return collider
 	end
 
+	--- Collision update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param number dt  Delta-time since last game tick.
 	function Collision:update(obj, dt)
 		local data = obj.data
 		for i = 1, #data.bodies do
 			local bdy = data.bodies[i]
 			local kind = KindsManager:get(bdy.kind)
-			PhysixManager:add('bdy', self:collider(obj, dt, bdy, kind))
+			PhysixManager:add('bdy', self:collider(obj, bdy, kind))
 		end
 		for i = 1, #data.itrs do
 			local itr = data.itrs[i]
 			local kind = KindsManager:get(itr.kind)
 			if kind then
-				PhysixManager:add('itr', self:collider(obj, dt, itr, kind))
+				PhysixManager:add('itr', self:collider(obj, itr, kind))
 			end
 		end
 	end

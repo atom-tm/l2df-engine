@@ -1,4 +1,4 @@
---- Recorder manager (replays)
+--- Recorder manager (replays).
 -- @classmod l2df.manager.recorder
 -- @author Abelidze
 -- @copyright Atom-TM 2020
@@ -54,18 +54,22 @@ local records = { }
 
 local Manager = { }
 
-	--- Configure @{l2df.manager.recorder}
-	-- @param table kwargs
+	--- Configure @{l2df.manager.recorder|RecorderManager}.
+	-- @param[opt] table kwargs  Keyword arguments. Not actually used.
 	-- @return l2df.manager.recorder
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
 		return self
 	end
 
-	---
-	-- @param string path
-	-- @param[opt] string metadata
-	-- @param[opt] function stream
+	--- Start replay recording.
+	-- @param string path  Path to the file for writing replay on disk storage.
+	-- @param[opt] string metadata  Optional metadata included in the replay header.
+	-- @param[opt] function stream  Function called on each @{Manager:update|update}.
+	-- This function should return three numbers:<br>
+	-- * `player` - Player ID for this input;
+	-- * `frame` - Frame ID at which input appeared;
+	-- * `input` - Raw encoded @{l2df.manager.input.rawinput|input data}, 32-bit unsigned integer.
 	-- @param[opt=1] number period
 	function Manager:start(path, metadata, stream, period)
 		local f = assert(fopen(path, 'wb'), 'Can not open "' .. path .. '" for recording')
@@ -78,8 +82,8 @@ local Manager = { }
 		records[path] = { timer = 0, stream = stream or dummyFunc, freq = period or 1 }
 	end
 
-	---
-	-- @param string path
+	--- Stop replay recording.
+	-- @param string path  Path to the replay file which was previously passed to the @{Manager:start|Recorder:start()}.
 	function Manager:stop(path)
 		if path then
 			records[path] = nil
@@ -88,8 +92,8 @@ local Manager = { }
 		end
 	end
 
-	---
-	-- @param string path
+	--- Open replay file and load its data to @{l2df.manager.input.addinput|InputManager}.
+	-- @param string path  Path to the replay file.
 	-- @param function loader
 	function Manager:open(path, loader)
 		local f, err = fopen(path, 'rb')
@@ -118,14 +122,14 @@ local Manager = { }
 		return true
 	end
 
-	---
+	--- Resets @{l2df.manager.input.reset|Input} and @{l2df.manager.sync.reset|Sync} managers.
 	function Manager:close()
 		Input:reset()
 		Sync:reset()
 	end
 
-	--- Process all records
-	-- @param number dt
+	--- Process all records and append data to replay files.
+	-- @param number dt  Delta-time since last game tick.
 	function Manager:update(dt)
 		for path, record in pairs(records) do
 			record.timer = record.timer + dt

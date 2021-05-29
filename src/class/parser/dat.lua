@@ -1,7 +1,8 @@
---- Parser for DAT syntax
+--- Parser for DAT syntax. Inherited from @{l2df.class.parser|l2df.class.BaseParser} class.
 -- @classmod l2df.class.parser.dat
 -- @author Abelidze
 -- @copyright Atom-TM 2019
+-- @deprecated
 
 local core = l2df or require(((...):match('(.-)class.+$') or '') .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'DatParser works only with l2df v1.0 and higher')
@@ -24,10 +25,10 @@ local DatParser = BaseParser:extend()
 	DatParser.BLOCK_RBRACKET = ']'
 	DatParser.VALUE_END_PATTERN = '[;,%s]'
 
-	--- Method for parsing dat formatted string
+	--- Method for parsing dat formatted string.
 	-- You can extend existing object by passing it as second parameter.
-	-- @param string str  String for parsing
-	-- @param table obj  Object to extend, optional.
+	-- @param string str  String for parsing.
+	-- @param[opt] table obj  Object to extend.
 	-- @return table
 	function DatParser:parse(str, obj)
 		assert(type(str) == 'string', 'Parameter "str" must be a string.')
@@ -50,8 +51,8 @@ local DatParser = BaseParser:extend()
 		return result
 	end
 
-	--- Method for dumping table to dat format
-	-- @param table data  Table for dumping
+	--- Method for dumping table to dat format.
+	-- @param table data  Table for dumping.
 	-- @return string
 	function DatParser:dump(data)
 		assert(type(data) == 'table', 'Parameter "data" must be a table.')
@@ -65,8 +66,8 @@ local DatParser = BaseParser:extend()
 		return result
 	end
 
-	--- Method for dumping dat-file's block
-	-- @param table block  Block for dumping
+	--- Method for dumping dat-file's block.
+	-- @param table block  Block for dumping.
 	-- @param[opt] string tabs
 	-- @return string
 	function DatParser:dumpBlock(block, tabs)
@@ -89,10 +90,10 @@ local DatParser = BaseParser:extend()
 		return result
 	end
 
-	--- Method for parsing dat-file's section string
+	--- Method for parsing dat-file's section string.
 	-- You can extend existing object by passing it as second parameter.
-	-- @param string str  String for parsing
-	-- @param table obj  Object to extend, optional.
+	-- @param string str  String for parsing.
+	-- @param[opt] table obj  Object to extend.
 	-- @return table
 	function DatParser:parseBlock(str, obj)
 		str = (str or '') .. ' '

@@ -17,10 +17,16 @@ local sound_list = { }
 
 local Manager = { sound_volume = 1, music_volume = 1 }
 
-	--- Configure @{l2df.manager.sound}
-	-- @param table kwargs
-	-- @param[opt=0.7] number kwargs.sound
-	-- @param[opt=0.3] number kwargs.music
+	--- Sounds volume.
+	-- @field number Manager.sound_volume
+	
+	--- Music volume.
+	-- @field number Manager.music_volume
+
+	--- Configure @{l2df.manager.sound|SoundManager}.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt=0.7] number kwargs.sound  Sounds volume. Value should be in range [0.0; 1.0].
+	-- @param[opt=0.3] number kwargs.music  Music volume. Value should be in range [0.0; 1.0].
 	-- @return l2df.manager.sound
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
@@ -29,9 +35,10 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 		return self
 	end
 
-	--- Set background music
-	-- @param love.audio.Source source
-	-- @param[opt=false] looping
+	--- Set background music.
+	-- @param love.audio.Source source  Music `userdata` source for playing.
+	-- @param[opt=false] boolean looping  True if the background music should be looped. False otherwise.
+	-- @return boolean
 	function Manager:setMusic(source, looping)
 		if music == source or not (source and source.typeOf and source:typeOf('Source')) then
 			return false
@@ -46,8 +53,9 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 		return true
 	end
 
-	--- Check if source is a currently playing music
-	-- @param love.audio.Source source
+	--- Check if source is a currently playing music.
+	-- @param love.audio.Source source  Music `userdata` source.
+	-- @return boolean
 	function Manager:isPlaying(source)
 		if music and music.typeOf and music:typeOf('Source') then
 			if source and source.typeOf and source:typeOf('Source') then
@@ -58,10 +66,11 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 		return false
 	end
 
-	--- Add sound to queue for playing
-	-- @param table|love.audio.Source input
-	-- @param[opt] love.audio.Source input.resource
-	-- @param[opt=1] love.audio.Source input.volume
+	--- Add sound to queue for playing.
+	-- @param table|love.audio.Source input  Sound `userdata` source.
+	-- @param[opt] love.audio.Source input.resource  Sound `userdata` source if input was passed as table.
+	-- @param[opt=1] love.audio.Source input.volume  Sound volume. Value should be in range [0.0; 1.0].
+	-- Defaults to @{Manager.sound_volume|SoundManager.sound_volume} or `1`.
 	function Manager:play(input)
 		local t = type(input)
 		if t ~= 'table' and t ~= 'userdata' or
@@ -75,13 +84,13 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 		sound_list[#sound_list + 1] = sound
 	end
 
-	--- Stop all or list of playing sources / music
-	-- @param[opt] table sources
+	--- Stop all or list of playing sources / music.
+	-- @param[opt] {love.audio.Source,...} sources
 	function Manager:stop(sources)
 		loveStop(sources)
 	end
 
-	--- Play all queued sounds
+	--- Play all queued sounds.
 	function Manager:update()
 		lovePlay(sound_list)
 		for i = #sound_list, 1, -1 do

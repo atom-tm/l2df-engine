@@ -1,4 +1,4 @@
---- Parser for LittleFighterForever syntax 2
+--- Parser for LittleFighterForever syntax v2. Inherited from @{l2df.class.parser|l2df.class.parser.BaseParser} class.
 -- @classmod l2df.class.parser.lffs2
 -- @author Kasai
 -- @author Abelidze
@@ -43,10 +43,10 @@ local LffsParser = BaseParser:extend()
 	LffsParser.VALUE_END_PATTERN = '[;,%s]'
 	LffsParser.BLOCK_PATTERN = '([%w-_]+):?([%w-_]*)'
 
-	--- Method for parsing lffs formatted string
-	-- You can extend existing object by passing it as second parameter
-	-- @param string str  String for parsing
-	-- @param table obj   Object to extend, optional
+	--- Method for parsing lffs formatted string.
+	-- You can extend existing object by passing it as second parameter.
+	-- @param string str  String for parsing.
+	-- @param[opt] table obj  Object to extend.
 	-- @return table
 	function LffsParser:parse(str, obj)
 		assert(type(str) == 'string', 'Parameter "str" must be a string.')
@@ -239,8 +239,9 @@ local LffsParser = BaseParser:extend()
 		return result
 	end
 
-	--- Method for dumping table to lffs format
-	-- @param table data  Table for dumping
+	--- Method for dumping table to lffs format.
+	-- @param table data  Table for dumping.
+	-- @param[opt=0] number offset  Index to start from.
 	-- @return string
 	-- @return boolean
 	function LffsParser:dump(data, offset)		
