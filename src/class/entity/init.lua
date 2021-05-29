@@ -66,7 +66,7 @@ local Entity = Class:extend()
 		obj.components.class = { }
 		obj.parent = nil
 		obj.active = default(kwargs.active, true)
-		obj.data = { ___shallow = true }
+		obj.data = { ___nomerge = true }
 		obj.___meta = { }
 		obj.C = { }
 		obj.R = setmetatable({ }, {

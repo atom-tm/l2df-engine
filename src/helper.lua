@@ -38,8 +38,11 @@ local mapper = setmetatable({
 		return tostring(v)
 	end,
 	[ 'table'    ] = function(t, stack, indent)
-		stack = stack or { }
 		indent = indent or 1
+		if indent > 8 then
+			return tostring(t)
+		end
+		stack = stack or { }
 		if stack[t] then return '{"cycle:' .. tostring(t) .. '"}' end
 		local margin0 = strrep('  ', indent - 1)
 		local margin1 = strrep('  ', indent)
@@ -188,10 +191,17 @@ local helper = { }
 			return table
 		end
 		for key, val in pairs(table) do
-			if type(val) == 'table' and val.___class == nil then
-				result[key] = helper.copyTable(val, not val.___shallow and result[key] or nil)
+			if not table.___shallow and type(val) == 'table' and val.___class == nil then
+				result[key] = helper.copyTable(val, not val.___nomerge and result[key] or nil)
 			else
 				result[key] = val
+			end
+		end
+		if table.___hasnil then
+			for key, val in pairs(result) do
+				if not table[key] then
+					result[key] = nil
+				end
 			end
 		end
 		for i = #table + 1, #result do
