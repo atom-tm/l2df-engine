@@ -119,18 +119,22 @@ local Manager = { }
 			local l2 = s[i2]
 			if l1 and l2 then
 				local c1
+				local intersected = { }
 				for j = 1, #l1.items do
 					c1 = l1.items[j]
+					intersected[c1] = { }
 					traverse(l2.grid, c1, function (cell)
 						local c2, _
 						for k = 1, #cell do
 							c2 = cell[k]
-							if Cube:isIntersecting(c1.x, c1.y, c1.z, c1.w, c1.h, c1.d, c2.x, c2.y, c2.z, c2.w, c2.h, c2.d) then
+							if not intersected[c1][c2] and Cube:isIntersecting(c1.x, c1.y, c1.z, c1.w, c1.h, c1.d, c2.x, c2.y, c2.z, c2.w, c2.h, c2.d) then
+								intersected[c1][c2] = true
 								_ = c1.action and c1.action(c1.owner, c2.owner, c1, c2)
 								_ = c2.action and c2.action(c2.owner, c1.owner, c2, c1)
 							end
 						end
 					end)
+					intersected[c1] = nil
 				end
 			end
 		end
