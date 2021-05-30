@@ -11,6 +11,7 @@ local enet = require 'enet'
 local math = require 'math'
 local socket = require 'socket'
 local log = core.import 'class.logger'
+local json = core.import 'class.parser.json'
 local helper = core.import 'helper'
 local packer = core.import 'external.packer'
 local Client = core.import 'class.client'
@@ -43,6 +44,7 @@ local clients = setmetatable({ }, { __newindex = function (t, k, v) rawset(t, k,
 local players = setmetatable({ }, { __newindex = function (t, k, v) rawset(t, k, v);clients_resort = true end })
 
 -- Constants
+local SEP = 29
 local PENDING = -1
 local RELAY_WAIT_TIME = 1
 local RELAY_MAX_COUNT = 10
@@ -50,7 +52,7 @@ local RELAY_CLIENT_ATTEMPTS = 5
 local RELAY_MASTER_ATTEMPTS = 8
 local MIN_PEER_TIMEOUT = 2000
 local MAX_PEER_TIMEOUT = 4000
-local NETRECORD_PATTERN = '([^' .. strchar(29) .. ']+)'
+local NETRECORD_PATTERN = '([^' .. strchar(SEP) .. ']+)'
 
 -- Client message codes
 local LOGIN = 1
@@ -64,6 +66,7 @@ local FLUSH = 1
 local LIST = 2
 local LINK = 3
 local RELAY = 4
+local LOBBY = 6
 
 if os.getenv('L2DF_MASTER') then
 	masters[os.getenv('L2DF_MASTER')] = PENDING
@@ -211,6 +214,17 @@ end
 local ClientEvents = { }
 local ClientEventsMap = { }
 
+local function ClientEventEmitter(event, ...)
+	local handler = ClientEvents[ClientEventsMap[event] or event]
+	if not handler then
+		return false
+	end
+	for i = 3, #handler do
+		handler[i](...)
+	end
+	return true
+end
+
 local MasterEvents = {
 	-- Connected to master
 	connect = function (self, manager, host, event)
@@ -219,9 +233,9 @@ local MasterEvents = {
 			log:success('Connected to master: %s', host)
 			master.peer:last_round_trip_time(50)
 			master.peer:ping()
-			master.peer:send( strformat('%c%s%c%s', LOGIN, manager.ip, 29, manager.username) )
-			master.peer:send( strformat('%c', LIST) )
+			master.peer:send( strformat('%c%s%c%s', LOGIN, manager.ip, SEP, manager.username) )
 			master.initialized = true
+			ClientEventEmitter('masterconnected', master, event)
 		end
 	end,
 
@@ -245,6 +259,7 @@ local MasterEvents = {
 			elseif not master.relayed then
 				log:warn 'Lost connection to master.'
 			end
+			ClientEventEmitter('masterdisconnected', master, event)
 		end
 	end,
 
@@ -259,7 +274,7 @@ local MasterEvents = {
 
 	-- Request to link another peer
 	[LINK] = function (self, manager, host, event, payload)
-		local ip, name, private, public, port = itunpack(strgmatch(payload, NETRECORD_PATTERN))
+		local ip, id, name, private, public, port = itunpack(strgmatch(payload, NETRECORD_PATTERN))
 		-- Peers are under one NAT
 		if public == ip then
 			public, private = private, public
@@ -268,9 +283,10 @@ local MasterEvents = {
 		local client = players[name] or clients[Client:id(0, e1)] or clients[Client:id(0, e2)] or Client {
 			events = ClientEvents,
 			emap = ClientEventsMap,
+			emitter = ClientEventEmitter,
 			cstate = 'punching',
 		}
-		client.name = name
+		client.uid, client.name = id, name
 		if client:state() == 'connected' then
 			return
 		end
@@ -289,7 +305,17 @@ local MasterEvents = {
 		if #lobbies == 1 and lobbies[1] == '' then
 			lobbies[1] = nil
 		end
-		print('LOBBIES', helper.dump(lobbies))
+		for i = 1, #lobbies do
+			lobbies[i] = json:parse(lobbies[i])
+		end
+	end,
+
+	-- Client was added to lobby
+	[LOBBY] = function (self, manager, host, event, payload)
+		if manager.lobbyid ~= payload then
+			manager.lobbyid = payload
+			ClientEventEmitter('masterlobby', master, event, payload)
+		end
 	end,
 
 	-- Reply from master to relay peers
@@ -299,6 +325,7 @@ local MasterEvents = {
 		local client = clients[Client.id(event, channel)] or Client {
 			events = ClientEvents,
 			emap = ClientEventsMap,
+			emitter = ClientEventEmitter,
 			name = name,
 			peer = event.peer,
 			channel = event.channel,
@@ -313,6 +340,7 @@ local MasterEvents = {
 	-- Drop all connections (leaving lobby)
 	[FLUSH] = function (self, manager, host, event, payload)
 		log:info('FLUSH all connections')
+		manager.lobbyid = nil
 		for id, client in pairs(clients) do
 			client:disconnect()
 			setClient(id, client.name)
@@ -405,7 +433,8 @@ local Manager = { ip = '127.0.0.1' }
 	-- @param[opt] string username
 	-- @return l2df.manager.network
 	function Manager:login(username)
-		username = username or self:initSocket().username
+		self:initSocket()
+		username = username or self.username
 		self.username = assert(type(username) == 'string' and username, 'Username is required for NetworkManager')
 		self.ip = discoverIP() or '127.0.0.1'
 		for id, c in pairs(clients) do
@@ -421,6 +450,7 @@ local Manager = { ip = '127.0.0.1' }
 	--- Disconnects from all registered masters
 	-- @return l2df.manager.network
 	function Manager:logout()
+		self.lobbyid = nil
 		for host, master in pairs(masters) do
 			if master ~= PENDING then
 				if master.relayed then
@@ -443,6 +473,36 @@ local Manager = { ip = '127.0.0.1' }
 		end
 		Masters_broadcast('%c%s', FIND, lobby)
 		return true
+	end
+
+	--- Create new lobby
+	-- @return boolean
+	function Manager:host()
+		if not self:isReady() then
+			return false
+		end
+		Masters_broadcast('%c', FIND)
+		return true
+	end
+
+	local function getLobbies()
+		return lobbies
+	end
+
+	---
+	-- @param[opt] number count
+	-- @param[opt] boolean refresh
+	-- @return function
+	function Manager:list(count, refresh)
+		if refresh then
+			lobbies = nil
+		end
+		if count then
+			Masters_broadcast('%c%d', LIST, count)
+		else
+			Masters_broadcast('%c', LIST)
+		end
+		return getLobbies
 	end
 
 	--- Register new network event
@@ -470,8 +530,9 @@ local Manager = { ip = '127.0.0.1' }
 	function Manager:broadcast(event, ...)
 		event = event and ClientEventsMap[event] or 0
 		local format = ClientEvents[event]
-		if not (format and self:isConnected()) then return false end
-
+		if not (format and self:isConnected()) then
+			return false
+		end
 		local result = true
 		for _, client in pairs(clients) do
 			result = client:rawsend(format[1], event, ...) and result
@@ -533,6 +594,7 @@ local Manager = { ip = '127.0.0.1' }
 			client = relay_remap[eid] or clients[eid] or masters[endpoint] or Client {
 				events = ClientEvents,
 				emap = ClientEventsMap,
+				emitter = ClientEventEmitter,
 				peer = event.peer,
 				channel = event.channel,
 			}
@@ -637,7 +699,8 @@ local Manager = { ip = '127.0.0.1' }
 					-- Relay connection established
 					elseif c:state() == 'relay-connecting' then
 						clients_resort = true
-						setClient(c:id(), name, c:connected(c.event))
+						setClient(c:id(), name, c)
+						c:connected(c.event)
 						c:verify(c.event)
 						pending_relays[name] = nil
 
