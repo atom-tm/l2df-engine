@@ -94,7 +94,7 @@ local Manager = { }
 
 	--- Open replay file and load its data to @{l2df.manager.input.addinput|InputManager}.
 	-- @param string path  Path to the replay file.
-	-- @param function loader
+	-- @param function loader  Should return offset for players' IDs. Offset defaults to 0.
 	function Manager:open(path, loader)
 		local f, err = fopen(path, 'rb')
 		if not f then
@@ -104,13 +104,13 @@ local Manager = { }
 		local n = f:read('*n')
 		local meta = assert(f:read(n), 'Record loading failed: no metadata found')
 		self:close()
-		loader(meta)
+		local offset = loader(meta) or 0
 		-- local debug = { }
 		while true do
 			local block = f:read(12 * 100)
 			if not block then break end
 			for player, frame, input in strgmatch(block, '(....)(....)(....)') do
-				player, frame, input = Input.localplayers + biton(player), biton(frame), biton(input)
+				player, frame, input = offset + biton(player), biton(frame), biton(input)
 				-- debug[#debug + 1] = { player, hex2bin(input), frame }
 				Input:addinput(input, player, frame)
 			end
