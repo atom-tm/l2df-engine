@@ -3,4 +3,6 @@ bg/Hall
 dev/
 presets/*/**/l2df*
 *.sublime-*
+*.deproj
+*.deuser
 *settings\.dat
