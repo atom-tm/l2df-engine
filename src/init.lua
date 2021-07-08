@@ -8,6 +8,7 @@ l2df = require((...) .. '.core')
 
 local love = _G.love
 local math = _G.math
+local floor = math.floor
 
 local core = l2df
 
@@ -26,11 +27,18 @@ local core = l2df
 	local Recorder = core.import 'manager.recorder'
 
 	--- Engine's standart entry point.
-	-- @param number fps
-	function core:init(fps)
+	-- @param[opt] table kwargs
+	-- @param[opt=60] number kwargs.fps
+	-- @param[opt=30] number kwargs.datafps
+	-- @param[opt=30] number kwargs.speed
+	function core:init(kwargs)
+		kwargs = kwargs or { }
 		-- First call to core.root() always should be in core.init
 		Factory:scan(core.root() .. 'class/entity')
-		self.tickrate = 1 / (fps or 60)
+		self.fps = kwargs.fps or 60
+		self.tickrate = 1 / self.fps
+		self.factor = self.fps / (kwargs.datafps or 30)
+		self.speed = kwargs.speed or 1
 
 		EventManager:monitoring(love, love.handlers)
 		EventManager:monitoring(love, 'update', 'rawupdate')
@@ -56,6 +64,18 @@ local core = l2df
 		EventManager:subscribe('draw', RenderManager.render, love, RenderManager)
 	end
 
+	--- Tweak simulation speed.
+	-- @param number value  
+	function core:speedup(value)
+		self.speed = value > 0 and floor(value) or (1 / floor(-value))
+	end
+
+	--- Convert
+	-- @param number value
+	function core:convert(value)
+		return floor(value * self.factor)
+	end
+
 	--- Engine's game loop.
 	-- @return function
 	function core.gameloop()
@@ -75,16 +95,14 @@ local core = l2df
 		local min = math.min
 		return function()
 			-- Events
-			if love.event then
-				love.event.pump()
-				for name, a, b, c, d, e, f in love.event.poll() do
-					if name == "quit" then
-						if not love.quit or not love.quit() then
-							return a or 0
-						end
+			love.event.pump()
+			for name, a, b, c, d, e, f in love.event.poll() do
+				if name == "quit" then
+					if not love.quit or not love.quit() then
+						return a or 0
 					end
-					love.handlers[name](a, b, c, d, e, f)
 				end
+				love.handlers[name](a, b, c, d, e, f)
 			end
 
 			-- Network and rollbacks
@@ -92,31 +110,21 @@ local core = l2df
 			delta = (love.timer and love.timer.step() or tickrate)
 			NetworkManager:update(delta)
 			diff, throttle = SyncManager:sync(InputManager.frame)
-			if SyncManager.desync then
-				SyncManager.desync = false
-				love.window.showMessageBox("Alert", "Rollback Desync Detected", "warning", true)
-				if love.timer then love.timer.step() end
-			end
 
 			-- Update
-			accumulate = min(accumulate + delta + diff - throttle, fps)
-			if love.update then
-				draw = false
-				while accumulate >= tickrate do
-					accumulate = accumulate - tickrate
-					draw = accumulate < tickrate
-					love.update(tickrate, draw)
-				end
-			else
-				draw = true
-				accumulate = accumulate % tickrate
+			draw = false
+			accumulate = min(accumulate + delta * core.speed + diff - throttle, fps)
+			while accumulate >= tickrate do
+				accumulate = accumulate - tickrate
+				draw = accumulate < tickrate
+				love.update(tickrate, draw)
 			end
 
 			-- Draw
 			if (draw or not RenderManager.vsync) and love.graphics and love.graphics.isActive() then
 				love.graphics.origin()
 				love.graphics.clear(love.graphics.getBackgroundColor())
-				if love.draw then love.draw() end
+				love.draw()
 				love.graphics.present()
 			end
 

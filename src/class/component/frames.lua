@@ -133,12 +133,12 @@ local Frames = Component:extend({ unique = true })
 
 	--- Frames pre-update event handler.
 	-- @param l2df.class.entity obj  Entity's instance.
-	-- @param number dt  Delta-time since last game tick.
-	function Frames:preupdate(obj, dt)
+	function Frames:preupdate(obj)
 		local data = obj.data
 		local storage = self:data(obj)
-		if storage.counter >= data.wait then
-			storage.counter = storage.counter - data.wait
+		local wait = core:convert(data.wait)
+		if storage.counter >= wait then
+			storage.counter = storage.counter - wait
 			self:set(obj, data.next, storage.counter)
 		end
 		if not data.frame.id then
@@ -155,7 +155,7 @@ local Frames = Component:extend({ unique = true })
 				data[k] = v
 			end
 		end
-		storage.counter = data.wait > 0 and storage.counter + dt * 1000 or 0
+		storage.counter = data.wait > 0 and storage.counter + 1 or 0
 	end
 
 return Frames
