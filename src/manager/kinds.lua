@@ -42,6 +42,9 @@ local Manager = { }
 		local req, key = requireFile(filepath)
 		if type(req) == 'function' then
 			list[key] = req
+			if tonumber(key) then
+				list[tonumber(key)] = req
+			end
 		end
 	end
 
@@ -53,6 +56,9 @@ local Manager = { }
 		for k, v in pairs(r) do
 			if type(v) == 'function' then
 				list[k] = v
+				if tonumber(k) then
+					list[tonumber(k)] = v
+				end
 			end
 		end
 	end
