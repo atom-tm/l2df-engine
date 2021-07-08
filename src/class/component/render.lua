@@ -35,6 +35,8 @@ local Render = Component:extend({ unique = true })
 	-- Currently also counts skipped sprites (would be fixed in future)
 	-- @field[opt=0] number ox  Clipping area's X-offset (the left upper corner)
 	-- @field[opt=0] number oy  Clipping area's Y-offset (the left upper corner)
+	-- @field[opt=0] number kx
+	-- @field[opt=0] number ky
 	-- @field[opt] number ord  Index of the first sprite to start from.
 	-- Used for appending new sprites to already existing collection
 	-- @table .Sprite
@@ -174,12 +176,6 @@ local Render = Component:extend({ unique = true })
 		sprite.res = sprite.res or sprite[1] or nil
 		sprite.w = sprite.w or sprite[2] or nil
 		sprite.h = sprite.h or sprite[3] or nil
-
-		if not (sprite.w and sprite.h) then
-			log:error('Missing width and height for: %s', sprite.res)
-			return
-		end
-
 		sprite.x = sprite.x or sprite[4] or 1
 		sprite.y = sprite.y or sprite[5] or 1
 
@@ -190,7 +186,9 @@ local Render = Component:extend({ unique = true })
 		sprite.f = sprite.f or sprite[7] or count
 		sprite.ox = sprite.ox or sprite[8] or 0
 		sprite.oy = sprite.oy or sprite[9] or 0
-		sprite.ord = sprite.ord or sprite[10] or #cdata.pics
+		sprite.kx = sprite.kx or sprite[10] or 0
+		sprite.ky = sprite.ky or sprite[11] or 0
+		sprite.ord = sprite.ord or sprite[12] or #cdata.pics
 
 		local num = 0
 		for y = 1, sprite.y do
@@ -208,14 +206,17 @@ local Render = Component:extend({ unique = true })
 				for x = 1, sprite.x do
 					num = num + 1
 					if (sprite.s <= num) and (num <= sprite.f) then
+						local w, h = img:getDimensions()
+						sprite.w = sprite.w or (w / sprite.x)
+						sprite.h = sprite.h or (h / sprite.y)
 						cdata.pics[sprite.ord + (num - sprite.s) + 1] = {
 							sprite.res,
 							newQuad(
-								(x - 1) * sprite.w + sprite.ox,
-								(y - 1) * sprite.h + sprite.oy,
+								(x - 1) * (sprite.w + sprite.kx) + sprite.ox,
+								(y - 1) * (sprite.h + sprite.ky) + sprite.oy,
 								sprite.w,
 								sprite.h,
-								img:getDimensions()
+								w, h
 							)
 						}
 					end
