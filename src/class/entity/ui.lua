@@ -17,8 +17,10 @@ local Print = core.import 'class.component.print'
 local Video = core.import 'class.component.video'
 local Transform = core.import 'class.component.transform'
 local Behaviour = core.import 'class.component.behaviour'
-local Physix = core.import 'class.component.physix'
+local Collision = core.import 'class.component.collision'
 local Sound = core.import 'class.component.sound'
+local Input = core.import 'manager.input'
+local Renderer = core.import 'manager.render'
 
 local min = math.min
 local strtrim = helper.trim
@@ -69,6 +71,18 @@ local UI = Entity:extend()
 
 	local function assertUI(var, msg)
 		return assert(var and var.isInstanceOf and var:isInstanceOf(UI) and var, msg)
+	end
+
+
+	UI.Cursor = UI:extend({ name = 'cursor' })
+	function UI.Cursor:init(kwargs)
+		self:super(kwargs)
+		self:addComponent(Collision, kwargs)
+		self:addComponent(Behaviour, function () 
+			local sx, sy, ox, oy = Renderer:getScaleInfo()
+			self.data.x = (Input.mousex - ox) / sx
+			self.data.y = (Input.mousey - oy) / sy
+		end)
 	end
 
 
@@ -336,4 +350,4 @@ local UI = Entity:extend()
 		self.data.sound = 'choice'
 	end
 
-return setmetatable({ UI.Text, UI.Image, UI.Animation, UI.Video, UI.Input, UI.Button, UI.Group, UI.Menu }, { __index = UI })
+return setmetatable({ UI.Cursor, UI.Text, UI.Image, UI.Animation, UI.Video, UI.Input, UI.Button, UI.Group, UI.Menu }, { __index = UI })

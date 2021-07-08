@@ -132,6 +132,19 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		self.INVALIDATED = true
 	end
 
+	--- Returns scale and offset information after @{Manager:resize|resize}.
+	-- @return number scale_x
+	-- @return number scale_y
+	-- @return number offset_x
+	-- @return number offset_y
+	function Manager:getScaleInfo()
+		return
+			self.scalex,
+			self.scaley,
+			self.offsetx,
+			self.offsety
+	end
+
 	--- Set up game space. Updates @{Manager.width|RenderManager.width} and @{Manager.height|RenderManager.height}.
 	-- @param number width   Width of the game. It's independent from the width of the screen / window.
 	-- @param number height  Height of the game. It's independent from the height of the screen / window.
@@ -150,6 +163,12 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			end
 		end
 		self:resize(loveGetMode())
+	end
+
+	function Manager:screenToGame(x, y)
+		return
+			(x - self.offsetx) / self.scalex,
+			(y - self.offsety) / self.scaley
 	end
 
 	local function sortByIndex(a, b)
@@ -172,6 +191,8 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 	-- @param[opt] {number,number,number,number} kwargs.background  RGBA color.
 	-- Each component must be in range [0; 255]. Default to white non-transparent color.
 	-- @param[opt=false] boolean kwargs.camera  True if layer should create its own camera. False otherwise.
+	-- @param[opt=false] boolean kwargs.forced  True if layer should be drawn even if there are not rendered objects.
+	-- False otherwise.
 	function Manager:addLayer(name, kwargs)
 		if not name then return end
 
@@ -197,6 +218,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			width = kwargs.width,
 			height = kwargs.height,
 			index = kwargs.index,
+			forced = not not kwargs.forced,
 			tracking = { },
 			camera = kwargs.camera and gamera.new(self.width, self.height) or nil,
 			canvas = loveNewCanvas(kwargs.width, kwargs.height),
@@ -336,17 +358,22 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		if clear then
 			loveClear(unpack(layer.background))
 		end
-		local input, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
+		local input, x, y, z, w, h, sx, sy, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
 		local drawables = layer.z
+		layer.has_elements = false
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
+				layer.has_elements = true
 				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
 				bwidth = loveGetLineWidth()
+				x, y, z, w, h, sx, sy =
+					input.x or 0, input.y or 0, input.z or 0,
+					input.w or 1, input.h or 1,
+					input.sx or 1, input.sy or 1
 				-- Draw shadows
 				if input.shadow and Manager.shadows > 0 then
 					local object = Manager.shadows > 1 and input.object or nil
-					local x, y, z, sx, sy = input.x or 0, input.y or 0, input.z or 0, input.sx or 1, input.sy or 1
 					if not object then
 						local r = input.rad or min(input.ox or 1, input.oy or 1)
 						loveSetColor(0, 0, 0, 0.5)
@@ -389,32 +416,32 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				-- Accept object draw request
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
-						loveDraw(input.object, input.quad, round(input.x), round(input.z - input.y), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.quad, round(x), round(z - y), rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
 					else
-						loveDraw(input.object, round(input.x), round(input.z - input.y), rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, round(x), round(z - y), rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
 					end
 				-- Accept rectangle draw request
 				elseif input.rect then
-					loveRect(input.rect, round(input.x), round(input.y), input.w or 1, input.h or 1, input.rx, input.ry)
+					loveRect(input.rect, round(x), round(y), w, h, input.rx, input.ry)
 				-- Accept cube draw request
 				elseif input.cube then
 					setAlpha(r2, g2, b2, a2, 0.3)
-					loveRect('fill', input.x, input.z - input.y + input.d, input.w, input.h)
+					loveRect('fill', x, z - y + input.d, w, h)
 
 					setAlpha(r2, g2, b2, a2, 1)
-					loveRect('line', input.x, input.z - input.y + input.d, input.w, input.h)
+					loveRect('line', x, z - y + input.d, w, h)
 
 					setAlpha(r2, g2, b2, a2, 0.5)
-					loveRect('fill', input.x, input.z - input.y, input.w, input.d)
+					loveRect('fill', x, z - y, w, input.d)
 
 					setAlpha(r2, g2, b2, a2, 1)
-					loveRect('line', input.x, input.z - input.y, input.w, input.d)
+					loveRect('line', x, z - y, w, input.d)
 				-- Accept circle draw request
 				elseif input.circle then
-					loveCircle(input.circle, round(input.x), round(input.z - input.y), input.r or 4)
+					loveCircle(input.circle, round(x), round(z - y), input.r or 4)
 				-- Accept text draw request
 				elseif input.text and type(input.text) == 'string' then
-					lovePrintf(input.text, input.font, input.x, input.y, input.limit, input.align, rad(input.r), input.sx, input.sy, input.ox, input.oy, input.kx, input.ky)
+					lovePrintf(input.text, input.font, x, y, input.limit, input.align, rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
 				end
 				-- Restore color and border
 				loveSetColor(r1, g1, b1, a1)
@@ -459,7 +486,9 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			loveClear(unpack(self.background))
 			for i = 1, #layers do
 				local layer = layers[i]
-				loveDraw(layer.canvas, layer.x, layer.y)
+				if layer.has_elements or layer.forced then
+					loveDraw(layer.canvas, layer.x, layer.y)
+				end
 			end
 			render(0, 0, self.width, self.height, self)
 			loveSetCanvas()
