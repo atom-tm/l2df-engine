@@ -330,12 +330,12 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = x + body.x * data.facing + body.w * (data.facing - 1) * 0.5,
-					y = y - body.y * data.yorientation,
-					z = z + body.z,
-					w = body.w,
-					h = body.h,
-					d = body.d,
+					x = x + (body.x or 0) * data.facing + (body.w or 0) * (data.facing - 1) * 0.5,
+					y = y - (body.y or 0) * data.yorientation,
+					z = z + (body.z or 0),
+					w = (body.w or 0),
+					h = (body.h or 0),
+					d = (body.d or 0),
 					color = greenColor
 				}
 			end
@@ -348,12 +348,12 @@ local Render = Component:extend({ unique = true })
 				Renderer:draw {
 					layer = data.layer,
 					cube = true,
-					x = x + itr.x * data.facing + itr.w * (data.facing - 1) * 0.5,
-					y = y - itr.y * data.yorientation,
-					z = z + itr.z,
-					w = itr.w,
-					h = itr.h,
-					d = itr.d,
+					x = x + (itr.x or 0) * data.facing + (itr.w or 0) * (data.facing - 1) * 0.5,
+					y = y - (itr.y or 0) * data.yorientation,
+					z = z + (itr.z or 0),
+					w = (itr.w or 0),
+					h = (itr.h or 0),
+					d = (itr.d or 0),
 					color = redColor
 				}
 			end

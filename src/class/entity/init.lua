@@ -104,6 +104,7 @@ local Entity = Class:extend()
 		local entity = self:___getInstance()
 		entity.nodes = Storage:new()
 		entity.components = Storage:new()
+		entity.key = self.key
 		entity.data = copyTable(self.data)
 		for id, node in self.nodes:enum(true) do
 			node = node:clone()

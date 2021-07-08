@@ -123,7 +123,7 @@ local Manager = { root = Scene { active = true } }
 	-- @param ... ...  Passes all arguments to `enable` / `leave` callbacks of the @{l2df.class.entity.scene|scene}.
 	-- @return boolean  `true` if there were one or more scenes in stack. `false` otherwise.
 	function Manager:pop(...)
-		if not #history > 0 then return false end
+		if #history == 0 then return false end
 		local scene = history[#history]
 		local _ = not scene:setActive(false) and scene.leave and scene:leave(...)
 		history[#history] = nil

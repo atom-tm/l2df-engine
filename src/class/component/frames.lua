@@ -82,7 +82,7 @@ local Frames = Component:extend({ unique = true })
 		frame.___shallow = true
 		frame.id = frame.id or frame[1] or id
 		frame.keyword = frame.keyword or frame[2]
-		if frame.keyword then
+		if frame.keyword and not storage.map[frame.keyword] then
 			storage.map[frame.keyword] = frame.id
 		end
 		storage.list[frame.id] = frame

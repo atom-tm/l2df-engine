@@ -27,10 +27,13 @@ local Collision = Component:extend({ unique = true })
 		kwargs = kwargs or { }
 
 		local data = obj.data
-		data.itrs = { ___shallow = true }
-		data.bodies = { ___shallow = true }
+		data.itrs = kwargs.itrs or { }
+		data.itrs.___shallow = true
+		data.bodies = kwargs.bodies or { }
+		data.bodies.___shallow = true
 
 		data.facing = data.facing or 1
+		data.yorientation = data.yorientation or 1
 
 		data.x = data.x or 0
 		data.y = data.y or 0
@@ -60,11 +63,11 @@ local Collision = Component:extend({ unique = true })
 	function Collision:collider(obj, col, action)
 		local data = obj.data
 		--local r = col.r or col.w * col.h * col.d > 0 and sqrt(col.w ^ 2 + col.h ^ 2 + col.d ^ 2) / 2 or 0
-		local x_1 = data.x + (col.x or 0) * data.facing
+		local x_1 = data.globalX + (col.x or 0) * data.facing
 		local x_2 = x_1 + (col.w or 0) * data.facing
-		local y_1 = (col.y or 0) - data.y
+		local y_1 = (col.y or 0) - data.globalY * data.yorientation
 		local y_2 = y_1 + (col.h or 0)
-		local z_1 = data.z + (col.z or 0)
+		local z_1 = data.globalZ + (col.z or 0)
 		local z_2 = z_1 + (col.d or 0)
 
 		local x1 = min(x_1, x_1 + data.mx, x_2, x_2 + data.mx)

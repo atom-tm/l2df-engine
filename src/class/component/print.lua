@@ -83,18 +83,18 @@ local Print = Component:extend({ unique = false })
 
 		cdata.align = kwargs.align
 		cdata.limit = cdata.limit or 0
-		cdata.color = kwargs.color and {
+		udata.color = kwargs.color and {
 			(kwargs.color[1] or 255) / 255,
 			(kwargs.color[2] or 255) / 255,
 			(kwargs.color[3] or 255) / 255,
 			(kwargs.color[4] or 255) / 255 }
 		or { 1, 1, 1, 1 }
-		cdata.pcolor = kwargs.pcolor and {
+		udata.pcolor = kwargs.pcolor and {
 			(kwargs.pcolor[1] or 255) / 255,
 			(kwargs.pcolor[2] or 255) / 255,
 			(kwargs.pcolor[3] or 255) / 255,
 			(kwargs.pcolor[4] or 255) / 255 }
-		or cdata.color
+		or udata.color
 	end
 
 	--- Component was added to @{l2df.class.entity|Entity} event.

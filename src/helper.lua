@@ -66,8 +66,8 @@ dump = function(x, stack, indent)
   return mapper[type(x)](x, stack, indent)
 end
 
-local tableCount = 0
-local tableCache = { }
+local cacheCount = 0
+local cacheTable = { }
 
 local helper = { }
 
@@ -160,12 +160,12 @@ local helper = { }
 	--- Allocate new table from pool.
 	-- @return table
     function helper.newTable()
-        if tableCount == 0 then
+        if cacheCount == 0 then
             helper.freeTable { }
         end
-        local table = tableCache[tableCount]
-        tableCache[tableCount] = nil
-        tableCount = tableCount - 1
+        local table = cacheTable[cacheCount]
+        cacheTable[cacheCount] = nil
+        cacheCount = cacheCount - 1
         return table
     end
 
@@ -175,8 +175,8 @@ local helper = { }
         for k in pairs(table) do
             table[k] = nil
         end
-        tableCount = tableCount + 1
-        tableCache[tableCount] = table
+        cacheCount = cacheCount + 1
+        cacheTable[cacheCount] = table
     end
 
 	--- Deep-copy of the table.
