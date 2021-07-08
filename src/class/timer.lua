@@ -9,14 +9,20 @@ assert(type(core) == 'table' and core.version >= 1.0, 'Timer works only with l2d
 local Class = core.import 'class'
 local EventManager = core.import 'manager.event'
 
+local type = _G.type
+
 local Timer = Class:extend()
 
     --- Init timer.
     -- @param number tick  Number of frames to wait for.
-    function Timer:init(tick)
+    -- @param[opt] function callback Callback function.
+    function Timer:init(tick, callback)
         self.i = 0
         self.tick = tick
-        EventManager:subscribe('update', self.update, nil, self)
+        self.id = EventManager:subscribe('update', self.update, nil, self)
+        if type(callback) == 'function' then
+            self.trigger = callback
+        end
     end
 
     --- Update event handler.
@@ -26,9 +32,17 @@ local Timer = Class:extend()
     	if not islast then return end
         self.i = self.i + 1
         if self.i >= self.tick then
-            EventManager:invoke('timer', self)
+            self:trigger()
             self.i = 0
         end
+    end
+
+    function Timer:trigger()
+        EventManager:invoke('timer', self)
+    end
+
+    function Timer:dispose()
+        EventManager:unsubscribeById('update', self.id)
     end
 
 return Timer
