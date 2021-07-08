@@ -13,6 +13,7 @@ local helper = core.import 'helper'
 local fs = love and love.filesystem
 local requireFolder = helper.requireFolder
 local isArray = helper.isArray
+local copyTable = helper.copyTable
 local strlower = string.lower
 local type = _G.type
 local pairs = _G.pairs
@@ -80,7 +81,11 @@ local Manager = { }
 				kwargs = parser:parseFile(file_path) or { }
 			end
 			local n = #kwargs
-			for i = 1, select("#", ...) do
+			local m = select("#", ...)
+			if m > 0 then
+				kwargs = copyTable(kwargs)
+			end
+			for i = 1, m do
 				kwargs[n + i] = select(i, ...)
 			end
 			kwargs = recursiveCreate(kwargs)
