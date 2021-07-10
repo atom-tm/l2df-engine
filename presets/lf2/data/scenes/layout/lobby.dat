@@ -1,0 +1,118 @@
+<layer> LOBBY_LAYER index: 3 background: 0 0 0 255 </layer>
+
+<node:image> BACKGROUND x: 150 y: 31 layer: LOBBY_LAYER
+	<sprite> "sprite/UI/CHARMENU.png" w: 705 h: 487 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:group> SELECTION x: 257 y: 93
+</node:group>
+
+<node:menu> MENU x: 4 y: 4
+	<sprite> "sprite/UI/MENU_CLIP3.png" w: 304 h: 166 ox: 348 oy: 0 </sprite>
+	<node:button> BTN_FIGHT x: 89 y: 13
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 126 h: 21 ox: 407 oy: 183 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_RESET_ALL x: 61 y: 36
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 186 h: 21 ox: 379 oy: 206 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_RESET_RANDOM x: 37 y: 61
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 235 h: 21 ox: 355 oy: 231 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_BACKGROUND x: 12 y: 84
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 279 h: 22 ox: 330 oy: 254 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_DIFFICULTY x: 34 y: 108
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 228 h: 22 ox: 352 oy: 278 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_EXIT x: 98 y: 134
+		<state:animation>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 111 h: 19 ox: 416 oy: 304 </sprite>
+			<frame> 1 idle pic: 0 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 1 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 2 wait: 1 </frame>
+		</state:animation>
+	</node:button>
+</node:menu>
+
+[template]
+	<node:animation> AVATAR y: 0 layer: LOBBY_LAYER
+		<sprite> "sprite/UI/CMA.png" </sprite>
+		<sprite> "sprite/UI/CMA2.png" </sprite>
+		<sprite> "sprite/UI/CM5.png" </sprite>
+		<sprite> "sprite/UI/CM4.png" </sprite>
+		<sprite> "sprite/UI/CM3.png" </sprite>
+		<sprite> "sprite/UI/CM2.png" </sprite>
+		<sprite> "sprite/UI/CM1.png" </sprite>
+		<sprite> "sprite/UI/RFACE.png" </sprite>
+		<frame> 1 join pic: 1 next: 2 wait: 9 centery: -27 </frame>
+		<frame> 2 pic: 2 next: 1 wait: 9 centery: -27 </frame>
+		<frame> 3 count pic: 3 next: 4 wait: 13 centerx: -35 centery: -31 </frame>
+		<frame> 4 pic: 4 next: 5 wait: 13 centerx: -35 centery: -31 </frame>
+		<frame> 5 pic: 5 next: 6 wait: 13 centerx: -35 centery: -31 </frame>
+		<frame> 6 pic: 6 next: 7 wait: 13 centerx: -35 centery: -31 </frame>
+		<frame> 7 pic: 7 next: 8 wait: 13 centerx: -35 centery: -31 </frame>
+		<frame> 8 idle pic: 0 next: 8 wait: 30 </frame>
+		<frame> 9 random pic: 8 next: 9 wait: 30 fighter: Random </frame>
+	</node:animation>
+	<node:text> PLAYER y: 124 layer: LOBBY_LAYER hidden: true
+		text: "Join?"
+		align: center
+		color: 255 255 255 255
+		limit: 120
+		font: 14
+		<component> l2df.class.component.frames </component>
+		<component> l2df.class.component.render </component>
+		<frame> 1 color: 1.0 1.0 1.0 1 wait: 9 next: 2 </frame>
+		<frame> 2 flicker color: 0.1 0.3 1.0 1 wait: 9 next: 1 </frame>
+		<frame> 3 idle wait: 30 next: 3 </frame>
+	</node:text>
+	<node:text> FIGHTER y: 146 layer: LOBBY_LAYER hidden: true
+		text: "Random"
+		align: center
+		color: 255 255 255 255
+		limit: 120
+		font: 14
+		<component> l2df.class.component.frames </component>
+		<component> l2df.class.component.render </component>
+		<frame> 1 color: 1.0 1.0 1.0 1 wait: 9 next: 2 </frame>
+		<frame> 2 flicker color: 0.1 0.3 1.0 1 wait: 9 next: 1 </frame>
+		<frame> 3 idle wait: 30 next: 3 </frame>
+	</node:text>
+	<node:text> TEAM y: 168 layer: LOBBY_LAYER hidden: true
+		text: "Independent"
+		align: center
+		color: 255 255 255 255
+		limit: 120
+		font: 14
+		<component> l2df.class.component.frames </component>
+		<component> l2df.class.component.render </component>
+		<frame> 1 color: 1.0 1.0 1.0 1 wait: 9 next: 2 </frame>
+		<frame> 2 flicker color: 0.1 0.3 1.0 1 wait: 9 next: 1 </frame>
+		<frame> 3 idle wait: 30 next: 3 </frame>
+	</node:text>
+[/template]

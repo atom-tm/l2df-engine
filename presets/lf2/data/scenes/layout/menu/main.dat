@@ -1,0 +1,141 @@
+<layer> MENU_LAYER index: 1 background: 16 32 108 255 </layer>
+
+<node:cursor> CURSOR
+	bgcolor: 0 0 0 0 w: 1 h: 1
+	<component> l2df.class.component.render </component>
+	<itr> kind: button_hover x: 0 y: 0 w: 4 h: 4 z: 0 d: 1 </itr>
+</node:cursor>
+
+<node:image> BG_IMAGE layer: MENU_LAYER
+	<sprite> "sprite/UI/MENU_BACK1.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK2.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK3.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK4.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK5.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK6.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK7.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK8.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK9.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK10.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK11.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK12.png" </sprite>
+	<sprite> "sprite/UI/MENU_BACK13.png" </sprite>
+</node:image>
+
+<node:image> LOGOTYPE x: 245 y: 95 layer: MENU_LAYER
+	<sprite> "sprite/UI/MENU_CLIP.png" w: 496 h: 80 oy: 41 </sprite>
+</node>
+
+<node:group> MAINMENU
+	x: 367 y: 215
+	<node:button> BTN_GAME_START y: 0 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 256 h: 29 ox: 14 oy: 13 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP.png" w: 256 h: 26 ox: 535 oy: 105 </sprite>
+			<frame> 1 idle
+				pic: 1 next: 1 wait: 30
+				<body> x: 20 y: 1 w: 205 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 2 hover
+				pic: 2 next: 2 wait: 30
+				<body> x: 20 y: 1 w: 205 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 3 click
+				pic: 1 next: 4 wait: 3
+				<body> x: 20 y: 1 w: 205 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 4
+				pic: 2 next: 4 wait: 30
+				<body> x: 20 y: 1 w: 205 h: 26 z: 0 d: 1 </body>
+			</frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_NETWORK_GAME y: 32 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 256 h: 29 ox: 14 oy: 45 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP.png" w: 256 h: 26 ox: 535 oy: 137 </sprite>
+			<frame> 1 idle
+				pic: 1 next: 1 wait: 30
+				<body> x: 5 y: 1 w: 235 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 2 hover
+				pic: 2 next: 2 wait: 30
+				<body> x: 5 y: 1 w: 235 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 3 click
+				pic: 1 next: 4 wait: 3
+				<body> x: 5 y: 1 w: 235 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 4
+				pic: 2 next: 1 wait: 30
+				<body> x: 5 y: 1 w: 235 h: 26 z: 0 d: 1 </body>
+			</frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_CONTROL_SETTINGS y: 64 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 256 h: 29 ox: 14 oy: 76 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP.png" w: 256 h: 26 ox: 535 oy: 168 </sprite>
+			<frame> 1 idle
+				pic: 1 next: 1 wait: 30
+				<body> x: 0 y: 1 w: 244 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 2 hover
+				pic: 2 next: 2 wait: 30
+				<body> x: 0 y: 1 w: 244 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 3 click
+				pic: 1 next: 4 wait: 3
+				<body> x: 0 y: 1 w: 244 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 4
+				pic: 2 next: 4 wait: 30
+				<body> x: 0 y: 1 w: 244 h: 26 z: 0 d: 1 </body>
+			</frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_RECORDING_INFO y: 96 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 256 h: 29 ox: 16 oy: 108 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 240 h: 26 ox: 283 oy: 1 </sprite>
+			<frame> 1 idle
+				pic: 1 next: 1 wait: 30
+				<body> x: 8 y: 1 w: 227 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 2 hover
+				pic: 2 next: 2 wait: 30
+				<body> x: 8 y: 1 w: 227 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 3 click
+				pic: 1 next: 4 wait: 3
+				<body> x: 8 y: 1 w: 227 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 4
+				pic: 2 next: 4 wait: 30
+				<body> x: 8 y: 1 w: 227 h: 26 z: 0 d: 1 </body>
+			</frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_OFFICIAL_WEBSITE y: 128 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 256 h: 29 ox: 16 oy: 139 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP5.png" w: 240 h: 26 ox: 283 oy: 28 </sprite>
+			<frame> 1 idle
+				pic: 1 next: 1 wait: 30
+				<body> x: 0 y: 1 w: 241 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 2 hover
+				pic: 2 next: 2 wait: 30
+				<body> x: 0 y: 1 w: 241 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 3 click
+				pic: 1 next: 4 wait: 3
+				<body> x: 0 y: 1 w: 241 h: 26 z: 0 d: 1 </body>
+			</frame>
+			<frame> 4
+				pic: 2 next: 4 wait: 30
+				<body> x: 0 y: 1 w: 241 h: 26 z: 0 d: 1 </body>
+			</frame>
+		</state:animation>
+	</node:button>
+</node:group>

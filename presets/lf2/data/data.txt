@@ -1,14 +1,56 @@
-[characters]
-1:    [ file: chars/itachi/character.dat ]
+debug: true
+fps: 60
+mobile: false
+scenes: data/scenes
+states: data/states
+kinds: data/kinds
+settings: settings.cfg
+width: 977
+height: 550
 
-[objects]
-100:  [ file: objects/sandbag/main.dat ]
+[graphics]
+    fullscreen: false
+    vsync: true
+    shadows: false
+    reflections: true
+    fxaa: false
+    effects: true
+    details: true
+    ratio: true
+[/graphics]
 
-220:  [ file: effects/fire.dat ]
-222:  [ file: effects/water.dat ]
+<layout> PlayerMobile
+    [up] left: 92 bottom: 156 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/up]
+    [down] left: 92 bottom: 88 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/down]
+    [left] left: 58 bottom: 122 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/left]
+    [right] left: 126 bottom: 122 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/right]
+    [defend] right: 156 bottom: 156 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/defend]
+    [jump] right: 156 bottom: 88 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/jump]
+    [special] right: 88 bottom: 122 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/special]
+    [attack] right: 224 bottom: 122 w: 64 h: 64
+        <render> rect: fill color: 1 1 1 0.5 </render>
+    [/attack]
+</layout>
 
-900:  [ file: bg/effects.dat ]
-1000: [ file: effects/sparks.dat ]
+<character> file: data/template.dat </character>
+<character> file: data/ftemplate.dat </character>
+<object> file: data/objects/sandbag/object.dat </object>
 
-[maps]
-1:    [ file: bg/TestArena/TestArena.dat ]
+# <background> file: bg/sys/TestArena/bg.dat </background>
+<background> file: bg/template/1/bg.dat </background>
+<background> file: bg/template/2/bg.dat </background>
+<background> file: bg/template/3/bg.dat </background>

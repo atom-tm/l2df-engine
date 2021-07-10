@@ -1,0 +1,31 @@
+name: doton_wall
+
+<sprite> "objects/sandbag/main.png" w: 100 h: 100 x: 10 y: 1 </sprite>
+
+gravity: true
+shadow: true
+
+bdefend: 0
+fall: 50
+
+<frame> 1 stance
+	pic: 1  next: 1  wait: 5 dvx: 0 dvy: 0 centerx: 65  centery: 97
+	<body> x: 47  y: 16  w: 36  h: 82  z: -5  l: 10 </body>
+</frame>
+
+<frame> 220 injured
+	pic: 3  next: 1  wait: 14 dvx: 0 dvy: 0 centerx: 65  centery: 97
+	<body> x: 47  y: 16  w: 36  h: 82  z: -5  l: 10 </body>
+</frame>
+<frame> 221 injured
+	pic: 4  next: 1  wait: 14 dvx: 0 dvy: 0 centerx: 65  centery: 97
+	<body> x: 47  y: 16  w: 36  h: 82  z: -5  l: 10 </body>
+</frame>
+<frame> 222 injured
+	pic: 5  next: 1  wait: 14 dvx: 0 dvy: 0 centerx: 65  centery: 97
+	<body> x: 47  y: 16  w: 36  h: 82  z: -5  l: 10 </body>
+</frame>
+<frame> 223 injured
+	pic: 2  next: 1  wait: 14 dvx: 0 dvy: 0 centerx: 65  centery: 97
+	<body> x: 47  y: 16  w: 36  h: 82  z: -5  l: 10 </body>
+</frame>

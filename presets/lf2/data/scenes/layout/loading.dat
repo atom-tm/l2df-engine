@@ -1,0 +1,38 @@
+<node:image> BACKGROUND
+	pic: 1 x: 0 y: 0
+	<sprite> "sprite/UI/MENU_WAIT.png"</sprite>
+</node:image>
+
+<node:animation> LOADER
+	<sprite> "sprite/UI/LOADING.png" x: 4  y: 3  w: 140  h: 140 </sprite>
+	x: 820 y: 400 z: 1
+	<frame> 1 load1 pic: 1 wait: 1 next: 2 </frame>
+	<frame> 2 load2 pic: 2 wait: 1 next: 3 </frame>
+	<frame> 3 load3 pic: 3 wait: 1 next: 4 </frame>
+	<frame> 4 load4 pic: 4 wait: 1 next: 5 </frame>
+	<frame> 5 load5 pic: 5 wait: 1 next: 6 </frame>
+	<frame> 6 load6 pic: 6 wait: 1 next: 7 </frame>
+	<frame> 7 load7 pic: 7 wait: 1 next: 8 </frame>
+	<frame> 8 load8 pic: 8 wait: 1 next: 9 </frame>
+	<frame> 9 load9 pic: 9 wait: 1 next: 10 </frame>
+	<frame> 10 load10 pic: 10 wait: 1 next: 11 </frame>
+	<frame> 11 load11 pic: 11 wait: 1 next: 12 </frame>
+	<frame> 12 load12 pic: 12 wait: 1 next: 1 </frame>
+</node:animation>
+
+[map]
+	active: true
+	friction: 0.015
+	gravity: 30
+	scalex: 1
+	scaley: 1
+	zoom: 1.0
+	# <sprite> "data/maps/test-arena/CS0.png" </sprite>
+	# <light> x:    0 y: 340 z: 800 r: 1200 shadow: true </light>
+	# <light> x: 1280 y: 340 z: 800 r: 1200 shadow: true </light>
+	[borders]
+		x1: 0	x2: 977
+		z1: 340	z2: 540
+		y1: 0
+	[/borders]
+[/map]

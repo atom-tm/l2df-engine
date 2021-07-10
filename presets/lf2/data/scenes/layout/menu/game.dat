@@ -1,0 +1,89 @@
+<node:image> CONTROL x: 8 y: 48 active: false
+	<sprite> "sprite/UI/MENU_CLIP5.png" w: 530 h: 200 ox: 0 oy: 182 </sprite>
+</node:image>
+
+<node:menu> MENU
+	x: 348 y: 215
+	<component> l2df.class.component.collision </component>
+	<body> x: 0 y: 0 z: 0 w: 280 h: 210 d: 1 </body>
+	<node:button> BTN_VS_MODE x: 32 y: 0 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 210 h: 21 ox: 45 oy: 116 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 210 h: 22 ox: 32 oy: 331 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 centery: -2 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 centery: -2 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_STAGE_MODE x: 18 y: 26 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 238 h: 24 ox: 31 oy: 141 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 238 h: 24 ox: 18 oy: 358 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 1 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_1_VS_1 x: 0 y: 52 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 275 h: 24 ox: 13 oy: 168 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 275 h: 23 ox: 0 oy: 385 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_2_VS_2 x: 0 y: 78 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 275 h: 24 ox: 13 oy: 195 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 275 h: 24 ox: 0 oy: 412 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_BATTLE_MODE x: 32 y: 104 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 207 h: 24 ox: 45 oy: 221 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 207 h: 24 ox: 32 oy: 438 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_DEMO x: 42 y: 130 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 188 h: 23 ox: 55 oy: 249 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 188 h: 23 ox: 42 oy: 466 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_PLAYBACK x: 0 y: 156 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 277 h: 25 ox: 405 oy: 532 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 277 h: 25 ox: 0 oy: 493 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+	<node:button> BTN_QUIT x: 55 y: 182 cooldown: 10
+		<state:animation> layer: MENU_LAYER
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 165 h: 23 ox: 68 oy: 304 </sprite>
+			<sprite> "sprite/UI/MENU_CLIP3.png" w: 165 h: 23 ox: 55 oy: 521 </sprite>
+			<frame> 1 idle pic: 1 next: 1 wait: 30 </frame>
+			<frame> 2 hover pic: 2 next: 2 wait: 30 </frame>
+			<frame> 3 click pic: 1 next: 4 wait: 3 </frame>
+			<frame> 4 pic: 2 next: 4 wait: 30 </frame>
+		</state:animation>
+	</node:button>
+</node:menu>

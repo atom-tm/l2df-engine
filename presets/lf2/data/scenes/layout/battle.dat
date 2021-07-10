@@ -1,0 +1,27 @@
+<layer> GAME_LAYER
+	index: 0
+	camera: true
+</layer>
+
+# <node:group> CONTROL x: 8 y: 584
+# 	<component> l2df.class.component.render </component>
+# 	bgcolor: 0 0 0 140 w: 420 h: 128
+# 	<node:group> ATK x: 8 y: 8
+# 		<node:image>
+# 			<sprite> "sprite/UI/controls/attack.png" w: 32 h: 32 </sprite>
+# 		</node:image>
+# 		<node:text> LABEL x: 44 y: 2 font: 24 color: 255 255 255 200 limit: 480 </node:text>
+# 	</node:group>
+# 	<node:group> JMP x: 8 y: 48
+# 		<node:image>
+# 			<sprite> "sprite/UI/controls/jump.png" w: 32 h: 32 </sprite>
+# 		</node:image>
+# 		<node:text> LABEL x: 44 y: 2 font: 24 color: 255 255 255 200 limit: 480 </node:text>
+# 	</node:group>
+# 	<node:group> DEF x: 8 y: 88
+# 		<node:image>
+# 			<sprite> "sprite/UI/controls/defence.png" w: 32 h: 32 </sprite>
+# 		</node:image>
+# 		<node:text> LABEL x: 44 y: 2 font: 24 color: 255 255 255 200 limit: 480 </node:text>
+# 	</node:group>
+# </node:group>

@@ -53,6 +53,7 @@ local Class = { }
 	-- @return l2df.class
 	function Class:new(...)
 		local obj = self:___getInstance()
+		obj.___instance = true
 		obj:init(...)
 		return obj
 	end
