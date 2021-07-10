@@ -12,6 +12,7 @@ local Frames = core.import 'class.component.frames'
 local States = core.import 'class.component.states'
 local World = core.import 'class.component.physix.world'
 local Transform = core.import 'class.component.transform'
+local Renderer = core.import 'manager.render'
 
 local Map = Scene:extend({ name = 'map' })
 
@@ -24,6 +25,8 @@ local Map = Scene:extend({ name = 'map' })
 	-- @param[opt] table kwargs  Keyword arguments.
 	-- @param[opt=false] boolean kwargs.hidden  Initial map hidden state.
 	function Map:init(kwargs)
+		kwargs.width = kwargs.width or Renderer.minwidth
+		kwargs.height = kwargs.height or Renderer.minheight
 		self:super(kwargs)
 		self.data.hidden = kwargs.hidden or false
 		self:addComponent(Transform, kwargs)
