@@ -72,7 +72,7 @@ local core = l2df
 	--- Tweak simulation speed.
 	-- @param number value  
 	function core:speedup(value)
-		self.speed = value > 0 and floor(value) or (1 / floor(-value))
+		self.speed = value >= 0 and floor(value) or (1 / floor(-value))
 	end
 
 	--- Convert

@@ -77,7 +77,7 @@ local Manager = { }
 	-- @param number value  Initial value.
 	-- @return number
 	function Manager.convert(value)
-		return value * 60
+		return value * core.fps
 	end
 
 	--- Update event handler.
@@ -170,6 +170,8 @@ local Manager = { }
 
 		data.vz = borders.z1 and data.z <= borders.z1 and 0 or data.vz
 		data.vz = borders.z2 and data.z >= borders.z2 and 0 or data.vz
+
+		data.ground = data.y == borders.y1
 
 		data.mx, data.my, data.mz = 0, 0, 0
 		data.dx, data.dy, data.dz = 0, 0, 0

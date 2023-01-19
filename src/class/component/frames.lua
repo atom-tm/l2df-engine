@@ -142,10 +142,9 @@ local Frames = Component:extend({ unique = true })
 	function Frames:preupdate(obj)
 		local data = obj.data
 		local storage = self:data(obj)
-		local wait = core:convert(data.wait)
+		local wait = core:convert(data.wait + 1)
 		if storage.counter >= wait then
-			storage.counter = storage.counter - wait
-			self:set(obj, data.next, storage.counter)
+			self:set(obj, data.next, storage.counter - wait)
 		end
 		if not data.frame.id then
 			return
@@ -161,7 +160,7 @@ local Frames = Component:extend({ unique = true })
 				data[k] = v
 			end
 		end
-		storage.counter = data.wait > 0 and storage.counter + 1 or 0
+		storage.counter = storage.counter + 1
 	end
 
 return Frames

@@ -14,6 +14,7 @@ local World = core.import 'class.component.physix.world'
 local PhysixManager = core.import 'manager.physix'
 
 local abs = math.abs
+local sign = helper.sign
 local default = helper.notNil
 local convert = PhysixManager.convert
 
@@ -57,6 +58,7 @@ local Physix = Component:extend({ unique = true })
 		data.facing = data.facing or kwargs.facing or 1
 		data.gravity = kwargs.gravity or false
 		data.static = kwargs.static or false
+		data.ground = data.ground or false
 		data.solid = default(kwargs.solid, true)
 		return true
 	end
@@ -70,16 +72,18 @@ local Physix = Component:extend({ unique = true })
 
 		local wdata = world.data()
 
-		data.vx = data.vx - convert(data.vx * wdata.friction) * dt
-		data.vx = data.dvx ~= 0 and convert(data.dvx) or data.vx
+		local frictionx = data.ground and sign(data.vx) * convert(wdata.ground_friction or 0) or 0
+		local frictionz = data.ground and sign(data.vz) * convert(wdata.ground_friction or 0) or 0
+		frictionx = frictionx + convert(data.vx * (wdata.friction or 0)) * dt
+		frictionz = frictionz + convert(data.vz * (wdata.friction or 0)) * dt
+
+		data.vx = data.dvx ~= 0 and convert(data.dvx) or abs(data.vx) > abs(frictionx) and data.vx - frictionx or 0
 		data.vx = data.vx + convert(data.dsx)
 
-		data.vy = data.vy - convert(data.gravity and wdata.gravity or 0) * dt
-		data.vy = data.dvy ~= 0 and convert(data.dvy) or data.vy
+		data.vy = data.dvy ~= 0 and convert(data.dvy) or data.vy - convert(data.gravity and wdata.gravity or 0) * dt
 		data.vy = data.vy + convert(data.dsy)
 
-		data.vz = data.vz - convert(data.vz * wdata.friction) * dt
-		data.vz = data.dvz ~= 0 and convert(data.dvz) or data.vz
+		data.vz = data.dvz ~= 0 and convert(data.dvz) or abs(data.vz) > abs(frictionz) and data.vz - frictionz or 0
 		data.vz = data.vz + convert(data.dsz)
 
 		if abs(data.vx) < EPS then data.vx = 0 end

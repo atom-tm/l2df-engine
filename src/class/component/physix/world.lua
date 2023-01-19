@@ -157,6 +157,7 @@ local World = Component:extend({ unique = true })
     -- @param[opt=0] number kwargs.height  Height of the world in px. Used for spatial hashing.
     -- @param[opt=0] number kwargs.gravity  Gravity acceleration used in the world.
     -- @param[opt=0] number kwargs.friction  Friction used in the world. Value is bounded at [0; 1] segment.
+    -- @param[opt=0] number kwargs.ground_friction  Linear friction of all grounded objects in the world.
     -- @param[opt=1] number kwargs.zoom  Default game's zoom. Used by @{l2df.class.component.camera|Camera}.
     -- @param[opt=false] boolean kwargs.inactive  If true the world would not receive update events.
     function World:added(obj, kwargs)
@@ -180,6 +181,7 @@ local World = Component:extend({ unique = true })
         data.nonEmptyCells = { }
         data.gravity = kwargs.gravity or 0
         data.friction = bound(kwargs.friction, 0, 1) or 0
+        data.ground_friction = kwargs.ground_friction or 0
     end
 
     --- Component was removed from @{l2df.class.entity|Entity} event.
