@@ -56,6 +56,12 @@ local Frames = Component:extend({ unique = true })
 		data.wait = 0
 		data.next = kwargs.frame
 
+		data.playonce = { }
+		local playonce = kwargs.playonce or { }
+		for i = 1, #playonce do
+			data.playonce[playonce[i]] = true
+		end
+
 		for i = 1, #kwargs.frames do
 			self:add(obj, kwargs.frames[i], i)
 		end
@@ -126,7 +132,7 @@ local Frames = Component:extend({ unique = true })
 		data.next = nextFrame.next
 		data.wait = nextFrame.wait or 0
 		storage.counter = counter or 0
-		if nextFrame.keyword then
+		if nextFrame.keyword and not data.playonce[nextFrame.keyword] then
 			storage.map[nextFrame.keyword] = nextFrame.id
 		end
 	end
