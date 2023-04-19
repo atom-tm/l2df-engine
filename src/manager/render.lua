@@ -36,6 +36,7 @@ local loveSetDefaultFilter = love.graphics.setDefaultFilter
 local loveCircle = love.graphics.circle
 local loveEllipse = love.graphics.ellipse
 local loveRect = love.graphics.rectangle
+local loveTranslate = love.graphics.translate
 
 local PI_2 = 2 / math.pi
 
@@ -358,8 +359,14 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		if clear then
 			loveClear(unpack(layer.background))
 		end
-		local input, x, y, z, w, h, sx, sy, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
+		local input, x, y, z, w, h, sx, sy, px, py, cdx, cdy, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
 		local drawables = layer.z
+		local camera = layer.camera
+		if camera then
+			local cs = 1 / camera.scale
+			cdx = camera.ww == camera.w and 0 or (camera.x - camera.w2 * cs) / (camera.ww - camera.w * cs)
+			cdy = camera.wh == camera.h and 0 or (camera.y - camera.h2 * cs) / (camera.wh - camera.h * cs)
+		end
 		layer.has_elements = false
 		for i = 1, #drawables do
 			for j = 1, #drawables[i] do
@@ -367,10 +374,17 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
 				bwidth = loveGetLineWidth()
-				x, y, z, w, h, sx, sy =
+				x, y, z, w, h, sx, sy, px, py =
 					input.x or 0, input.y or 0, input.z or 0,
 					input.w or 1, input.h or 1,
-					input.sx or 1, input.sy or 1
+					input.sx or 1, input.sy or 1,
+					input.px, input.py
+				-- Set parallax
+				if (px or py) and camera then
+					px = round(cdx * camera.ww * (1 - (px or 1)))
+					py = round(cdy * camera.wh * (1 - (py or 1)))
+					loveTranslate(px, py)
+				end
 				-- Draw shadows
 				if input.shadow and Manager.shadows > 0 then
 					local object = Manager.shadows > 1 and input.object or nil
@@ -446,6 +460,10 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				-- Restore color and border
 				loveSetColor(r1, g1, b1, a1)
 				loveSetLineWidth(bwidth)
+				-- Reset parallax
+				if (px or py) and camera then
+					loveTranslate(-px, -py)
+				end
 			end
 		end
 	end

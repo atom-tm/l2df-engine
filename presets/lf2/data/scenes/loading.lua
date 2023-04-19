@@ -75,6 +75,7 @@ coroutine.yield()
 							_type = 'image',
 							x = layer.x,
 							y = layer.y,
+							hparallax = layer.width / bg.width,
 							sprites = { {layer[1]} },
 						}
 					end

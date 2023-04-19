@@ -4,12 +4,12 @@ shadow: bg/template/1/shadow.png  shadowsize: 37 9
 
 <layer>
   bg/template/1/pic1.png
-  transparency: 0 width: 967  x: 0  y: 128
+  transparency: 0 width: 977  x: 0  y: 128
 </layer>
 
 <layer>
   bg/template/1/pic2.png
-  transparency: 0 width: 967  x: 800  y: 128
+  transparency: 0 width: 977  x: 800  y: 128
 </layer>
 
 <layer>

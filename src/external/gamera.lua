@@ -16,6 +16,7 @@ local min = math.min
 local max = math.max
 local mcos = math.cos
 local msin = math.sin
+local floor = math.floor
 
 local loveSetScissor = love.graphics.setScissor
 local loveGetScissor = love.graphics.getScissor
@@ -185,9 +186,9 @@ function gamera:draw(f, ...)
     local scale = self.scale
     loveScale(scale)
 
-    loveTranslate((self.w2 + self.l) / scale, (self.h2 + self.t) / scale)
+    loveTranslate(floor((self.w2 + self.l) / scale), floor((self.h2 + self.t) / scale))
     loveRotate(-self.angle)
-    loveTranslate(-self.x, -self.y)
+    loveTranslate(-floor(self.x), -floor(self.y))
 
     local l, t, w, h = self:getVisible()
     f(l, t, w, h, ...)

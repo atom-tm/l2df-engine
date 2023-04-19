@@ -62,6 +62,8 @@ local Render = Component:extend({ unique = true })
 	-- @param l2df.class.entity obj  Entity's instance.
 	-- @param[opt] table kwargs  Keyword arguments.
 	-- @param[opt] {l2df.class.component.render.Sprite,...} kwargs.sprites  Array of sprites to be added with @{l2df.class.component.render.addSprite|Render:addSprite()} method.
+	-- @param[opt] number kwargs.hparallax  Enables horizontal parallax scrolling.
+	-- @param[opt] number kwargs.vparallax  Enables vertical parallax scrolling.
 	-- @param[opt=0] number kwargs.w  BBox width. Doesn't apply if entity already has width setted.
 	-- @param[opt=0] number kwargs.h  BBox height. Doesn't apply if entity already has height setted.
 	-- @param[opt=1] number kwargs.scalex  BBox X scale. Doesn't apply if entity already has scale setted.
@@ -107,6 +109,9 @@ local Render = Component:extend({ unique = true })
 
 		data.w = data.w or kwargs.w or 0
 		data.h = data.h or kwargs.h or 0
+
+		data.hparallax = kwargs.hparallax
+		data.vparallax = kwargs.vparallax
 
 		data.scalex = data.scalex or kwargs.scalex or 1
 		data.scaley = data.scaley or kwargs.scaley or 1
@@ -275,6 +280,8 @@ local Render = Component:extend({ unique = true })
 				y = z - y,
 				w = data.w * sx,
 				h = data.h * sy,
+				px = data.hparallax,
+				py = data.vparallax,
 				rx = data.radiusx,
 				ry = data.radiusy,
 				color = cdata.bgcolor
@@ -288,6 +295,8 @@ local Render = Component:extend({ unique = true })
 				y = z - y,
 				w = data.w * sx,
 				h = data.h * sy,
+				px = data.hparallax,
+				py = data.vparallax,
 				rx = data.radiusx,
 				ry = data.radiusy,
 				color = cdata.bcolor,
@@ -300,6 +309,8 @@ local Render = Component:extend({ unique = true })
 				layer = data.layer,
 				object = Resources:get(pic[1]),
 				quad = pic[2],
+				px = data.hparallax,
+				py = data.vparallax,
 				x = x,
 				y = y,
 				z = z,
@@ -321,6 +332,8 @@ local Render = Component:extend({ unique = true })
 			x = x,
 			y = y,
 			z = z,
+			px = data.hparallax,
+			py = data.vparallax,
 			color = cdata.color
 		}
 
@@ -337,6 +350,8 @@ local Render = Component:extend({ unique = true })
 					w = (body.w or 0),
 					h = (body.h or 0),
 					d = (body.d or 0),
+					px = data.hparallax,
+					py = data.vparallax,
 					color = greenColor
 				}
 			end
@@ -355,6 +370,8 @@ local Render = Component:extend({ unique = true })
 					w = (itr.w or 0),
 					h = (itr.h or 0),
 					d = (itr.d or 0),
+					px = data.hparallax,
+					py = data.vparallax,
 					color = redColor
 				}
 			end
