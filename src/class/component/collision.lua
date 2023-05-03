@@ -14,7 +14,7 @@ local KindsManager = core.import 'manager.kinds'
 
 local sqrt = math.sqrt
 local min = math.min
-local max = math.max
+local abs = math.abs
 local copy = helper.copyTable
 
 local Collision = Component:extend({ unique = true })
@@ -39,10 +39,6 @@ local Collision = Component:extend({ unique = true })
 		data.y = data.y or 0
 		data.z = data.z or 0
 
-		data.mx = data.mx or 0
-		data.my = data.my or 0
-		data.mz = data.mz or 0
-
 		data.centerx = data.centerx or 0
 		data.centery = data.centery or 0
 	end
@@ -63,32 +59,24 @@ local Collision = Component:extend({ unique = true })
 	function Collision:collider(obj, col, action)
 		local data = obj.data
 		--local r = col.r or col.w * col.h * col.d > 0 and sqrt(col.w ^ 2 + col.h ^ 2 + col.d ^ 2) / 2 or 0
-		local x_1 = data.globalX + (col.x or 0) * data.facing
-		local x_2 = x_1 + (col.w or 0) * data.facing
-		local y_1 = (col.y or 0) - data.globalY * data.yorientation
-		local y_2 = y_1 + (col.h or 0)
-		local z_1 = data.globalZ + (col.z or 0)
-		local z_2 = z_1 + (col.d or 0)
-
-		local x1 = min(x_1, x_1 + data.mx, x_2, x_2 + data.mx)
-		local x2 = max(x_1, x_1 + data.mx, x_2, x_2 + data.mx)
-		local y1 = min(y_1, y_1 + data.my, y_2, y_2 + data.my)
-		local y2 = max(y_1, y_1 + data.my, y_2, y_2 + data.my)
-		local z1 = min(z_1, z_1 + data.mz, z_2, z_2 + data.mz)
-		local z2 = max(z_1, z_1 + data.mz, z_2, z_2 + data.mz)
-
+		local x1 = data.globalX + (col.x or 0) * data.facing
+		local x2 = x1 + (col.w or 0) * data.facing
+		local y1 = (col.y or 0) - data.globalY * data.yorientation
+		local y2 = y1 + (col.h or 0)
+		local z1 = data.globalZ + (col.z or 0)
+		local z2 = z1 + (col.d or 0)
 		local collider = copy(col)
 		collider.kind = col.kind or 0
 		collider.owner = obj
 		collider.data = data
 		collider.col = col
 		collider.action = action
-		collider.w = x2 - x1
-		collider.h = y2 - y1
-		collider.d = z2 - z1
-		collider.x = x1
-		collider.y = y1
-		collider.z = z1
+		collider.w = abs(x2 - x1)
+		collider.h = abs(y2 - y1)
+		collider.d = abs(z2 - z1)
+		collider.x = min(x1, x2)
+		collider.y = min(y1, y2)
+		collider.z = min(z1, z2)
 		return collider
 	end
 

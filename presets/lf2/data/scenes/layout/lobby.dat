@@ -1,5 +1,3 @@
-<layer> LOBBY_LAYER index: 3 background: 0 0 0 255 </layer>
-
 <node:image> BACKGROUND x: 150 y: 31 layer: LOBBY_LAYER
 	<sprite> "sprite/UI/CHARMENU.png" w: 705 h: 487 ox: 0 oy: 0 </sprite>
 </node:image>

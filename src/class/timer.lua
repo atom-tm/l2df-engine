@@ -37,10 +37,12 @@ local Timer = Class:extend()
         end
     end
 
+    --- Triggers `timer` event.
     function Timer:trigger()
         EventManager:invoke('timer', self)
     end
 
+    --- Disposes timer object by unsubscribing it from @{l2df.manager.event|EventManager}
     function Timer:dispose()
         EventManager:unsubscribeById('update', self.id)
     end

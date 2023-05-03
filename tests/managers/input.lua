@@ -1,6 +1,6 @@
 package.path = '../../?.lua;../../?/init.lua;' .. package.path
 
-require 'dev.prod.love'
+require 'dev.prod.love2d'
 require 'src'
 
 local Input = l2df.import 'manager.input'

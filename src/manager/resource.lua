@@ -16,25 +16,25 @@ local notNil = helper.notNil
 
 local type = _G.type
 local unpack = table.unpack or _G.unpack
-local fs = love and love.filesystem
+local fs = core.api.io
 local min = math.min
 local strmatch = string.match
-local loveNewImage = love.graphics.newImage
-local loveNewVideo = love.graphics.newVideo
-local loveNewSound = love.audio.newSource
-local loveNewFont = love.graphics.newFont
+local loveNewImage = core.api.data.image
+local loveNewVideo = core.api.data.video
+local loveNewSource = core.api.data.audio
+local loveNewFont = core.api.data.font
 
 local asyncList = { }
-local asyncChannel = love.thread.getChannel('asyncChannel')
-local asyncReturn = love.thread.getChannel('asyncReturn')
-local asyncLoader = love.thread.newThread([[
-	require 'love.image'
-	require 'love.video'
-	require 'love.filesystem'
-	local extensions = ...
+local asyncChannel = core.api.async.channel('asyncChannel')
+local asyncReturn = core.api.async.channel('asyncReturn')
+local asyncLoader = core.api.async.create([[
+	pcall(require, 'love.image')
+	pcall(require, 'love.video')
+	local extensions, lib = ...
+	local api = require(lib)
 	local strformat = string.format
-	local asyncChannel = love.thread.getChannel('asyncChannel')
-	local asyncReturn = love.thread.getChannel('asyncReturn')
+	local asyncChannel = api.async.channel('asyncChannel')
+	local asyncReturn = api.async.channel('asyncReturn')
 	local continuation = true
 	while continuation do
 		local task = asyncChannel:pop()
@@ -45,19 +45,20 @@ local asyncLoader = love.thread.newThread([[
 			local temp = task[4]
 			local resource = nil
 			if extensions.image[extension] then
-				resource = love.image.newImageData(file)
+				resource = api.data.pixels(file)
 			elseif extensions.video[extension] then
-				resource = love.video.newVideoStream(file)
+				resource = api.data.stream(file)
 			elseif extensions.sound[extension] then
 				resource = id
 			else
-				resource = love.filesystem.newFileData(file)
+				resource = api.data.file(file)
 			end
 			if resource then
 				asyncReturn:push({ id = id, resource = resource, extension = extension, temp = temp })
 			end
 		else continuation = false end
 		collectgarbage()
+		api.async.yield()
 	end
 ]])
 
@@ -179,7 +180,10 @@ local Manager = { }
 		local id = id or filepath
 		if not reload and self:get(id) then return id end
 		local path, extension = strmatch(filepath, '^(.+)(%..+)$')
-		if filepath and not (fs.getInfo(filepath) or path == '__default__') then return false end
+		if filepath and not (fs.getInfo(filepath) or path == '__default__') then
+			print('failed', filepath)
+			return false
+		end
 		local resource = nil
 		if extensions.image[extension] then
 			resource = loveNewImage(filepath, ...)
@@ -197,12 +201,20 @@ local Manager = { }
 	--- Update event handler.
 	-- Checks async loaders and triggers callbacks if they are finished.
 	function Manager:update()
-		if #asyncList > 0 then
-			for i = 1, #asyncList do
-				asyncChannel:push(asyncList[i])
+		local taskCount = #asyncList
+		for i = 1, taskCount do
+			asyncChannel:push(asyncList[i])
+			asyncList[i] = nil
+		end
+		if not core.api.async.isrunning(asyncLoader) and taskCount > 0 then
+			local lib = 'l2df.api'
+			for k, v in pairs(package.loaded) do
+				if v == core.api then
+					lib = k
+					break
+				end
 			end
-			asyncList = { }
-			if not asyncLoader:isRunning() then asyncLoader:start(extensions) end
+			core.api.async.start(asyncLoader, extensions, lib)
 		end
 		if asyncReturn:getCount() > 0 then
 			local returned = asyncReturn:pop()

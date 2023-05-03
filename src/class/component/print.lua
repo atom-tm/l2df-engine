@@ -75,7 +75,8 @@ local Print = Component:extend({ unique = false })
 		elseif not Resources:loadAsync(font, function (id, fnt)
 			if not id then return end
 			cdata.font = fnt
-			cdata.limit = kwargs.limit or max(fnt:getWidth(udata.text), fnt:getWidth(cdata.placeholder)) or cdata.limit
+			cdata.limit =
+				kwargs.limit or max(fnt:getWidth(udata.text), fnt:getWidth(cdata.placeholder)) or cdata.limit
 		end, false, strformat('%s#%s', font, size), false, size) then
 			log:error('Font error: %s [%s]', font, size)
 			return

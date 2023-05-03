@@ -23,9 +23,9 @@ local strlen = string.len
 local strbyte = string.byte
 local tremove = table.remove
 local ppack = packer.pack
-local setKeyRepeat = love.keyboard.setKeyRepeat
-local loveGetPosition = love.mouse.getPosition
-local newQuad = love.graphics.newQuad
+local setKeyRepeat = core.api.io.keyRepeat
+local loveGetPosition = core.api.io.mousePosition
+local newQuad = core.api.data.quad
 
 local inputs = { }
 
@@ -323,12 +323,12 @@ local Manager = {
 	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
-	function Manager:hitted(button, player)
+	function Manager:hitted(button, player, ignore_remotes)
 		local keycode = self.keymap[button]
 		if keycode then
 			keycode = self.keys[keycode][2]
 			local input = nil
-			for p = player or 1, player or self.localplayers do
+			for p = player or 1, player or self.localplayers + (ignore_remotes and 0 or self.remoteplayers) do
 				input = inputs[p]
 				local ishitted = input and input.frame == self.frame and hasbit(input.data, keycode)
 				local prev = input and input.prev
@@ -345,13 +345,13 @@ local Manager = {
 	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
-	function Manager:consume(button, player)
+	function Manager:consume(button, player, ignore_remotes)
 		local keycode = self.keymap[button]
 		if keycode then
 			local consumed = self.consumed[keycode]
 			local input = nil
 			keycode = self.keys[keycode][2]
-			for p = player or 1, player or self.localplayers do
+			for p = player or 1, player or self.localplayers + (ignore_remotes and 0 or self.remoteplayers) do
 				if consumed[p] then
 					return false
 				end
@@ -372,12 +372,12 @@ local Manager = {
 	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
-	function Manager:pressed(button, player)
+	function Manager:pressed(button, player, ignore_remotes)
 		local index = self.keymap[button]
 		if index then
 			index = self.keys[index][2]
 			local input = nil
-			for p = player or 1, player or self.localplayers do
+			for p = player or 1, player or self.localplayers + (ignore_remotes and 0 or self.remoteplayers) do
 				input = inputs[p]
 				if input and hasbit(input.data, index) then
 					return true, p
@@ -392,12 +392,12 @@ local Manager = {
 	-- @param number player  Player to check or nil to check any local player.
 	-- @return boolean
 	-- @return number
-	function Manager:doubled(button, player)
+	function Manager:doubled(button, player, ignore_remotes)
 		local index = self.keymap[button]
 		if index then
 			index = self.keys[index][2]
 			local timer, c, a, b, it = self.frame - double_timer
-			for p = player or 1, player or self.localplayers do
+			for p = player or 1, player or self.localplayers + (ignore_remotes and 0 or self.remoteplayers) do
 				it, c, a, b = inputs[p], 0, true, false
 				while it and it.frame >= timer do
 					if hasbit(it.data, index) then

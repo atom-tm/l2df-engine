@@ -2,19 +2,21 @@ local core = assert(l2df, 'L2DF is not available')
 local data = assert(data, 'Shared data is not available')
 
 -- UTILS
-local utf8 = require 'utf8'
+local log = core.import 'class.logger'
 local cfg = core.import 'config'
 
 -- COMPONENTS
 local Camera = core.import 'class.component.camera'
 local Collision = core.import 'class.component.collision'
 local Controller = core.import 'class.component.controller'
+local SoundSystem = core.import 'class.component.sound'
 local CharAttributes = require 'data.scripts.component.attributes'
 
 -- MANAGERS
 local Input = core.import 'manager.input'
 local Factory = l2df.import 'manager.factory'
 local SceneManager = core.import 'manager.scene'
+local Network = core.import 'manager.network'
 
 -- VARIABLES
 local function dummyFunc() end
@@ -69,8 +71,10 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		for i = 1, #Room.data.ready_players do
 			local player = Room.data.ready_players[i]
 			local chardata = data.chardata:getById(getGroup(player).data.index)
+			chardata.playonce = chardata.playonce or cfg.playonce
 			chars[i] = Factory:create('object', chardata)
 			chars[i]:addComponent(Controller, player)
+			chars[i]:addComponent(SoundSystem, chardata)
 			chars[i]:addComponent(CharAttributes, chardata)
 			chars[i]:addComponent(Camera, { kx = 128, ky = 128 })
 		end
@@ -88,7 +92,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		local randoms = self.data.random
 		if data.chardata.count == 0 or #randoms == 0 then return end
 		for i = 1, #randoms do
-			local charid = math.random(1, data.chardata.count)
+			local charid = data.random(1, data.chardata.count)
 			randoms[i].data.index = charid
 			randoms[i].R.AVATAR.C.frames.set(AFCOUNT + charid)
 			randoms[i].R.FIGHTER.data.text = randoms[i].R.AVATAR.data.frame.fighter
@@ -104,6 +108,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 	end
 
 	function Room:enter()
+		log:debug 'Room: LOBBY'
 		Menu.active = false
 		self.data.counting = false
 		self.data.random = { }
@@ -166,9 +171,9 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 					group.FIGHTER.C.frames.set('idle')
 					group.TEAM.data.hidden = false
 				else
-					group.AVATAR.C.frames.set('random')
+					group.AVATAR.C.frames.set(AFCOUNT + group.data.index)
 					group.PLAYER.C.frames.set('idle')
-					group.PLAYER.data.text = data.players[atk]
+					group.PLAYER.data.text = data.players[atk] or tostring(atk)
 					group.FIGHTER.data.hidden = false
 					self.data.active_players = self.data.active_players + 1
 					if self.data.counting then

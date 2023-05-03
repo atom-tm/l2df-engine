@@ -5,7 +5,7 @@
 -- @copyright Atom-TM 2020
 
 local core = l2df or require(((...):match('(.-)[^%.]+$') or '') .. 'core')
-local fs = love and love.filesystem
+local fs = core.api.io
 
 local strgmatch = string.gmatch
 local strformat = string.format
@@ -124,7 +124,7 @@ local helper = { }
 		if fs and folderpath and fs.getInfo(folderpath, 'directory') then
 			folderpath = strfind(folderpath, '/$') and folderpath or folderpath .. '/'
 			local modulepath = core.modulepath(folderpath)
-			local files = fs.getDirectoryItems(folderpath)
+			local files = fs.directoryItems(folderpath)
 			local parser = core.import 'class.parser.lffs2'
 			local id, file
 			for i = 1, #files do
@@ -151,7 +151,6 @@ local helper = { }
 	-- @return table
 	-- @return string
 	function helper.requireFile(filepath)
-		local fs = love and love.filesystem
 		if not (filepath and fs and fs.getInfo(filepath, 'file') and strfind(filepath, '.lua$')) then return end
 		local file = filepath:gsub(filepath:gsub('[^/]+$', ''), ''):gsub('.lua$', '')
 		return require(filepath:gsub('.lua$', ''):gsub('/', '.')), file

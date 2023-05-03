@@ -1,3 +1,8 @@
+<layer> GAME_LAYER index: 1 camera: main background: 0 0 0 255 </layer>
+<layer> MENU_LAYER index: 2 background: 16 32 108 255 </layer>
+<layer> SUBMENU_LAYER index: 3 background: 16 32 108 100 </layer>
+<layer> LOBBY_LAYER index: 3 background: 0 0 0 255 </layer>
+
 <node:image> BACKGROUND
 	pic: 1 x: 0 y: 0
 	<sprite> "sprite/UI/MENU_WAIT.png"</sprite>
@@ -22,11 +27,10 @@
 
 [map]
 	active: true
-	friction: 0.015
+	ground_friction: 0.5
 	gravity: 30
 	scalex: 1
 	scaley: 1
-	zoom: 1.0
 	# <sprite> "data/maps/test-arena/CS0.png" </sprite>
 	# <light> x:    0 y: 340 z: 800 r: 1200 shadow: true </light>
 	# <light> x: 1280 y: 340 z: 800 r: 1200 shadow: true </light>

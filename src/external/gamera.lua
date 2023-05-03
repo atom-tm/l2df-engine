@@ -18,13 +18,15 @@ local mcos = math.cos
 local msin = math.sin
 local floor = math.floor
 
-local loveSetScissor = love.graphics.setScissor
-local loveGetScissor = love.graphics.getScissor
-local lovePush = love.graphics.push
-local lovePop = love.graphics.pop
-local loveScale = love.graphics.scale
-local loveTranslate = love.graphics.translate
-local loveRotate = love.graphics.rotate
+local function dummy() end
+
+local loveSetScissor = l2df and l2df.api.render.scissor or dummy
+local loveGetScissor = l2df and l2df.api.render.scissor or dummy
+local lovePush = l2df and l2df.api.render.push or dummy
+local lovePop = l2df and l2df.api.render.pop or dummy
+local loveScale = l2df and l2df.api.render.scale or dummy
+local loveTranslate = l2df and l2df.api.render.translate or dummy
+local loveRotate = l2df and l2df.api.render.rotate or dummy
 
 local function clamp(x, minX, maxX)
   return x < minX and minX or (x > maxX and maxX or x)

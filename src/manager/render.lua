@@ -10,6 +10,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'RenderManager works only 
 local helper = core.import 'helper'
 local gamera = core.import 'external.gamera'
 
+local abs = math.abs
 local rad = math.rad
 local min = math.min
 local max = math.max
@@ -21,22 +22,23 @@ local default = helper.notNil
 local tsort = table.sort
 local tremove = table.remove
 local unpack = table.unpack or _G.unpack
-local loveSetMode = love.window.setMode
-local loveGetMode = love.window.getMode
-local loveDraw = love.graphics.draw
-local loveClear = love.graphics.clear
-local lovePrintf = love.graphics.printf
-local loveGetColor = love.graphics.getColor
-local loveSetColor = love.graphics.setColor
-local loveGetLineWidth = love.graphics.getLineWidth
-local loveSetLineWidth = love.graphics.setLineWidth
-local loveSetCanvas = love.graphics.setCanvas
-local loveNewCanvas = love.graphics.newCanvas
-local loveSetDefaultFilter = love.graphics.setDefaultFilter
-local loveCircle = love.graphics.circle
-local loveEllipse = love.graphics.ellipse
-local loveRect = love.graphics.rectangle
-local loveTranslate = love.graphics.translate
+local loveSetBlendMode = core.api.render.blend
+local loveSetMode = core.api.render.mode
+local loveGetMode = core.api.render.mode
+local loveDraw = core.api.render.draw
+local loveClear = core.api.render.clear
+local lovePrintf = core.api.render.printf
+local loveGetColor = core.api.render.color
+local loveSetColor = core.api.render.color
+local loveGetLineWidth = core.api.render.lineWidth
+local loveSetLineWidth = core.api.render.lineWidth
+local loveSetCanvas = core.api.render.canvas
+local loveNewCanvas = core.api.data.canvas
+local loveSetDefaultFilter = core.api.render.defaultFilter
+local loveCircle = core.api.render.circle
+local loveEllipse = core.api.render.ellipse
+local loveRect = core.api.render.rectangle
+local loveTranslate = core.api.render.translate
 
 local PI_2 = 2 / math.pi
 
@@ -114,6 +116,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		})
 		self.prevwidth = not info.fullscreen and width or self.prevwidth or width
 		self.prevheight = not info.fullscreen and height or self.prevheight or height
+		self.maincamera = gamera.new(width, height)
 		self:setResolution(kwargs.width, kwargs.height, kwargs.depth)
 		return self
 	end
@@ -163,6 +166,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				camera:setWindow(0, 0, width, height)
 			end
 		end
+		self.maincamera:setWindow(0, 0, width, height)
 		self:resize(loveGetMode())
 	end
 
@@ -191,7 +195,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 	-- Auto-increments for each added layer if not set properly.
 	-- @param[opt] {number,number,number,number} kwargs.background  RGBA color.
 	-- Each component must be in range [0; 255]. Default to white non-transparent color.
-	-- @param[opt=false] boolean kwargs.camera  True if layer should create its own camera. False otherwise.
+	-- @param[opt] string kwargs.camera  'custom' if layer should create its own camera. 'main' to use global camera.
 	-- @param[opt=false] boolean kwargs.forced  True if layer should be drawn even if there are not rendered objects.
 	-- False otherwise.
 	function Manager:addLayer(name, kwargs)
@@ -216,12 +220,16 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			},
 			x = kwargs.x,
 			y = kwargs.y,
+			zoom = kwargs.zoom or 1,
+			parallax = kwargs.parallax or 1,
 			width = kwargs.width,
 			height = kwargs.height,
 			index = kwargs.index,
 			forced = not not kwargs.forced,
 			tracking = { },
-			camera = kwargs.camera and gamera.new(self.width, self.height) or nil,
+			camera =
+				kwargs.camera == 'custom' and gamera.new(self.width, self.height) or
+				kwargs.camera == 'main' and self.maincamera or nil,
 			canvas = loveNewCanvas(kwargs.width, kwargs.height),
 			z = { },
 			INVALIDATED = true
@@ -256,7 +264,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			layer.depth = depth
 		end
 		if camera then
-			camera.zoom = zoom or camera.zoom
+			layer.zoom = zoom or layer.zoom
 			camera:setWorld(0, 0, layer.width, layer.height)
 		end
 		layer.INVALIDATED = true
@@ -286,7 +294,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			for i = #tracking, 1, -1 do
 				tracking[i] = nil
 			end
-			layer.camera:setScale(1)
+			layer.camera:setScale(layer.zoom)
 		end
 		layer.INVALIDATED = invalidate
 		-- loveSetCanvas()
@@ -389,9 +397,9 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				if input.shadow and Manager.shadows > 0 then
 					local object = Manager.shadows > 1 and input.object or nil
 					if not object then
-						local r = input.rad or min(input.ox or 1, input.oy or 1)
+						local r = input.rad or min(input.ox or 1, input.oy or 1) * 0.5
 						loveSetColor(0, 0, 0, 0.5)
-						loveEllipse('fill', round(x), round(z), r * (sx or 1), r * (sy or 1) * 0.25)
+						loveEllipse('fill', round(x), round(z), r * abs(sx or 1), r * abs(sy or 1) * 0.25)
 					else
 						local ox, oy = input.ox or 0, input.oy or 0
 						for i = 1, #lights do
@@ -457,6 +465,10 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				elseif input.text and type(input.text) == 'string' then
 					lovePrintf(input.text, input.font, x, y, input.limit, input.align, rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
 				end
+				if Manager.DEBUG then
+					loveSetColor(1, 0, 0, 1)
+					lovePrintf('X:'..round(x)..'Y:'..round(y), x, z - y + 16, 100)
+				end
 				-- Restore color and border
 				loveSetColor(r1, g1, b1, a1)
 				loveSetLineWidth(bwidth)
@@ -489,7 +501,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 								x2, y2 = max(x2, t.x + t.ox + t.kx), max(y2, t.y + t.oy + t.ky)
 								x, y, p = (x * p + t.x * t.p) * dk, (y * p + t.y * t.p) * dk, k
 							end
-							local s, l, t, w, h = camera.zoom, camera:getVisible(camera.zoom)
+							local s, l, t, w, h = layer.zoom, camera:getVisible(layer.zoom)
 							camera:setScale(min(s, w / (x2 - x1) * s, h / (y2 - y1) * s))
 							camera:setPosition(x, y)
 						end
@@ -502,12 +514,14 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 			end
 			loveSetCanvas(self.canvas)
 			loveClear(unpack(self.background))
+			-- loveSetBlendMode('alpha', 'premultiplied')
 			for i = 1, #layers do
 				local layer = layers[i]
 				if layer.has_elements or layer.forced then
 					loveDraw(layer.canvas, layer.x, layer.y)
 				end
 			end
+			-- loveSetBlendMode('alpha', 'alphamultiply')
 			render(0, 0, self.width, self.height, self)
 			loveSetCanvas()
 			self.INVALIDATED = false
