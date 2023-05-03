@@ -112,7 +112,7 @@ local Manager = { }
 	-- @return string  HEX representation of the generated GSID.
 	function Manager:hash(state, salt)
 		state, salt = hash(state, salt)
-		return i2h(floor(state / 65536)) .. i2h(state % 65536) .. i2h(salt)
+		return i2h(xor(state, salt * 65536 + salt), 8)
 	end
 
 	--- Generates random GSID.
@@ -120,7 +120,7 @@ local Manager = { }
 	function Manager:rand()
 		local a, b = hash(state, counter)
 		counter = counter + 1
-		return a * 65536 + b
+		return xor(a, b * 65536 + b)
 	end
 
 return setmetatable(Manager, { __call = Manager.init })

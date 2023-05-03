@@ -80,12 +80,43 @@ local Manager = { }
 		return value * core.fps
 	end
 
+	--- Performs collision simulation.
+	function Manager:collide()
+		local s = space
+		for i = 1, #layer_collisions do
+			local i1 = layer_collisions[i][1]
+			local i2 = layer_collisions[i][2]
+			local l1 = s[i1]
+			local l2 = s[i2]
+			if l1 and l2 then
+				local c1, intersected
+				for j = 1, #l1.items do
+					c1 = l1.items[j]
+					intersected = { }
+					traverse(l2.grid, c1, function (cell)
+						local c2, _
+						for k = 1, #cell do
+							c2 = cell[k]
+							if not intersected[c2] and Cube:isIntersecting(c1.x, c1.y, c1.z, c1.w, c1.h, c1.d, c2.x, c2.y, c2.z, c2.w, c2.h, c2.d) then
+								intersected[c2] = true
+								_ = c1.action and c1.action(c1.owner, c2.owner, c1, c2)
+								_ = c2.action and c2.action(c2.owner, c1.owner, c1, c2)
+							end
+						end
+					end)
+				end
+			end
+		end
+		for i, x in pairs(s) do
+			x.grid = { }
+			x.items = { }
+		end
+	end
+
 	--- Update event handler.
-	-- Performs collision simulation and moves all @{l2df.manager.physix.move|queued} entities.
+	-- Moves all @{l2df.manager.physix.move|queued} entities.
 	-- @param number dt  Delta-time since last game tick.
 	function Manager:update(dt)
-		local obj, world
-		collide()
 		for i = 1, #movable do
 			move(dt, movable[i][1], movable[i][2])
 			movable[i] = nil
@@ -107,40 +138,6 @@ local Manager = { }
 					callback(szy[x])
 				end
 			end
-		end
-	end
-
-	collide = function ()
-		local s = space
-		for i = 1, #layer_collisions do
-			local i1 = layer_collisions[i][1]
-			local i2 = layer_collisions[i][2]
-			local l1 = s[i1]
-			local l2 = s[i2]
-			if l1 and l2 then
-				local c1
-				local intersected = { }
-				for j = 1, #l1.items do
-					c1 = l1.items[j]
-					intersected[c1] = { }
-					traverse(l2.grid, c1, function (cell)
-						local c2, _
-						for k = 1, #cell do
-							c2 = cell[k]
-							if not intersected[c1][c2] and Cube:isIntersecting(c1.x, c1.y, c1.z, c1.w, c1.h, c1.d, c2.x, c2.y, c2.z, c2.w, c2.h, c2.d) then
-								intersected[c1][c2] = true
-								_ = c1.action and c1.action(c1.owner, c2.owner, c1, c2)
-								_ = c2.action and c2.action(c2.owner, c1.owner, c2, c1)
-							end
-						end
-					end)
-					intersected[c1] = nil
-				end
-			end
-		end
-		for i, x in pairs(s) do
-			x.grid = { }
-			x.items = { }
 		end
 	end
 
@@ -173,7 +170,6 @@ local Manager = { }
 
 		data.ground = data.y == borders.y1
 
-		data.mx, data.my, data.mz = 0, 0, 0
 		data.dx, data.dy, data.dz = 0, 0, 0
 	end
 

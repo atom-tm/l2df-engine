@@ -9,7 +9,7 @@ assert(type(core) == 'table' and core.version >= 1.0, 'NetworkManager works only
 local os = require 'os'
 local enet = require 'enet'
 local math = require 'math'
-local socket = require 'socket'
+local socket_ok, socket = pcall(require, 'socket')
 local log = core.import 'class.logger'
 local json = core.import 'class.parser.json'
 local helper = core.import 'helper'
@@ -20,7 +20,6 @@ local type = _G.type
 local pairs = _G.pairs
 local rawset = _G.rawset
 local max = math.max
-local rand = math.random
 local strbyte = string.byte
 local strchar = string.char
 local strmatch = string.match
@@ -94,13 +93,17 @@ local function setClient(id, name, client)
 end
 
 local function discoverIP()
+	if not socket_ok then
+		return nil
+	end
+	-- TODO: luajit.ffi, https://gist.github.com/abelidze/f6d715200775efc3dc5a4f838a7ac898
 	local udp = socket.udp4()
 	if not udp:setpeername('www.google.com', 80) then
 		log:error('Discovering IP has failed')
 		udp:close()
-		return nil
+		return socket.dns.toip(socket.dns.gethostname())
 	end
-	local result = udp:getsockname() or '255.255.255.255'
+	local result = udp:getsockname() or nil
 	udp:close()
 	return result
 end
@@ -412,7 +415,8 @@ local Manager = { ip = '127.0.0.1' }
 	function Manager:register(host)
 		-- TODO: add host validation
 		local ip, port = strmatch(host, '^(.+):(%d+)$')
-		host = strformat('%s:%s', socket.dns.toip(ip or ''), port)
+		ip = ip or 'localhost'
+		host = strformat('%s:%s', socket_ok and socket.dns.toip(ip) or ip, port)
 		if not ip or masters[host] then return end
 		masters[host] = PENDING
 		return self

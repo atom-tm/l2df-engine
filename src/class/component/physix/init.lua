@@ -39,9 +39,6 @@ local Physix = Component:extend({ unique = true })
 		data.x = data.x or 0
 		data.y = data.y or 0
 		data.z = data.z or 0
-		data.mx = data.mx or 0
-		data.my = data.my or 0
-		data.mz = data.mz or 0
 		data.vx = data.vx or 0
 		data.vy = data.vy or 0
 		data.vz = data.vz or 0
@@ -65,9 +62,15 @@ local Physix = Component:extend({ unique = true })
 
 	--- Physics update event handler.
 	-- @param l2df.class.entity obj  Entity's instance.
+	function Physix:update(obj)
+		self:data(obj).world = World.getFromContext()
+	end
+
+	--- Physics post-update event handler.
+	-- @param l2df.class.entity obj  Entity's instance.
 	-- @param number dt  Delta-time since last game tick.
-	function Physix:update(obj, dt)
-		local data, world = obj.data, World.getFromContext()
+	function Physix:postupdate(obj, dt)
+		local data, world = obj.data, self:data(obj).world
 		if not world or data.static then return end
 
 		local wdata = world.data()
@@ -89,10 +92,6 @@ local Physix = Component:extend({ unique = true })
 		if abs(data.vx) < EPS then data.vx = 0 end
 		if abs(data.vy) < EPS then data.vy = 0 end
 		if abs(data.vz) < EPS then data.vz = 0 end
-
-		data.mx = (convert(data.dx) + data.vx) * dt
-		data.my = (convert(data.dy) + data.vy) * dt
-		data.mz = (convert(data.dz) + data.vz) * dt
 
 		data.dsx, data.dsy, data.dsz = 0, 0, 0
 		data.dvx, data.dvy, data.dvz = 0, 0, 0

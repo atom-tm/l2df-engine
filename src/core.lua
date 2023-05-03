@@ -6,7 +6,6 @@
 
 local __DIR__ = (...):match('(.-)[^%.]+$')
 
-local fs = love and love.filesystem
 local strformat = string.format
 local strmatch = string.match
 local strgsub = string.gsub
@@ -16,7 +15,13 @@ local getinfo = debug.getinfo
 local source = nil
 local gsource = nil
 
-local core = { version = 1.0, tickrate = 1 / 60 }
+local core = {
+	api = require(__DIR__ .. 'api'),
+	version = 1.0,
+	tickrate = 1 / 60,
+}
+
+	local fs = core.api.io
 
 	--- Wrapper on standart 'require', imports engine's components.
 	-- automatically adding required module's prefix.
@@ -31,7 +36,7 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 	-- @param[opt=3] number depth  Depth passed to debug.getinfo method.
 	-- @return string
 	function core.root(depth)
-		gsource = gsource or fs and fs.getSource():gsub('%-', '%%%-')
+		gsource = gsource or fs.getSource():gsub('%-', '%%-')
 		source = source or core.fullpath('', depth or 3)
 		return source
 	end
@@ -55,22 +60,20 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 	-- @param[opt] string path  Source path.
 	-- @return string
 	function core.workpath(path)
-		assert(fs, 'core.workdir function currently doesn\'t work without LOVE')
 		if path then
-			return strformat('%s/%s', fs.getWorkingDirectory(), path)
+			return strformat('%s/%s', fs.workingDirectory(), path)
 		end
-		return fs.getWorkingDirectory()
+		return fs.workingDirectory()
 	end
 
 	--- Convert path relative to current save directory to absolute.
 	-- @param[opt] string path  Source path.
 	-- @return string
 	function core.savepath(path)
-		assert(fs, 'core.savepath function currently doesn\'t work without LOVE')
 		if path then
-			return strformat('%s/%s', fs.getSaveDirectory(), path)
+			return strformat('%s/%s', fs.saveDirectory(), path)
 		end
-		return fs.getSaveDirectory()
+		return fs.saveDirectory()
 	end
 
 	--- Converts the path relative to the game's entry point.
@@ -83,9 +86,12 @@ local core = { version = 1.0, tickrate = 1 / 60 }
 			info = info or getinfo(depth or 2, 'Sn')
 			local prefix = info.source
 				:sub(2, -1)
+				:gsub('\\', '/')
 				:gsub(gsource .. '/?', '')
 				:gsub(info.name .. '.lua', '')
-
+			while prefix:sub(1, 1) == '/' do
+				prefix = prefix:sub(2)
+			end
 			return prefix .. path
 		end
 		return path

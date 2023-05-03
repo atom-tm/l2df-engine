@@ -9,8 +9,8 @@ assert(type(core) == 'table' and core.version >= 1.0, 'SoundManager works only w
 local helper = core.import 'helper'
 
 local type = _G.type
-local lovePlay = love.audio.play
-local loveStop = love.audio.stop
+local lovePlay = core.api.audio.play
+local loveStop = core.api.audio.stop
 
 local music = nil
 local sound_list = { }
@@ -30,7 +30,7 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 	-- @return l2df.manager.sound
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
-		self.sound_volume = kwargs.sound or 0.7
+		self.sound_volume = kwargs.sound or 1--0.7
 		self.music_volume = kwargs.music or 0.3
 		return self
 	end
@@ -71,17 +71,25 @@ local Manager = { sound_volume = 1, music_volume = 1 }
 	-- @param[opt] love.audio.Source input.resource  Sound `userdata` source if input was passed as table.
 	-- @param[opt=1] love.audio.Source input.volume  Sound volume. Value should be in range [0.0; 1.0].
 	-- Defaults to @{Manager.sound_volume|SoundManager.sound_volume} or `1`.
-	function Manager:play(input)
+	function Manager:play(input, force)
 		local t = type(input)
 		if t ~= 'table' and t ~= 'userdata' or
 		not (input.typeOf and input:typeOf('Source')) and
 		not (input.resource and input.resource.typeOf and input.resource:typeOf('Source'))
 		then return end
 
-		local sound = (input.resource or input):clone()
-		input.volume = input.volume or self.sound_volume or 1
-		sound:setVolume(input.volume)
-		sound_list[#sound_list + 1] = sound
+		local sound = (input.resource or input)
+		local volume = input.volume or self.sound_volume or 1
+		if input.resource then
+			input.volume = volume
+		end
+		if force then
+			sound = sound:clone()
+		end
+		if not sound:isPlaying() then
+			sound:setVolume(volume)
+			sound_list[#sound_list + 1] = sound
+		end
 	end
 
 	--- Stop all or list of playing sources / music.

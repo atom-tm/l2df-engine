@@ -16,7 +16,7 @@ local Resources = core.import 'manager.resource'
 
 local min = math.min
 local ceil = math.ceil
-local newQuad = love.graphics.newQuad
+local newQuad = core.api.data.quad
 
 local greenColor = { 0, 1, 0, 0.3 }
 local yellowColor = { 1, 1, 0, 0.5 }
@@ -207,11 +207,11 @@ local Render = Component:extend({ unique = true })
 
 		if not Resources:loadAsync(sprite.res, function (id, img)
 			local num = 0
+			local w, h = img:getDimensions()
 			for y = 1, sprite.y do
 				for x = 1, sprite.x do
 					num = num + 1
 					if (sprite.s <= num) and (num <= sprite.f) then
-						local w, h = img:getDimensions()
 						sprite.w = sprite.w or (w / sprite.x)
 						sprite.h = sprite.h or (h / sprite.y)
 						cdata.pics[sprite.ord + (num - sprite.s) + 1] = {
@@ -245,7 +245,7 @@ local Render = Component:extend({ unique = true })
 		local wdata = world and world.data()
 		local ground = world and world.borders.y1 or nil
 		local lights = data.lights
-		obj.data.layer = wdata and wdata.layer or data.layer
+		obj.data.layer = obj.data.layer or wdata and wdata.layer or data.layer
 		for i = 1, #lights do
 			local light = lights[i]
 			Renderer:addLight {

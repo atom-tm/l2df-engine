@@ -1,7 +1,7 @@
-bg/Arena
-bg/Hall
 dev/
 presets/*/**/l2df*
+presets/*/**/logs
+presets/*/**/replay
 *.sublime-*
 *.deproj
 *.deuser

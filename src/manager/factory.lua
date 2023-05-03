@@ -10,7 +10,6 @@ assert(type(core) == 'table' and core.version >= 1.0, 'FactoryManager works only
 local parser = core.import 'class.parser.lffs2'
 local helper = core.import 'helper'
 
-local fs = love and love.filesystem
 local requireFolder = helper.requireFolder
 local isArray = helper.isArray
 local copyTable = helper.copyTable

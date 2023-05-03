@@ -19,6 +19,28 @@ height: 550
     ratio: true
 [/graphics]
 
+[playonce]
+    stop_running
+    crouch
+    injured
+    falling
+    lying
+    catching
+    jump
+    defend
+    punch
+    super_punch
+    dash
+    rowing
+    run_attack
+    jump_attack
+    broken_defend
+    normal_weapon_atck
+    jump_weapon_atck
+    run_weapon_atck
+    dash_weapon_atck
+[/playonce]
+
 <layout> PlayerMobile
     [up] left: 92 bottom: 156 w: 64 h: 64
         <render> rect: fill color: 1 1 1 0.5 </render>

@@ -6,7 +6,9 @@
 
 l2df = require((...) .. '.core')
 
-local love = _G.love
+local function dummy() end
+
+local love = _G.love or { ismock = true }
 local math = _G.math
 local floor = math.floor
 
@@ -60,9 +62,10 @@ local core = l2df
 		EventManager:subscribe('beforepreupdate', SyncManager.persist, EventManager, SyncManager)
 		EventManager:subscribe('beforepreupdate', RenderManager.clear, EventManager, RenderManager)
 		EventManager:subscribe('beforepreupdate', InputManager.update, EventManager, InputManager)
+		EventManager:subscribe('update', PhysixManager.collide, EventManager, PhysixManager)
 		EventManager:subscribe('update', SoundManager.update, EventManager, SoundManager)
-		EventManager:subscribe('update', PhysixManager.update, EventManager, PhysixManager)
 		EventManager:subscribe('update', ResourceManager.update, EventManager, ResourceManager)
+		EventManager:subscribe('postupdate', PhysixManager.update, EventManager, PhysixManager)
 		EventManager:subscribe('postupdate', InputManager.advance, EventManager, InputManager)
 		EventManager:subscribe('postupdate', SyncManager.commit, EventManager, SyncManager)
 		EventManager:subscribe('postupdate', Recorder.update, EventManager, Recorder)
@@ -84,12 +87,14 @@ local core = l2df
 	--- Engine's game loop.
 	-- @return function
 	function core.gameloop()
-		if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
-		if love.timer then
-			math.randomseed(love.timer.getTime())
-			love.timer.step()
+		math.randomseed(core.api.time.now())
+		local load = core.load or love.load
+		local quit = core.quit or love.quit
+		if load then
+			load(love.ismock and arg or love.arg.parseGameArguments(arg), arg)
 		end
-
+		love.update = love.update or dummy
+		love.draw = love.draw or dummy
 		local tickrate = core.tickrate
 		local fps = 1 / tickrate
 		local accumulate = 0
@@ -98,21 +103,32 @@ local core = l2df
 		local diff = 0
 		local draw = false
 		local min = math.min
+		local sleep = core.api.time.sleep
+		local epump = core.api.event.pump
+		local epoll = core.api.event.poll
+		local gactive = core.api.render.active
+		local gorigin = core.api.render.origin
+		local gclear = core.api.render.clear
+		local gpresent = core.api.render.present
+		local gbackground = core.api.render.backgroundColor
+		local getDelta = core.api.time.delta; getDelta()
 		return function()
 			-- Events
-			love.event.pump()
-			for name, a, b, c, d, e, f in love.event.poll() do
+			epump()
+			for name, a, b, c, d, e, f in epoll() do
 				if name == "quit" then
-					if not love.quit or not love.quit() then
+					if not quit or not quit() then
 						return a or 0
 					end
 				end
 				love.handlers[name](a, b, c, d, e, f)
 			end
 
-			-- Network and rollbacks
+			-- Delta calculations
 			tickrate = core.tickrate
-			delta = (love.timer and love.timer.step() or tickrate)
+			delta = getDelta()
+
+			-- Network and rollbacks
 			NetworkManager:update(delta)
 			diff, throttle = SyncManager:sync(InputManager.frame)
 
@@ -126,15 +142,15 @@ local core = l2df
 			end
 
 			-- Draw
-			if (draw or not RenderManager.vsync) and love.graphics and love.graphics.isActive() then
-				love.graphics.origin()
-				love.graphics.clear(love.graphics.getBackgroundColor())
+			if (draw or not RenderManager.vsync) and gactive() then
+				gorigin()
+				gclear(gbackground())
 				love.draw()
-				love.graphics.present()
+				gpresent()
 			end
 
 			-- Throttle = tickrate - accumulate
-			if love.timer then love.timer.sleep(0.001) end
+			sleep(0.001)
 		end
 	end
 

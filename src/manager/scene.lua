@@ -125,7 +125,7 @@ local Manager = { root = Scene { active = true } }
 	function Manager:pop(...)
 		if #history == 0 then return false end
 		local scene = history[#history]
-		local _ = not scene:setActive(false) and scene.leave and scene:leave(...)
+		local _ = scene:setActive(false) and scene.leave and scene:leave(...)
 		history[#history] = nil
 		scene = history[#history]
 		return scene and scene:setActive(true) and scene.enable and scene:enable(...) or true

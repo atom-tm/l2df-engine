@@ -1,7 +1,34 @@
-<layer> GAME_LAYER
-	index: 0
-	camera: true
-</layer>
+<node:image> FRAME1 x: 0 y: 0
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME2 x: 244 y: 0
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME3 x: 488 y: 0
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME4 x: 732 y: 0
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME5 x: 0 y: 54
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME6 x: 244 y: 54
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME7 x: 488 y: 54
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
+
+<node:image> FRAME8 x: 732 y: 54
+	<sprite> "sprite/UI/FRAME.png" w: 244 h: 54 ox: 0 oy: 0 </sprite>
+</node:image>
 
 # <node:group> CONTROL x: 8 y: 584
 # 	<component> l2df.class.component.render </component>

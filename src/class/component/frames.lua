@@ -135,6 +135,9 @@ local Frames = Component:extend({ unique = true })
 		if nextFrame.keyword and not data.playonce[nextFrame.keyword] then
 			storage.map[nextFrame.keyword] = nextFrame.id
 		end
+		if data.played_sounds then
+			data.played_sounds = { }
+		end
 	end
 
 	--- Frames pre-update event handler.

@@ -2,7 +2,7 @@
 
 <!-- [![Build Status](https://travis-ci.org/atom-tm/l2df-engine.svg?branch=develop)](https://travis-ci.org/atom-tm/l2df-engine) -->
 
-Love2D Fighting Engine (`L2DF`) is a cross-platform game engine written in Lua.
+Lua2D Fighting Engine (`L2DF`) is a cross-platform game engine written in Lua.
 
 `L2DF` is a perfect solution for:
 
@@ -21,8 +21,7 @@ without any single line of code! It was achieved with a flexible architecture an
 with our XML/HTML like syntax. We're going to release our custom editor for these files, so you won't need to edit data
 files manually in text-format :)
 
-Right now `L2DF` uses [LÖVE](https://bitbucket.org/rude/love) as "backend" for rendering, input and other stuff, but we
-also have plans to support [CoronaSDK](https://github.com/coronalabs/corona) and [Luce](https://github.com/peersuasive/luce) in future.
+Right now `L2DF` uses [LÖVE](https://github.com/love2d/love) as "backend" for rendering, input and other stuff, but there are also plans to support [Solar2D](https://github.com/coronalabs/corona) and [Defold](https://github.com/defold/defold) in future.
 
 
 ## Features
@@ -38,12 +37,23 @@ also have plans to support [CoronaSDK](https://github.com/coronalabs/corona) and
 * "GGPO like" rollback networking instead of lockstep to make you feel an excellent netplay experience.
 
 
+## Documentation
+
+You can find it here: [https://atom-tm.github.io/l2df-engine](https://atom-tm.github.io/l2df-engine).
+
+It's still in-progress but already covers some basics of development with our engine.
+
+We are working hard on tutorials so take a look at it and if possible leave your feedback here at [issues](https://github.com/atom-tm/l2df-engine/issues) or on our [Discord server](https://discord.gg/PEM4P4ChMc).
+
+
 ## Installation
+
+Before you start take a look at [Introduction](https://atom-tm.github.io/l2df-engine/manual/01-introduction.md.html) section from our documentation as it covers some preparation steps if you are not familar with LÖVE ecosystem.
 
 1. Go to [releases](https://github.com/atom-tm/l2df-engine/releases) page
 2. Download one of packages in the latest available release:
 	- `l2df.lua` - if you want just to import engine into your game with `require 'l2df'`
-	- `demo-x.x.x.exe` - if you want just to test latest changes and features in Windows
+	- `demo-x.x.x.exe` - if you want just to test latest changes and features on Windows
 	- `demo-x.x.x.zip` - if you want to see / modificate a single full-featured example
 	- `Source code.zip` - everything is under your control, feel the full power of presets and modificate engine if you need it!
 
@@ -62,7 +72,7 @@ love.filesystem.setRequirePath('libs/?.lua;libs/?/init.lua;?.lua;?/init.lua')
 local l2df = require 'l2df'
 ```
 
-4. Initialize engine with default `init` function. It's not needed if you want to use only some parts of `L2DF`.
+4. Initialize engine with default `init` function. It's not needed if you only want to use some parts of `L2DF`.
 ```lua
 function love.load()
 	l2df:init()
@@ -78,13 +88,6 @@ end
 ```
 
 6. Now you are ready to start development!
-
-
-## Documentation
-
-You can find it here: [https://atom-tm.github.io/l2df-engine](https://atom-tm.github.io/l2df-engine).
-
-It's still in-progress but already covers some basics of development with our engine.
 
 
 ## License

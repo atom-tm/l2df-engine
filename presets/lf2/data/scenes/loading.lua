@@ -109,8 +109,9 @@ Room, RoomData = data.layout('layout/loading.dat')
 	data.bgdata = Storage()
 
 	function Room:enter()
+		log:debug 'Room: LOADING'
 		if cfg.debug and not log.file then
-			love.filesystem.createDirectory('logs')
+			core.api.io.mkdir('logs')
 			log.file = string.format('%s/%s.txt', core.savepath('logs'), os.date('%Y%m%d-%H%M%S'))
 		end
 		loader = coroutine.create(loading)

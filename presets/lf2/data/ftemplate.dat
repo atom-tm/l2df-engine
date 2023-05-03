@@ -2,13 +2,30 @@ name: "Template (F)"
 head: sprite/template2/face.png
 small: sprite/template2/s.png
 
-<sprite> sprite/template2/0.png  w: 79  h: 79  x: 10  y: 7 kx: 1 ky: 1 </sprite>
-<sprite> sprite/template2/1.png  w: 79  h: 79  x: 9  y: 7 kx: 1 ky: 1 </sprite>
+<sprite> sprite/template2/0.png  w: 79  h: 79  x: 10  y: 7  kx: 1  ky: 1 </sprite>
+<sprite> sprite/template2/1.png  w: 79  h: 79  x: 10  y: 7  kx: 1  ky: 1 </sprite>
+
+<sound> punch data/sounds/001.wav </sound>
+<sound> block data/sounds/002.wav </sound>
+<sound> super_punch data/sounds/006.wav </sound>
+<sound> drop data/sounds/016.wav </sound>
+<sound> bounce data/sounds/016.wav </sound>
+
+<sound> data\003.wav data/sounds/003.wav </sound>
+<sound> data\004.wav data/sounds/004.wav </sound>
+<sound> data\007.wav data/sounds/007.wav </sound>
+<sound> data\008.wav data/sounds/008.wav </sound>
+<sound> data\009.wav data/sounds/009.wav </sound>
+<sound> data\012.wav data/sounds/012.wav </sound>
+<sound> data\014.wav data/sounds/014.wav </sound>
+<sound> data\015.wav data/sounds/015.wav </sound>
+<sound> data\017.wav data/sounds/017.wav </sound>
+<sound> data\042.wav data/sounds/042.wav </sound>
 
 walking_frame_rate: 3
 walking_speed: 4.000000
 walking_speedz: 2.000000
-running_frame_rate: 3
+running_frame_rate: 4
 running_speed: 8.000000
 running_speedz: 1.300000
 heavy_walking_speed: 3.000000
@@ -26,14 +43,15 @@ rowing_distance: 5.000000
 
 frame: 0
 gravity: true
+shadow: true
 <constate> compatibility </constate>
 
 <frame> 0 standing
    pic: 0   wait: 3  next: 1  centerx: 39  centery: 79
    <state> 0 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 29  y: 56  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -41,9 +59,9 @@ gravity: true
 <frame> 1 standing
    pic: 1   wait: 3  next: 2  centerx: 39  centery: 79
    <state> 0 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 29  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -51,9 +69,9 @@ gravity: true
 <frame> 2 standing
    pic: 2   wait: 3  next: 3  centerx: 39  centery: 79
    <state> 0 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 29  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -61,9 +79,9 @@ gravity: true
 <frame> 3 standing
    pic: 3   wait: 3  next: 999  centerx: 39  centery: 79
    <state> 0 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 28  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -76,9 +94,9 @@ gravity: true
       kind: 1  x: 40  y: 16  w: 25  h: 65  
       catchingact: 120 120  caughtact: 130 130  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 26  y: 54  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -90,9 +108,9 @@ gravity: true
       kind: 1  x: 40  y: 16  w: 25  h: 65  
       catchingact: 120 120  caughtact: 130 130  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 30  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -104,9 +122,9 @@ gravity: true
       kind: 1  x: 40  y: 16  w: 25  h: 65  
       catchingact: 120 120  caughtact: 130 130  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 32  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -118,9 +136,9 @@ gravity: true
       kind: 1  x: 40  y: 16  w: 25  h: 65  
       catchingact: 120 120  caughtact: 130 130  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 34  y: 55  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -128,10 +146,10 @@ gravity: true
 <frame> 9 running
    pic: 10   wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-  sound: data\003.wav 
-   <wpoint>
+  <sound> data\003.wav </sound>
+   [wpoint]
       kind: 1  x: 56  y: 52  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 34  y: 19  w: 26  h: 26
    </body>
@@ -142,9 +160,9 @@ gravity: true
 <frame> 10 running
    pic: 11   wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 41  y: 57  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 34  y: 19  w: 26  h: 26
    </body>
@@ -155,10 +173,10 @@ gravity: true
 <frame> 11 running
    pic: 12   wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-  sound: data\004.wav 
-   <wpoint>
+  <sound> data\004.wav </sound>
+   [wpoint]
       kind: 1  x: 30  y: 53  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 34  y: 19  w: 26  h: 26
    </body>
@@ -169,9 +187,9 @@ gravity: true
 <frame> 12 heavy_obj_walk
    pic: 100  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 1 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 39  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -179,9 +197,9 @@ gravity: true
 <frame> 13 heavy_obj_walk
    pic: 101  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 1 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 40  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -189,9 +207,9 @@ gravity: true
 <frame> 14 heavy_obj_walk
    pic: 102  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 1 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 39  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -199,9 +217,9 @@ gravity: true
 <frame> 15 heavy_obj_walk
    pic: 103  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 1 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 39  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -209,10 +227,10 @@ gravity: true
 <frame> 16 heavy_obj_run
    pic: 104  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-  sound: data\003.wav 
-   <wpoint>
+  <sound> data\003.wav </sound>
+   [wpoint]
       kind: 1  x: 41  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -220,9 +238,9 @@ gravity: true
 <frame> 17 heavy_obj_run
    pic: 105  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 42  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -230,10 +248,10 @@ gravity: true
 <frame> 18 heavy_obj_run
    pic: 106  wait: 3  next: 0  centerx: 39  centery: 79
    <state> 2 </state>
-  sound: data\004.wav 
-   <wpoint>
+  <sound> data\004.wav </sound>
+   [wpoint]
       kind: 1  x: 44  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -241,10 +259,10 @@ gravity: true
 <frame> 19 heavy_stop_run
    pic: 107  wait: 7  next: 999  dvx: 2  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\009.wav 
-   <wpoint>
+  <sound> data\009.wav </sound>
+   [wpoint]
       kind: 1  x: 39  y: 23  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -252,9 +270,9 @@ gravity: true
 <frame> 20 normal_weapon_atck
    pic: 70  wait: 1  next: 21  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 28  y: 39  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -262,10 +280,10 @@ gravity: true
 <frame> 21 normal_weapon_atck
    pic: 71  wait: 1  next: 22  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 31  y: 28  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -273,9 +291,9 @@ gravity: true
 <frame> 22 normal_weapon_atck
    pic: 72  wait: 1  next: 23  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 74  y: 49  weaponact: 23  attacking: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -283,9 +301,9 @@ gravity: true
 <frame> 23 normal_weapon_atck
    pic: 73  wait: 1  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 70  y: 53  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -294,9 +312,9 @@ gravity: true
 <frame> 25 normal_weapon_atck
    pic: 80  wait: 1  next: 26  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 45  y: 34  weaponact: 32 cover: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -304,10 +322,10 @@ gravity: true
 <frame> 26 normal_weapon_atck
    pic: 81  wait: 1  next: 27  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 64  y: 35  weaponact: 33 cover: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -315,9 +333,9 @@ gravity: true
 <frame> 27 normal_weapon_atck
    pic: 82  wait: 1  next: 28  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 64  y: 48  weaponact: 24  attacking: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -325,9 +343,9 @@ gravity: true
 <frame> 28 normal_weapon_atck
    pic: 83   wait: 1  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 27  y: 51  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -336,9 +354,9 @@ gravity: true
 <frame> 30 jump_weapon_atck
    pic: 74   wait: 2  next: 31  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 20  y: 33  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -346,10 +364,10 @@ gravity: true
 <frame> 31 jump_weapon_atck
    pic: 75   wait: 2  next: 32  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 22  y: 27  weaponact: 20  attacking: 2
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -357,9 +375,9 @@ gravity: true
 <frame> 32 jump_weapon_atck
    pic: 76   wait: 3  next: 33  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 66  y: 45  weaponact: 23
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 32  y: 8  w: 26  h: 66
    </body>
@@ -367,9 +385,9 @@ gravity: true
 <frame> 33 jump_weapon_atck
    pic: 77   wait: 4  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 62  y: 48  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 32  y: 8  w: 26  h: 66
    </body>
@@ -378,9 +396,9 @@ gravity: true
 <frame> 35 run_weapon_atck
    pic: 90  wait: 5  next: 36  dvx: 6  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 45  y: 34  weaponact: 32 cover: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -388,10 +406,10 @@ gravity: true
 <frame> 36 run_weapon_atck
    pic: 91  wait: 5  next: 37  dvx: 4  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 64  y: 48  weaponact: 24  attacking: 3
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -399,9 +417,9 @@ gravity: true
 <frame> 37 run_weapon_atck
    pic: 92  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 27  y: 51  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -410,9 +428,9 @@ gravity: true
 <frame> 40 dash_weapon_atck
    pic: 84  wait: 3  next: 41  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 20  y: 33  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -420,10 +438,10 @@ gravity: true
 <frame> 41 dash_weapon_atck
    pic: 85  wait: 2  next: 42  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 24  y: 26  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -431,9 +449,9 @@ gravity: true
 <frame> 42 dash_weapon_atck
    pic: 86  wait: 3  next: 43  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 58  y: 42  weaponact: 23  attacking: 4
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 32  y: 8  w: 26  h: 66
    </body>
@@ -441,9 +459,9 @@ gravity: true
 <frame> 43 dash_weapon_atck
    pic: 87  wait: 4  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 52  y: 46  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 32  y: 8  w: 26  h: 66
    </body>
@@ -452,9 +470,9 @@ gravity: true
 <frame> 45 light_weapon_thw
    pic: 94  wait: 6  next: 46  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 24  y: 55  weaponact: 23
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -462,10 +480,10 @@ gravity: true
 <frame> 46 light_weapon_thw
    pic: 95  wait: 1  next: 47  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 23  y: 53  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 13  w: 26  h: 66
    </body>
@@ -473,9 +491,9 @@ gravity: true
 <frame> 47 light_weapon_thw
    pic: 96  wait: 9  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 102  y: 60  weaponact: 35  attacking: 0  cover: 0  dvx: 14  dvy: -4  dvz: 3 
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 36  y: 13  w: 26  h: 66
    </body>
@@ -484,9 +502,9 @@ gravity: true
 <frame> 50 heavy_weapon_thw
    pic: 108  wait: 6  next: 51  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 38  y: 22  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 17  w: 26  h: 62
    </body>
@@ -494,10 +512,10 @@ gravity: true
 <frame> 51 heavy_weapon_thw
    pic: 109  wait: 10  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\007.wav 
-   <wpoint>
+  <sound> data\007.wav </sound>
+   [wpoint]
       kind: 1  x: 93  y: 37  weaponact: 10  attacking: 0  cover: 0  dvx: 8  dvy: -4  dvz: 2 
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 39  y: 22  w: 23  h: 33
    </body>
@@ -508,9 +526,9 @@ gravity: true
 <frame> 52 sky_lgt_wp_thw
    pic: 97  wait: 6  next: 53  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 26  y: 34  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -518,10 +536,10 @@ gravity: true
 <frame> 53 sky_lgt_wp_thw
    pic: 98  wait: 1  next: 54  dvy: -2  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\008.wav 
-   <wpoint>
+  <sound> data\008.wav </sound>
+   [wpoint]
       kind: 1  x: 17  y: 33  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 8  w: 26  h: 66
    </body>
@@ -529,9 +547,9 @@ gravity: true
 <frame> 54 sky_lgt_wp_thw
    pic: 99  wait: 9  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 67  y: 56  weaponact: 23  attacking: 0  cover: 0  dvx: 12  dvy: 8  dvz: 3 
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 35  y: 13  w: 23  h: 36
    </body>
@@ -542,10 +560,10 @@ gravity: true
 <frame> 55 weapon_drink
    pic: 38  wait: 3  next: 56  centerx: 39  centery: 79  hit_d: 999
    <state> 17 </state>
-  sound: data\042.wav 
-   <wpoint>
+  <sound> data\042.wav </sound>
+   [wpoint]
       kind: 1  x: 55  y: 26  weaponact: 31
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 16  w: 24  h: 63
    </body>
@@ -553,9 +571,9 @@ gravity: true
 <frame> 56 weapon_drink
    pic: 39  wait: 3  next: 57  centerx: 39  centery: 79  hit_d: 999
    <state> 17 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 55  y: 25  weaponact: 31
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 16  w: 24  h: 63
    </body>
@@ -563,9 +581,9 @@ gravity: true
 <frame> 57 weapon_drink
    pic: 48  wait: 3  next: 58  centerx: 39  centery: 79  hit_d: 999
    <state> 17 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 55  y: 25  weaponact: 31
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 16  w: 24  h: 63
    </body>
@@ -573,9 +591,9 @@ gravity: true
 <frame> 58 weapon_drink
    pic: 39  wait: 3  next: 55  centerx: 39  centery: 79  hit_d: 999
    <state> 17 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 55  y: 26  weaponact: 31
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 16  w: 24  h: 63
    </body>
@@ -594,7 +612,7 @@ gravity: true
 <frame> 61 punch
    pic: 111  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <itr>
       kind: 0  x: 23  y: 30  w: 56  h: 21  dvx: 2  bdefend: 16  injury: 20  
    </itr>
@@ -616,7 +634,7 @@ gravity: true
 <frame> 66 punch
    pic: 113  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <itr>
       kind: 0  x: 34  y: 31  w: 44  h: 21  dvx: 2  bdefend: 16  injury: 20  
    </itr>
@@ -642,7 +660,7 @@ gravity: true
 <frame> 72 super_punch
    pic: 122   wait: 4  next: 999  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <itr>
       kind: 0  x: 33  y: -0  w: 41  h: 69  dvx: 5  dvy: -12  fall: 70  arest: 15  bdefend: 60  injury: 50  
    </itr>
@@ -654,7 +672,7 @@ gravity: true
 <frame> 80 jump_attack
    pic: 118  wait: 2  next: 81  centerx: 39  centery: 79
    <state> 3 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <body>
       kind: 0  x: 33  y: 15  w: 24  h: 59
    </body>
@@ -680,7 +698,7 @@ gravity: true
 <frame> 86 run_attack
    pic: 126   wait: 5  next: 87  dvx: 4  centerx: 24  centery: 79
    <state> 3 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <itr>
       kind: 0  x: 24  y: 35  w: 58  h: 22  dvx: 10  fall: 70  arest: 15  bdefend: 16  injury: 50  
    </itr>
@@ -712,7 +730,7 @@ gravity: true
 <frame> 91 dash_attack
    pic: 129  wait: 20  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\007.wav 
+  <sound> data\007.wav </sound>
    <itr>
       kind: 0  x: 37  y: 46  w: 38  h: 22  dvx: 12  fall: 70  arest: 20  bdefend: 60  injury: 70  
    </itr>
@@ -721,21 +739,21 @@ gravity: true
    </body>
 </frame>
 
-<frame> 100 rowing
+<frame> 100 #rowing
    pic: 37  wait: 2  next: 101  centerx: 39  centery: 79
    <state> 6 </state>
-  sound: data\017.wav 
+  <sound> data\017.wav </sound>
 </frame>
-<frame> 101 rowing
+<frame> 101 #rowing
    pic: 36  wait: 6  next: 0  centerx: 39  centery: 79
    <state> 6 </state>
 </frame>
 <frame> 102 rowing
    pic: 14  wait: 2  next: 103  dvx: 7  centerx: 39  centery: 79
    <state> 6 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 45  y: 71  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <itr>
       kind: 7  x: 36  y: 54  w: 13  h: 25  vrest: 1  
    </itr>
@@ -743,9 +761,9 @@ gravity: true
 <frame> 103 rowing
    pic: 15  wait: 2  next: 104  dvx: 7  centerx: 39  centery: 79
    <state> 6 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 31  y: 50  weaponact: 31
-   </wpoint>
+   [/wpoint]
    <itr>
       kind: 7  x: 36  y: 54  w: 13  h: 25  vrest: 1  
    </itr>
@@ -753,9 +771,9 @@ gravity: true
 <frame> 104 rowing
    pic: 16  wait: 2  next: 105  dvx: 7  centerx: 39  centery: 79
    <state> 6 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 19  y: 58  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <itr>
       kind: 7  x: 36  y: 54  w: 13  h: 25  vrest: 1  
    </itr>
@@ -763,9 +781,9 @@ gravity: true
 <frame> 105 rowing
    pic: 14  wait: 2  next: 219  dvx: 7  centerx: 39  centery: 79
    <state> 6 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 45  y: 71  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <itr>
       kind: 7  x: 36  y: 54  w: 13  h: 25  vrest: 1  
    </itr>
@@ -774,7 +792,7 @@ gravity: true
 <frame> 108 rowing
    pic: 46  wait: 3  next: 109  centerx: 39  centery: 79
    <state> 6 </state>
-  sound: data\017.wav 
+  <sound> data\017.wav </sound>
 </frame>
 <frame> 109 rowing
    pic: 47  wait: 6  next: 0  centerx: 39  centery: 79
@@ -783,9 +801,9 @@ gravity: true
 <frame> 110 defend
    pic: 57  wait: 12  next: 999  centerx: 39  centery: 79
    <state> 7 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 53  y: 32  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 28  y: 18  w: 30  h: 61
    </body>
@@ -793,9 +811,9 @@ gravity: true
 <frame> 111 defend
    pic: 58  wait: 0  next: 110  centerx: 39  centery: 79
    <state> 7 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 51  y: 33  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 28  y: 18  w: 30  h: 61
    </body>
@@ -806,9 +824,9 @@ gravity: true
    <itr>
       kind: 6  x: -9  y: 16  w: 85  h: 65  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 45  y: 29  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 28  y: 18  w: 30  h: 61
    </body>
@@ -819,9 +837,9 @@ gravity: true
    <itr>
       kind: 6  x: -9  y: 16  w: 85  h: 65  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 27  y: 37  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -832,9 +850,9 @@ gravity: true
    <itr>
       kind: 6  x: -9  y: 16  w: 85  h: 65  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 20  y: 54  weaponact: 35
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 32  h: 63
    </body>
@@ -842,10 +860,10 @@ gravity: true
 <frame> 115 picking_light
    pic: 78  wait: 5  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\009.wav 
-   <wpoint>
+  <sound> data\009.wav </sound>
+   [wpoint]
       kind: 1  x: 40  y: 76  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 25  y: 27  w: 25  h: 52
    </body>
@@ -853,10 +871,10 @@ gravity: true
 <frame> 116 picking_heavy
    pic: 88  wait: 5  next: 117  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\009.wav 
-   <wpoint>
+  <sound> data\009.wav </sound>
+   [wpoint]
       kind: 1  x: 42  y: 79  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 25  y: 27  w: 25  h: 52
    </body>
@@ -864,9 +882,9 @@ gravity: true
 <frame> 117 picking_heavy
    pic: 89  wait: 5  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 42  y: 66  weaponact: 10
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 25  y: 27  w: 25  h: 52
    </body>
@@ -875,14 +893,14 @@ gravity: true
 <frame> 120 catching
    pic: 114   wait: 5  next: 121  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 9 </state>
-  sound: data\015.wav 
-   <cpoint>
+  <sound> data\015.wav </sound>
+   [cpoint]
       kind: 1  x: 62  y: 37
       vaction: 131  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 7 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 56  y: 36  weaponact: 33
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 35  y: 19  w: 23  h: 60
    </body>
@@ -890,13 +908,13 @@ gravity: true
 <frame> 121 catching
    pic: 115   wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 9 </state>
-   <cpoint>
+   [cpoint]
       kind: 1  x: 57  y: 37
       vaction: 130  aaction: 122  taction: -232  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: -7 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 56  y: 34  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 29  y: 19  w: 23  h: 60
    </body>
@@ -904,13 +922,13 @@ gravity: true
 <frame> 122 catching
    pic: 116   wait: 5  next: 123  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 9 </state>
-   <cpoint>
+   [cpoint]
       kind: 1  x: 56  y: 35
       vaction: 130  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 7 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 54  y: 33  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 29  y: 19  w: 23  h: 60
    </body>
@@ -918,14 +936,14 @@ gravity: true
 <frame> 123 catching
    pic: 117   wait: 3  next: 121  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 9 </state>
-  sound: data\014.wav 
-   <cpoint>
+  <sound> data\014.wav </sound>
+   [cpoint]
       kind: 1  x: 60  y: 34
       injury: 15  vaction: 132  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 3 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 58  y: 32  weaponact: 34
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 31  y: 19  w: 23  h: 60
    </body>
@@ -934,10 +952,10 @@ gravity: true
 <frame> 130 picked_caught
    pic: 50   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 42  y: 36
       fronthurtact: 132 backhurtact: 131 
-   </cpoint>
+   [/cpoint]
    <body>
       kind: 0  x: 20  y: 14  w: 30  h: 24
    </body>
@@ -948,10 +966,10 @@ gravity: true
 <frame> 131 picked_caught
    pic: 51   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 42  y: 36
       fronthurtact: 132 backhurtact: 132 
-   </cpoint>
+   [/cpoint]
    <body>
       kind: 0  x: 17  y: 13  w: 29  h: 25
    </body>
@@ -962,10 +980,10 @@ gravity: true
 <frame> 132 picked_caught
    pic: 52   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 42  y: 36
       fronthurtact: 131 backhurtact: 131 
-   </cpoint>
+   [/cpoint]
    <body>
       kind: 0  x: 16  y: 15  w: 26  h: 31
    </body>
@@ -976,86 +994,86 @@ gravity: true
 <frame> 133 picked_caught
    pic: 30   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 33  y: 36
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 134 picked_caught
    pic: 31   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 37  y: 28
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 135 picked_caught
    pic: 32   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 31  y: 22
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 136 picked_caught
    pic: 33   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 27  y: 46
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 137 picked_caught
    pic: 34   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 72
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 33  y: 68
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 138 picked_caught
    pic: 35   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 34  y: 54
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 139 picked_caught
    pic: 40   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 40  y: 36
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 140 picked_caught
    pic: 41   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 36  y: 38
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 141 picked_caught
    pic: 42   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 44  y: 40
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 142 picked_caught
    pic: 43   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 46  y: 51
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 143 picked_caught
    pic: 44   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 75
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 45  y: 66
-   </cpoint>
+   [/cpoint]
 </frame>
 <frame> 144 picked_caught
    pic: 45   wait: 3  next: 0  dvx: 0  dvy: 0  centerx: 39  centery: 79
    <state> 10 </state>
-   <cpoint>
+   [cpoint]
       kind: 2  x: 42  y: 55
-   </cpoint>
+   [/cpoint]
 </frame>
 
 <frame> 180 falling
@@ -1170,9 +1188,9 @@ gravity: true
 <frame> 200 ice
    pic: 8  wait: 2  next: 201  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 27  y: 56  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 10  y: 9  w: 55  h: 68
    </body>
@@ -1180,9 +1198,9 @@ gravity: true
 <frame> 201 ice
    pic: 9  wait: 90  next: 202  centerx: 39  centery: 79
    <state> 13 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 32  y: 52  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 8  y: 6  w: 67  h: 73
    </body>
@@ -1193,9 +1211,9 @@ gravity: true
 <frame> 202 ice
    pic: 8  wait: 1  next: 182  dvx: -4  dvy: -3  centerx: 39  centery: 79
    <state> 15 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 27  y: 56  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 8  y: 6  w: 67  h: 73
    </body>
@@ -1203,9 +1221,9 @@ gravity: true
 <frame> 203 fire
    pic: 18  wait: 1  next: 204  centerx: 39  centery: 79
    <state> 18 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 44  y: 29  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 22  y: 35  w: 26  h: 19
    </body>
@@ -1217,9 +1235,9 @@ gravity: true
 <frame> 204 fire
    pic: 19  wait: 1  next: 203  centerx: 39  centery: 79
    <state> 18 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 44  y: 29  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 22  y: 35  w: 26  h: 19
    </body>
@@ -1231,9 +1249,9 @@ gravity: true
 <frame> 205 fire
    pic: 28  wait: 1  next: 206  centerx: 39  centery: 79
    <state> 18 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 53  y: 39  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 22  y: 35  w: 26  h: 19
    </body>
@@ -1245,9 +1263,9 @@ gravity: true
 <frame> 206 fire
    pic: 29  wait: 1  next: 205  centerx: 39  centery: 79
    <state> 18 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 53  y: 39  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 22  y: 35  w: 26  h: 19
    </body>
@@ -1260,9 +1278,9 @@ gravity: true
 <frame> 210 jump
    pic: 20   wait: 1  next: 211  centerx: 39  centery: 79
    <state> 4 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 37  y: 63  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 28  y: 27  w: 25  h: 52
    </body>
@@ -1270,10 +1288,10 @@ gravity: true
 <frame> 211 jump
    pic: 21   wait: 1  next: 212  centerx: 39  centery: 79
    <state> 4 </state>
-  sound: data\017.wav 
-   <wpoint>
+  <sound> data\017.wav </sound>
+   [wpoint]
       kind: 1  x: 37  y: 63  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 28  y: 27  w: 25  h: 52
    </body>
@@ -1281,9 +1299,9 @@ gravity: true
 <frame> 212 jump
    pic: 22   wait: 1  next: 0  centerx: 39  centery: 79
    <state> 4 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 28  y: 52  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 10  w: 25  h: 63
    </body>
@@ -1291,9 +1309,9 @@ gravity: true
 <frame> 213 dash
    pic: 23   wait: 8  next: 216  centerx: 39  centery: 79
    <state> 5 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 22  y: 49  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 35  y: 14  w: 22  h: 36
    </body>
@@ -1304,9 +1322,9 @@ gravity: true
 <frame> 214 dash
    pic: 25  wait: 8  next: 217  centerx: 39  centery: 79
    <state> 5 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 29  y: 52  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 12  w: 24  h: 43
    </body>
@@ -1317,10 +1335,10 @@ gravity: true
 <frame> 215 crouch
    pic: 17   wait: 2  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\012.wav 
-   <wpoint>
+  <sound> data\012.wav </sound>
+   [wpoint]
       kind: 1  x: 34  y: 63  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 25  y: 27  w: 25  h: 52
    </body>
@@ -1328,9 +1346,9 @@ gravity: true
 <frame> 216 dash
    pic: 24  wait: 2  next: 0  centerx: 39  centery: 79
    <state> 5 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 30  y: 50  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 30  y: 13  w: 26  h: 56
    </body>
@@ -1338,9 +1356,9 @@ gravity: true
 <frame> 217 dash
    pic: 26  wait: 2  next: 0  centerx: 39  centery: 79
    <state> 5 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 26  y: 50  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 10  w: 23  h: 42
    </body>
@@ -1351,10 +1369,10 @@ gravity: true
 <frame> 218 stop_running
    pic: 13  wait: 5  next: 999  dvx: 1  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\009.wav 
-   <wpoint>
+  <sound> data\009.wav </sound>
+   [wpoint]
       kind: 1  x: 21  y: 60  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 18  y: 20  w: 24  h: 41
    </body>
@@ -1365,10 +1383,10 @@ gravity: true
 <frame> 219 crouch2
    pic: 17   wait: 2  next: 999  centerx: 39  centery: 79
    <state> 15 </state>
-  sound: data\012.wav 
-   <wpoint>
+  <sound> data\012.wav </sound>
+   [wpoint]
       kind: 1  x: 34  y: 63  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 25  y: 27  w: 25  h: 52
    </body>
@@ -1376,9 +1394,9 @@ gravity: true
 <frame> 220 injured
    pic: 63  wait: 2  next: 221  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 37  y: 55  weaponact: 20
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 20  w: 26  h: 59
    </body>
@@ -1386,9 +1404,9 @@ gravity: true
 <frame> 221 injured
    pic: 62  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 32  y: 58  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 20  w: 26  h: 59
    </body>
@@ -1396,9 +1414,9 @@ gravity: true
 <frame> 222 injured
    pic: 65  wait: 2  next: 223  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 22  y: 60  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1406,9 +1424,9 @@ gravity: true
 <frame> 223 injured
    pic: 64  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 20  y: 58  weaponact: 25
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1416,9 +1434,9 @@ gravity: true
 <frame> 224 injured
    pic: 61  wait: 2  next: 225  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 24  y: 58  weaponact: 23
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 20  w: 26  h: 59
    </body>
@@ -1426,9 +1444,9 @@ gravity: true
 <frame> 225 injured
    pic: 60  wait: 3  next: 999  centerx: 39  centery: 79
    <state> 11 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 23  y: 61  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 24  y: 16  w: 26  h: 63
    </body>
@@ -1439,9 +1457,9 @@ gravity: true
    <itr>
       kind: 6  x: 6  y: 12  w: 85  h: 68  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 32  y: 58  weaponact: 22
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1452,9 +1470,9 @@ gravity: true
    <itr>
       kind: 6  x: 6  y: 12  w: 85  h: 68  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 34  y: 57  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1465,9 +1483,9 @@ gravity: true
    <itr>
       kind: 6  x: 6  y: 12  w: 85  h: 68  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 35  y: 54  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1478,9 +1496,9 @@ gravity: true
    <itr>
       kind: 6  x: 6  y: 12  w: 85  h: 68  vrest: 1  
    </itr>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 34  y: 57  weaponact: 21
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 26  y: 23  w: 26  h: 56
    </body>
@@ -1496,13 +1514,13 @@ gravity: true
 <frame> 232 throw_lying_man
    pic: 108  wait: 7  next: 233  centerx: 39  centery: 79
    <state> 9 </state>
-   <cpoint>
+   [cpoint]
       kind: 1  x: 28  y: 9
       vaction: 135  throwvz: -842150451  throwinjury: -842150451 dircontrol: 1 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 26  y: 23  weaponact: 24
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 23  y: 17  w: 26  h: 62
    </body>
@@ -1510,14 +1528,14 @@ gravity: true
 <frame> 233 throw_lying_man
    pic: 109  wait: 1  next: 234  centerx: 39  centery: 79
    <state> 9 </state>
-  sound: data\007.wav 
-   <cpoint>
+  <sound> data\007.wav </sound>
+   [cpoint]
       kind: 1  x: 72  y: 53
       vaction: 181  throwvx: 13  throwvy: -7  throwvz: 3  throwinjury: 30 
-   </cpoint>
-   <wpoint>
+   [/cpoint]
+   [wpoint]
       kind: 1  x: 60  y: 52  weaponact: 24 cover: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 39  y: 22  w: 23  h: 33
    </body>
@@ -1528,13 +1546,26 @@ gravity: true
 <frame> 234 throw_lying_man
    pic: 109  wait: 10  next: 999  centerx: 39  centery: 79
    <state> 9 </state>
-   <wpoint>
+   [wpoint]
       kind: 1  x: 60  y: 52  weaponact: 24 cover: 1
-   </wpoint>
+   [/wpoint]
    <body>
       kind: 0  x: 39  y: 22  w: 23  h: 33
    </body>
    <body>
       kind: 0  x: 25  y: 52  w: 26  h: 27
+   </body>
+</frame>
+<frame> 2012 running
+   pic: 11   wait: 3  next: 9  centerx: 39  centery: 79
+   <state> 2 </state>
+   [wpoint]
+      kind: 1  x: 41  y: 57  weaponact: 21
+   [/wpoint]
+   <body>
+      kind: 0  x: 34  y: 19  w: 26  h: 26
+   </body>
+   <body>
+      kind: 0  x: 24  y: 45  w: 26  h: 34
    </body>
 </frame>

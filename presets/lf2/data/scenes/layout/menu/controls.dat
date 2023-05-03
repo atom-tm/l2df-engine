@@ -1,42 +1,40 @@
-<layer> CONTROLS_LAYER index: 2 background: 16 32 108 100 </layer>
-
-<node:image> BACKGROUND x: 150 y: 140 layer: CONTROLS_LAYER
+<node:image> BACKGROUND x: 150 y: 140 layer: SUBMENU_LAYER
 	<sprite> "sprite/UI/MENU_CLIP2.png" w: 704 h: 353 ox: 0 oy: 0 </sprite>
 </node:image>
 
 <node:group> CONTROLS
 	x: 512 y: 460
 	<node:button> BTN_OK x: 0
-		<state:animation> layer: CONTROLS_LAYER
+		<state:animation> layer: SUBMENU_LAYER
 			<sprite> "sprite/UI/MENU_CLIP.png" w: 150 h: 25 ox: 489 oy: 426 </sprite>
 			<frame> 1 idle
 				pic: 0 next: 1 wait: 1
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 			<frame> 2 hover
 				pic: 1 next: 2 wait: 1
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 			<frame> 3 click
 				pic: 1 next: 1 wait: 10
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 		</state:animation>
 	</node:button>
-	<node:button> BTN_CANCEL x: 176
-		<state:animation> layer: CONTROLS_LAYER
+	<node:button> BTN_CANCEL x: 172
+		<state:animation> layer: SUBMENU_LAYER
 			<sprite> "sprite/UI/MENU_CLIP.png" w: 150 h: 25 ox: 643 oy: 426 </sprite>
 			<frame> 1 idle
 				pic: 0 next: 1 wait: 1
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 			<frame> 2 hover
 				pic: 1 next: 2 wait: 1
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 			<frame> 3 click
 				pic: 1 next: 1 wait: 10
-				<body> x: 0 y: 1 w: 145 h: 26 z: 1 d: 1 </body>
+				<body> x: 0 y: 1 w: 150 h: 25 z: 1 d: 1 </body>
 			</frame>
 		</state:animation>
 	</node:button>

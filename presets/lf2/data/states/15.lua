@@ -1,3 +1,3 @@
+--- Misc state. Used for weapon throw, dash attack, running stop and other frames.
 return function (obj, data)
-	data.dvx = l2df:convert(data.dvx * data.facing)
 end

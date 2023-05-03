@@ -13,7 +13,7 @@ local assert = _G.assert
 local tostring = _G.tostring
 local strmatch = string.match
 local fopen = io.open
-local fs = love and love.filesystem
+local fs = core.api.io
 
 local Parser = Class:extend()
 
