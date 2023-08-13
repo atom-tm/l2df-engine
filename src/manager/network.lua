@@ -48,8 +48,9 @@ local SEP = 29
 local PENDING = -1
 local RELAY_WAIT_TIME = 1
 local RELAY_MAX_COUNT = 10
-local RELAY_CLIENT_ATTEMPTS = 5
-local RELAY_MASTER_ATTEMPTS = 8
+local PUNCH_ATTEMPTS = 5
+local RELAY_CLIENT_ATTEMPTS = PUNCH_ATTEMPTS + 2
+local RELAY_MASTER_ATTEMPTS = RELAY_CLIENT_ATTEMPTS + 2
 local MIN_PEER_TIMEOUT = 2000
 local MAX_PEER_TIMEOUT = 4000
 local NETRECORD_PATTERN = '([^' .. strchar(SEP) .. ']+)'
@@ -93,7 +94,7 @@ local function setClient(id, name, client)
 end
 
 local function discoverIP()
-	local udp = socket.udp()
+	local udp = socket.udp4()
 	if not udp:setpeername('www.google.com', 80) then
 		log:error('Discovering IP has failed')
 		udp:close()
@@ -115,7 +116,7 @@ local function Relay_newRequest(client)
 	client.cstate = 'relay-requesting'
 	client.ping_overhead = 1e12
 	client.channel = 0
-	client.attempts = 2
+	client.attempts = PUNCH_ATTEMPTS
 	relay_timer = RELAY_WAIT_TIME
 	pending_relays[client.name] = client
 end
@@ -291,7 +292,7 @@ local MasterEvents = {
 			return
 		end
 		client.attempts = 0
-		client.public, client.private, client.port = public, private, port
+		client.public, client.private, client.port, client.port2 = public, private, port, port
 		setClient(client:id()) -- Removing unnecessary
 		client.peer = sock:connect(e1, RELAY_MAX_COUNT + 1)
 		client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
@@ -356,8 +357,8 @@ local Manager = { ip = '127.0.0.1' }
 	-- @param string kwargs.username
 	-- @param[opt=1] number kwargs.relay_wait_time
 	-- @param[opt=10] number kwargs.relay_max_count
-	-- @param[opt=5] number kwargs.relay_client_attempts
-	-- @param[opt=8] number kwargs.relay_master_attempts
+	-- @param[opt=2] number kwargs.relay_client_attempts
+	-- @param[opt=2] number kwargs.relay_master_attempts
 	-- @param[opt=2000] number kwargs.min_peer_timeout
 	-- @param[opt=4000] number kwargs.max_peer_timeout
 	-- @return l2df.manager.network
@@ -365,8 +366,10 @@ local Manager = { ip = '127.0.0.1' }
 		kwargs = kwargs or { }
 		RELAY_WAIT_TIME = kwargs.relay_wait_time or RELAY_WAIT_TIME
 		RELAY_MAX_COUNT = kwargs.relay_max_count or RELAY_MAX_COUNT
-		RELAY_CLIENT_ATTEMPTS = kwargs.relay_client_attempts or RELAY_CLIENT_ATTEMPTS
-		RELAY_MASTER_ATTEMPTS = kwargs.relay_master_attempts or RELAY_MASTER_ATTEMPTS
+		RELAY_CLIENT_ATTEMPTS =
+			PUNCH_ATTEMPTS + (kwargs.relay_client_attempts or (RELAY_CLIENT_ATTEMPTS - PUNCH_ATTEMPTS))
+		RELAY_MASTER_ATTEMPTS =
+			RELAY_CLIENT_ATTEMPTS + (kwargs.relay_master_attempts or (RELAY_MASTER_ATTEMPTS - RELAY_CLIENT_ATTEMPTS))
 		MIN_PEER_TIMEOUT = kwargs.min_peer_timeout or MIN_PEER_TIMEOUT
 		MAX_PEER_TIMEOUT = kwargs.max_peer_timeout or MAX_PEER_TIMEOUT
 		self.username = kwargs.username or self.username
@@ -429,7 +432,7 @@ local Manager = { ip = '127.0.0.1' }
 		return self
 	end
 
-	--- Login to all registered masters and discover your public IP
+	--- Login to all registered masters and discover your local IP
 	-- @param[opt] string username
 	-- @return l2df.manager.network
 	function Manager:login(username)
@@ -636,14 +639,25 @@ local Manager = { ip = '127.0.0.1' }
 			elseif event.type == 'disconnect' then
 				-- Failed to connect via public
 				-- TODO: add UPnP
-				if client.attempts == 0 and client.private then
+				if client.attempts < PUNCH_ATTEMPTS and client.port2 then
+					local ip, port, msg = client.public, client.port, nil
+					if client.attempts == 0 and client.private then
+						msg = 'Connecting in local network'
+						ip = client.private
+					else
+						msg = 'Punching symmetric NAT'
+						if (self.ip < client.public) == (client.attempts % 2 == 0) then
+							port = client.port2 + 1
+							client.port2 = port
+						end
+					end
 					clients[eid] = nil
-					endpoint = strformat('%s:%s', client.private, client.port)
+					endpoint = strformat('%s:%s', ip, port)
 					client.peer = sock:connect(endpoint, RELAY_MAX_COUNT + 1)
 					client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
-					client.attempts = 1
+					client.attempts = client.attempts + 1
 					eid = client:id()
-					log:info('Connecting in local network %s', client.name or eid)
+					log:info('%s %s[%s]', msg, client.name or eid, endpoint)
 					clients[eid] = client
 
 				-- Symmetric NAT, firewall and etc: use relay
