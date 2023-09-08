@@ -27,7 +27,7 @@ pre {
 }
 
 /* DC-CODE */
-.dc-code {
+.dc-code, .lffs {
     border: 1px solid #cccccc;
     padding: 7px; margin: 15px 9px;
     font-size: 12px;
@@ -41,6 +41,12 @@ pre {
 
     .tags {
         color: #EB7309;
+    }
+
+    .tag-type {
+        color: #2C5AAF;
+        // color: #09EB73;
+        font-weight: bold;
     }
 
     .tag-num {
@@ -106,6 +112,7 @@ pre {
     }
 
     .comment2 {
+        display: inline-block;
         color: #666666;
     }
 }

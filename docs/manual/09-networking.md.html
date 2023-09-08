@@ -120,13 +120,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><strong>Networking</strong></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -237,19 +237,19 @@ Read more about that <a href="https://love2d.org/wiki/lua-enet">here</a> for adv
 <p>It works as simple as it is:</p>
 
 <ol>
-    <li><p>Player connects to master and sends its username.</p></li>
-    <li><p>Master registers user, so now others can find him by username.</p></li>
-    <li><p>Player wants to find another player / his lobby and sends his username:</p>
+    <li>Player connects to master and sends its username.</li>
+    <li>Master registers user, so now others can find him by username.</li>
+    <li>Player wants to find another player / his lobby and sends his username:
     <ul>
         <li>if noone was found add this player to it's own lobby;</li>
         <li>if someone was found then join his lobby = connect to each user in the lobby (peer-to-peer);</li>
         <li>if everything is like in the previous variant, but current user is already connected to lobby then he should
         leave lobby first = disconnect from all clients (internally master sends <code>FLUSH</code> event for doing that).</li>
     </ul></li>
-    <li><p>In lobby users can wait for other players or start game immediately - depends on your implementation / preset.</p></li>
-    <li><p>If somebody disconnects from master it will be removed from lobby BUT not from other peers. It's used to not overload
-    master-servers and "localize" lobbies after game startups - so nobody else can connect after game starts.</p></li>
-    <li><p>If the last user in lobby disconnects master'll destroy this lobby.</p></li>
+    <li>In lobby users can wait for other players or start game immediately - depends on your implementation / preset.</li>
+    <li>If somebody disconnects from master it will be removed from lobby BUT not from other peers. It's used to not overload
+    master-servers and "localize" lobbies after game startups - so nobody else can connect after game starts.</li>
+    <li>If the last user in lobby disconnects master'll destroy this lobby.</li>
 </ol>
 
 <p>We support multiple master-server at the same time so you can create "mirrors", "fallbacks", "public and private" and
@@ -472,7 +472,6 @@ persist entity's state for future rollbacks.</p>
     </ul></li>
 </ol>
 
-
 <p>Now we want to cover only the last section about rollback netcode.</p>
 
 
@@ -489,7 +488,6 @@ persist entity's state for future rollbacks.</p>
         <li>interupt game session.</li>
     </ul></li>
 </ol>
-
 
 <p>Later we will provide your examples of situations when there're could be desync and explain how to avoid it.</p>
 
@@ -508,7 +506,7 @@ persist entity's state for future rollbacks.</p>
 
 
   <div id="about" class="about">
-    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
   </div> <!-- about -->
 
   </div> <!-- content -->

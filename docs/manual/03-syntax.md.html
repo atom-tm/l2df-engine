@@ -104,9 +104,11 @@
 
       <h2>Contents</h2>
       <ul>
+        <li><a href="#Syntax_definition">Syntax definition </a></li>
+        <li><a href="#LF2_data_code_comparison">LF2 data code comparison </a></li>
         <li><a href="#Frame_example">Frame example </a></li>
         <li><a href="#Scene_example">Scene example </a></li>
-        <li><a href="#Dat_files">Dat files </a></li>
+        <li><a href="#Dat_files__span_class__label__deprecated__span_">Dat files <span class="label">deprecated</span> </a></li>
         <li><a href="#Write_your_own_parser">Write your own parser </a></li>
       </ul>
 
@@ -116,13 +118,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><strong>Syntax</strong></li>
+        <li><strong>Data syntax</strong></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -192,18 +194,117 @@
   <div class="content" id="content">
 
 
-<h1>Syntax</h1>
+<h1>Data syntax</h1>
 
-<p>See <a href="../classes/l2df.class.parser.lffs.html#">LFFParser</a>.</p>
+<p>L2DF uses its own XML-like syntax named LFFS. The reasons for that are:
+1. It's more flexible for our needs and has some specific features for ease-of-use.
+2. DC-code familar coders may find it really powerful and can dive into it really fast.
+3. It is easy to extend.</p>
+
+<p>See <a href="../classes/l2df.class.parser.lffs2.html#">LffsParser</a> for advanced use.</p>
+
+
+<p><a name="Syntax_definition"></a></p>
+<h2>Syntax definition</h2>
+
+<p>In general the whole LFFS-file consists of two types of blocks and properties.
+Also there are support for one-line comments via <code>#</code> symbol at the beginning.</p>
+
+<h4>Object block</h4>
+
+
+<pre class="lffs">
+[name:type] argument1 argument2 argument3 # there are can be any number of arguments
+  # there are goes other properties and blocks
+[/name:type] # name:type in the closing tag is optional
+</pre>
+
+
+<ul>
+    <li><code>name</code> is any string consisting of latin characters, <code>_</code> underscore and numbers without whitespaces;</li>
+    <li><code>type</code> is optional and is used to determine factory-specific type for <a href="../classes/l2df.manager.factory.html#Manager:create">object creation</a> from this data code.</li>
+    <li><code>argumentN</code> can be string, number or float. These arguments will be added in array-space of the created object (Lua <a href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a>).</li>
+</ul>
+
+<p>This block will create new object block inside parent block at specified by <code>name</code> key.</p>
+
+<h4>Array block</h4>
+
+
+<pre class="lffs">
+&lt;name:type&gt; argument1 argument2 argument3 # there are can be any number of arguments
+  # there are goes other properties and blocks
+&lt;/name:type&gt; # name:type in the closing tag is optional
+</pre>
+
+
+<p><code>name</code>, <code>type</code> and arguments are same as in object block.
+The difference between this and object blocks is that this will create an array of objects inside parent block at
+pluralized (!) by <code>name</code> key. By pluralization we mean this type of convertion:</p>
+
+<ul>
+    <li><code>tiger</code> &xrarr; <code>tigers</code></li>
+    <li><code>class</code> &xrarr; <code>classes</code></li>
+</ul>
+
+<p>So all array blocks with the same <code>name</code> are combined together in one array at parent's object inside pluralized <code>name</code> key!</p>
+
+<h4>Properties</h4>
+
+
+<pre class="lffs">
+property_name: string
+also_string_property: "in quotes to support whitespaces"
+number: 1000
+float: 9.8
+array_of_numbers: 1 2 3 4 # will create an array of 4 number elements
+mixed_types_array: string1 108.002 "quoted string" # array of 3 elements with mixed types
+
+[car]
+    manufacturer: "Nissan" mileage: 822
+    speed: 53.5 # m / h
+[/car]
+</pre>
+
+
+<p>Properties could be either inside or outside blocks.</p>
+
+<p>Just to clarify the understanding the whole content of the LFFS file are one anonymous object block.
+So if you're writing property outside any block you may think of it as writing in global anonymous block.</p>
+
+
+<p><a name="LF2_data_code_comparison"></a></p>
+<h2>LF2 data code comparison</h2>
+
+<h4>Characters</h4>
+
+<ol>
+    <li><code>bmp_begin / bmp_end</code> tags were removed (but their content is still remain)</li>
+    <li>All data-keys from <code>bmp_begin / bmp_end</code> without ":" symbol should now have it</li>
+    <li>*.bmp files should be replaced with *.png</li>
+    <li>It is better to start frames from 1, not 0</li>
+    <li><code>file(0-100):</code> &xrarr; &lt;sprite&gt;</li>
+    <li>Inside file property <code>row</code> &xrarr; x</li>
+    <li>Inside file property <code>col</code> &xrarr; y</li>
+    <li>&lt;frame_end&gt; &xrarr; &lt;/frame&gt;</li>
+    <li>&lt;frame&gt; 1 <code>--&gt;</code> <strong>name</strong> <code>&lt;--</code> should be empty for non-cycling animations except the first one frame use them correctly for name-based animation indexing</li>
+    <li>Inside frame <code>wpoint:</code> &xrarr; &lt;wpoint&gt;</li>
+    <li>Inside frame <code>bdy:</code> &xrarr; &lt;body&gt;</li>
+    <li>Inside frame <code>itr:</code> &xrarr; &lt;itr&gt;</li>
+    <li>Inside frame <code>state:</code> X &xrarr; &lt;state&gt; X &lt;/state&gt;</li>
+    <li>Inside frame <code>cpoint:</code> &xrarr; &lt;cpoint&gt;</li>
+    <li>Backslash '' should be replaced with forward slash '/' for all path-containing properties</li>
+</ol>
+
 
 <p><a name="Frame_example"></a></p>
 <h2>Frame example</h2>
 
 
-<pre class="dc-code">
+<pre class="lffs">
 &lt;frame&gt; 1 test
-  pic: 10 wait: 5 next: 999
-  state: 4050 hit_a: 330 mp: 55
+  pic: 10 wait: 5 next: 999 hit_a: 330 mp: 55
+  &lt;state&gt; 4050 &lt;/state&gt;
 &lt;/frame&gt;
 </pre>
 
@@ -213,26 +314,27 @@
 <h2>Scene example</h2>
 
 
-<pre class="dc-code">
-&lt;scene&gt;
-    &lt;image&gt;
-        sprites: { res: "resources/sprites/UI/CS0.png" w: 1280 h: 720 }
+<pre class="lffs">
+&lt;node:scene&gt;
+    &lt;node:image&gt;
+        &lt;sprite&gt; "resources/sprites/UI/CS0.png" w: 1280 h: 720 &lt;/sprite&gt;
         scaleX: 0.5 scaleY: 0.5
-    &lt;/image&gt;
-    &lt;object&gt;
-        body: { x: 0 y: 0 z: 0 w: 1024 h: 32 l: 1024 }
+    &lt;/node:image&gt;
+    &lt;node:object&gt;
+        &lt;body&gt; x: 0 y: 0 z: 0 w: 1024 h: 32 l: 1024 &lt;/body&gt;
         static: true
-    &lt;/object&gt;
-    &lt;object&gt;
-        body: { x: 0 y: -1024 z: 0 w: 1024 h: 1184 l: 170 }
+    &lt;/node:object&gt;
+    &lt;node:object&gt;
+        &lt;body&gt; x: 0 y: -1024 z: 0 w: 1024 h: 1184 l: 170 &lt;/body&gt;
         static: true
-    &lt;/object&gt;<br/>&lt;/scene&gt;</pre>
+    &lt;/node:object&gt;
+&lt;/node:scene&gt;
+</pre>
 
 
 
-
-<p><a name="Dat_files"></a></p>
-<h2>Dat files</h2>
+<p><a name="Dat_files__span_class__label__deprecated__span_"></a></p>
+<h2>Dat files <span class="label">deprecated</span></h2>
 
 <p>See <a href="../classes/l2df.class.parser.dat.html#">DatParser</a>.</p>
 
@@ -258,7 +360,7 @@
 
 
   <div id="about" class="about">
-    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
   </div> <!-- about -->
 
   </div> <!-- content -->

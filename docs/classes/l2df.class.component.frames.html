@@ -174,13 +174,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -193,7 +193,7 @@
     <div class="module-header">
       <h1>Class <code>l2df.class.component.frames</code>
       </h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
     </div>
     <p>Frames component.</p>
     <p> Inherited from <a href="../classes/l2df.class.component.html#">l2df.class.Component</a> class.</p>
@@ -231,7 +231,7 @@
         <td class="summary">Change current frame.</td>
       </tr>
       <tr>
-        <td class="name" nowrap><a href="#Frames:preupdate">Frames:preupdate(obj, dt)</a></td>
+        <td class="name" nowrap><a href="#Frames:preupdate">Frames:preupdate(obj)</a></td>
         <td class="summary">Frames pre-update event handler.</td>
       </tr>
     </table>
@@ -435,7 +435,7 @@
       </dd>
         <dt>
           <a class="atom-anchor" name="Frames:preupdate"></a>
-          <strong>Frames:preupdate(obj, dt)</strong>
+          <strong>Frames:preupdate(obj)</strong>
 
         <dd>
           Frames pre-update event handler.
@@ -447,11 +447,6 @@
                   <span class="parameter">obj</span>
                   <span class="types"><a class="type" href="../classes/l2df.class.entity.html#">l2df.class.entity</a></span>
                     Entity's instance.
-                </li>
-                <li>
-                  <span class="parameter">dt</span>
-                  <span class="types"><span class="type">number</span></span>
-                    Delta-time since last game tick.
                 </li>
         </ul>
 

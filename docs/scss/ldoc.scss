@@ -392,6 +392,10 @@ ol ol { margin-top: 0px; }
     font-weight: bold;
     background: #EEF1F5;
     font-size: 18px;
+
+    &.range {
+        width: 120px;
+    }
 }
 
 /* INFO-Table */
@@ -403,7 +407,7 @@ ol ol { margin-top: 0px; }
     border-spacing: 0px;
 
     th {
-        background: #385E97;
+        background: #97183E;
         color: #eee;
         text-align: left;
         padding: 7px 10px;
@@ -411,24 +415,24 @@ ol ol { margin-top: 0px; }
     }
 
     td {
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid rgba(0, 0, 0, 0.06);
         padding: 5px 10px;
     }
 
     .info-table-desc {
         font-size: 12px;
         text-align: center;
-        background: #6485B2;
+        background: #B22445;
         color: #f5f5f5;
     }
 }
 
 .text-block {
-    border: 1px solid #cccccc;
     padding: 9px; margin: 15px 9px;
     font-size: 16px;
-    background: #fbfbff;
     color: #111111;
+    // background: #fbfbff;
+    // border: 1px solid #cccccc;
 }
 
 
