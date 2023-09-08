@@ -172,13 +172,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -191,7 +191,7 @@
     <div class="module-header">
       <h1>Module <code>l2df</code>
       </h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
     </div>
     <p>L2DF engine.</p>
     <p>
@@ -211,8 +211,16 @@
     <h2><a href="#Functions">Functions</a></h2>
     <table class="function_list">
       <tr>
-        <td class="name" nowrap><a href="#core:init">core:init(fps)</a></td>
+        <td class="name" nowrap><a href="#core:init">core:init([kwargs])</a></td>
         <td class="summary">Engine's standart entry point.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#core:speedup">core:speedup(value)</a></td>
+        <td class="summary">Tweak simulation speed.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#core:convert">core:convert(value)</a></td>
+        <td class="summary">Convert</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#core.gameloop">core.gameloop()</a></td>
@@ -230,7 +238,7 @@
       <dl class="function">
         <dt>
           <a class="atom-anchor" name="core:init"></a>
-          <strong>core:init(fps)</strong>
+          <strong>core:init([kwargs])</strong>
 
         <dd>
           Engine's standart entry point.
@@ -238,8 +246,82 @@
 
           <h3>Parameters:</h3>
           <ul>
+            <li>
+              <span class="parameter">kwargs</span>
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+              <ul>
                 <li>
                   <span class="parameter">fps</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>default</em> 60)
+                </li>
+                <li>
+                  <span class="parameter">datafps</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>default</em> 30)
+                </li>
+                <li>
+                  <span class="parameter">speed</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>default</em> 30)
+                </li>
+              </ul>
+            </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="core:speedup"></a>
+          <strong>core:speedup(value)</strong>
+
+        <dd>
+          Tweak simulation speed.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">value</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="core:convert"></a>
+          <strong>core:convert(value)</strong>
+
+        <dd>
+          Convert
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">value</span>
                   <span class="types"><span class="type">number</span></span>
 
 

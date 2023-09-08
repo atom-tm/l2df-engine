@@ -105,8 +105,8 @@
       <h2>Contents</h2>
       <ul>
         <li><a href="#Features">Features </a></li>
-        <li><a href="#Installation">Installation </a></li>
         <li><a href="#Documentation">Documentation </a></li>
+        <li><a href="#Installation">Installation </a></li>
         <li><a href="#License">License </a></li>
         <li><a href="#Contributing">Contributing </a></li>
       </ul>
@@ -117,13 +117,13 @@
         <li><strong>About L2DF</strong></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -199,7 +199,7 @@
 <!-- [![Build Status](https://travis-ci.org/atom-tm/l2df-engine.svg?branch=develop)](https://travis-ci.org/atom-tm/l2df-engine) -->
 
 
-<p>Love2D Fighting Engine (<code>L2DF</code>) is a cross-platform game engine written in Lua.</p>
+<p>Lua2D Fighting Engine (<code>L2DF</code>) is a cross-platform game engine written in Lua.</p>
 
 <p><code>L2DF</code> is a perfect solution for:</p>
 
@@ -220,8 +220,7 @@ without any single line of code! It was achieved with a flexible architecture an
 with our XML/HTML like syntax. We're going to release our custom editor for these files, so you won't need to edit data
 files manually in text-format :)</p>
 
-<p>Right now <code>L2DF</code> uses <a href="https://bitbucket.org/rude/love">LÖVE</a> as "backend" for rendering, input and other stuff, but we
-also have plans to support <a href="https://github.com/coronalabs/corona">CoronaSDK</a> and <a href="https://github.com/peersuasive/luce">Luce</a> in future.</p>
+<p>Right now <code>L2DF</code> uses <a href="https://github.com/love2d/love">LÖVE</a> as "backend" for rendering, input and other stuff, but there are also plans to support <a href="https://github.com/coronalabs/corona">Solar2D</a> and <a href="https://github.com/defold/defold">Defold</a> in future.</p>
 
 
 <p><a name="Features"></a></p>
@@ -240,8 +239,20 @@ also have plans to support <a href="https://github.com/coronalabs/corona">Corona
 </ul>
 
 
+<p><a name="Documentation"></a></p>
+<h2>Documentation</h2>
+
+<p>You can find it here: <a href="https://atom-tm.github.io/l2df-engine">https://atom-tm.github.io/l2df-engine</a>.</p>
+
+<p>It's still in-progress but already covers some basics of development with our engine.</p>
+
+<p>We are working hard on tutorials so take a look at it and if possible leave your feedback here at <a href="https://github.com/atom-tm/l2df-engine/issues">issues</a> or on our <a href="https://discord.gg/PEM4P4ChMc">Discord server</a>.</p>
+
+
 <p><a name="Installation"></a></p>
 <h2>Installation</h2>
+
+<p>Before you start take a look at <a href="https://atom-tm.github.io/l2df-engine/manual/01-introduction.md.html">Introduction</a> section from our documentation as it covers some preparation steps if you are not familar with LÖVE ecosystem.</p>
 
 <ol>
     <li><p>Go to <a href="https://github.com/atom-tm/l2df-engine/releases">releases</a> page</p></li>
@@ -249,7 +260,7 @@ also have plans to support <a href="https://github.com/coronalabs/corona">Corona
 
 <pre>
 - <span class="backtick">`l2df.lua`</span> - <span class="keyword">if</span> you want just to import engine into your game with <span class="backtick">`require 'l2df'`</span>
-- <span class="backtick">`demo-x.x.x.exe`</span> - <span class="keyword">if</span> you want just to test latest changes <span class="keyword">and</span> features <span class="keyword">in</span> Windows
+- <span class="backtick">`demo-x.x.x.exe`</span> - <span class="keyword">if</span> you want just to test latest changes <span class="keyword">and</span> features on Windows
 - <span class="backtick">`demo-x.x.x.zip`</span> - <span class="keyword">if</span> you want to see / modificate a single full-featured example
 - <span class="backtick">`Source code.zip`</span> - everything is under your control, feel the full power of presets <span class="keyword">and</span> modificate engine <span class="keyword">if</span> you need it!
 </pre>
@@ -270,7 +281,7 @@ also have plans to support <a href="https://github.com/coronalabs/corona">Corona
 <span class="keyword">local</span> l2df = <span class="global">require</span> <span class="string">'l2df'</span>
 </pre>
 </li>
-    <li><p>Initialize engine with default <code>init</code> function. It's not needed if you want to use only some parts of <code>L2DF</code>.</p>
+    <li><p>Initialize engine with default <code>init</code> function. It's not needed if you only want to use some parts of <code>L2DF</code>.</p>
 
 <pre>
 <span class="keyword">function</span> love.<span class="global">load</span>()
@@ -289,14 +300,6 @@ Else read <a href="https://atom-tm.github.io/l2df-engine">documentation</a> for 
 </li>
     <li><p>Now you are ready to start development!</p></li>
 </ol>
-
-
-<p><a name="Documentation"></a></p>
-<h2>Documentation</h2>
-
-<p>You can find it here: <a href="https://atom-tm.github.io/l2df-engine">https://atom-tm.github.io/l2df-engine</a>.</p>
-
-<p>It's still in-progress but already covers some basics of development with our engine.</p>
 
 
 <p><a name="License"></a></p>
@@ -342,7 +345,7 @@ bug fixes then dm one of the core developers in Discord to discuss the topic / y
 
 
   <div id="about" class="about">
-    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
   </div> <!-- about -->
 
   </div> <!-- content -->

@@ -1,47 +1,17 @@
-# States
+# Game logic (states)
 
-## Default states
+## States
 
-- 1-9       Стойка
-- 10-19     Ходьба
-- 20-29     Бег
-- 30-34     Остановка бега
-- 35-39     Подготовка к прыжку
-- 40-44     Jump вверх
-- 45-49     Jump вперед
-- 50-54     Jump назад
-- 55-59     Шуншин вверх
-- 60-64     Шуншин вверх вперед
-- 65-69     Шуншин вверх назад
-- 70-74     Шуншин вниз
-- 75-79     Приземление
-- 80-84     Падение (стойка в воздухе)
-- 85-89     Шуншин вперед
-- 90-94     Шуншин назад
-- 100-129   Сервис кадры
-- 130-139   Защитная стойка
-- 140-149   Боевая стойка
-- 150-299   Разные типы урона
-- 300-399   Разные типы ударов
+...
 
 
-## Attacks and damage types
+## Basic states
 
-```
-|- Обычный удар -
-|-> вперед
-
-|- Сильный удар -
-|-> вперед
-|-> вверх
-|-> вниз
-```
-
-## Shortcut description
+#### Shortcut description
 
 <div class="text-block">
 <table class="state-control" style="display: inline-block;">
-<tr><td class="state-control-desc state-num">Клавиша</td><td class="state-control-desc" style="text-align: left;">Действие</td></tr>
+<tr><td class="state-control-desc state-num">Key</td><td class="state-control-desc" style="text-align: left;">Action</td></tr>
 <tr><td class="state-num"><b>A</b></td><td style="text-align: left;">Press key "Attack"</td></tr>
 <tr><td class="state-num"><b>J</b></td><td style="text-align: left;">Press key "Jump"</td></tr>
 <tr><td class="state-num"><b>D</b></td><td style="text-align: left;">Press key "Defence"</td></tr>
@@ -50,11 +20,11 @@
 <tr><td class="state-num"><b>↓</b></td><td style="text-align: left;">Press key "Down"</td></tr>
 <tr><td class="state-num"><b>←</b></td><td style="text-align: left;">Press key "Back"</td></tr>
 <tr><td class="state-num"><b>→</b></td><td style="text-align: left;">Press key "Forward"</td></tr>
-<tr><td class="state-num"><b>⇄</b></td><td style="text-align: left;">Нажатие клавиш "Left" or "Right"</td></tr>
-<tr><td class="state-num"><b>✶</b></td><td style="text-align: left;">Нажатие клавиш "Left", "Right", "Up" or "Down"</td></tr>
+<tr><td class="state-num"><b>⇄</b></td><td style="text-align: left;">Press key "Left" or "Right"</td></tr>
+<tr><td class="state-num"><b>✶</b></td><td style="text-align: left;">Press key "Left", "Right", "Up" or "Down"</td></tr>
 </table>
 <table class="state-control" style="display: inline-block;">
-<tr><td class="state-control-desc state-num">Клавиша</td><td class="state-control-desc" style="text-align: left;">Действие</td></tr>
+<tr><td class="state-control-desc state-num">Key</td><td class="state-control-desc" style="text-align: left;">Action</td></tr>
 <tr><td class="state-num"><b>A+</b></td><td style="text-align: left;">Double key press "Attack"</td></tr>
 <tr><td class="state-num"><b>J+</b></td><td style="text-align: left;">Double key press "Jump"</td></tr>
 <tr><td class="state-num"><b>D+</b></td><td style="text-align: left;">Double key press "Defence"</td></tr>
@@ -67,7 +37,7 @@
 <tr><td class="state-num"><b>✶+</b></td><td style="text-align: left;">Double key press "Left", "Right", "Up" or "Down"</td></tr>
 </table>
 <table class="state-control" style="display: inline-block;">
-<tr><td class="state-control-desc state-num">Клавиша</td><td class="state-control-desc" style="text-align: left;">Действие</td></tr>
+<tr><td class="state-control-desc state-num">Key</td><td class="state-control-desc" style="text-align: left;">Action</td></tr>
 <tr><td class="state-num"><b>A*</b></td><td style="text-align: left;">Hold key "Attack"</td></tr>
 <tr><td class="state-num"><b>J*</b></td><td style="text-align: left;">Hold key "Jump"</td></tr>
 <tr><td class="state-num"><b>D*</b></td><td style="text-align: left;">Hold key "Defence"</td></tr>
@@ -83,38 +53,38 @@
 
 <table class="info-table">
 <tr>
-<th colspan="2">Basic states</th>
+<th colspan="2">@{02-presets.md.LF__preset|LF2 preset}</th>
 </tr>
-<tr><td class="info-table-desc">Номер стейта</td><td class="info-table-desc">Описание</td></tr>
+<tr><td class="info-table-desc">ID</td><td class="info-table-desc">Description</td></tr>
 <tr>
 <td class="state-num">0</td>
 <td class="state-desc">
-<b>Стойка</b><br>
-Персонаж находится в состоянии покоя. Ожидает действий игрока.
+<b>Standing</b><br>
+Idle character animation. Awaiting for player action.
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>✶*</b></td>
-<td>Ходьба</td>
+<td>Walking</td>
 </tr>
 <tr>
 <td><b>⇄+</b></td>
-<td>Бег</td>
+<td>Running</td>
 </tr>
 <tr>
 <td><b>A</b></td>
-<td>Боевая стойка</td>
+<td>Battle stance</td>
 </tr>
 <tr>
 <td><b>J</b></td>
-<td>Подготовка к прыжку</td>
+<td>Jump</td>
 </tr>
 <tr>
 <td><b>D</b></td>
-<td>Защитная стойка</td>
+<td>Defence</td>
 </tr>
 </table>
 При длительном нахождении в состоянии покоя, персонаж переходит в кадры "анимации".
@@ -123,12 +93,12 @@
 <tr>
 <td class="state-num">1</td>
 <td class="state-desc">
-<b>Ходьба</b><br>
+<b>Walking</b><br>
 Персонаж передвигается, последовательно изменяя спрайт ходьбы, согласно установленному счетчику. 
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>✶*</b></td>
@@ -156,12 +126,12 @@
 <tr>
 <td class="state-num">2</td>
 <td class="state-desc">
-<b>Бег</b><br>
+<b>Running</b><br>
 Персонаж передвигается бегом, последовательно изменяя спрайт бега, согласно установленному счетчику. При окончании удержания клавиш "продолжения бега" персонаж переходит в кадры "остановки бега".
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>⇄*</b></td>
@@ -190,8 +160,8 @@
 Персонаж приседает и готовится к прыжку.
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>→*</b></td>
@@ -220,7 +190,7 @@
 <tr>
 <td class="state-num">4</td>
 <td class="state-desc">
-<b>Jump вверх</b><br>
+<b>Jump</b><br>
 Персонаж приобретает положительную скорость, которая указывается в стейте переменными dvx,dvy,dvz и движется вверх, постепенно скорость уменьшается. При достижении нулевой скорости, персонаж переходит в кадры "стойки в воздухе" и начинает падение.<br>
 Если стартовая скорость выше определенного значения, вызывается эффект "jerk_up".
 </td>
@@ -232,8 +202,8 @@
 Персонаж находится в воздухе в состоянии свободного падения. При достижении земли, переходит в кадры "приземления", обнуляя скорость по оси Y.
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>A</b></td>
@@ -249,12 +219,12 @@
 <tr>
 <td class="state-num">6</td>
 <td class="state-desc">
-<b>Приземление</b><br>
+<b>Landing</b><br>
 Персонаж находится в состоянии отката после прыжка.
 <table class="state-control">
 <tr>
-<td class="state-control-desc">Клавиша</td>
-<td class="state-control-desc">Переход</td>
+<td class="state-control-desc">Key</td>
+<td class="state-control-desc">Transition</td>
 </tr>
 <tr>
 <td><b>S→*</b></td>
@@ -275,98 +245,7 @@
 <tr>
 <td class="state-num">0</td>
 <td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
-<br> При нажатии клавиш направления переходит в кадры ходьбы.
-<br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
-<br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
-<br> При нажатии прыжка переходит в кадр 210.
-<br> При нажатии блока переходит в кадр 110.
-<br> Если находится в воздухе, переходит в кадр 212.
-</td>
-</tr>
-<tr>
-<tr>
-<td class="state-num">0</td>
-<td class="state-desc">
-<b>Стойка</b>
+<b>Standing</b>
 <br> При нажатии клавиш направления переходит в кадры ходьбы.
 <br> При двойном нажатии клавиш вправо \ влево переходит в кадры бега.
 <br> При нажатии атаки переходит в кадр 60 or 65 (выбирается случайно).
@@ -379,7 +258,7 @@
 <td class="state-num">1</td>
 <td class="state-desc">
 
-<b>Ходьба</b>
+<b>Walking</b>
 <br> При удержании клавиш направления персонаж движется, циклично повторяя кадры, отведённые под ходьбу.
 <br> Если клавиши направления отпущены, персонаж переходит в кадр 0.
 <br> Переходы по нажатию атаки \ прыжка \ блока, аналогично стойке.
@@ -388,7 +267,7 @@
 <tr>
 <td class="state-num">2</td>
 <td class="state-desc">
-<b>Бег</b>
+<b>Running</b>
 <br> Цикличное проигрывание кадров бега.
 <br> При нажатии клавиши, противоположной направлению бега происходит переход в кадр 218.
 <br> Возможность перемежения по оси Z клавишами вверх \ вниз.
@@ -401,27 +280,11 @@
 <td class="state-num">3</td>
 <td class="state-desc">Эффект</td>
 </tr>
-<tr>
-<td class="state-num">3</td>
-<td class="state-desc">Эффект</td>
-</tr>
-<tr>
-<td class="state-num">3</td>
-<td class="state-desc">Эффект</td>
-</tr>
-<tr>
-<td class="state-num">3</td>
-<td class="state-desc">Эффект</td>
-</tr>
-<tr>
-<td class="state-num">3</td>
-<td class="state-desc">Эффект</td>
-</tr>
 </table>
 
 <table class="info-table">
 <tr>
-<th colspan="2">[PDK] Стейты</th>
+<th colspan="2">PDK</th>
 </tr>
 <tr>
 <td class="state-num">20 | 21</td>
@@ -511,7 +374,7 @@ pic: 25 state: 6090 hit_a: 110 wait: 5 next: 101
 
 <table class="info-table">
 <tr>
-<th colspan="2">[Neora] Стейты</th>
+<th colspan="2">Neora</th>
 </tr>
 <tr>
 <td class="state-num">30 | 31</td>
@@ -560,7 +423,7 @@ pic: 25 state: 6090 hit_a: 110 wait: 5 next: 101
 
 <table class="info-table">
 <tr>
-<th colspan="2">[Neora-Atom] Стейты</th>
+<th colspan="2">Neora-Atom</th>
 </tr>
 <tr>
 <td class="state-num">0</td>

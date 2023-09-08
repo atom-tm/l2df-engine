@@ -174,13 +174,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -193,7 +193,7 @@
     <div class="module-header">
       <h1>Class <code>l2df.manager.render</code>
       </h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
     </div>
     <p>Render manager.</p>
     <p>
@@ -219,6 +219,10 @@
       <tr>
         <td class="name" nowrap><a href="#Manager:resize">Manager:resize(width, height)</a></td>
         <td class="summary">Resizes screen with specified width and height.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:getScaleInfo">Manager:getScaleInfo()</a></td>
+        <td class="summary">Returns scale and offset information after <a href="../classes/l2df.manager.render.html#Manager:resize">resize</a>.</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:setResolution">Manager:setResolution(width, height, depth)</a></td>
@@ -447,6 +451,39 @@
 
       </dd>
         <dt>
+          <a class="atom-anchor" name="Manager:getScaleInfo"></a>
+          <strong>Manager:getScaleInfo()</strong>
+
+        <dd>
+          Returns scale and offset information after <a href="../classes/l2df.manager.render.html#Manager:resize">resize</a>.
+
+
+
+        <h3>Returns:</h3>
+          <ol>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+              scale_x
+            </li>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+              scale_y
+            </li>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+              offset_x
+            </li>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+              offset_y
+            </li>
+          </ol>
+
+
+
+
+      </dd>
+        <dt>
           <a class="atom-anchor" name="Manager:setResolution"></a>
           <strong>Manager:setResolution(width, height, depth)</strong>
 
@@ -549,6 +586,13 @@
                   <span class="parameter">camera</span>
                   <span class="types"><span class="type">boolean</span></span>
                     True if layer should create its own camera. False otherwise.
+                  (<em>default</em> false)
+                </li>
+                <li>
+                  <span class="parameter">forced</span>
+                  <span class="types"><span class="type">boolean</span></span>
+                    True if layer should be drawn even if there are not rendered objects.
+ False otherwise.
                   (<em>default</em> false)
                 </li>
               </ul>

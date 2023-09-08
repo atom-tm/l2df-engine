@@ -116,13 +116,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><strong>Presets</strong></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -197,15 +197,15 @@
 <p><a name="What_is__preset__"></a></p>
 <h2>What is "preset"?</h2>
 
-<p>Presets provides you a bunch of already implemented tools, game logic and mechanics to rapidly start your development!
-It's like examples but more powerful since can just take it and start implementing your own mod / game with minimum / without
+<p>Presets provide you a bunch of already implemented tools, game logic and mechanics to rapidly start your development.
+It's like examples but more powerful since you can just take it and start implementing your own mod / game with minimum / without
 programming!</p>
 
 
 <p><a name="Well__how_can_I_use_them_"></a></p>
 <h2>Well, how can I use them?</h2>
 
-<p>If you've downloaded L2DF's source code you can find them in <code>l2df-engine/presets/</code>.</p>
+<p>If you've downloaded L2DF's source code you can find them in <code>/path/to/l2df-engine/presets/</code>.</p>
 
 <p>There're instructions below how to get working each preset.</p>
 
@@ -214,11 +214,11 @@ programming!</p>
 <h2>LF2 preset</h2>
 
 <ol>
-    <li><p>Copy <code>l2df-engine/presets/lf2</code> folder to another location (where you want to work with it).</p></li>
-    <li><p>Create <code>libs</code> directory inside your copy if it doesn't exist.</p></li>
-    <li><p>Do any of these steps:</p>
+    <li>Copy <code>l2df-engine/presets/lf2</code> folder to another location (where you want to work with it).</li>
+    <li>Create <code>libs</code> directory inside your copy if it doesn't exist.</li>
+    <li>Do any of these steps:
     <ul>
-        <li>copy <code>l2df.lua</code> distributed all-in-one engine version to <code>libs/l2df.lua</code>;</li>
+        <li>copy <code>l2df.lua</code> distributed <a href="https://github.com/atom-tm/l2df-engine/releases">all-in-one engine version</a> to <code>libs/l2df.lua</code>;</li>
         <li>copy <code>l2df-engine/src</code> to <code>libs/l2df/</code> (rename <code>src</code> to <code>l2df</code>);</li>
         <li>* make symbolic link <code>libs/l2df</code> pointing to <code>l2df-engine/src</code>:
         <ul>
@@ -226,10 +226,11 @@ programming!</p>
             <li>Linux / Mac: <code>ln -s libs/l2df path/to/l2df-engine/src</code></li>
         </ul></li>
     </ul></li>
-    <li><p><a href="../manual/01-introduction.md.html#How_to_start_projects">Run</a> your preset's copy with LÖVE.</p></li>
+    <li><a href="../manual/01-introduction.md.html#How_to_start_projects">Run</a> your preset's copy with LÖVE.</li>
 </ol>
 
 <p>* Use this method only for development since it's not working when you'll try to "zip" / build your project.</p>
+
 
 <p><a name="MUGEN_preset"></a></p>
 <h2>MUGEN preset</h2>
@@ -238,7 +239,7 @@ programming!</p>
 
 
   <div id="about" class="about">
-    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+    <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
   </div> <!-- about -->
 
   </div> <!-- content -->

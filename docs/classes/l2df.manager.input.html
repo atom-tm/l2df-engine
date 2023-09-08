@@ -172,13 +172,13 @@
         <li><a href="../manual/readme.md.html">About L2DF</a></li>
         <li><a href="../manual/01-introduction.md.html">Introduction</a></li>
         <li><a href="../manual/02-presets.md.html">Presets</a></li>
-        <li><a href="../manual/03-syntax.md.html">Syntax</a></li>
+        <li><a href="../manual/03-syntax.md.html">Data syntax</a></li>
         <li><a href="../manual/04-managers.md.html">Managers</a></li>
         <li><a href="../manual/05-ecs.md.html">Entity-Component system</a></li>
         <li><a href="../manual/06-ui.md.html">User Interface</a></li>
-        <li><a href="../manual/07-frames.md.html">Frames</a></li>
-        <li><a href="../manual/07-states.md.html">States</a></li>
-        <li><a href="../manual/08-itr-body-kinds.md.html">Itrs, bodies and kinds</a></li>
+        <li><a href="../manual/07-frames.md.html">Animation (frames)</a></li>
+        <li><a href="../manual/07-states.md.html">Game logic (states)</a></li>
+        <li><a href="../manual/08-itr-body-kinds.md.html">Collision detection (kinds)</a></li>
         <li><a href="../manual/09-networking.md.html">Networking</a></li>
         <li><a href="../manual/10-masters-protocol.md.html">Master-servers' protocol</a></li>
       </ul>
@@ -191,7 +191,7 @@
     <div class="module-header">
       <h1>Class <code>l2df.manager.input</code>
       </h1>
-      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-05-28 15:24:22</span>
+      <span class="meta"><i class="far fa-clock"></i> Last updated 2021-07-14 04:04:51</span>
     </div>
     <p>Input manager.</p>
     <p> Controls all available input sources and converts them to internal representation for unified use.</p>
@@ -222,7 +222,7 @@
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:update">Manager:update()</a></td>
-        <td class="summary">Update inputs.</td>
+        <td class="summary">Update inputs and render UI for mobile.</td>
       </tr>
       <tr>
         <td class="name" nowrap><a href="#Manager:newRemotePlayer">Manager:newRemotePlayer()</a></td>
@@ -288,6 +288,30 @@
         <td class="name" nowrap><a href="#Manager:keyreleased">Manager:keyreleased(key)</a></td>
         <td class="summary">Hook for love.keyreleased.</td>
       </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:mousepressed">Manager:mousepressed(x, y, btn, istouch)</a></td>
+        <td class="summary">Hook for love.mousepressed.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:mousereleased">Manager:mousereleased(x, y, btn, istouch)</a></td>
+        <td class="summary">Hook for love.mousereleased.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:mousemoved">Manager:mousemoved(x, y, dx, dy, istouch)</a></td>
+        <td class="summary">Hook for love.mousemoved.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:touchpressed">Manager:touchpressed(id, x, y, dx, dy, pressure)</a></td>
+        <td class="summary">Hook for love.touchpressed.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:touchreleased">Manager:touchreleased(id, x, y, dx, dy, pressure)</a></td>
+        <td class="summary">Hook for love.touchreleased.</td>
+      </tr>
+      <tr>
+        <td class="name" nowrap><a href="#Manager:touchmoved">Manager:touchmoved(id, x, y, dx, dy, pressure)</a></td>
+        <td class="summary">Hook for love.touchmoved.</td>
+      </tr>
     </table>
     <br/>
     <br/>
@@ -322,6 +346,30 @@
                   (<em>optional</em>)
                 </li>
                 <li>
+                  <span class="parameter">uiwidth</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">uiheight</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
+                  <span class="parameter">uilayout</span>
+                  <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+                  (<em>optional</em>)
+                </li>
+                <li>
                   <span class="parameter">mappings</span>
                   <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
 
@@ -331,6 +379,14 @@
                 </li>
                 <li>
                   <span class="parameter">key_repeat</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                  (<em>default</em> false)
+                </li>
+                <li>
+                  <span class="parameter">supportui</span>
                   <span class="types"><span class="type">boolean</span></span>
 
 
@@ -390,7 +446,7 @@
           <strong>Manager:update()</strong>
 
         <dd>
-          Update inputs.
+          Update inputs and render UI for mobile.
 
 
 
@@ -727,6 +783,21 @@
 
 
           </ol>
+          <h3>Or</h3>
+          <ol>
+            <li>
+              <span class="types"><a class="type" href="../classes/l2df.manager.input.html#">l2df.manager.input</a></span>
+
+
+
+            </li>
+            <li>
+              <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+
+
+            </li>
+          </ol>
 
 
 
@@ -810,6 +881,10 @@
             <li>
               <span class="types"><span class="type">number</span></span>
               Input data.
+            </li>
+            <li>
+              <span class="types"><span class="type">number</span></span>
+              CRC32 checksum.
             </li>
           </ol>
 
@@ -941,6 +1016,302 @@
                 <li>
                   <span class="parameter">key</span>
                   <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:mousepressed"></a>
+          <strong>Manager:mousepressed(x, y, btn, istouch)</strong>
+
+        <dd>
+          Hook for love.mousepressed.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">btn</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">istouch</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:mousereleased"></a>
+          <strong>Manager:mousereleased(x, y, btn, istouch)</strong>
+
+        <dd>
+          Hook for love.mousereleased.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">btn</span>
+                  <span class="types"><span class="type">number</span></span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">istouch</span>
+                  <span class="types"><span class="type">boolean</span></span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:mousemoved"></a>
+          <strong>Manager:mousemoved(x, y, dx, dy, istouch)</strong>
+
+        <dd>
+          Hook for love.mousemoved.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">x</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dx</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dy</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">istouch</span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:touchpressed"></a>
+          <strong>Manager:touchpressed(id, x, y, dx, dy, pressure)</strong>
+
+        <dd>
+          Hook for love.touchpressed.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">id</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">x</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dx</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dy</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">pressure</span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:touchreleased"></a>
+          <strong>Manager:touchreleased(id, x, y, dx, dy, pressure)</strong>
+
+        <dd>
+          Hook for love.touchreleased.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">id</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">x</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dx</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dy</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">pressure</span>
+
+
+
+                </li>
+        </ul>
+
+
+
+
+
+      </dd>
+        <dt>
+          <a class="atom-anchor" name="Manager:touchmoved"></a>
+          <strong>Manager:touchmoved(id, x, y, dx, dy, pressure)</strong>
+
+        <dd>
+          Hook for love.touchmoved.
+
+
+          <h3>Parameters:</h3>
+          <ul>
+                <li>
+                  <span class="parameter">id</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">x</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">y</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dx</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">dy</span>
+
+
+
+                </li>
+                <li>
+                  <span class="parameter">pressure</span>
 
 
 

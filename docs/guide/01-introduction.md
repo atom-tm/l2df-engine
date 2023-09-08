@@ -1,6 +1,6 @@
 # Introduction
 
-Love2D Fighting Engine (L2DF) is a cross-platform game engine written in Lua.
+Lua2D Fighting Engine (L2DF) is a cross-platform game engine written in Lua.
 
 It has its own syntax for data representation: LF2 style data-code, custom dat-code and json. More is coming soon.
 
@@ -16,7 +16,7 @@ You can find it @{l2df.class|here}.
 ## How to start projects
 
 Before you start make sure to download latest [LÖVE](https://love2d.org/) framework binary for your platform.
-We use it as our backend for rendering, i/o, system events and etc.
+We use it as our backend for rendering, I/O, system events and etc.
 
 After you successfully downloaded LÖVE we suggest you to add it in your system environment PATH variable.
 This step is not required but allows you to run `love` from the console / terminal anythere on your system.
