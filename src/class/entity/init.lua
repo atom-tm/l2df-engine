@@ -23,10 +23,10 @@ local dummy = function () return nil end
 local Entity = Class:extend()
 
 	--- Meta-table for performing search in sub-nodes of the entity object.
-	-- @field function __index  Doing search. Ex.: `local btn_ref = Entity.R.MENU.BUTTON`
-	-- @field function __newindex  Set object key after search. Ex.: `Entity.R.MENU.BUTTON.text = 'Click'`
+	-- @field function __index  Doing search. E.g., `local btn_ref = Entity.R.MENU.BUTTON`
+	-- @field function __newindex  Set object key after search. E.g., `Entity.R.MENU.BUTTON.text = 'Click'`
 	-- @field function __call  Returns "clear" @{l2df.class.entity|entity} object.
-	-- Important cuz @{l2df.class.entity.R|Entity.R} variable is not an actual entity. Ex.: `local btn = Entity.R.MENU.BUTTON()`
+	-- Important cuz @{l2df.class.entity.R|Entity.R} variable is not an actual entity. E.g., `local btn = Entity.R.MENU.BUTTON()`
 	-- @table Entity.R
 
 	--- Table containing components for easy access.
@@ -67,6 +67,7 @@ local Entity = Class:extend()
 		obj.parent = nil
 		obj.active = default(kwargs.active, true)
 		obj.data = { ___nomerge = true }
+		obj.storage = { }
 		obj.___meta = { }
 		obj.C = { }
 		obj.R = setmetatable({ }, {

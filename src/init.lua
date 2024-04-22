@@ -97,6 +97,7 @@ local core = l2df
 		love.draw = love.draw or dummy
 		local tickrate = core.tickrate
 		local fps = 1 / tickrate
+		local updatestart = 0
 		local accumulate = 0
 		local throttle = 0
 		local delta = 0
@@ -130,12 +131,14 @@ local core = l2df
 
 			-- Network and rollbacks
 			NetworkManager:update(delta)
-			diff, throttle = SyncManager:sync(InputManager.frame)
+			delta = delta * core.speed
+			diff, throttle = SyncManager:sync(delta, InputManager.frame)
 
 			-- Update
 			draw = false
-			accumulate = min(accumulate + delta * core.speed + diff - throttle, fps)
-			while accumulate >= tickrate do
+			accumulate = accumulate + delta + diff - throttle
+			updatestart = love.timer.getTime()
+			while accumulate >= tickrate and love.timer.getTime() - updatestart < 1 do
 				accumulate = accumulate - tickrate
 				draw = accumulate < tickrate
 				love.update(tickrate, draw)

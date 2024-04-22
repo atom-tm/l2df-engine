@@ -7,6 +7,9 @@
 local core = l2df or require((...):match('(.-)class.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
+local assert = _G.assert
+local setmetatable = _G.setmetatable
+
 local Class = core.import 'class'
 
 local Component = Class:extend()

@@ -154,7 +154,7 @@ local Render = Component:extend({ unique = true })
 		} or nil
 
 		cdata.border = kwargs.border or 1
-		cdata.pics = { }
+		obj.storage.pics = { }
 		if sprites then
 			sprites = sprites[1] and type(sprites[1]) == 'table' and sprites or { sprites }
 			for i = 1, #sprites do
@@ -176,7 +176,6 @@ local Render = Component:extend({ unique = true })
 	-- @param l2df.class.component.render.Sprite sprite  Table describing data to load.
 	function Render:addSprite(obj, sprite)
 		local data = obj.data
-		local cdata = self:data(obj)
 
 		sprite.res = sprite.res or sprite[1] or nil
 		sprite.w = sprite.w or sprite[2] or nil
@@ -193,14 +192,16 @@ local Render = Component:extend({ unique = true })
 		sprite.oy = sprite.oy or sprite[9] or 0
 		sprite.kx = sprite.kx or sprite[10] or 0
 		sprite.ky = sprite.ky or sprite[11] or 0
-		sprite.ord = sprite.ord or sprite[12] or #cdata.pics
+		sprite.ord = sprite.ord or sprite[12] or #obj.storage.pics
 
 		local num = 0
+		local last = sprite.ord + 1
 		for y = 1, sprite.y do
 			for x = 1, sprite.x do
 				num = num + 1
 				if (sprite.s <= num) and (num <= sprite.f) then
-					cdata.pics[sprite.ord + (num - sprite.s) + 1] = false
+					last = sprite.ord + (num - sprite.s) + 1
+					obj.storage.pics[last] = false
 				end
 			end
 		end
@@ -214,7 +215,7 @@ local Render = Component:extend({ unique = true })
 					if (sprite.s <= num) and (num <= sprite.f) then
 						sprite.w = sprite.w or (w / sprite.x)
 						sprite.h = sprite.h or (h / sprite.y)
-						cdata.pics[sprite.ord + (num - sprite.s) + 1] = {
+						obj.storage.pics[sprite.ord + (num - sprite.s) + 1] = {
 							sprite.res,
 							newQuad(
 								(x - 1) * (sprite.w + sprite.kx) + sprite.ox,
@@ -231,6 +232,7 @@ local Render = Component:extend({ unique = true })
 			log:error('Data error: %s', sprite.res)
 			return
 		end
+		return sprite.ord + 1, last
 	end
 
 	--- Component update event handler.
@@ -303,7 +305,7 @@ local Render = Component:extend({ unique = true })
 				border = cdata.border
 			}
 		end
-		local pic = cdata.pics[data.pic]
+		local pic = obj.storage.pics[data.pic]
 		if pic then
 			Renderer:draw {
 				layer = data.layer,

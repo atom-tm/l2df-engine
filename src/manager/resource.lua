@@ -216,7 +216,7 @@ local Manager = { }
 			end
 			core.api.async.start(asyncLoader, extensions, lib)
 		end
-		if asyncReturn:getCount() > 0 then
+		while asyncReturn:getCount() > 0 do
 			local returned = asyncReturn:pop()
 			if extensions.image[returned.extension] then
 				returned.resource = loveNewImage(returned.resource, unpack(arguments[returned.id]))
@@ -237,7 +237,7 @@ local Manager = { }
 				callbacks[returned.id] = nil
 			end
 			log:debug('Async loaded: %s', returned.id)
-		else asyncReturn:clear() end
+		end
 	end
 
 	--- Add new file to queue for async loading or return already loaded resource's ID.

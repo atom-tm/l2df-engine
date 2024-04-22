@@ -37,7 +37,7 @@ local ClientEventEmitter = function () end
 
 local peers = { }
 
-local Client = Class:extend()
+local Client = Class:extend { packet_mode = 'reliable' }
 
 	--- Client initialization.
 	-- @param[opt] table kwargs  Keyword arguments.
@@ -183,7 +183,7 @@ local Client = Class:extend()
 			return false
 		end
 		if self:isConnected() then
-			self.peer:send(ppack(format, ...), self.channel)
+			self.peer:send(ppack(format, ...), self.channel, self.packet_mode)
 			return true
 		end
 		return self:islocal()

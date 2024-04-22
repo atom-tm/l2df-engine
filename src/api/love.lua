@@ -102,67 +102,67 @@ local api = {
 	},
 }
 
-	function api.render.blend(arg, ...)
-		if arg == nil then
+	function api.render.blend(argument, ...)
+		if argument == nil then
 			return getBlendMode()
 		else
-			return setBlendMode(arg, ...)
+			return setBlendMode(argument, ...)
 		end
 	end
 
-	function api.render.mode(arg, ...)
-		if arg == nil then
+	function api.render.mode(argument, ...)
+		if argument == nil then
 			return getMode()
 		else
-			return setMode(arg, ...)
+			return setMode(argument, ...)
 		end
 	end
 
-	function api.render.backgroundColor(arg, ...)
-		if arg == nil then
+	function api.render.backgroundColor(argument, ...)
+		if argument == nil then
 			return getBackgroundColor()
 		else
-			return setBackgroundColor(arg, ...)
+			return setBackgroundColor(argument, ...)
 		end
 	end
 
-	function api.render.defaultFilter(arg, ...)
-		if arg == nil then
+	function api.render.defaultFilter(argument, ...)
+		if argument == nil then
 			return getDefaultFilter()
 		else
-			return setDefaultFilter(arg, ...)
+			return setDefaultFilter(argument, ...)
 		end
 	end
 
-	function api.render.color(arg, ...)
-		if arg == nil then
+	function api.render.color(argument, ...)
+		if argument == nil then
 			return getColor()
 		else
-			return setColor(arg, ...)
+			return setColor(argument, ...)
 		end
 	end
 
-	function api.render.scissor(arg, ...)
-		if arg == nil then
+	function api.render.scissor(argument, ...)
+		if argument == nil then
 			return getScissor()
 		else
-			return setScissor(arg, ...)
+			return setScissor(argument, ...)
 		end
 	end
 
-	function api.render.lineWidth(arg, ...)
-		if arg == nil then
+	function api.render.lineWidth(argument, ...)
+		if argument == nil then
 			return getLineWidth()
 		else
-			return setLineWidth(arg, ...)
+			return setLineWidth(argument, ...)
 		end
 	end
 
-	function api.io.requirePath(arg, ...)
-		if arg == nil then
+	function api.io.requirePath(argument, ...)
+		if argument == nil then
 			return getRequirePath()
 		else
-			return setRequirePath(arg, ...)
+			return setRequirePath(argument, ...)
 		end
 	end
 

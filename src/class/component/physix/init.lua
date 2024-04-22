@@ -52,10 +52,11 @@ local Physix = Component:extend({ unique = true })
 		data.dsy = data.dsy or 0
 		data.dsz = data.dsz or 0
 
+		self:data(obj).world = nil -- fixes bug with rollback on the first frame
 		data.facing = data.facing or kwargs.facing or 1
 		data.gravity = kwargs.gravity or false
 		data.static = kwargs.static or false
-		data.ground = data.ground or false
+		data.ground = helper.notNil(data.ground, true)
 		data.solid = default(kwargs.solid, true)
 		return true
 	end

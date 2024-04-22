@@ -50,8 +50,8 @@ local RELAY_MAX_COUNT = 10
 local PUNCH_ATTEMPTS = 5
 local RELAY_CLIENT_ATTEMPTS = PUNCH_ATTEMPTS + 2
 local RELAY_MASTER_ATTEMPTS = RELAY_CLIENT_ATTEMPTS + 2
-local MIN_PEER_TIMEOUT = 2000
-local MAX_PEER_TIMEOUT = 4000
+local MIN_PEER_TIMEOUT = 1000
+local MAX_PEER_TIMEOUT = 2000
 local NETRECORD_PATTERN = '([^' .. strchar(SEP) .. ']+)'
 
 -- Client message codes
@@ -168,12 +168,12 @@ local function Relay_acceptReply(client, event, name, ping, channel)
 	end
 	-- Accept notification about successful relay bridge
 	if event.channel > 0 then
-		log:success('Relayed with %s', name)
 		client.ping_overhead, client.event, client.cstate = ping, event, 'relay-connecting'
 		local relay = pending_relays[name] or players[name] or client
 		relay:init(client)
 		relay_timer = RELAY_WAIT_TIME
 		pending_relays[name] = relay
+		log:success('Relayed with %s[%sms|%sms]', name, relay:ping(), ping)
 		return
 	end
 	-- Filter irrelevant replies
@@ -182,7 +182,7 @@ local function Relay_acceptReply(client, event, name, ping, channel)
 		return
 	end
 	-- Update relay info and choose best option
-	log:info('Relay reply %s[%d] - %sms vs %sms', name, channel, Client.ping(event) + ping, relay:ping())
+	log:info('Relay reply %s[%d]: [%sms|%sms] vs [%sms]', name, channel, Client.ping(event) + ping, ping, relay:ping())
 	if Client.ping(event) + ping < relay:ping() then
 		setClient(relay:id())
 		relay.ping_overhead = ping
@@ -637,35 +637,41 @@ local Manager = { ip = '127.0.0.1' }
 				else
 					log:success('Connected to %s', client.name or eid)
 				end
+				if not client.dropped then
+					log:debug 'Dropping...'
+					client.dropped = true
+					client.peer:disconnect()
+				else
 				setClient(eid, client.name, client:connected(event))
 				client:send('l2df-verify', self.username)
+				end
 
-			elseif event.type == 'disconnect' then
+			elseif event.type == 'disconnect' and not client:isConnected() then
 				-- Failed to connect via public
 				-- TODO: add UPnP
-				if client.attempts < PUNCH_ATTEMPTS and client.port2 then
-					local ip, port, msg = client.public, client.port, nil
-					if client.attempts == 0 and client.private then
-						msg = 'Connecting in local network'
-						ip = client.private
-					else
-						msg = 'Punching symmetric NAT'
-						if (self.ip < client.public) == (client.attempts % 2 == 0) then
-							port = client.port2 + 1
-							client.port2 = port
-						end
-					end
-					clients[eid] = nil
-					endpoint = strformat('%s:%s', ip, port)
-					client.peer = sock:connect(endpoint, RELAY_MAX_COUNT + 1)
-					client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
-					client.attempts = client.attempts + 1
-					eid = client:id()
-					log:info('%s %s[%s]', msg, client.name or eid, endpoint)
-					clients[eid] = client
+				-- if client.attempts < PUNCH_ATTEMPTS and client.port2 then
+				-- 	local ip, port, msg = client.public, client.port, nil
+				-- 	if client.attempts == 0 and client.private then
+				-- 		msg = 'Connecting in local network'
+				-- 		ip = client.private
+				-- 	else
+				-- 		msg = 'Punching symmetric NAT'
+				-- 		if (self.ip < client.public) == (client.attempts % 2 == 0) then
+				-- 			port = client.port2 + 1
+				-- 			client.port2 = port
+				-- 		end
+				-- 	end
+				-- 	clients[eid] = nil
+				-- 	endpoint = strformat('%s:%s', ip, port)
+				-- 	client.peer = sock:connect(endpoint, RELAY_MAX_COUNT + 1)
+				-- 	client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
+				-- 	client.attempts = client.attempts + 1
+				-- 	eid = client:id()
+				-- 	log:info('%s %s[%s]', msg, client.name or eid, endpoint)
+				-- 	clients[eid] = client
 
 				-- Symmetric NAT, firewall and etc: use relay
-				elseif not client.verified and client.name then
+				if not client.verified and client.name then
 					log:info('Switching to relay for %s', client.name)
 					Relay_newRequest(client)
 
@@ -690,7 +696,7 @@ local Manager = { ip = '127.0.0.1' }
 					for id, c in pairs(clients) do
 						if c.peer == event.peer then
 							if c:isRelayed() then
-								log:info('Lost connection to relay for %s. Finding new one...', c.name)
+								log:warn('Lost connection to relay for %s. Finding new one...', c.name)
 								Masters_connect()
 								if self.username > c.name then
 									Relay_newRequest(c)
@@ -775,6 +781,7 @@ local Manager = { ip = '127.0.0.1' }
 	Manager:event('l2df-verify', 's', function (c, e, name)
 		c.ping_overhead = 0
 		c.name = name -- important, do not erase!
+		c.attempts = PUNCH_ATTEMPTS
 		setClient(c:id(), name, c:verify(e))
 	end)
 
