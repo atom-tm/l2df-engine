@@ -130,7 +130,8 @@ local Manager = { }
 
 	--- Process all records and append data to replay files.
 	-- @param number dt  Delta-time since last game tick.
-	function Manager:update(dt)
+	function Manager:update(dt, islast)
+		if not islast then return end
 		for path, record in pairs(records) do
 			record.timer = record.timer + dt
 			if record.timer >= record.freq then
