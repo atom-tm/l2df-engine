@@ -15,6 +15,9 @@ local Storage = core.import 'class.storage'
 local Component = core.import 'class.component'
 local StatesManager = core.import 'manager.states'
 
+local new = helper.newTable
+local free = helper.freeTable
+
 local States = Component:extend({ unique = true })
 
 	--- State description table.
@@ -30,12 +33,12 @@ local States = Component:extend({ unique = true })
 	-- For more info see @{l2df.manager.states.run|StatesManager:run()}.
 	-- @table .ConstantState
 
-    --- Component was added to @{l2df.class.entity|Entity} event.
-    -- Adds `"states"` key to the @{l2df.class.entity.C|Entity.C} table.
-    -- @param l2df.class.entity obj  Entity's instance.
-    -- @param[opt] table kwargs  Keyword arguments.
-    -- @param[opt] {l2df.class.component.states.ConstantState,...} kwargs.constates  Array of constant states
-    -- which will be processed at each @{l2df.class.component.states.update|States:update()} event.
+	--- Component was added to @{l2df.class.entity|Entity} event.
+	-- Adds `"states"` key to the @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param[opt] table kwargs  Keyword arguments.
+	-- @param[opt] {l2df.class.component.states.ConstantState,...} kwargs.constates  Array of constant states
+	-- which will be processed at each @{l2df.class.component.states.update|States:update()} event.
 	function States:added(obj, kwargs)
 		if not obj then return false end
 		local data = obj.data
@@ -45,22 +48,22 @@ local States = Component:extend({ unique = true })
 		data.constates = data.constates or kwargs.constates or { }
 	end
 
-    --- Component was removed from @{l2df.class.entity|Entity} event.
-    -- Removes `"states"` key from @{l2df.class.entity.C|Entity.C} table.
-    -- @param l2df.class.entity obj  Entity's instance.
-    function States:removed(obj)
-        self.super.removed(self, obj)
-        obj.C.states = nil
-    end
+	--- Component was removed from @{l2df.class.entity|Entity} event.
+	-- Removes `"states"` key from @{l2df.class.entity.C|Entity.C} table.
+	-- @param l2df.class.entity obj  Entity's instance.
+	function States:removed(obj)
+		self.super.removed(self, obj)
+		obj.C.states = nil
+	end
 
-    --- Add new state to the collection.
-    -- @param l2df.class.entity obj  Entity's instance.
-    -- @param l2df.class.component.states.State|l2df.class.component.states.ConstantState state  State description table.
-    -- @param number|string id  ID of the state to be added. Used for calling @{l2df.manager.states.run|StatesManager:run()} function.
-    -- Also ID could be provided as `state[1]` (first array index in the state variable).
-    -- This ID couldn't be used in @{l2df.class.component.states.remove|States:remove()}, use returned value instead.
-    -- @param[opt=false] boolean use_constate  Set to `true ` to add state as @{l2df.class.component.states.ConstantState|constant state}.
-    -- @return number  ID of the state added in a local storage.
+	--- Add new state to the collection.
+	-- @param l2df.class.entity obj  Entity's instance.
+	-- @param l2df.class.component.states.State|l2df.class.component.states.ConstantState state  State description table.
+	-- @param number|string id  ID of the state to be added. Used for calling @{l2df.manager.states.run|StatesManager:run()} function.
+	-- Also ID could be provided as `state[1]` (first array index in the state variable).
+	-- This ID couldn't be used in @{l2df.class.component.states.remove|States:remove()}, use returned value instead.
+	-- @param[opt=false] boolean use_constate  Set to `true ` to add state as @{l2df.class.component.states.ConstantState|constant state}.
+	-- @return number  ID of the state added in a local storage.
 	function States:add(obj, state, id, use_constate)
 		local data = obj.data
 		local storage = use_constate and data.constates or data.states
@@ -92,10 +95,35 @@ local States = Component:extend({ unique = true })
 		end
 	end
 
-    --- Component update event handler.
-    -- Executes all added @{l2df.class.component.states.State|states} and @{l2df.class.component.states.ConstantState|constant states}.
-    -- All added states are removed after processing (except for constant states, they can be removed manually only).
-    -- @param l2df.class.entity obj  Entity's instance.
+	---
+	function States:has(obj, id)
+		local is_state = new()
+		if type(id) == 'table' then
+			for i = 1, #id do
+				is_state[id[i]] = true
+			end
+		else is_state[id] = true end
+		local data = obj.data
+		for i = 1, #data.states do
+			if is_state[data.states[i][1]] then
+				free(is_state)
+				return true
+			end
+		end
+		for i = 1, #data.constates do
+			if data.constates[i][1] == id then
+				free(is_state)
+				return true
+			end
+		end
+		free(is_state)
+		return false
+	end
+
+	--- Component update event handler.
+	-- Executes all added @{l2df.class.component.states.State|states} and @{l2df.class.component.states.ConstantState|constant states}.
+	-- All added states are removed after processing (except for constant states, they can be removed manually only).
+	-- @param l2df.class.entity obj  Entity's instance.
 	-- @param number dt  Delta-time since last game tick.
 	function States:update(obj, dt)
 		local data = obj.data
