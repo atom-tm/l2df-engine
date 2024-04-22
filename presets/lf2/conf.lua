@@ -9,6 +9,7 @@ function love.conf(configuration)
 	configuration.window.depth = nil
 	configuration.window.resizable = true
 	configuration.modules.physics = false
+	configuration.modules.graphics = true
 	configuration.console = true
 	-- configuration.window.fullscreen = true
 end

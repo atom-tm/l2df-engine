@@ -27,8 +27,8 @@
 
 [map]
 	active: true
-	ground_friction: 0.5
-	gravity: 30
+	ground_friction: 0.96 #0.5
+	gravity: 28
 	scalex: 1
 	scaley: 1
 	# <sprite> "data/maps/test-arena/CS0.png" </sprite>

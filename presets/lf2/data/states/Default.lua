@@ -1,37 +1,46 @@
 --[[
 
-    Стейт персонажа. Код (функция) будет вызываться каждый тик персонажа, если данный стейт установлен ему как активный.
-    Разовую активность стейтов можно установить в data.states, а пассивную в data.constates.
+    State is a function which is called on every game update (tick) if it is active.
 
-    В DS синтаксисе это делается с помощью тегов <state> и <constate>, размещенных в шапке персонажа, либо во фрейме.
+    States added to `data.states` are called once on the next update and data.states is cleared.
+    To call state again it should be added again to data.states.
+    It's can be done automatically using <state> tag from object's <frame> data.
 
-    <constate> state_name </constate> -- вариант без передаваемых значений
-    <state> state_name
+    States added to `data.constates` are called on every update until data.constates is cleared manually.
+    It can be used to implement passive abilities and effects.
+    You can add such state using <constate> tag in object's data file.
+
+    <constate> state_name </constate> # Adds constate named 'state_name' to object.
+    <state> state_name argument2 argument3
         var: true  var2: 42  var3: "string"
-    </state> -- вариант с передачей переменных стейту
+    </state> # Adds state named 'state_name' with additional parameters which will be cleared after call.
 
-    В коде это делается таблицами
+    You also can add states using Lua instead of data files:
 
-    data.constates = { { state_name } } -- без переменных
+    -- Without parameters
+    data.constates = { { state_name } }
     data.states = {
-        { state_name }, -- без переменных
-        { state_name, var = true, var2 = 42, var3 = "string" } -- с переменными
+        -- Without parameters
+        { state_name },
+        -- With additional parameters
+        { state_name, var = true, var2 = 42, var3 = "string" }
     }
 
-    state_name - название стейта. канонически является числом, однако, может быть и строкой.
-    Функция, при вызове, принимает 2 переменных:
-        - дата сегмент персонажа (в текущем примере именован как data)
-        - переменные, переданные через тело стейта (в примере vars)
+    state_name - can be a number (legacy way) or a string (modern way).
+    Function accepts 3 arguments:
+        - object on which the state was added and called;
+        - object's synchronized data. It equals to `object.data`;
+        - variables / parameters passed to the state (as in the example above).
 
 ]]
-
---- Данный стейт заставит персонажа испытывать чувство невесомости при отдалении от земли
-return function (obj, data, params) -- обязательная конструкция, означающая начало стейта
-    if data.y > 50 then -- если персонаж на высоте больше 50
-        data.normalWeight = data.normalWeight or data.weight -- сохраняем текущий вес персонажа
-        data.weight = 0.5 -- в 2 раза уменьшаем вес персонажа (будто он в невесомости)
-    else -- иначе (или когда спустился)
-        data.weight = data.normalWeight -- нормализуем вес
-        data.normalWeight = nil -- обнуляем переменную, в которую сохраняли вес
-    end
+return function (obj, data, params) -- state file should always return a defined function
+    -- processing logic can be placed here
+    -- e.g. you can work with components from `obj.C` to update object's `data`:
+    -- if obj.C.controller.pressed('left') then
+    --     data.dvx = 2
+    --     data.facing = -1
+    -- elseif obj.C.controller.pressed('right') then
+    --     data.dvx = 2
+    --     data.facing = 1
+    -- end
 end

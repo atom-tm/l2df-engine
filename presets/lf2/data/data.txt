@@ -33,6 +33,7 @@ height: 550
     dash
     rowing
     run_attack
+    dash_attack
     jump_attack
     broken_defend
     normal_weapon_atck
@@ -72,7 +73,6 @@ height: 550
 <character> file: data/ftemplate.dat </character>
 <object> file: data/objects/sandbag/object.dat </object>
 
-# <background> file: bg/sys/TestArena/bg.dat </background>
 <background> file: bg/template/1/bg.dat </background>
 <background> file: bg/template/2/bg.dat </background>
 <background> file: bg/template/3/bg.dat </background>

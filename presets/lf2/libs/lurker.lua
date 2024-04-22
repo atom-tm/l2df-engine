@@ -283,4 +283,3 @@ end
 
 
 return lurker.init()
-

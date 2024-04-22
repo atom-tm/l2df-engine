@@ -6,6 +6,7 @@ local log = core.import 'class.logger'
 local cfg = core.import 'config'
 
 -- COMPONENTS
+local Bot = core.import 'class.component.ai.simple'
 local Camera = core.import 'class.component.camera'
 local Collision = core.import 'class.component.collision'
 local Controller = core.import 'class.component.controller'
@@ -14,7 +15,7 @@ local CharAttributes = require 'data.scripts.component.attributes'
 
 -- MANAGERS
 local Input = core.import 'manager.input'
-local Factory = l2df.import 'manager.factory'
+local Factory = core.import 'manager.factory'
 local SceneManager = core.import 'manager.scene'
 local Network = core.import 'manager.network'
 
@@ -70,15 +71,24 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		local chars = { }
 		for i = 1, #Room.data.ready_players do
 			local player = Room.data.ready_players[i]
-			local chardata = data.chardata:getById(getGroup(player).data.index)
+			local groupdata = getGroup(player).data
+			local chardata = data.chardata:getById(groupdata.charid)
 			chardata.playonce = chardata.playonce or cfg.playonce
 			chars[i] = Factory:create('object', chardata)
+			chars[i].data.index = i
+			chars[i].data.team = groupdata.team
+			if player > 1 then
+				player = Input:newBotPlayer()
+				chars[i]:addComponent(Bot)
+			end
 			chars[i]:addComponent(Controller, player)
 			chars[i]:addComponent(SoundSystem, chardata)
 			chars[i]:addComponent(CharAttributes, chardata)
 			chars[i]:addComponent(Camera, { kx = 128, ky = 128 })
 		end
-		SceneManager:push('battle', chars)
+		Input:lock()
+		local bg = data.bgdata:getById(1); bg.layer = 'GAME_LAYER'
+		SceneManager:push('battle', Factory:create('map', bg), chars)
 	end)
 	Menu.R.BTN_RESET_ALL:onClick(function () Room:enter() end)
 	Menu.R.BTN_RESET_RANDOM:onClick(function () Room:randomize() end)
@@ -93,7 +103,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		if data.chardata.count == 0 or #randoms == 0 then return end
 		for i = 1, #randoms do
 			local charid = data.random(1, data.chardata.count)
-			randoms[i].data.index = charid
+			randoms[i].data.charid = charid
 			randoms[i].R.AVATAR.C.frames.set(AFCOUNT + charid)
 			randoms[i].R.FIGHTER.data.text = randoms[i].R.AVATAR.data.frame.fighter
 		end
@@ -138,7 +148,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			group.R.TEAM.data.hidden = true
 			group.R.TEAM.data.text = TEAMS[1]
 			group.R.TEAM.data.team = 0
-			group.data.index = 0
+			group.data.charid = 0
 			group.data.ST = 0
 		end
 	end
@@ -171,7 +181,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 					group.FIGHTER.C.frames.set('idle')
 					group.TEAM.data.hidden = false
 				else
-					group.AVATAR.C.frames.set(AFCOUNT + group.data.index)
+					group.AVATAR.C.frames.set(AFCOUNT + group.data.charid)
 					group.PLAYER.C.frames.set('idle')
 					group.PLAYER.data.text = data.players[atk] or tostring(atk)
 					group.FIGHTER.data.hidden = false
@@ -219,8 +229,8 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			local sign = right and 1 or -1
 			local group = left and getGroup(left) or getGroup(right)
 			if group.data.ST == 1 then
-				group.data.index = (group.data.index + sign) % (data.chardata.count + 1)
-				group.AVATAR.C.frames.set(AFCOUNT + group.data.index)
+				group.data.charid = (group.data.charid + sign) % (data.chardata.count + 1)
+				group.AVATAR.C.frames.set(AFCOUNT + group.data.charid)
 				group.FIGHTER.data.text = group.AVATAR.data.frame.fighter
 			elseif group.data.ST == 2 then
 				group.TEAM.data.team = (group.TEAM.data.team + sign) % #TEAMS

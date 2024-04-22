@@ -1,4 +1,9 @@
 --- Running
+-- If a player presses left or right two times quickly, the character will run.
+-- State 2 is used for the running frames, and running_speed and running_speedz sets the speed. 
+-- If you press J while running, your character go to dash.
+-- While pressing A and he'll go to run_attack.
+-- Pressing D will cause the character to jump to rowing.
 return function (obj, data)
 	local control = obj.C.controller
 	local frames = obj.C.frames
@@ -36,9 +41,10 @@ return function (obj, data)
 		frames.set('rowing') -- rolling / rowing / 102
 	elseif jmp then
 		data.jspeedx = adata.dash_distance
-		data.jspeedz = up ~= down and adata.dash_distancez
+		data.jspeedz = up ~= down and adata.dash_distancez * (up and - 1 or 1)
 		frames.set('dash') -- dash / 213
 	elseif atk then
+		-- TODO: run_weapon_attack and weapon_throw
 		frames.set('run_attack') -- run_attack / 85
 	elseif data.frame.id ~= 2012 then
 		local n = (data.frame.id - 8) % adata.running_frame_rate + 9

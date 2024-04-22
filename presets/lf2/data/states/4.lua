@@ -1,4 +1,6 @@
 --- Jumping
+-- When the character is in the air, you can press right or left to change the direction he is facing.
+-- Pressing A will take him jump_attack.
 return function (obj, data, params)
 	local control = obj.C.controller
 	local frames = obj.C.frames
@@ -25,6 +27,9 @@ return function (obj, data, params)
 	if data.frame.id < 212 then return end
 	if data.ground then
 		frames.set('crouch')
+	elseif control.pressed('attack') then
+		-- TODO: jump_weapon_attack
+		frames.set('jump_attack')
 	else
 		data.next = data.frame.id
 	end

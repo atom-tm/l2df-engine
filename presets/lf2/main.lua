@@ -14,10 +14,8 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 
 l2df = require 'l2df'
--- local lurker = require 'lurker'
 
-local FPS = 60
-data = { players = { 'Player 1', 'Player 2' }, username = nil } -- shared data
+data = { FPS = 60, players = { 'Player 1', 'Player 2' }, usertag = nil } -- shared data
 
 helper = l2df.import 'helper'
 local cfg = l2df.import 'config'
@@ -29,6 +27,7 @@ local InputManager = l2df.import 'manager.input'
 local SyncManager = l2df.import 'manager.sync'
 local EventManager = l2df.import 'manager.event'
 local RenderManager = l2df.import 'manager.render'
+local NetworkManager = l2df.import 'manager.network'
 local GSID = l2df.import 'manager.gsid'
 
 function data.layout(path)
@@ -55,12 +54,8 @@ function data.random(a, b)
 	return math.random(a, b)
 end
 
--- function love.update(dt)
--- 	lurker.update()
--- end
-
 function l2df.load()
-	data.username = 'Player#' .. tostring(math.random(1000, 9999))
+	data.usertag = ('%04d'):format(math.random(9999))
 	l2df.api.io.mkdir(l2df.savepath())
 	cfg:group('settings', 'controls', 'graphics', 'general', 'debug')
 	cfg:load('data/data.txt')
@@ -68,12 +63,12 @@ function l2df.load()
 	cfg:load(cfg.settings)
 	l2df:init
 	{
-		fps = FPS,
+		fps = data.FPS,
 		datafps = 30,
 	}
 	SyncManager
 	{
-		size = FPS,
+		size = data.FPS,
 	}
 	RenderManager
 	{
@@ -111,9 +106,20 @@ function l2df.load()
 		load = cfg.scenes,
 		set = 'loading'
 	}
+	NetworkManager:register(cfg.master or '127.0.0.1:12565')
 	EventManager:subscribe('keypressed', function (key)
 		if key == 'escape' and (not love or love.window.showMessageBox('LF2', 'Are you sure to quit?', {'No', 'Yes'}) == 2) then
 			l2df.api.event.quit()
+		end
+		if key == 'q' then
+			SyncManager.desync = true
+		elseif key == 'e' then
+			print('DELAY', InputManager.delay)
+			InputManager:rehash()
+		elseif key == 'p' then
+			for _, c in NetworkManager:clients() do
+				print('PINGTO', c.name, c:ping())
+			end
 		end
 	end, love)
 end

@@ -13,9 +13,9 @@ return function (obj, data)
 	local atk = (data.hit_a or 0) == 0 and control.hitted('attack')
 	local speedx = adata.walking_speed
 	local speedz = adata.walking_speedz
+	local left = control.pressed('left')
+	local right = control.pressed('right')
 	if speedx then
-		local left = control.pressed('left')
-		local right = control.pressed('right')
 		if left ~= right then
 			data.dvx = speedx
 			data.facing = left and -1 or 1
@@ -35,10 +35,11 @@ return function (obj, data)
 	if adata.defence > 0 and def then
 		frames.set('defend') -- defend / 110
 	elseif jmp then
-		data.jspeedx = adata.jump_distance
-		data.jspeedz = up ~= down and adata.jump_distancez
+		data.jspeedx = left ~= right and adata.jump_distance
+		data.jspeedz = up ~= down and adata.jump_distancez * (up and - 1 or 1)
 		frames.set('jump') -- jump / 210
 	elseif atk then
+		-- TODO: normal_weapon_atk
 		frames.set(adata.cansuper and 'super_punch' or rnd(2) == 1 and 60 or 65) -- punch / 60 / 65
 	elseif data.dvz == 0 and data.dvx == 0 then
 		frames.set('standing')

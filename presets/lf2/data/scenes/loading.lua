@@ -96,10 +96,6 @@ coroutine.yield()
 coroutine.yield()
 		end
 	end
-coroutine.yield()
-	for i = 1, 30 do
-coroutine.yield()
-	end
 end
 
 Room, RoomData = data.layout('layout/loading.dat')
