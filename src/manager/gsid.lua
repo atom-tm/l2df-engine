@@ -8,8 +8,8 @@ local core = l2df or require((...):match('(.-)manager.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'GSID works only with l2df v1.0 and higher')
 
 local step = 1
-local state = 1
-local salt = 1
+local gstate = 1
+local gsalt = 1
 local counter = 0
 local accumulator = 0
 
@@ -60,12 +60,31 @@ local Manager = { }
 	-- @return l2df.manager.gsid
 	function Manager:init(kwargs)
 		kwargs = kwargs or { }
-		state = kwargs.seed or state or 1
+		gstate = kwargs.seed or gstate or 1
+		gsalt = kwargs.salt or gsalt or 1
 		step = kwargs.step or step or 1
-		salt = kwargs.salt or salt or 1
-		counter = salt
+		counter = gsalt
 		accumulator = 0
 		return self
+	end
+
+	---
+	-- @param table state
+	function Manager.sync(state)
+		if not state then
+			return {
+				state = gstate,
+				salt = gsalt,
+				step = step,
+				counter = counter,
+				acc = accumulator
+			}
+		end
+		gstate = state.state
+		gsalt = state.salt
+		step = state.step
+		counter = state.counter
+		accumulator = state.acc
 	end
 
 	--- Advances inner counter used for generation of GSIDs.
@@ -83,7 +102,7 @@ local Manager = { }
 			accumulator = -(-accumulator % step)
 		end
 		if delta ~= 0 then
-			state = state + delta
+			gstate = gstate + delta
 			counter = salt
 		end
 	end
@@ -91,7 +110,7 @@ local Manager = { }
 	--- Generates next GSID @{Manager:hash|hash} value from the inner state.
 	-- @return string  HEX representation of the generated GSID.
 	function Manager:generate()
-		local h = self:hash(state, counter)
+		local h = self:hash(gstate, counter)
 		counter = counter + 1
 		return h
 	end
@@ -118,7 +137,7 @@ local Manager = { }
 	--- Generates random GSID.
 	-- @return number  Number representation of the generated GSID.
 	function Manager:rand()
-		local a, b = hash(state, counter)
+		local a, b = hash(gstate, counter)
 		counter = counter + 1
 		return xor(a, b * 65536 + b)
 	end
