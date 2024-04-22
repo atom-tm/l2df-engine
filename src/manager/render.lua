@@ -367,7 +367,7 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 		if clear then
 			loveClear(unpack(layer.background))
 		end
-		local input, x, y, z, w, h, sx, sy, px, py, cdx, cdy, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
+		local input, x, y, z, w, h, r, ox, oy, kx, ky, sx, sy, px, py, cdx, cdy, r1, g1, b1, a1, r2, g2, b2, a2, bwidth
 		local drawables = layer.z
 		local camera = layer.camera
 		if camera then
@@ -382,10 +382,12 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				input = drawables[i][j]
 				r1, g1, b1, a1 = loveGetColor()
 				bwidth = loveGetLineWidth()
-				x, y, z, w, h, sx, sy, px, py =
+				x, y, z, w, h, r, sx, sy, ox, oy, kx, ky, px, py =
 					input.x or 0, input.y or 0, input.z or 0,
-					input.w or 1, input.h or 1,
+					input.w or 1, input.h or 1, input.r or 0,
 					input.sx or 1, input.sy or 1,
+					input.ox or 0, input.oy or 0,
+					input.kx or 0, input.ky or 0,
 					input.px, input.py
 				-- Set parallax
 				if (px or py) and camera then
@@ -397,9 +399,9 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				if input.shadow and Manager.shadows > 0 then
 					local object = Manager.shadows > 1 and input.object or nil
 					if not object then
-						local r = input.rad or min(input.ox or 1, input.oy or 1) * 0.5
+						local radius = input.rad or min(input.ox or 1, input.oy or 1) * 0.5
 						loveSetColor(0, 0, 0, 0.5)
-						loveEllipse('fill', round(x), round(z), r * abs(sx or 1), r * abs(sy or 1) * 0.25)
+						loveEllipse('fill', round(x), round(z), radius * abs(sx or 1), r * abs(sy or 1) * 0.25)
 					else
 						local ox, oy = input.ox or 0, input.oy or 0
 						for i = 1, #lights do
@@ -438,9 +440,9 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 				-- Accept object draw request
 				if input.object and input.object.typeOf and input.object:typeOf('Drawable') then
 					if input.quad then
-						loveDraw(input.object, input.quad, round(x), round(z - y), rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, input.quad, round(x), round(z - y), rad(r), sx, sy, ox, oy, kx, ky)
 					else
-						loveDraw(input.object, round(x), round(z - y), rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
+						loveDraw(input.object, round(x), round(z - y), rad(r), sx, sy, ox, oy, kx, ky)
 					end
 				-- Accept rectangle draw request
 				elseif input.rect then
@@ -463,11 +465,11 @@ local Manager = { z = { { } }, shadows = 2, DEBUG = os.getenv('L2DF_DEBUG') or f
 					loveCircle(input.circle, round(x), round(z - y), input.r or 4)
 				-- Accept text draw request
 				elseif input.text and type(input.text) == 'string' then
-					lovePrintf(input.text, input.font, x, y, input.limit, input.align, rad(input.r), sx, sy, input.ox, input.oy, input.kx, input.ky)
+					lovePrintf(input.text, input.font, x, y, input.limit, input.align, rad(r), sx, sy, ox, oy, kx, ky)
 				end
 				if Manager.DEBUG then
 					loveSetColor(1, 0, 0, 1)
-					lovePrintf('X:'..round(x)..'Y:'..round(y), x, z - y + 16, 100)
+					lovePrintf('X:'..round(x)..'Y:'..round(z - y), x, z - y + 16, 100)
 				end
 				-- Restore color and border
 				loveSetColor(r1, g1, b1, a1)
