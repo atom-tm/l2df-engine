@@ -354,13 +354,24 @@ local helper = { }
 		return default
 	end
 
-	--- Get maximum of array.
-	-- @param table arr  Array to process.
+	--- Get minimum of table.
+	-- @param table arr  Table to process.
 	-- @return int
-	function helper.maximum(arr)
+	function helper.minimum(var)
+		local min = MAX_INT
+		for _, v in pairs(var) do
+			if v < min then min = v end
+		end
+		return min
+	end
+
+	--- Get maximum of table.
+	-- @param table arr  Table to process.
+	-- @return int
+	function helper.maximum(var)
 		local max = 0
-		for i = 1, #arr do
-			if arr[i] > max then max = arr[i] end
+		for _, v in pairs(var) do
+			if v > max then max = v end
 		end
 		return max
 	end
