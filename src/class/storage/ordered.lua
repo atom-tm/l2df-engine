@@ -69,6 +69,7 @@ local OrderedStorage = Storage:extend()
 		if not id then return false end
 		self.data:remove(id)
 		self.map[object] = nil
+		self.count = self.count - 1
 		return true
 	end
 
@@ -79,6 +80,7 @@ local OrderedStorage = Storage:extend()
 		if not self.data[id] then return false end
 		self.map[self.data[id]] = nil
 		self.data:remove(id)
+		self.count = self.count - 1
 		return true
 	end
 

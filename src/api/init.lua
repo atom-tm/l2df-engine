@@ -72,6 +72,7 @@ local interface = {
 	},
 	time = {
 		now = NotImplementedException('time.now'),
+		fps = NotImplementedException('time.fps'),
 		sleep = NotImplementedException('time.sleep'),
 		delta = NotImplementedException('time.delta'),
 	},

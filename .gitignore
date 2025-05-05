@@ -6,3 +6,5 @@ presets/*/**/replay
 *.deproj
 *.deuser
 *settings\.dat
+/*.md
+!README.md

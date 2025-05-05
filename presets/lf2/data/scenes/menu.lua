@@ -111,7 +111,7 @@ local Room = data.layout('layout/menu/main.dat')
 		Network:logout()
 		Sync:mode(Sync.NONE):reset()
 		Input:reset(Input.remoteplayers)
-		-- Input.delay = cfg.delay or 8
+		Input.delay = cfg.delay or 4
 		for _, event in ipairs { 'netupdate' } do
 			self:subscribe(event, self[event], nil, self)
 		end

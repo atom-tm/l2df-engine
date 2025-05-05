@@ -6,6 +6,7 @@ local Resources = core.import 'manager.resource'
 
 local pairs = _G.pairs
 local floor = math.floor
+local tostring = _G.tostring
 
 local blueColor = { 0, 0, 1, 1 }
 local redColor = { 1, 0, 0, 1 }
@@ -16,6 +17,21 @@ local MAX_PAIN = 60
 local MAX_DEFENCE = 45
 
 local Attributes = Component:extend({ unique = true })
+
+	local function sourceKey(source)
+		if not source then return nil end
+		if source.syncid then return source.syncid end
+		local owner = source.owner
+		local data = owner and owner.data or source.data
+		local ownerid = data and (data.syncid or data.gsid or data.player or data.index) or 'source'
+		local frame = data and data.frame
+		return table.concat {
+			tostring(ownerid), ':',
+			tostring(frame and frame.id or 0), ':',
+			tostring(source.kind or 0), ':',
+			tostring(source.syncindex or 0)
+		}
+	end
 
 	function Attributes:added(obj, kwargs)
 		if not obj then return false end
@@ -76,11 +92,11 @@ local Attributes = Component:extend({ unique = true })
 	end
 
 	function Attributes:isdamaged(obj, source)
-		return obj and source and obj.data[self].damaged[source] and true or false
+		return obj and source and self:data(obj).damaged[sourceKey(source)] and true or false
 	end
 
 	function Attributes:isrecovered(obj)
-		return obj and obj.data[self].recovered and true or false
+		return obj and self:data(obj).recovered and true or false
 	end
 
 	function Attributes:recover(obj, amount)
@@ -112,11 +128,12 @@ local Attributes = Component:extend({ unique = true })
 
 		local cdata = self:data(obj)
 		local damaged, ignored = cdata.damaged, cdata.ignored
+		local key = sourceKey(source)
 		local injury = source.injury or 0
 		local bdefend = source.bdefend or injury
 		local fall = source.fall or injury
-		if not ignore_defence and cdata.candefend and cdata.defence > 0 and not ignored[source] then
-			ignored[source] = core:convert(source.arest or source.vrest or 5)
+		if not ignore_defence and cdata.candefend and cdata.defence > 0 and not ignored[key] then
+			ignored[key] = core:convert(source.arest or source.vrest or 5)
 			cdata.hp = cdata.hp - injury * 0.2
 			if cdata.hp <= 0 then
 				cdata.hp = 0
@@ -126,7 +143,7 @@ local Attributes = Component:extend({ unique = true })
 			end
 			cdata.dtimer = 1
 		end
-		if damaged[source] or ignored[source] then
+		if damaged[key] or ignored[key] then
 			return false
 		end
 		cdata.maxhp = cdata.maxhp - injury * 0.25
@@ -144,13 +161,13 @@ local Attributes = Component:extend({ unique = true })
 		end
 		cdata.ptimer = 1
 		cdata.pain = cdata.pain - fall
-		damaged[source] = core:convert(source.arest or source.vrest or 5)
+		damaged[key] = core:convert(source.arest or source.vrest or 5)
 		return true
 	end
 
 	function Attributes:preupdate(obj)
 		obj.data.stunned = false
-		obj.data[self].candefend = false
+		self:data(obj).candefend = false
 	end
 
 	function Attributes:update(obj, dt)

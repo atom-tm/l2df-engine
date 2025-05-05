@@ -75,6 +75,7 @@ local api = {
 	},
 	time = {
 		now = ltimer.getTime,
+		fps = ltimer.getFPS,
 		sleep = ltimer.sleep,
 		delta = ltimer.step,
 	},

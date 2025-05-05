@@ -85,6 +85,7 @@ local api = {
 	},
 	time = {
 		now = os.time,
+		fps = function() return 1 / (os.clock() - timer) end,
 		sleep = socket_ok and socket.sleep or function(t) os.execute('sleep ' .. t) end,
 		delta = function(t) t = os.clock() - timer; timer = timer + t; return t end,
 	},

@@ -15,6 +15,7 @@ local KindsManager = core.import 'manager.kinds'
 local sqrt = math.sqrt
 local min = math.min
 local abs = math.abs
+local tostring = _G.tostring
 local copy = helper.copyTable
 
 local Collision = Component:extend({ unique = true })
@@ -56,7 +57,7 @@ local Collision = Component:extend({ unique = true })
 	-- @param[opt=0] number col.d  Collider's box depth.
 	-- @param[opt] function action  Callback called when collider is triggered.
 	-- @return l2df.manager.physix.Collider
-	function Collision:collider(obj, col, action)
+	function Collision:collider(obj, col, action, syncindex)
 		local data = obj.data
 		--local r = col.r or col.w * col.h * col.d > 0 and sqrt(col.w ^ 2 + col.h ^ 2 + col.d ^ 2) / 2 or 0
 		local x1 = data.globalX + (col.x or 0) * data.facing
@@ -66,11 +67,19 @@ local Collision = Component:extend({ unique = true })
 		local z1 = data.globalZ + (col.z or 0)
 		local z2 = z1 + (col.d or 0)
 		local collider = copy(col)
+		local frame = data.frame
+		local ownerid = data.syncid or data.gsid or data.player or data.index or obj.key or tostring(obj)
 		collider.kind = col.kind or 0
 		collider.owner = obj
 		collider.data = data
 		collider.col = col
 		collider.action = action
+		collider.syncid = col.syncid or table.concat {
+			tostring(ownerid), ':',
+			tostring(frame and frame.id or 0), ':',
+			tostring(collider.kind), ':',
+			tostring(syncindex or col.syncindex or 0)
+		}
 		collider.w = abs(x2 - x1)
 		collider.h = abs(y2 - y1)
 		collider.d = abs(z2 - z1)
@@ -88,13 +97,13 @@ local Collision = Component:extend({ unique = true })
 		for i = 1, #data.bodies do
 			local bdy = data.bodies[i]
 			local kind = KindsManager:get(bdy.kind)
-			PhysixManager:add('bdy', self:collider(obj, bdy, kind))
+			PhysixManager:add('bdy', self:collider(obj, bdy, kind, i))
 		end
 		for i = 1, #data.itrs do
 			local itr = data.itrs[i]
 			local kind = KindsManager:get(itr.kind)
 			if kind then
-				PhysixManager:add('itr', self:collider(obj, itr, kind))
+				PhysixManager:add('itr', self:collider(obj, itr, kind, i))
 			end
 		end
 	end

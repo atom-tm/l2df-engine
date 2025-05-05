@@ -8,6 +8,7 @@ local core = l2df or require((...):match('(.-)class.+$') or '' .. 'core')
 assert(type(core) == 'table' and core.version >= 1.0, 'Components works only with l2df v1.0 and higher')
 
 local assert = _G.assert
+local type = _G.type
 local setmetatable = _G.setmetatable
 
 local Class = core.import 'class'
@@ -20,15 +21,17 @@ local Component = Class:extend()
 	-- @return table
 	function Component:data(obj)
 		if type(obj) ~= 'table' then return nil end
+		local cname = self-- [1]
+		-- assert(type(cname) == 'string', 'to store component data inside entity you must define its unique name')
 		local meta = obj.___meta
-		if meta and obj.data and not meta[self] then
-			obj.data[self] = obj.data[self] or { }
+		if meta and obj.cdata and not meta[self] then
+			obj.cdata[cname] = obj.cdata[cname] or { }
 			meta[self] = setmetatable({ }, {
 				__index = function (_, key)
-					return obj.data[self][key] or obj.data[key]
+					return obj.cdata[cname][key] or obj.data[key]
 				end,
 				__newindex = function (_, key, value)
-					obj.data[self][key] = value
+					obj.cdata[cname][key] = value
 				end
 			})
 		end
@@ -70,7 +73,7 @@ local Component = Class:extend()
 	--- Component was removed from @{l2df.class.entity|Entity} event.
 	-- @param l2df.class.entity obj  Entity's instance.
 	function Component:removed(obj)
-		obj.data[self] = nil
+		obj.cdata[self] = nil --[1] or 1
 		if obj.___meta then
 			obj.___meta[self] = nil
 		end

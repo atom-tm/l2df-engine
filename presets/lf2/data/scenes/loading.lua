@@ -118,7 +118,7 @@ Room, RoomData = data.layout('layout/loading.dat')
 		if coroutine.status(loader) == 'dead' then
 			log:success 'All data loaded!'
 			self.loader.data.hidden = true
-			SceneManager:set('menu')
+			SceneManager:set(data.test and data.test.active and 'test' or 'menu')
 		elseif not coroutine.resume(loader) then
 			log:crit 'Loading failed'
 			SceneManager:pop()

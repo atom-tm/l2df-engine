@@ -48,13 +48,49 @@ end
 
 function data.random(a, b)
 	a, b = b and a or 1, b or a
-	if InputManager.remoteplayers > 0 then
+	if InputManager.remoteplayers > 0 or data.test and data.test.active then
 		return a + GSID:rand() % (b - a + 1)
 	end
 	return math.random(a, b)
 end
 
-function l2df.load()
+local function readArgs(args)
+	for i = 1, #(args or { }) do
+		local arg = tostring(args[i])
+		if arg == '--test' then
+			data.test = data.test or { }
+			data.test.active = true
+			data.test.exit = true
+		elseif arg == '--test-debug' then
+			data.test = data.test or { }
+			data.test.debug = true
+			data.test.active = true
+			data.test.exit = true
+		else
+			local frames = arg:match('^%-%-test%-frames=(%d+)$')
+			if frames then
+				data.test = data.test or { }
+				data.test.frames = tonumber(frames)
+			else
+				local speed = arg:match('^%-%-test%-speed=(%d+)$')
+				if speed then
+					data.test = data.test or { }
+					data.test.speed = tonumber(speed)
+				else
+					local hash = arg:match('^%-%-test%-hash=(%a+)$')
+					if hash then
+						assert(hash == 'fast' or hash == 'full', 'Invalid --test-hash value')
+						data.test = data.test or { }
+						data.test.hash = hash
+					end
+				end
+			end
+		end
+	end
+end
+
+function l2df.load(args)
+	readArgs(args)
 	data.usertag = ('%04d'):format(math.random(9999))
 	l2df.api.io.mkdir(l2df.savepath())
 	cfg:group('settings', 'controls', 'graphics', 'general', 'debug')
@@ -92,12 +128,12 @@ function l2df.load()
 			{
 				up = 'w', down = 's', left = 'a', right = 'd',
 				attack = 'f', jump = 'g', defend = 'h',
-				special = 'j', select = 'return', click = 'lmb'
+				special = 'v', select = 'return', click = 'lmb'
 			},
 			{
 				up = 'up', down = 'down', left = 'left', right = 'right',
-				attack = 'kp1', jump = 'kp2', defend = 'kp3',
-				special = 'kp5',
+				attack = 'j', jump = 'k', defend = 'l',
+				special = 'm',
 			}
 		}
 	}
@@ -111,17 +147,25 @@ function l2df.load()
 		if key == 'escape' and (not love or love.window.showMessageBox('LF2', 'Are you sure to quit?', {'No', 'Yes'}) == 2) then
 			l2df.api.event.quit()
 		end
-		if key == 'q' then
+		if key == 'f2' then
 			SyncManager.desync = true
-		elseif key == 'e' then
+		elseif key == 'f3' then
 			print('DELAY', InputManager.delay)
 			InputManager:rehash()
-		elseif key == 'p' then
+		elseif key == 'f4' then
 			for _, c in NetworkManager:clients() do
 				print('PINGTO', c.name, c:ping())
 			end
+		elseif key == 'f6' then
+			data.test = data.test or { }
+			data.test.active = true
+			data.test.exit = false
+			if data.chardata and data.bgdata then
+				SceneManager:set('test')
+			end
 		end
 	end, love)
+	l2df.api.time.delta()
 end
 
 if not love or love.ismock then

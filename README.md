@@ -9,8 +9,7 @@ Lua2D Fighting Engine (`L2DF`) is a cross-platform game engine written in Lua.
 - 2D and 2.5D games
 - fightings
 - beat 'em ups
-- platformers
-- similar genres
+- platformers and similar genres
 
 The backstage of this engine is an old "Little Fighter 2" game, so if you are familiar with it you can dive in very fast
 because `L2DF` uses similar syntax and terms. But if you're not there're no problem as we are going to support more syntaxes

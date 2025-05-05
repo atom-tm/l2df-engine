@@ -77,10 +77,10 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			chars[i] = Factory:create('object', chardata)
 			chars[i].data.index = i
 			chars[i].data.team = groupdata.team
-			if player > 1 then
-				player = Input:newBotPlayer()
-				chars[i]:addComponent(Bot)
-			end
+			-- if player > 1 then
+			-- 	player = Input:newBotPlayer()
+			-- 	chars[i]:addComponent(Bot)
+			-- end
 			chars[i]:addComponent(Controller, player)
 			chars[i]:addComponent(SoundSystem, chardata)
 			chars[i]:addComponent(CharAttributes, chardata)
@@ -147,7 +147,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			group.R.FIGHTER.data.text = 'Random'
 			group.R.TEAM.data.hidden = true
 			group.R.TEAM.data.text = TEAMS[1]
-			group.R.TEAM.data.team = 0
+			group.data.team = 0
 			group.data.charid = 0
 			group.data.ST = 0
 		end
@@ -233,8 +233,8 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 				group.AVATAR.C.frames.set(AFCOUNT + group.data.charid)
 				group.FIGHTER.data.text = group.AVATAR.data.frame.fighter
 			elseif group.data.ST == 2 then
-				group.TEAM.data.team = (group.TEAM.data.team + sign) % #TEAMS
-				group.TEAM.data.text = TEAMS[group.TEAM.data.team + 1]
+				group.data.team = (group.data.team + sign) % #TEAMS
+				group.TEAM.data.text = TEAMS[group.data.team + 1]
 			end
 		end
 		if self.data.active_players > 0 and self.data.active_players == #self.data.ready_players then

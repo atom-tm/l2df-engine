@@ -8,16 +8,23 @@ assert(type(core) == 'table' and core.version >= 1.0, 'SyncManager works only wi
 
 local log = core.import 'class.logger'
 local helper = core.import 'helper'
+local EventManager = core.import 'manager.event'
+local Input = core.import 'manager.input'
 
 local type = _G.type
+local pairs = _G.pairs
 local select = _G.select
+local tostring = _G.tostring
 local unpack = table.unpack or _G.unpack
 local concat = table.concat
+local sort = table.sort
 local min = math.min
 local max = math.max
 local abs = math.abs
 local floor = math.floor
 local crc32 = helper.crc32
+
+local Manager
 
 local function createNode()
 	local node = { }
@@ -57,8 +64,261 @@ local checkpoint = { }
 local data = { }
 local history = { }
 local sync_mode = SYNC_ROLLBACK
+local test = nil
+local test_subscription = nil
+local HASH_FAST = 'fast'
+local HASH_FULL = 'full'
+local DEFAULT_TEST_ROLLBACKS = {
+	{ frame = 34, target = 6 },
+	{ frame = 96, target = 54 },
+	{ frame = 156, target = 112 },
+	{ frame = 216, target = 170 },
+}
 
-local Manager = {
+local function valueKey(value)
+	local kind = type(value)
+	if kind == 'number' then
+		return 'n:' .. tostring(value)
+	elseif kind == 'string' then
+		return 's:' .. value
+	elseif kind == 'boolean' then
+		return value and 'b:1' or 'b:0'
+	end
+	return kind .. ':'
+end
+
+local function hashValue(hash, value, seen)
+	local kind = type(value)
+	if kind == 'nil' then
+		hash('nil;')
+	elseif kind == 'number' or kind == 'string' or kind == 'boolean' then
+		hash(kind, ':', tostring(value), ';')
+	elseif kind == 'table' then
+		if value.___class then
+			local vdata = type(value.data) == 'table' and value.data or nil
+			hash('ref:', vdata and (vdata.syncid or vdata.index or vdata.player) or value.name or 'class', ';')
+			return
+		end
+		if seen[value] then
+			hash('cycle;')
+			return
+		end
+		seen[value] = true
+		local keys = { }
+		for key, val in pairs(value) do
+			if type(val) ~= 'function'
+			and type(val) ~= 'userdata'
+			and type(val) ~= 'thread'
+			and type(key) ~= 'table'
+			and tostring(key):sub(1, 3) ~= '___'
+			then
+				keys[#keys + 1] = key
+			end
+		end
+		sort(keys, function (a, b) return valueKey(a) < valueKey(b) end)
+		hash('{')
+		for i = 1, #keys do
+			local key = keys[i]
+			hashValue(hash, key, seen)
+			hashValue(hash, value[key], seen)
+		end
+		hash('}')
+		seen[value] = nil
+	end
+end
+
+local function hashField(value)
+	local hash = Manager:hash()
+	hashValue(hash, value, { })
+	return hash()
+end
+
+local function debugValue(value)
+	local kind = type(value)
+	if kind == 'table' then
+		return ('table:%08X'):format(hashField(value))
+	end
+	return kind .. ':' .. tostring(value)
+end
+
+local function dataDebug(objdata)
+	local fields = { }
+	for key, value in pairs(objdata or { }) do
+		if type(value) ~= 'function'
+		and type(value) ~= 'userdata'
+		and type(value) ~= 'thread'
+		and type(key) ~= 'table'
+		and tostring(key):sub(1, 3) ~= '___'
+		then
+			fields[valueKey(key)] = {
+				key = key,
+				hash = hashField(value),
+				value = debugValue(value),
+			}
+		end
+	end
+	return fields
+end
+
+local function logFieldMismatch(frame, object, oldFields, newFields)
+	local keys = { }
+	for key in pairs(oldFields or { }) do
+		keys[#keys + 1] = key
+	end
+	for key in pairs(newFields or { }) do
+		if not oldFields or not oldFields[key] then
+			keys[#keys + 1] = key
+		end
+	end
+	sort(keys)
+	for i = 1, #keys do
+		local old = oldFields and oldFields[keys[i]]
+		local new = newFields and newFields[keys[i]]
+		local oldHash = old and old.hash or nil
+		local newHash = new and new.hash or nil
+		if oldHash ~= newHash then
+			log:error('TEST data field mismatch at frame %05d object %d key %s: %08X != %08X',
+				frame, object, tostring((old or new).key), oldHash or 0, newHash or 0
+			)
+			log:error('TEST data old: %s', old and old.value or 'nil')
+			log:error('TEST data new: %s', new and new.value or 'nil')
+			break
+		end
+	end
+end
+
+local function objectDetails(index, obj)
+	local objdata = obj.data or { }
+	local result = { components = { } }
+	local hash = Manager:hash()
+	hash('data:')
+	hashValue(hash, objdata, { })
+	result.data = hash()
+	result.fields = test and test.debug and dataDebug(objdata) or nil
+	local objectHash = Manager:hash()
+	objectHash('obj:', index, ':', objdata.syncid or objdata.index or objdata.player or obj.key or index, ':', obj.active and 1 or 0, ';')
+	objectHash('data:', result.data, ';')
+	if obj.components then
+		for id, component in obj.components:enum(true) do
+			hash = Manager:hash()
+			hash('component:', id, ';')
+			hashValue(hash, obj.cdata and obj.cdata[component], { })
+			local componentHash = hash()
+			result.components[id] = {
+				hash = componentHash,
+			}
+			objectHash('component:', id, ':', componentHash, ';')
+		end
+	end
+	result.hash = objectHash()
+	return result
+end
+
+local function fullObjectHash(hash, index, obj)
+	local details = objectDetails(index, obj)
+	hash('objhash:', index, ':', details.hash, ';')
+	return details
+end
+
+local function observeTestHash(frame, hash, details)
+	if not test then return end
+	local previous = test.hashes[frame]
+	if previous and previous ~= hash then
+		test.failures[#test.failures + 1] = { frame = frame, expected = previous, actual = hash }
+		log:error('TEST mismatch at frame %05d: %08X != %08X', frame, previous, hash)
+		local previousDetails = test.details[frame] or { }
+		for i = 1, max(#previousDetails, #(details or { })) do
+			local old = previousDetails[i]
+			local new = details and details[i]
+			if old and new and old.hash ~= new.hash then
+				log:error('TEST object mismatch at frame %05d object %d: %08X != %08X', frame, i, old.hash or 0, new.hash or 0)
+				if old.data ~= new.data then
+					log:error('TEST data mismatch at frame %05d object %d: %08X != %08X', frame, i, old.data or 0, new.data or 0)
+					if old.fields or new.fields then
+						logFieldMismatch(frame, i, old.fields, new.fields)
+					end
+				else
+					local oldComponents = old.components or { }
+					local newComponents = new.components or { }
+					for id = 1, max(#oldComponents, #newComponents) do
+						local oldComponent = oldComponents[id]
+						local newComponent = newComponents[id]
+						local oldHash = type(oldComponent) == 'table' and oldComponent.hash or oldComponent
+						local newHash = type(newComponent) == 'table' and newComponent.hash or newComponent
+						if oldHash ~= newHash then
+							log:error('TEST component mismatch at frame %05d object %d component %d: %08X != %08X',
+								frame, i, id, oldHash or 0, newHash or 0
+							)
+							break
+						end
+					end
+				end
+				break
+			elseif (old and old.hash or nil) ~= (new and new.hash or nil) then
+				log:error('TEST object mismatch at frame %05d object %d: %08X != %08X', frame, i, old and old.hash or 0, new and new.hash or 0)
+				break
+			end
+		end
+	elseif not previous then
+		test.hashes[frame] = hash
+		test.details[frame] = details
+	end
+end
+
+local function filterRollbacks(frames, rollbacks)
+	local filtered = { }
+	if rollbacks == false then
+		return filtered
+	end
+	rollbacks = rollbacks or DEFAULT_TEST_ROLLBACKS
+	for i = 1, #rollbacks do
+		local rollback = rollbacks[i]
+		if rollback.frame and rollback.target and rollback.frame <= frames then
+			filtered[#filtered + 1] = {
+				frame = rollback.frame,
+				target = rollback.target,
+			}
+		end
+	end
+	sort(filtered, function (a, b) return a.frame < b.frame end)
+	return filtered
+end
+
+local function defaultTestInput()
+	return 0
+end
+
+local function testHashMode(mode, debug)
+	if mode == nil then
+		return debug and HASH_FULL or HASH_FAST
+	end
+	assert(mode == HASH_FAST or mode == HASH_FULL, 'Invalid sync test hash mode')
+	return mode
+end
+
+local function stopTest()
+	if test_subscription then
+		EventManager:unsubscribeById('postupdate', test_subscription)
+		test_subscription = nil
+	end
+	test = nil
+end
+
+local function rollbackTestMode()
+	if not (test and test.rollbacks) then return end
+	for i = 1, #test.rollbacks do
+		local rollback = test.rollbacks[i]
+		if not rollback.done and Manager.frame >= rollback.frame then
+			rollback.done = true
+			Input.frame = rollback.target
+			local diff = Manager:rollback(rollback.target)
+			log:warn('TEST rollback probe: %05d -> %05d [%d]', Manager.frame + diff, rollback.target, diff)
+			break
+		end
+	end
+end
+
+Manager = {
 	frame = 0, time = 0, size = 1, resync = false, desync = false,
 	NONE = SYNC_NONE,
 	ROLLBACK = SYNC_ROLLBACK,
@@ -94,6 +354,7 @@ local Manager = {
 	-- @return l2df.manager.sync
 	function Manager:reset(zero)
 		zero = zero or 0
+		stopTest()
 		tickrate = core.tickrate or tickrate
 		min_advantage = tickrate
 		max_advantage = 0.1 * maxsize * tickrate
@@ -291,16 +552,113 @@ local Manager = {
 		return hasher
 	end
 
+	--- Start or stop deterministic synchronization test mode.
+	-- @param[opt] table|false config  Test configuration, or `false` to stop an active test.
+	-- @param[opt=240] number config.frames  Frame count to verify.
+	-- @param[opt=2] number config.players  Count of players to seed with scripted input.
+	-- @param[opt] function config.input  Callback returning input data for `(player, frame)`.
+	-- @param[opt] table config.rollbacks  Rollback probes, filtered by `config.frames`.
+	-- @param[opt=false] boolean config.debug  Store detailed per-field diagnostics.
+	-- @param[opt='fast'] string config.hash  Hash mode: `fast` or `full`.
+	-- @param[opt] function config.fasthash  Fast object hash callback for `(hash, index, obj)`.
+	-- @param[opt] function config.onfinish  Callback receiving `(success, failures)`.
+	-- @return l2df.manager.sync
+	function Manager:test(config)
+		if config == false then
+			stopTest()
+			return self
+		end
+		stopTest()
+		config = config or { }
+		local debug = not not config.debug
+		test = {
+			frames = config.frames or 240,
+			players = config.players or 2,
+			input = config.input or defaultTestInput,
+			debug = debug,
+			hash = testHashMode(config.hash, debug),
+			fasthash = config.fasthash,
+			onfinish = config.onfinish,
+			hashes = { },
+			details = { },
+			failures = { },
+		}
+		test.rollbacks = filterRollbacks(test.frames, config.rollbacks)
+		for frame = 0, test.frames do
+			for player = 1, test.players do
+				Input:addinput(test.input(player, frame) or 0, player, frame)
+			end
+		end
+		test_subscription = EventManager:subscribe('postupdate', rollbackTestMode, EventManager)
+		log:info('TEST started: %d frames, %d rollback probes, hash=%s', test.frames, #test.rollbacks, test.hash)
+		return self
+	end
+
+	--- Hash an object for active sync test diagnostics.
+	-- @param function hash
+	-- @param number index
+	-- @param table obj
+	-- @return boolean  `true` when test mode is active, `false` otherwise.
+	function Manager:testobject(hash, index, obj)
+		if not test then
+			return false
+		end
+		if test.hash == HASH_FAST then
+			if test.fasthash then
+				test.fasthash(hash, index, obj)
+				return true
+			end
+			return false
+		end
+		test.current_details = test.current_details or { }
+		test.current_details[index] = fullObjectHash(hash, index, obj)
+		return true
+	end
+
+	--- Finalize the current test frame hash and compare it with previous visits.
+	-- @param function hash
+	-- @return number
+	function Manager:testhash(hash)
+		local value = hash()
+		if test then
+			observeTestHash(self.frame, value, test.current_details)
+			test.current_details = nil
+		end
+		return value
+	end
+
+	--- Update test mode finish handling.
+	-- @return boolean  `true` while test mode owns the frame.
+	function Manager:testupdate()
+		if not test then
+			return false
+		end
+		if self.frame >= test.frames then
+			local state = test
+			local failures = state.failures
+			local success = #failures == 0
+			stopTest()
+			if state.onfinish then
+				state.onfinish(success, failures)
+			elseif success then
+				log:success('TEST passed: %d frames verified', state.frames)
+			else
+				log:error('TEST failed: %d mismatches', #failures)
+			end
+		end
+		return true
+	end
+
 	--- Restore from snapshot.
 	-- @param table snapshot
 	function Manager:restore(snapshot)
+		if not snapshot then return end
 		if snapshot.frame then
 			self.frame = snapshot.frame
 			self.time = self.frame * tickrate
 		end
 		for i = 1, #snapshot do
 			snapshot[i][1](unpack(snapshot[i][2]))
-			snapshot[i] = nil
 		end
 	end
 

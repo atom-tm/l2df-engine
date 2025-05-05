@@ -103,7 +103,7 @@ local Manager = { }
 		end
 		if delta ~= 0 then
 			gstate = gstate + delta
-			counter = salt
+			counter = gsalt
 		end
 	end
 

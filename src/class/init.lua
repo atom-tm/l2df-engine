@@ -68,7 +68,7 @@ local Class = { }
 	-- @param l2df.class cls  Source class.
 	-- @return boolean
 	function Class.isTypeOf(obj, cls)
-		return obj and (obj == cls or obj.___class == cls)
+		return obj and (obj == cls or obj.___class == cls) or false
 	end
 
 	--- Returns true if the object is an instance of the class. False otherwise.
@@ -76,7 +76,7 @@ local Class = { }
 	-- @param l2df.class cls  Source class.
 	-- @return boolean
 	function Class.isInstanceOf(obj, cls)
-		return obj and (obj == cls or obj.___class == cls or Class.isInstanceOf(obj.___class, cls))
+		return obj and (obj == cls or obj.___class == cls or Class.isInstanceOf(obj.___class, cls)) or false
 	end
 
 return Class

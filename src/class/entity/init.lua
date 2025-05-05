@@ -41,6 +41,9 @@ local Entity = Class:extend()
 	-- 4. Networking doesn't work without this!
 	-- @table Entity.data
 
+	--- Entity's storage for all components data.
+	-- @table Entity.cdata
+
 	--- Key string. Used for searching via @{l2df.class.entity.R|Entity.R}.
 	-- @string Entity.key
 
@@ -67,6 +70,7 @@ local Entity = Class:extend()
 		obj.parent = nil
 		obj.active = default(kwargs.active, true)
 		obj.data = { ___nomerge = true }
+		obj.cdata = { ___nomerge = true }
 		obj.storage = { }
 		obj.___meta = { }
 		obj.C = { }
@@ -105,8 +109,10 @@ local Entity = Class:extend()
 		local entity = self:___getInstance()
 		entity.nodes = Storage:new()
 		entity.components = Storage:new()
+		entity.components.class = { }
 		entity.key = self.key
 		entity.data = copyTable(self.data)
+		entity.cdata = { ___nomerge = true }
 		for id, node in self.nodes:enum(true) do
 			node = node:clone()
 			node.id = id
@@ -115,7 +121,8 @@ local Entity = Class:extend()
 		for id, component in self.components:enum(true) do
 			local c = component:new()
 			c.entity = entity
-			entity.data[c] = self.data[component]
+			entity.cdata[c] = copyTable(self.cdata[component])
+			entity.components.class[c.___class] = entity.components.class[c.___class] and entity.components.class[c.___class] + 1 or 1
 			entity.components:add(c)
 		end
 		return entity
@@ -201,20 +208,23 @@ local Entity = Class:extend()
 
 	--- Backup / restore entity.
 	-- @param[opt] table state  Table containing snapshot of the entity's state:
-	-- <pre>{ active = [boolean], parent = [@{l2df.class.entity}], data = [table] }</pre>.
+	-- <pre>{ active = [@{boolean}], parent = [@{l2df.class.entity}], data = [@{table}, cdata = [@{table}] }</pre>.
 	-- @return table|nil
 	function Entity:sync(state)
 		if not state then
 			return {
 				active = self.active,
 				parent = self.parent,
-				data = copyTable(self.data)
+				data = copyTable(self.data),
+				cdata = copyTable(self.cdata)
 			}
 		end
 		if state.parent then
 			state.parent:attach(self)
 		end
-		copyTable(state, self)
+		self.active = state.active
+		self.data = copyTable(state.data, { })
+		self.cdata = copyTable(state.cdata, { })
 	end
 
 	--- Check for inheritance from an object.

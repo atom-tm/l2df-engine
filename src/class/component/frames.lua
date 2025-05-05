@@ -13,10 +13,37 @@ local Component = core.import 'class.component'
 
 local type = _G.type
 local pairs = _G.pairs
-local clone = helper.copyTable
+local tostring = _G.tostring
+local sort = table.sort
+
+local function keyValue(value)
+	return type(value) .. ':' .. tostring(value)
+end
+
+local function cloneFrame(frame, seen)
+	if type(frame) ~= 'table' then
+		return frame
+	end
+	if frame.___class ~= nil then
+		return frame
+	end
+	seen = seen or { }
+	if seen[frame] then
+		return seen[frame]
+	end
+	local result = { }
+	seen[frame] = result
+	for key, value in pairs(frame) do
+		if key ~= '___shallow' then
+			result[key] = cloneFrame(value, seen)
+		end
+	end
+	return result
+end
 
 local added_data = { }
 local ignored = { 1, 2, id = 1, keyword = 1, ___shallow = 1 }
+local keys = { }
 
 local Frames = Component:extend({ unique = true })
 
@@ -45,7 +72,11 @@ local Frames = Component:extend({ unique = true })
 		kwargs = kwargs or { }
 
 		local data = obj.data
-		obj.data[self] = { added = { }, list = { }, map = { }, counter = 0 }
+		local cdata = self:data(obj)
+		cdata.added = { }
+		cdata.list = { }
+		cdata.map = { }
+		cdata.counter = 0
 
 		obj.C.frames = self:wrap(obj)
 
@@ -128,7 +159,7 @@ local Frames = Component:extend({ unique = true })
 			return
 		end
 		local data = obj.data
-		data.frame = clone(nextFrame)
+		data.frame = cloneFrame(nextFrame)
 		data.next = nextFrame.next
 		data.wait = nextFrame.wait or 0
 		storage.counter = counter or 0
@@ -157,11 +188,17 @@ local Frames = Component:extend({ unique = true })
 			data[adata[i][1]] = adata[i][2]
 			adata[i] = nil
 		end
-		for k, v in pairs(data.frame) do
+		for k in pairs(data.frame) do
 			if not ignored[k] then
-				adata[#adata + 1] = { k, data[k] }
-				data[k] = v
+				keys[#keys + 1] = k
 			end
+		end
+		sort(keys, function (a, b) return keyValue(a) < keyValue(b) end)
+		for i = 1, #keys do
+			local k = keys[i]
+			adata[#adata + 1] = { k, data[k] }
+			data[k] = data.frame[k]
+			keys[i] = nil
 		end
 		storage.counter = storage.counter + 1
 	end

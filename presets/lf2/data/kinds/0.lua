@@ -8,7 +8,7 @@ return function (e1, e2, itr, bdy)
 	end
 	local frames, attr, sound = e2.C.frames, e2.C.attr, e2.C.sound
 	local looks_in_same_direction = e1.data.facing == e2.data.facing
-	if attr and attr.damage(itr.col, looks_in_same_direction) then -- not e1.data.stunned and
+	if attr and attr.damage(itr, looks_in_same_direction) then -- not e1.data.stunned and
 		local pain = attr.data().pain
 		if pain < 0 then
 			frames.set(looks_in_same_direction and 186 or 180) -- falling

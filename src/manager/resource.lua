@@ -181,7 +181,7 @@ local Manager = { }
 		if not reload and self:get(id) then return id end
 		local path, extension = strmatch(filepath, '^(.+)(%..+)$')
 		if filepath and not (fs.getInfo(filepath) or path == '__default__') then
-			print('failed', filepath)
+			log:warn('Can\'t load %s', filepath)
 			return false
 		end
 		local resource = nil

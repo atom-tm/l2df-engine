@@ -497,7 +497,11 @@ local Manager = {
 			-- 	-- debuginput(player, timer)
 			-- 	return self
 			-- end
-			return self:addinput(input, player, timer + 1)
+			log:error(
+				'Input conflict for player %s at frame %05d: %s != %s',
+				player, timer, left.data, input
+			)
+			return self, left, false
 		end
 		local new = {
 			prev = left,

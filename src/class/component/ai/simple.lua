@@ -94,7 +94,7 @@ local Bot = Component:extend()
 		if (isVeryClose or isFacingTarget and isInRange and isRunning) and not target.C.states.has(cdata.unavailable_states) then
 			InputManager:release(directions[lastdir], player):press(directions[dir], player)
 			InputManager:press(actions[1], player):release(actions[1], player)
-			print('ATTACK', dir, lastdir)
+			if data.debug then print('ATTACK', dir, lastdir) end
 			lastdir = 0
 			return
 		end
@@ -109,13 +109,13 @@ local Bot = Component:extend()
 				else
 					dir = (dz > 0 == is_chasing) and 4 or 3
 				end 
-				print('WALK', directions[dir], directions[lastdir])
+				if data.debug then print('WALK', directions[dir], directions[lastdir]) end
 				if dir ~= lastdir then
 					InputManager:release(directions[lastdir], player):press(directions[dir], player)
 					lastdir = dir
 				end
 			elseif not isRunning then
-				print('RUN', directions[dir])
+				if data.debug then print('RUN', directions[dir]) end
 				InputManager:release(directions[lastdir], player)
 				InputManager:press(directions[dir], player):release(directions[dir], player)
 				InputManager:press(directions[dir], player):release(directions[dir], player)

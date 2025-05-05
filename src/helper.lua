@@ -286,6 +286,7 @@ local helper = { }
 				result[key] = val
 			end
 		end
+		-- TODO: is it really needed?
 		if table.___hasnil then
 			for key, val in pairs(result) do
 				if not table[key] then

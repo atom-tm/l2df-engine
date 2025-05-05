@@ -637,41 +637,41 @@ local Manager = { ip = '127.0.0.1' }
 				else
 					log:success('Connected to %s', client.name or eid)
 				end
-				if not client.dropped then
-					log:debug 'Dropping...'
-					client.dropped = true
-					client.peer:disconnect()
-				else
+				-- if not client.dropped then
+				-- 	log:debug 'Dropping...'
+				-- 	client.dropped = true
+				-- 	client.peer:disconnect()
+				-- else
 				setClient(eid, client.name, client:connected(event))
 				client:send('l2df-verify', self.username)
-				end
+				-- end
 
 			elseif event.type == 'disconnect' and not client:isConnected() then
 				-- Failed to connect via public
 				-- TODO: add UPnP
-				-- if client.attempts < PUNCH_ATTEMPTS and client.port2 then
-				-- 	local ip, port, msg = client.public, client.port, nil
-				-- 	if client.attempts == 0 and client.private then
-				-- 		msg = 'Connecting in local network'
-				-- 		ip = client.private
-				-- 	else
-				-- 		msg = 'Punching symmetric NAT'
-				-- 		if (self.ip < client.public) == (client.attempts % 2 == 0) then
-				-- 			port = client.port2 + 1
-				-- 			client.port2 = port
-				-- 		end
-				-- 	end
-				-- 	clients[eid] = nil
-				-- 	endpoint = strformat('%s:%s', ip, port)
-				-- 	client.peer = sock:connect(endpoint, RELAY_MAX_COUNT + 1)
-				-- 	client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
-				-- 	client.attempts = client.attempts + 1
-				-- 	eid = client:id()
-				-- 	log:info('%s %s[%s]', msg, client.name or eid, endpoint)
-				-- 	clients[eid] = client
+				if client.attempts < PUNCH_ATTEMPTS and client.port2 then
+					local ip, port, msg = client.public, client.port, nil
+					if client.attempts == 0 and client.private then
+						msg = 'Connecting in local network'
+						ip = client.private
+					else
+						msg = 'Punching symmetric NAT'
+						if (self.ip < client.public) == (client.attempts % 2 == 0) then
+							port = client.port2 + 1
+							client.port2 = port
+						end
+					end
+					clients[eid] = nil
+					endpoint = strformat('%s:%s', ip, port)
+					client.peer = sock:connect(endpoint, RELAY_MAX_COUNT + 1)
+					client.peer:timeout(0, MIN_PEER_TIMEOUT, MAX_PEER_TIMEOUT)
+					client.attempts = client.attempts + 1
+					eid = client:id()
+					log:info('%s %s[%s]', msg, client.name or eid, endpoint)
+					clients[eid] = client
 
 				-- Symmetric NAT, firewall and etc: use relay
-				if not client.verified and client.name then
+				elseif not client.verified and client.name then
 					log:info('Switching to relay for %s', client.name)
 					Relay_newRequest(client)
 
@@ -781,7 +781,7 @@ local Manager = { ip = '127.0.0.1' }
 	Manager:event('l2df-verify', 's', function (c, e, name)
 		c.ping_overhead = 0
 		c.name = name -- important, do not erase!
-		c.attempts = PUNCH_ATTEMPTS
+		-- c.attempts = PUNCH_ATTEMPTS
 		setClient(c:id(), name, c:verify(e))
 	end)
 
