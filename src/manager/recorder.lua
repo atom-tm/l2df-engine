@@ -15,6 +15,8 @@ local type = _G.type
 local pairs = _G.pairs
 local assert = _G.assert
 local fopen = io.open
+local osremove = os.remove
+local osrename = os.rename
 local strgmatch = string.gmatch
 local strchar = string.char
 local strbyte = string.byte
@@ -50,6 +52,49 @@ end
 
 local function dummyFunc() end
 
+local function writeHeader(f, metadata)
+	if type(metadata) == 'string' then
+		f:write(#metadata, metadata)
+	else
+		f:write(0)
+	end
+end
+
+local function writeInputs(f, stream)
+	for player, frame, input in stream do
+		f:write(ntobi(player), ntobi(frame), ntobi(input))
+	end
+end
+
+local function openForWrite(path)
+	local f, err = fopen(path, 'wb')
+	return assert(f, 'Can not open "' .. path .. '" for recording: ' .. tostring(err))
+end
+
+local function flushAppend(path, record)
+	local f = assert(fopen(path, 'ab'))
+	writeInputs(f, record.stream or dummyFunc)
+	f:close()
+end
+
+local function flushSnapshot(path, record)
+	local tmp = path .. '.tmp'
+	local f = openForWrite(tmp)
+	writeHeader(f, record.metadata)
+	writeInputs(f, record.stream())
+	f:close()
+	osremove(path)
+	assert(osrename(tmp, path))
+end
+
+local function flushRecord(path, record)
+	if record.snapshot then
+		flushSnapshot(path, record)
+	else
+		flushAppend(path, record)
+	end
+end
+
 local records = { }
 
 local Manager = { }
@@ -66,30 +111,55 @@ local Manager = { }
 	-- @param string path  Path to the file for writing replay on disk storage.
 	-- @param[opt] string metadata  Optional metadata included in the replay header.
 	-- @param[opt] function stream  Function called on each @{Manager:update|update}.
-	-- This function should return three numbers:<br>
+	-- In snapshot mode this should return a fresh iterator. In append mode this is
+	-- the iterator itself. If omitted, @{l2df.manager.input.replaystream|Input:replaystream()} is used.
+	-- Returned iterators should return three numbers:<br>
 	-- * `player` - Player ID for this input;
 	-- * `frame` - Frame ID at which input appeared;
 	-- * `input` - Raw encoded @{l2df.manager.input.rawinput|input data}, 32-bit unsigned integer.
 	-- @param[opt=1] number period
-	function Manager:start(path, metadata, stream, period)
-		local f = assert(fopen(path, 'wb'), 'Can not open "' .. path .. '" for recording')
-		if type(metadata) == 'string' then
-			f:write(#metadata, metadata)
-		else
-			f:write(0)
-		end
+	-- @param[opt] boolean snapshot  Rewrite the replay from the current input history instead of appending.
+	function Manager:start(path, metadata, stream, period, snapshot)
+		local f = openForWrite(path)
+		writeHeader(f, metadata)
 		f:close()
-		records[path] = { timer = 0, stream = stream or dummyFunc, freq = period or 1 }
+		if snapshot == nil then
+			snapshot = stream == nil
+		end
+		records[path] = {
+			timer = 0,
+			stream = stream or function () return Input:replaystream() end,
+			freq = period or 1,
+			metadata = metadata,
+			snapshot = snapshot,
+		}
 	end
 
 	--- Stop replay recording.
 	-- @param string path  Path to the replay file which was previously passed to the @{Manager:start|Recorder:start()}.
 	function Manager:stop(path)
 		if path then
+			if records[path] then
+				flushRecord(path, records[path])
+			end
 			records[path] = nil
 		else
-			records = { }
+			for filepath, record in pairs(records) do
+				flushRecord(filepath, record)
+				records[filepath] = nil
+			end
 		end
+	end
+
+	--- Update metadata for an active replay recording.
+	-- @param string path  Path to the replay file which was previously passed to @{Manager:start|Recorder:start()}.
+	-- @param[opt] string metadata  Replacement replay metadata.
+	-- @return l2df.manager.recorder
+	function Manager:metadata(path, metadata)
+		if records[path] then
+			records[path].metadata = metadata
+		end
+		return self
 	end
 
 	--- Open replay file and load its data to @{l2df.manager.input.addinput|InputManager}.
@@ -119,6 +189,7 @@ local Manager = { }
 		-- for i = 1, #debug do
 		-- 	log:info('Input[%d] %s at frame %05d', debug[i][1], debug[i][2], debug[i][3])
 		-- end
+		f:close()
 		return true
 	end
 
@@ -136,11 +207,7 @@ local Manager = { }
 			record.timer = record.timer + dt
 			if record.timer >= record.freq then
 				record.timer = 0
-				local f = assert(fopen(path, 'ab'))
-				for player, frame, input in record.stream do
-					f:write(ntobi(player), ntobi(frame), ntobi(input))
-				end
-				f:close()
+				flushRecord(path, record)
 			end
 		end
 	end

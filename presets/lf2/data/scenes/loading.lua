@@ -106,6 +106,7 @@ Room, RoomData = data.layout('layout/loading.dat')
 
 	function Room:enter()
 		log:debug 'Room: LOADING'
+		data.loaded = false
 		if cfg.debug and not log.file then
 			core.api.io.mkdir('logs')
 			log.file = string.format('%s/%s.txt', core.savepath('logs'), os.date('%Y%m%d-%H%M%S'))
@@ -116,9 +117,19 @@ Room, RoomData = data.layout('layout/loading.dat')
 
 	function Room:update()
 		if coroutine.status(loader) == 'dead' then
-			log:success 'All data loaded!'
-			self.loader.data.hidden = true
-			SceneManager:set(data.test and data.test.active and 'test' or 'menu')
+			if not data.loaded then
+				log:success 'All data loaded!'
+				self.loader.data.hidden = true
+				data.loaded = true
+			end
+			if data.replay and data.replay.pending then
+				data.tryOpenReplay()
+				return
+			elseif data.test and data.test.active then
+				SceneManager:set('test')
+			else
+				SceneManager:set('menu')
+			end
 		elseif not coroutine.resume(loader) then
 			log:crit 'Loading failed'
 			SceneManager:pop()

@@ -25,6 +25,7 @@ local loveNewSource = core.api.data.audio
 local loveNewFont = core.api.data.font
 
 local asyncList = { }
+local asyncPending = 0
 local asyncChannel = core.api.async.channel('asyncChannel')
 local asyncReturn = core.api.async.channel('asyncReturn')
 local asyncLoader = core.api.async.create([[
@@ -229,6 +230,7 @@ local Manager = { }
 			end
 			arguments[returned.id] = nil
 			self:addById(returned.id, returned.resource, returned.temp)
+			asyncPending = asyncPending > 0 and asyncPending - 1 or 0
 			local c = callbacks[returned.id]
 			if c then
 				for i = 1, #c do
@@ -270,7 +272,14 @@ local Manager = { }
 		if callback then callbacks[id] = { callback } end
 		arguments[id] = { ... }
 		asyncList[#asyncList + 1] = { id, filepath, extension, temp }
+		asyncPending = asyncPending + 1
 		return self:addById(id, Plug:new(), temp)
+	end
+
+	--- Check if there are still async resources waiting to be loaded.
+	-- @return boolean
+	function Manager:isLoading()
+		return asyncPending > 0
 	end
 
 	--- Async loading of multiple resources.

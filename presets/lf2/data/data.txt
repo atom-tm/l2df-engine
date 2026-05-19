@@ -1,6 +1,7 @@
 debug: true
 fps: 60
 mobile: false
+record: true
 scenes: data/scenes
 states: data/states
 kinds: data/kinds

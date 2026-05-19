@@ -3,6 +3,7 @@ local data = assert(data, 'Shared data is not available')
 
 -- UTILS
 local log = core.import 'class.logger'
+local json = core.import 'class.parser.json'
 
 -- MANAGERS
 local Input = core.import 'manager.input'
@@ -10,6 +11,7 @@ local Factory = core.import 'manager.factory'
 local SceneManager = core.import 'manager.scene'
 local EventManager = core.import 'manager.event'
 local Network = core.import 'manager.network'
+local Recorder = core.import 'manager.recorder'
 local Sync = core.import 'manager.sync'
 local GSID = core.import 'manager.gsid'
 
@@ -20,6 +22,7 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 	local LoadingNode = Room.R.LOADING()
 	local FrameCounter = Room.R.FRAME_COUNTER()
 	local resetMatch
+	local stopReplayRecording
 
 	local function flag(value)
 		return value and 1 or 0
@@ -53,6 +56,9 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 		local test = data.test
 		if test then
 			test.active = false
+		end
+		if stopReplayRecording then
+			stopReplayRecording()
 		end
 		core.speed = 1
 		if success then
@@ -124,19 +130,121 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 		return Sync:testhash(hash)
 	end
 
+	local function safeReplayName(name)
+		return tostring(name or 'player'):gsub('[^%w%._%-]', '_')
+	end
+
+	local function replayPathExists(path)
+		local file = io.open(path, 'rb')
+		if file then
+			file:close()
+			return true
+		end
+		return false
+	end
+
+	local function replaySalt()
+		if love and love.math and love.math.random then
+			return string.format('%08X', love.math.random(0, 0x7FFFFFFF))
+		end
+		return string.format('%08X', math.random(0, 0x7FFFFFFF))
+	end
+
+	local function makeReplayMetadata()
+		local replay = data.replay or { }
+		local players = { }
+		for i = 1, #objects do
+			local objdata = objects[i].data or { }
+			players[i] = {
+				index = objdata.index or i,
+				player = objdata.player or i,
+				team = objdata.team or 0,
+				char = objdata.charid or objects[i].charid or i,
+				x = objdata.x or 0,
+				y = objdata.y or 0,
+				z = objdata.z or 0,
+				facing = objdata.facing or 1,
+				syncid = objdata.syncid,
+			}
+		end
+		return {
+			version = 1,
+			preset = 'lf2',
+			fps = data.FPS,
+			background = replay.background or 1,
+			players = players,
+		}
+	end
+
+	local function replayPath()
+		core.api.io.mkdir('replays')
+		local timestamp = os.date('%Y%m%d-%H%M%S')
+		local folder = core.savepath('replays')
+		local filename = string.format('%s-%s-%s',
+			safeReplayName(data.players and data.players[1]),
+			timestamp,
+			replaySalt()
+		)
+		local path = string.format('%s/%s.replay', folder, filename)
+		local suffix = 1
+		while replayPathExists(path) do
+			path = string.format('%s/%s-%d.replay', folder, filename, suffix)
+			suffix = suffix + 1
+		end
+		return path
+	end
+
+	local function shouldRecordReplay()
+		local replay = data.replay or { }
+		if replay.playing or replay.record == false then
+			return false
+		end
+		return true
+	end
+
+	local function startReplayRecording()
+		if not shouldRecordReplay() then return end
+		local replay = data.replay or { }
+		data.replay = replay
+		replay.current = replayPath()
+		replay.metadata = makeReplayMetadata()
+		Recorder:start(replay.current, json:dump(replay.metadata, true), nil, 1)
+		log:info('Recording replay to %s', replay.current)
+	end
+
+	function stopReplayRecording()
+		local replay = data.replay
+		if not (replay and replay.current) then return end
+		if replay.metadata then
+			replay.metadata.frames = Sync.frame
+			Recorder:metadata(replay.current, json:dump(replay.metadata, true))
+			replay.metadata = nil
+		end
+		Recorder:stop(replay.current)
+		log:info('Replay saved to %s', replay.current)
+		replay.current = nil
+	end
+
 	local function startMatch()
+		local replay = data.replay or { }
 		math.randomseed(12564)
 		GSID:init { seed = 12564, salt = 3 }
 		Sync:mode(Sync.ROLLBACK):reset().persist(makeSnapshot)
-		Input:unlock():reset(Input.remoteplayers)
+		if replay.playing then
+			Input:lock():reset(Input.remoteplayers, 0, true)
+		else
+			Input:unlock():reset(Input.remoteplayers)
+		end
 		setupTestMode()
 		Room:attach(RoomMap)
 		LoadingNode.active = false
 		data.isplaying = true
+		startReplayRecording()
 		log:success('Match has been started')
 	end
 
 	function resetMatch()
+		stopReplayRecording()
 		data.isplaying = false
 		SceneManager:pop()
 		Room:detach(RoomMap)
@@ -159,23 +267,33 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 		GSID:init { seed = 12564, salt = 3 }
 		local test = data.test
 		local testActive = test and test.active
+		local replayActive = data.replay and data.replay.playing
 		for i = 1, #chars do
-			local spawn = testActive and test.spawns and test.spawns[i]
 			chars[i].data.syncid = chars[i].data.syncid or ('player:%d'):format(i)
-			chars[i].data.x = spawn and spawn.x or data.random(200, 700)
-			chars[i].data.y = 0
-			chars[i].data.z = spawn and spawn.z or 0
-			chars[i].data.facing = spawn and spawn.facing or chars[i].data.facing
+			if not replayActive then
+				local spawn = testActive and test.spawns and test.spawns[i]
+				chars[i].data.x = spawn and spawn.x or data.random(200, 700)
+				chars[i].data.y = 0
+				chars[i].data.z = spawn and spawn.z or 0
+				chars[i].data.facing = spawn and spawn.facing or chars[i].data.facing
+			end
 			RoomMap:attach(chars[i])
 		end
 		objects = chars
-		if Input.remoteplayers == 0 or testActive then
+		if replayActive or Input.remoteplayers == 0 or testActive then
 			startMatch()
 		else
 			data.ready = true
 			data.ontimer = startMatch
 			Network:broadcast('netready')
 		end
+	end
+
+	function Room:filedropped(file)
+		local path = file and file:getFilename()
+		if not (path and path:match('%.replay$')) then return end
+		resetMatch()
+		data.openReplay(path)
 	end
 
 	function Room:preupdate(dt)
@@ -191,6 +309,11 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 
 	function Room:update(dt)
 		if Sync:testupdate() then
+			return
+		end
+		local replay = data.replay
+		if replay and replay.playing and replay.frames and Sync.frame >= replay.frames then
+			resetMatch()
 			return
 		end
 		local lastAlive = nil

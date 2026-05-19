@@ -15,7 +15,13 @@ end
 
 l2df = require 'l2df'
 
-data = { FPS = 60, players = { 'Player 1', 'Player 2' }, usertag = nil } -- shared data
+data = {
+	FPS = 60,
+	players = { 'Player 1', 'Player 2' },
+	usertag = nil,
+	loaded = false,
+	replay = { },
+} -- shared data
 
 helper = l2df.import 'helper'
 local cfg = l2df.import 'config'
@@ -28,6 +34,7 @@ local SyncManager = l2df.import 'manager.sync'
 local EventManager = l2df.import 'manager.event'
 local RenderManager = l2df.import 'manager.render'
 local NetworkManager = l2df.import 'manager.network'
+local ResourceManager = l2df.import 'manager.resource'
 local GSID = l2df.import 'manager.gsid'
 
 function data.layout(path)
@@ -54,36 +61,64 @@ function data.random(a, b)
 	return math.random(a, b)
 end
 
+function data.isReplayReady()
+	return data.loaded and data.chardata and data.bgdata and not ResourceManager:isLoading()
+end
+
+function data.tryOpenReplay()
+	local replay = data.replay
+	if not (replay and replay.pending and replay.path) then
+		return false
+	end
+	if not data.isReplayReady() then
+		return false
+	end
+	replay.pending = false
+	SceneManager:set('replay')
+	return true
+end
+
+function data.openReplay(path)
+	path = path and tostring(path) or nil
+	if not (path and path:match('%.replay$')) then
+		return false
+	end
+	NetworkManager:destroy()
+	data.ready = false
+	data.ontimer = nil
+	data.replay.path = path
+	data.replay.playing = false
+	data.replay.frames = nil
+	data.replay.pending = true
+	data.tryOpenReplay()
+	return true
+end
+
 local function readArgs(args)
+	local default_test = { active = true, exit = true, frames = data.FPS, speed = 1 }
 	for i = 1, #(args or { }) do
 		local arg = tostring(args[i])
-		if arg == '--test' then
-			data.test = data.test or { }
-			data.test.active = true
-			data.test.exit = true
-		elseif arg == '--test-debug' then
-			data.test = data.test or { }
+		if arg == '--test-debug' then
+			data.test = data.test or default_test
 			data.test.debug = true
-			data.test.active = true
-			data.test.exit = true
+		elseif arg == '--test-fast' then
+			data.test = data.test or default_test
+			data.test.hash = 'fast'
+		elseif arg == '--test-full' then
+			data.test = data.test or default_test
+			data.test.hash = 'full'
+		elseif arg:match('%.replay$') then
+			data.replay.path = arg
+			data.replay.pending = true
 		else
 			local frames = arg:match('^%-%-test%-frames=(%d+)$')
+			local speed = arg:match('^%-%-test%-speed=(%d+)$')
 			if frames then
 				data.test = data.test or { }
 				data.test.frames = tonumber(frames)
-			else
-				local speed = arg:match('^%-%-test%-speed=(%d+)$')
-				if speed then
-					data.test = data.test or { }
-					data.test.speed = tonumber(speed)
-				else
-					local hash = arg:match('^%-%-test%-hash=(%a+)$')
-					if hash then
-						assert(hash == 'fast' or hash == 'full', 'Invalid --test-hash value')
-						data.test = data.test or { }
-						data.test.hash = hash
-					end
-				end
+			elseif speed then
+				data.test = data.test or { }
+				data.test.speed = tonumber(speed)
 			end
 		end
 	end
@@ -97,6 +132,7 @@ function l2df.load(args)
 	cfg:load('data/data.txt')
 	cfg.settings = l2df.savepath(cfg.settings)
 	cfg:load(cfg.settings)
+	data.replay.record = not not cfg.record
 	l2df:init
 	{
 		fps = data.FPS,
@@ -143,6 +179,15 @@ function l2df.load(args)
 		set = 'loading'
 	}
 	NetworkManager:register(cfg.master or '127.0.0.1:12565')
+	EventManager:subscribe('filedropped', function (file)
+		local scene = SceneManager:current()
+		if scene and scene.filedropped then
+			scene:filedropped(file)
+		else
+			data.openReplay(file and file:getFilename())
+		end
+	end, love)
+	EventManager:subscribe('update', data.tryOpenReplay, EventManager, data)
 	EventManager:subscribe('keypressed', function (key)
 		if key == 'escape' and (not love or love.window.showMessageBox('LF2', 'Are you sure to quit?', {'No', 'Yes'}) == 2) then
 			l2df.api.event.quit()

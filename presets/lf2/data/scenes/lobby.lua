@@ -75,6 +75,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			local chardata = data.chardata:getById(groupdata.charid)
 			chardata.playonce = chardata.playonce or cfg.playonce
 			chars[i] = Factory:create('object', chardata)
+			chars[i].data.charid = groupdata.charid
 			chars[i].data.index = i
 			chars[i].data.team = groupdata.team
 			-- if player > 1 then
@@ -87,7 +88,8 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 			chars[i]:addComponent(Camera, { kx = 128, ky = 128 })
 		end
 		Input:lock()
-		local bg = data.bgdata:getById(1); bg.layer = 'GAME_LAYER'
+		data.replay.background = 1
+		local bg = data.bgdata:getById(data.replay.background); bg.layer = 'GAME_LAYER'
 		SceneManager:push('battle', Factory:create('map', bg), chars)
 	end)
 	Menu.R.BTN_RESET_ALL:onClick(function () Room:enter() end)

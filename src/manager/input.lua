@@ -565,6 +565,37 @@ local Manager = {
 		end
 	end
 
+	--- Stream all currently stored replayable input data.
+	-- Unlike @{Manager:stream|stream()}, this creates a fresh iterator from the
+	-- current input chains on every call, so it survives rollback/resync rewrites.
+	-- @param[opt=1] number player
+	-- @param[opt] number last
+	-- @param[opt] number limit  Exclusive upper frame bound. Defaults to no limit.
+	-- @return function
+	function Manager:replaystream(player, last, limit)
+		local from = player or 1
+		local to = last or player or (self.localplayers + self.remoteplayers)
+		local it = { }
+		for p = from, to do
+			local _, first = self:nearestinput(-1, p)
+			it[p] = first
+		end
+		local p = from
+		return function ()
+			while p <= to do
+				local input = it[p]
+				if input and input.frame == 0 and input.data == 0 and not input.prev then
+					input = input.next
+				end
+				if input and (not limit or input.frame < limit) then
+					it[p] = input.next
+					return p, input.frame, input.data, input.hash, input
+				end
+				p = p + 1
+			end
+		end
+	end
+
 	---
 	function Manager:fastforward(stream)
 		local t = self.timer
