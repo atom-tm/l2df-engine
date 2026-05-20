@@ -1,0 +1,9 @@
+return {
+	default = {
+		ROOT = { 'tests' },
+		verbose = true,
+		sort = true,
+		helper = 'tests/spec_helper.lua',
+		lpath = './?.lua;./?/init.lua;./tests/?.lua;./tests/?/init.lua',
+	},
+}
