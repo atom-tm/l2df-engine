@@ -5,6 +5,20 @@
 <node:group> SELECTION x: 257 y: 93
 </node:group>
 
+<node:group> BOT_POPUP x: 306 y: 220 active: false
+	<node:image> BACKGROUND layer: LOBBY_LAYER
+		<sprite> "sprite/UI/CMC.png" w: 365 h: 111 </sprite>
+	</node:image>
+	<node:text> NUM_0 x: 64 y: 62 layer: LOBBY_LAYER text: "0" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_1 x: 94 y: 62 layer: LOBBY_LAYER text: "1" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_2 x: 124 y: 62 layer: LOBBY_LAYER text: "2" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_3 x: 154 y: 62 layer: LOBBY_LAYER text: "3" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_4 x: 184 y: 62 layer: LOBBY_LAYER text: "4" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_5 x: 214 y: 62 layer: LOBBY_LAYER text: "5" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_6 x: 244 y: 62 layer: LOBBY_LAYER text: "6" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+	<node:text> NUM_7 x: 274 y: 62 layer: LOBBY_LAYER text: "7" align: center color: 255 255 255 255 limit: 24 font: 24 </node:text>
+</node:group>
+
 <node:menu> MENU x: 4 y: 4
 	<sprite> "sprite/UI/MENU_CLIP3.png" w: 304 h: 166 ox: 348 oy: 0 </sprite>
 	<node:button> BTN_FIGHT x: 89 y: 13

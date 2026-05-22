@@ -59,6 +59,18 @@ local function newInput()
 	return { data = 0, frame = 0, changes = 0, hash = 0xFFFFFFFF }
 end
 
+local function refreshFrom(it)
+	while it do
+		if it.prev then
+			it.changes = bitxor(it.prev.data, it.data)
+			it.hash = crc32(ppack('III', it.prev.hash, it.data, it.frame))
+		else
+			it.changes = it.data
+		end
+		it = it.next
+	end
+end
+
 local function dummy() end
 
 local inputs = { }
@@ -68,6 +80,7 @@ local islocked = false
 
 local Manager = {
 	frame = 0, delay = 0, timer = 0, mousex = 0, mousey = 0, localplayers = 0, remoteplayers = 0,
+	botplayers = 0,
 	buttons = { }, mapping = { }, touches = { }, touchmap = { }, keys = { }, keymap = { },
 	ui = { }, consumed = { }, confirmed = { }
 }
@@ -169,8 +182,11 @@ local Manager = {
 		double_timer = max(3, ceil(0.2 / tickrate))
 		self.frame = zero
 		self.timer = zero
+		if remote ~= nil and remote ~= self.remoteplayers and self.botplayers > 0 then
+			self:clearBotPlayers()
+		end
 		self.remoteplayers = remote or 0
-		for p = 1, self.localplayers do
+		for p = 1, self:totalplayers() do
 			self.buttons[p] = { }
 		end
 		for i = 1, #self.consumed do
@@ -178,7 +194,7 @@ local Manager = {
 		end
 		self.timers = { }
 		self.confirmed = { }
-		for p = 1, self.localplayers + self.remoteplayers do
+		for p = 1, self:totalplayers() do
 			self.timers[p] = zero
 			self.confirmed[p] = zero
 		end
@@ -187,21 +203,25 @@ local Manager = {
 			return self:update(0, false)
 		end
 		if zero > 0 then
-			for p = 1, self.localplayers + self.remoteplayers do
+			for p = 1, self:totalplayers() do
 				_, inputs[p] = self:dropinput(zero, p)
 			end
 			return
 		end
 		inputs = { }
-		for p = 1, self.localplayers + self.remoteplayers do
+		for p = 1, self:totalplayers() do
 			inputs[p] = newInput()
 		end
 	end
 
 	---
 	function Manager:rehash(player)
-		for p = player or 1, player or (self.localplayers + self.remoteplayers) do
+		for p = player or 1, player or self:totalplayers() do
 			local _, it = self:nearestinput(-1, p)
+			if not it then
+				inputs[p] = newInput()
+				it = inputs[p]
+			end
 			it.hash = 0xFFFFFFFF
 			while it.next do
 				it = it.next
@@ -221,8 +241,12 @@ local Manager = {
 	-- @param number dt
 	-- @param boolean islast
 	function Manager:update(dt, islast)
-		for p = 1, self.localplayers + self.remoteplayers do
+		for p = 1, self:totalplayers() do
 			local it = inputs[p]
+			if not it then
+				inputs[p] = newInput()
+				it = inputs[p]
+			end
 			while it.prev and it.frame >= self.frame do
 				it = it.prev
 			end
@@ -253,6 +277,9 @@ local Manager = {
 	--- Create input source for remote player.
 	-- @return number  player's id
 	function Manager:newRemotePlayer()
+		if self.botplayers > 0 then
+			self:clearBotPlayers()
+		end
 		self.remoteplayers = self.remoteplayers + 1
 		local index = self.localplayers + self.remoteplayers
 		inputs[index] = newInput()
@@ -264,18 +291,46 @@ local Manager = {
 	---
 	-- @return number  player's id
 	function Manager:newBotPlayer()
-		self.localplayers = self.localplayers + 1
-		local index = self.localplayers + self.remoteplayers
+		self.botplayers = self.botplayers + 1
+		local index = self:totalplayers()
 		inputs[index] = newInput()
 		self.timers[index] = self.frame
+		self.confirmed[index] = self.frame
 		self.buttons[index] = { }
 		return index
+	end
+
+	--- Remove all synthetic bot input sources.
+	function Manager:clearBotPlayers()
+		local first = self.localplayers + self.remoteplayers + 1
+		for p = first, self:totalplayers() do
+			inputs[p] = nil
+			self.timers[p] = nil
+			self.buttons[p] = nil
+			self.confirmed[p] = nil
+			for i = 1, #self.consumed do
+				self.consumed[i][p] = nil
+			end
+		end
+		self.botplayers = 0
+		return self
+	end
+
+	--- Return the full count of simulated players, including synthetic bots.
+	function Manager:totalplayers()
+		return self.localplayers + self.remoteplayers + self.botplayers
+	end
+
+	--- Return the highest real remote player id.
+	function Manager:remoteplayerend()
+		return self.localplayers + self.remoteplayers
 	end
 
 	--- Sync mappings with config.
 	-- @param table mappings
 	function Manager:updateMappings(mappings)
 		self.mapping = { }
+		self:clearBotPlayers()
 		self.localplayers = #mappings
 		for p = 1, self.localplayers do
 			inputs[p] = newInput()
@@ -474,19 +529,27 @@ local Manager = {
 	-- @param number input
 	-- @param[opt=1] number player
 	-- @param[opt] number timer   Default is current timer.
+	-- @param[opt=false] boolean replace  Replace same-frame input instead of reporting conflict.
 	-- @return[1] l2df.manager.input
 	-- @return[2] l2df.manager.input
 	-- @return[2] table
-	function Manager:addinput(input, player, timer)
+	function Manager:addinput(input, player, timer, replace)
 		player = player or 1
-		if player > self.localplayers + self.remoteplayers then
+		if player > self:totalplayers() then
 			return self
 		end
-		timer = timer or max(self.timers[player], self.timer)
+		timer = timer or max(self.timers[player] or self.frame, self.timer)
 		local left, right = self:nearestinput(timer, player)
 		if left and left.data == input and left.frame == timer then
 			return self, left
 		elseif left and left.frame == timer then
+			if replace then
+				left.data = input
+				refreshFrom(left)
+				self.timers[player] = timer
+				self.frame = min(timer, self.frame)
+				return self, left
+			end
 			-- TODO: fix this input merger
 			-- local xor = bitxor(left.data, input)
 			-- local changes = bitxor(xor, left.changes)
@@ -518,10 +581,7 @@ local Manager = {
 		end
 		if right then
 			right.prev = new
-			while right do
-				right.hash = crc32(ppack('III', right.prev.hash, right.data, right.frame))
-				right = right.next
-			end
+			refreshFrom(right)
 		end
 		-- inputs[player] = new
 		self.timers[player] = timer
@@ -536,7 +596,7 @@ local Manager = {
 	-- @return l2df.manager.input
 	function Manager:saveinput(player, frame)
 		for p = player or 1, player or self.localplayers do
-			self:addinput(self:rawinput(p), p, frame)
+			self:addinput(self:rawinput(p), p, frame, true)
 		end
 		return self
 	end
@@ -551,7 +611,7 @@ local Manager = {
 	-- @return[2] number  CRC32 checksum.
 	function Manager:stream(player, last)
 		local it = { }
-		local from, to = player or 1, last or player or (self.localplayers + self.remoteplayers)
+		local from, to = player or 1, last or player or self:totalplayers()
 		for p = 1, to do
 			it[p] = inputs[p]
 		end
@@ -574,7 +634,7 @@ local Manager = {
 	-- @return function
 	function Manager:replaystream(player, last, limit)
 		local from = player or 1
-		local to = last or player or (self.localplayers + self.remoteplayers)
+		local to = last or player or self:totalplayers()
 		local it = { }
 		for p = from, to do
 			local _, first = self:nearestinput(-1, p)
@@ -608,9 +668,12 @@ local Manager = {
 	-- @param number player
 	-- @return number
 	function Manager:rawinput(player)
-		local buttons = self.buttons[player or 1]
-		if not buttons then return 0 end
+		return self:encode(self.buttons[player or 1])
+	end
 
+	--- Encode a button-state table into raw input bits.
+	function Manager:encode(buttons)
+		if not buttons then return 0 end
 		local input, kc = 0
 		for i = 1, #self.keys do
 			kc = self.keys[i]
@@ -619,6 +682,22 @@ local Manager = {
 			end
 		end
 		return input
+	end
+
+	--- Replace raw input for a player at the specified frame.
+	-- Intended for deterministic synthetic input sources.
+	function Manager:setrawinput(input, player, frame)
+		if islocked then return self end
+		player = player or 1
+		if player > self:totalplayers() then return self end
+		frame = max(1, frame or self.frame)
+		self:dropinput(frame - 1, player)
+		self.buttons[player] = self.buttons[player] or { }
+		for i = 1, #self.keys do
+			local kc = self.keys[i]
+			self.buttons[player][kc[1]] = hasbit(input, kc[2])
+		end
+		return self:addinput(input, player, frame)
 	end
 
 	--- Button pressed event.
@@ -630,6 +709,7 @@ local Manager = {
 			return self
 		end
 		player = player or 1
+		self.buttons[player] = self.buttons[player] or { }
 		self.buttons[player][button] = true
 		self:saveinput(player)
 		return self
@@ -644,6 +724,7 @@ local Manager = {
 			return self
 		end
 		player = player or 1
+		self.buttons[player] = self.buttons[player] or { }
 		self.buttons[player][button] = false
 		self:saveinput(player)
 		return self

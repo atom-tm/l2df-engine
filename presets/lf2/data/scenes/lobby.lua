@@ -27,6 +27,12 @@ local function defaultAction(self, action, ...) (self.node[action] or dummyFunc)
 
 local Room, RoomData = data.layout('layout/lobby.dat')
 
+	local BOT_MAX = 7
+	local SLOT_MAX = 8
+	local BOT_COLOR = { 1, 1, 1, 1 }
+	local BOT_SELECTED_COLOR = { 1, 0.85, 0.25, 1 }
+	local BOT_DISABLED_COLOR = { 0.45, 0.45, 0.45, 1 }
+
 	local function wrapButton(btn)
 		if btn.name ~= 'button' then return end
 		btn.nodes:first():addComponent(Collision)
@@ -55,6 +61,12 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 	end
 
 	local TEAMS = { 'Independent', 'Team 1', 'Team 2', 'Team 3', 'Team 4' }
+	local BotPopup = Room.R.BOT_POPUP()
+	local BotNumbers = { }
+	for i = 0, BOT_MAX do
+		BotNumbers[i] = BotPopup.R[('NUM_%s'):format(i)]()
+		BotNumbers[i].data.text = tostring(i)
+	end
 
 	local function getGroup(player)
 		local y = 1
@@ -65,27 +77,116 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		return SELECTION.R[('T%s_%s'):format(player, y)]
 	end
 
-	-- BUTTON BINDINGS
 	local Menu = Room.R.MENU()
+
+	local function setBotNumberColor(index, color)
+		local data = BotNumbers[index].C.print.data()
+		data.text = tostring(index)
+		data.color = color
+	end
+
+	local function botLimit(room)
+		return math.min(BOT_MAX, math.max(0, SLOT_MAX - #room.data.ready_players))
+	end
+
+	local function updateBotPopup(room)
+		local maxbots = room.data.max_bots or 0
+		local selected = room.data.bot_count or 0
+		for i = 0, BOT_MAX do
+			if i > maxbots then
+				setBotNumberColor(i, BOT_DISABLED_COLOR)
+			elseif i == selected then
+				setBotNumberColor(i, BOT_SELECTED_COLOR)
+			else
+				setBotNumberColor(i, BOT_COLOR)
+			end
+		end
+	end
+
+	local function collectRandomSlots(room)
+		room.data.random = { }
+		for _, group in SELECTION.nodes:enum() do
+			if group.R.AVATAR().data.frame.keyword == 'random' then
+				room.data.random[#room.data.random + 1] = group
+			end
+		end
+		room:randomize()
+	end
+
+	local function activateMenu(room)
+		BotPopup.active = false
+		room.data.bot_prompt = false
+		room.data.bot_prompt_done = true
+		collectRandomSlots(room)
+		Menu.active = true
+	end
+
+	local function activateBotPopup(room)
+		room.data.max_bots = botLimit(room)
+		room.data.bot_count = math.min(room.data.bot_count or 0, room.data.max_bots)
+		room.data.bot_prompt = true
+		BotPopup.active = true
+		updateBotPopup(room)
+	end
+
+	local function cancelReadyPlayer(room, player)
+		local group = getGroup(player)
+		if not group or group.data.ST <= 0 then return end
+		if group.data.ST == 1 then
+			group.AVATAR.C.frames.set('join')
+			group.PLAYER.C.frames.set('flicker')
+			group.PLAYER.data.text = 'Join?'
+			group.FIGHTER.data.hidden = true
+			room.data.active_players = room.data.active_players - 1
+		elseif group.data.ST == 2 then
+			group.FIGHTER.C.frames.set('flicker')
+			group.TEAM.data.hidden = true
+		else
+			group.TEAM.C.frames.set('flicker')
+			for i = 1, #room.data.ready_players do
+				if room.data.ready_players[i] == player then
+					table.remove(room.data.ready_players, i)
+					break
+				end
+			end
+		end
+		group.data.ST = group.data.ST - 1
+		room.data.bot_prompt = false
+		room.data.bot_prompt_done = false
+		room.data.bot_count = 0
+		BotPopup.active = false
+	end
+
+	local function createCharacter(charid, index, team, player, isbot)
+		charid = charid ~= 0 and charid or data.random(1, data.chardata.count)
+		local chardata = data.chardata:getById(charid)
+		chardata.playonce = chardata.playonce or cfg.playonce
+		local char = Factory:create('object', chardata)
+		char.data.charid = charid
+		char.data.index = index
+		char.data.team = team or 0
+		if isbot then
+			char:addComponent(Bot)
+		end
+		char:addComponent(Controller, player)
+		char:addComponent(SoundSystem, chardata)
+		char:addComponent(CharAttributes, chardata)
+		char:addComponent(Camera, { kx = 128, ky = 128 })
+		return char
+	end
+
+	-- BUTTON BINDINGS
 	Menu.R.BTN_FIGHT:onClick(function ()
 		local chars = { }
 		for i = 1, #Room.data.ready_players do
 			local player = Room.data.ready_players[i]
 			local groupdata = getGroup(player).data
-			local chardata = data.chardata:getById(groupdata.charid)
-			chardata.playonce = chardata.playonce or cfg.playonce
-			chars[i] = Factory:create('object', chardata)
-			chars[i].data.charid = groupdata.charid
-			chars[i].data.index = i
-			chars[i].data.team = groupdata.team
-			-- if player > 1 then
-			-- 	player = Input:newBotPlayer()
-			-- 	chars[i]:addComponent(Bot)
-			-- end
-			chars[i]:addComponent(Controller, player)
-			chars[i]:addComponent(SoundSystem, chardata)
-			chars[i]:addComponent(CharAttributes, chardata)
-			chars[i]:addComponent(Camera, { kx = 128, ky = 128 })
+			chars[i] = createCharacter(groupdata.charid, i, groupdata.team, player)
+		end
+		for i = 1, (Room.data.bot_count or 0) do
+			local index = #chars + 1
+			local player = Input:newBotPlayer()
+			chars[index] = createCharacter(data.random(1, data.chardata.count), index, 0, player, true)
 		end
 		Input:lock()
 		data.replay.background = 1
@@ -113,6 +214,9 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 
 	function Room:enable()
 		self.active = true
+		if not data.isplaying then
+			Input:clearBotPlayers()
+		end
 	end
 
 	function Room:disable()
@@ -121,8 +225,14 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 
 	function Room:enter()
 		log:debug 'Room: LOBBY'
+		Input:clearBotPlayers()
+		BotPopup.active = false
 		Menu.active = false
 		self.data.counting = false
+		self.data.bot_prompt = false
+		self.data.bot_prompt_done = false
+		self.data.bot_count = 0
+		self.data.max_bots = 0
 		self.data.random = { }
 		self.data.active_players = 0
 		self.data.ready_players = { }
@@ -157,6 +267,23 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 
 	function Room:update()
 		if SceneManager:current() ~= self then return end
+		if self.data.bot_prompt then
+			local _, left = Input:consume('left')
+			local _, right = Input:consume('right')
+			local ok = Input:consume('attack') or Input:consume('select')
+			local _, jmp = Input:consume('jump')
+			if left or right then
+				local maxbots = self.data.max_bots or 0
+				local sign = right and 1 or -1
+				self.data.bot_count = (self.data.bot_count + sign) % (maxbots + 1)
+				updateBotPopup(self)
+			elseif ok then
+				activateMenu(self)
+			elseif jmp then
+				cancelReadyPlayer(self, jmp)
+			end
+			return
+		end
 		if Menu.active then
 			if Input:consume('up') then
 				Menu:prev()
@@ -204,25 +331,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		if jmp then
 			local group = getGroup(jmp)
 			if group.data.ST > 0 and not self.data.counting then
-				if group.data.ST == 1 then
-					group.AVATAR.C.frames.set('join')
-					group.PLAYER.C.frames.set('flicker')
-					group.PLAYER.data.text = 'Join?'
-					group.FIGHTER.data.hidden = true
-					self.data.active_players = self.data.active_players - 1
-				elseif group.data.ST == 2 then
-					group.FIGHTER.C.frames.set('flicker')
-					group.TEAM.data.hidden = true
-				else
-					group.TEAM.C.frames.set('flicker')
-					for i = 1, #self.data.ready_players do
-						if self.data.ready_players[i] == jmp then
-							table.remove(self.data.ready_players, i)
-							break
-						end
-					end
-				end
-				group.data.ST = group.data.ST - 1
+				cancelReadyPlayer(self, jmp)
 			elseif self.data.active_players == 0 then
 				SceneManager:pop()
 			end
@@ -239,7 +348,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 				group.TEAM.data.text = TEAMS[group.data.team + 1]
 			end
 		end
-		if self.data.active_players > 0 and self.data.active_players == #self.data.ready_players then
+		if self.data.active_players > 0 and self.data.active_players == #self.data.ready_players and not self.data.bot_prompt_done then
 			for _, group in SELECTION.nodes:enum() do
 				if group.R.AVATAR.data.frame.id < 3 then
 					group.R.AVATAR.C.frames.set('count')
@@ -248,19 +357,10 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 				if group.R.AVATAR.data.frame.id == AFCOUNT - 1 then
 					group.R.PLAYER.C.frames.set('idle')
 					group.R.PLAYER.data.text = '—'
-					Menu.active = true
 					self.data.counting = false
+					activateBotPopup(self)
 				end
 			end
-		end
-		if Menu.active then
-			self.data.random = { }
-			for _, group in SELECTION.nodes:enum() do
-				if group.R.AVATAR().data.frame.keyword == 'random' then
-					self.data.random[#self.data.random + 1] = group
-				end
-			end
-			self:randomize()
 		end
 	end
 

@@ -110,10 +110,12 @@ local Print = Component:extend({ unique = false })
 	-- @param[opt=1] number kwargs.scaley  Text's Y scale. Careful: if setted it will change entity's scale.
 	-- @param[opt=0] number kwargs.centerx  Text's origin X position. Doesn't apply if entity already has origin setted.
 	-- @param[opt=0] number kwargs.centery  Text's origin Y position. Doesn't apply if entity already has origin setted.
+	-- @param[opt] string kwargs.layer  Render layer to draw text on.
 	function Print:added(obj, kwargs)
 		if not obj then return false end
 
 		local data = obj.data
+		kwargs = kwargs or { }
 
 		obj.C.print = self:wrap(obj)
 
@@ -127,6 +129,7 @@ local Print = Component:extend({ unique = false })
 
 		data.centerx = data.centerx or kwargs.centerx or 0
 		data.centery = data.centery or kwargs.centery or 0
+		data.layer = kwargs.layer or data.layer
 
 		data.hidden = kwargs.hidden or data.hidden or false
 
@@ -145,6 +148,7 @@ local Print = Component:extend({ unique = false })
 			end
 			if #text == 0 then return end
 			RenderManager:draw({
+				layer = data.layer,
 				text = text,
 				font = cdata.font,
 				align = cdata.align,

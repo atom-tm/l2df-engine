@@ -92,6 +92,7 @@ local Room = Scene { active = false }
 		local replay = assert(data.replay, 'Replay path is not configured')
 		assert(replay.path, 'Replay path is not configured')
 		metadata = nil
+		Input:clearBotPlayers():reset(0)
 		if not Recorder:open(replay.path, loadReplay) then
 			SceneManager:set('menu')
 			return

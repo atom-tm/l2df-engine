@@ -488,7 +488,7 @@ local Room = data.layout('layout/menu/main.dat')
 		if Sync.desync then return end
 		Input.confirmed[c.player] = math.max(Input.confirmed[c.player], frame)
 		local min = frame
-		for i = Input.localplayers + 1, #Input.confirmed do
+		for i = Input.localplayers + 1, Input:remoteplayerend() do
 			local v = Input.confirmed[i]
 			if v < min then
 				min = v
