@@ -72,7 +72,15 @@ height: 550
 
 <character> file: data/template.dat </character>
 <character> file: data/ftemplate.dat </character>
-<object> file: data/objects/sandbag/object.dat </object>
+<character> id: 1 type: 0 file: data/deep.dat </character>
+<character> id: 30 type: 0 file: data/bandit.dat </character>
+<character> id: 11 type: 0 file: data/davis.dat </character>
+<character> id: 52 type: 0 file: data/julian.dat </character>
+<object> id: 100 type: 1 file: data/weapon0.dat </object>
+<object> id: 203 type: 3 file: data/deep_ball.dat </object>
+<object> id: 207 type: 3 file: data/davis_ball.dat </object>
+<object> id: 228 type: 3 file: data/julian_ball.dat </object>
+<object> id: 229 type: 3 file: data/julian_ball2.dat </object>
 
 <background> file: bg/template/1/bg.dat </background>
 <background> file: bg/template/2/bg.dat </background>

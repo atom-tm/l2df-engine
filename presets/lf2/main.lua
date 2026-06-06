@@ -96,6 +96,7 @@ end
 
 local function readArgs(args)
 	local default_test = { active = true, exit = true, frames = data.FPS, speed = 1 }
+	local speed_set = false
 	for i = 1, #(args or { }) do
 		local arg = tostring(args[i])
 		if arg == '--test-debug' then
@@ -107,18 +108,47 @@ local function readArgs(args)
 		elseif arg == '--test-full' then
 			data.test = data.test or default_test
 			data.test.hash = 'full'
+		elseif arg == '--test-flf' then
+			data.test = data.test or default_test
+			data.test.mode = 'flf'
+			if not speed_set then
+				data.test.speed = 240
+			end
+		elseif arg == '--test-flf-strict' then
+			data.test = data.test or default_test
+			data.test.mode = 'flf'
+			data.test.flf_strict = true
+			if not speed_set then
+				data.test.speed = 240
+			end
 		elseif arg:match('%.replay$') then
 			data.replay.path = arg
 			data.replay.pending = true
 		else
 			local frames = arg:match('^%-%-test%-frames=(%d+)$')
 			local speed = arg:match('^%-%-test%-speed=(%d+)$')
+			local chars = arg:match('^%-%-test%-chars=([%d,]+)$')
+			local flfcase = arg:match('^%-%-test%-flf%-case=(.+)$')
 			if frames then
 				data.test = data.test or { }
 				data.test.frames = tonumber(frames)
 			elseif speed then
 				data.test = data.test or { }
 				data.test.speed = tonumber(speed)
+				speed_set = true
+			elseif chars then
+				data.test = data.test or { }
+				data.test.chars = { }
+				for id in chars:gmatch('%d+') do
+					data.test.chars[#data.test.chars + 1] = tonumber(id)
+				end
+			elseif flfcase then
+				data.test = data.test or { }
+				data.test.mode = 'flf'
+				data.test.case_filter = flfcase
+				if not speed_set then
+					data.test.speed = 240
+				end
 			end
 		end
 	end

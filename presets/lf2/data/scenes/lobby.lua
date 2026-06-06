@@ -89,6 +89,49 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		return math.min(BOT_MAX, math.max(0, SLOT_MAX - #room.data.ready_players))
 	end
 
+	local function resetGroup(group)
+		group = group.R
+		group.AVATAR.C.frames.set(1)
+		group.PLAYER.C.frames.set(1)
+		group.FIGHTER.C.frames.set(1)
+		group.TEAM.C.frames.set(1)
+		group.PLAYER.data.hidden = false
+		group.PLAYER.data.text = 'Join?'
+		group.FIGHTER.data.hidden = true
+		group.FIGHTER.data.text = 'Random'
+		group.TEAM.data.hidden = true
+		group.TEAM.data.text = TEAMS[1]
+		group.data.team = 0
+		group.data.charid = 0
+		group.data.ST = 0
+	end
+
+	local function closeGroup(group)
+		group = group.R
+		group.AVATAR.C.frames.set('idle')
+		group.PLAYER.C.frames.set('idle')
+		group.PLAYER.data.hidden = false
+		group.PLAYER.data.text = '—'
+		group.FIGHTER.data.hidden = true
+		group.TEAM.data.hidden = true
+		group.data.team = 0
+		group.data.charid = 0
+		group.data.ST = 0
+	end
+
+	local function setGroupCharacter(group, charid)
+		group = group.R
+		group.data.charid = (charid or 0) % (data.chardata.count + 1)
+		group.AVATAR.C.frames.set(AFCOUNT + group.data.charid)
+		group.FIGHTER.data.text = group.AVATAR.data.frame.fighter
+	end
+
+	local function setGroupTeam(group, team)
+		group = group.R
+		group.data.team = (team or 0) % #TEAMS
+		group.TEAM.data.text = TEAMS[group.data.team + 1]
+	end
+
 	local function updateBotPopup(room)
 		local maxbots = room.data.max_bots or 0
 		local selected = room.data.bot_count or 0
@@ -116,12 +159,144 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 	local function activateMenu(room)
 		BotPopup.active = false
 		room.data.bot_prompt = false
+		room.data.bot_selecting = false
 		room.data.bot_prompt_done = true
 		collectRandomSlots(room)
 		Menu.active = true
 	end
 
-	local function activateBotPopup(room)
+	local activateBotPopup
+
+	local function botSlots(room)
+		local occupied = { }
+		for i = 1, #room.data.ready_players do
+			local group = getGroup(room.data.ready_players[i])
+			group = group and group.R
+			if group then
+				occupied[group] = true
+			end
+		end
+		local slots = { }
+		for _, group in SELECTION.nodes:enum() do
+			group = group.R
+			if not occupied[group] then
+				slots[#slots + 1] = group
+			end
+		end
+		return slots
+	end
+
+	local function updateBotSelection(room)
+		local index = room.data.bot_select_index or 1
+		local stage = room.data.bot_select_stage or 1
+		local groups = room.data.bot_groups or { }
+		for i = 1, #groups do
+			local group = groups[i]
+			group.PLAYER.C.frames.set('idle')
+			group.FIGHTER.C.frames.set(i == index and stage == 1 and 'flicker' or 'idle')
+			group.TEAM.data.hidden = i > index or i == index and stage == 1
+			if not group.TEAM.data.hidden then
+				group.TEAM.C.frames.set(i == index and stage == 2 and 'flicker' or 'idle')
+			end
+		end
+	end
+
+	local function clearBotSelection(room)
+		for _, group in ipairs(room.data.bot_groups or { }) do
+			closeGroup(group)
+		end
+		room.data.bot_groups = { }
+		room.data.bot_selecting = false
+		room.data.bot_select_index = 1
+		room.data.bot_select_stage = 1
+	end
+
+	local function activateBotSelection(room)
+		local count = room.data.bot_count or 0
+		if count == 0 then
+			activateMenu(room)
+			return
+		end
+		local slots = botSlots(room)
+		count = math.min(count, #slots)
+		room.data.bot_count = count
+		if count == 0 then
+			activateMenu(room)
+			return
+		end
+		BotPopup.active = false
+		room.data.bot_prompt = false
+		room.data.bot_selecting = true
+		room.data.bot_select_index = 1
+		room.data.bot_select_stage = 1
+		room.data.bot_groups = { }
+		for i = 1, count do
+			local group = slots[i]
+			if not group then break end
+			room.data.bot_groups[i] = group
+			group.PLAYER.data.hidden = false
+			group.PLAYER.data.text = ('Bot %s'):format(i)
+			group.FIGHTER.data.hidden = false
+			group.TEAM.data.hidden = true
+			setGroupCharacter(group, 0)
+			setGroupTeam(group, 0)
+		end
+		updateBotSelection(room)
+	end
+
+	local function commitBotSelection(room)
+		local index = room.data.bot_select_index or 1
+		local stage = room.data.bot_select_stage or 1
+		local group = room.data.bot_groups and room.data.bot_groups[index]
+		if not group then
+			activateMenu(room)
+			return
+		end
+		if stage == 1 then
+			room.data.bot_select_stage = 2
+			updateBotSelection(room)
+			return
+		end
+		if index >= (room.data.bot_count or 0) then
+			activateMenu(room)
+			return
+		end
+		room.data.bot_select_index = index + 1
+		room.data.bot_select_stage = 1
+		updateBotSelection(room)
+	end
+
+	local function cancelBotSelection(room)
+		local index = room.data.bot_select_index or 1
+		local stage = room.data.bot_select_stage or 1
+		if stage == 2 then
+			room.data.bot_select_stage = 1
+			updateBotSelection(room)
+			return
+		end
+		if index > 1 then
+			room.data.bot_select_index = index - 1
+			room.data.bot_select_stage = 2
+			updateBotSelection(room)
+			return
+		end
+		clearBotSelection(room)
+		activateBotPopup(room)
+	end
+
+	local function moveBotSelection(room, sign)
+		local index = room.data.bot_select_index or 1
+		local group = room.data.bot_groups and room.data.bot_groups[index]
+		if not group then return end
+		if (room.data.bot_select_stage or 1) == 1 then
+			setGroupCharacter(group, group.data.charid + sign)
+		else
+			setGroupTeam(group, group.data.team + sign)
+		end
+	end
+
+	function activateBotPopup(room)
+		clearBotSelection(room)
 		room.data.max_bots = botLimit(room)
 		room.data.bot_count = math.min(room.data.bot_count or 0, room.data.max_bots)
 		room.data.bot_prompt = true
@@ -154,6 +329,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		room.data.bot_prompt = false
 		room.data.bot_prompt_done = false
 		room.data.bot_count = 0
+		clearBotSelection(room)
 		BotPopup.active = false
 	end
 
@@ -185,8 +361,10 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		end
 		for i = 1, (Room.data.bot_count or 0) do
 			local index = #chars + 1
+			local group = Room.data.bot_groups and Room.data.bot_groups[i]
+			local groupdata = group and group.data or { }
 			local player = Input:newBotPlayer()
-			chars[index] = createCharacter(data.random(1, data.chardata.count), index, 0, player, true)
+			chars[index] = createCharacter(groupdata.charid or 0, index, groupdata.team or 0, player, true)
 		end
 		Input:lock()
 		data.replay.background = 1
@@ -231,8 +409,12 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 		self.data.counting = false
 		self.data.bot_prompt = false
 		self.data.bot_prompt_done = false
+		self.data.bot_selecting = false
+		self.data.bot_select_index = 1
+		self.data.bot_select_stage = 1
 		self.data.bot_count = 0
 		self.data.max_bots = 0
+		self.data.bot_groups = { }
 		self.data.random = { }
 		self.data.active_players = 0
 		self.data.ready_players = { }
@@ -249,19 +431,7 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 					avatar.C.render.addSprite({ char.head })
 				end
 			end
-			group.R.AVATAR.C.frames.set(1)
-			group.R.PLAYER.C.frames.set(1)
-			group.R.FIGHTER.C.frames.set(1)
-			group.R.TEAM.C.frames.set(1)
-			group.R.PLAYER.data.hidden = false
-			group.R.PLAYER.data.text = 'Join?'
-			group.R.FIGHTER.data.hidden = true
-			group.R.FIGHTER.data.text = 'Random'
-			group.R.TEAM.data.hidden = true
-			group.R.TEAM.data.text = TEAMS[1]
-			group.data.team = 0
-			group.data.charid = 0
-			group.data.ST = 0
+			resetGroup(group)
 		end
 	end
 
@@ -278,9 +448,23 @@ local Room, RoomData = data.layout('layout/lobby.dat')
 				self.data.bot_count = (self.data.bot_count + sign) % (maxbots + 1)
 				updateBotPopup(self)
 			elseif ok then
-				activateMenu(self)
+				activateBotSelection(self)
 			elseif jmp then
 				cancelReadyPlayer(self, jmp)
+			end
+			return
+		end
+		if self.data.bot_selecting then
+			local left = Input:consume('left')
+			local right = Input:consume('right')
+			local ok = Input:consume('attack') or Input:consume('select')
+			local back = Input:consume('jump')
+			if left or right then
+				moveBotSelection(self, right and 1 or -1)
+			elseif ok then
+				commitBotSelection(self)
+			elseif back then
+				cancelBotSelection(self)
 			end
 			return
 		end

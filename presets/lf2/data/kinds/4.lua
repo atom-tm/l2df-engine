@@ -1,4 +1,6 @@
 --- Falling
-return function (e1, e2, itr, bdy)
-	-- TODO: implement
+local normalHit = require 'data.kinds.0'
+
+return function (...)
+	return normalHit(...)
 end

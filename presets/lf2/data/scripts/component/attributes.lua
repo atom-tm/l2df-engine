@@ -43,6 +43,9 @@ local Attributes = Component:extend({ unique = true })
 		local data = obj.data
 		data.stunned = false
 		data.index = data.index or data.player or 1
+		data._lf2 = true
+		data._lf2_type = kwargs._lf2_type or data._lf2_type or 0
+		data.lf2id = kwargs.lf2id or data.lf2id
 
 		if obj.C.render then
 			data.avatar = obj.C.render.addSprite({ kwargs.small })
@@ -131,7 +134,7 @@ local Attributes = Component:extend({ unique = true })
 		local key = sourceKey(source)
 		local injury = source.injury or 0
 		local bdefend = source.bdefend or injury
-		local fall = source.fall or injury
+		local fall = source.fall or (injury > 0 and 20 or 0)
 		if not ignore_defence and cdata.candefend and cdata.defence > 0 and not ignored[key] then
 			ignored[key] = core:convert(source.arest or source.vrest or 5)
 			cdata.hp = cdata.hp - injury * 0.2
@@ -161,7 +164,7 @@ local Attributes = Component:extend({ unique = true })
 		end
 		cdata.ptimer = 1
 		cdata.pain = cdata.pain - fall
-		damaged[key] = core:convert(source.arest or source.vrest or 5)
+		damaged[key] = core:convert(source.arest or source.vrest or 7)
 		return true
 	end
 

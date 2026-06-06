@@ -25,12 +25,17 @@ coroutine.yield()
 	KindsManager:load(cfg.kinds)
 	log:info 'Loading characters...'
 coroutine.yield()
+	data.objectdata = data.objectdata or Storage()
 	if cfg.characters then
 		for i = 1, #cfg.characters do
-			local path = cfg.characters[i].file or cfg.characters[i][1]
+			local entry = cfg.characters[i]
+			local path = entry.file or entry[1]
 			log:info('Loading: %s', path)
 			local char = Parser:parseFile(path)
 			if char then
+				char._lf2 = true
+				char._lf2_type = entry.type or char._lf2_type or 0
+				char.lf2id = entry.id or char.lf2id
 				if char.preview then
 					char.preview = {
 						states = { {
@@ -51,6 +56,32 @@ coroutine.yield()
 					}
 				end
 				data.chardata:add(char)
+				if entry.id then
+					data.objectdata:addById(char, entry.id, true)
+				end
+			else
+				log:error('%s not found', path)
+			end
+coroutine.yield()
+		end
+	end
+	log:info 'Loading objects...'
+coroutine.yield()
+	if cfg.objects then
+		for i = 1, #cfg.objects do
+			local entry = cfg.objects[i]
+			local path = entry.file or entry[1]
+			log:info('Loading: %s', path)
+			local obj = Parser:parseFile(path)
+			if obj then
+				obj._lf2 = true
+				obj._lf2_type = entry.type or obj._lf2_type
+				obj.lf2id = entry.id or obj.lf2id
+				if entry.id then
+					data.objectdata:addById(obj, entry.id, true)
+				else
+					data.objectdata:add(obj)
+				end
 			else
 				log:error('%s not found', path)
 			end
@@ -103,6 +134,7 @@ Room, RoomData = data.layout('layout/loading.dat')
 	Room.loader = Room.R.LOADER()
 	data.chardata = Storage()
 	data.bgdata = Storage()
+	data.objectdata = Storage()
 
 	function Room:enter()
 		log:debug 'Room: LOADING'
@@ -126,7 +158,7 @@ Room, RoomData = data.layout('layout/loading.dat')
 				data.tryOpenReplay()
 				return
 			elseif data.test and data.test.active then
-				SceneManager:set('test')
+				SceneManager:set(data.test.mode == 'flf' and 'flf_unit' or 'test')
 			else
 				SceneManager:set('menu')
 			end

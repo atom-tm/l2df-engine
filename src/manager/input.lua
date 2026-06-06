@@ -415,13 +415,15 @@ local Manager = {
 	--- Check if button was double pressed.
 	-- @param string button  Doubled button.
 	-- @param number player  Player to check or nil to check any local player.
+	-- @param boolean ignore_remotes  Do not check remote players.
+	-- @param number window  Optional input history window in frames.
 	-- @return boolean
 	-- @return number
-	function Manager:doubled(button, player, ignore_remotes)
+	function Manager:doubled(button, player, ignore_remotes, window)
 		local index = self.keymap[button]
 		if index then
 			index = self.keys[index][2]
-			local timer, c, a, b, it = self.frame - double_timer
+			local timer, c, a, b, it = self.frame - (window or double_timer)
 			for p = player or 1, player or self.localplayers + (ignore_remotes and 0 or self.remoteplayers) do
 				it, c, a, b = inputs[p], 0, true, false
 				while it and it.frame >= timer do

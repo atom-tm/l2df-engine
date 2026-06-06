@@ -1,5 +1,12 @@
 --- Falling
+local catch = require 'data.kinds.catch'
+local normalHit = require 'data.kinds.normal_hit'
+
 return function (obj, data)
+	if normalHit.processReaction(obj) or catch.processReaction(obj) then
+		return
+	end
+
 	local frames, control, sound = obj.C.frames, obj.C.controller, obj.C.sound
 	if not (control and frames and sound) then return end
 

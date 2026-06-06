@@ -86,7 +86,9 @@ local Room = Scene { active = false }
 	end
 
 	local function createFighter(index, player, charid)
-		local chardata = assert(data.chardata:getById(charid), 'Test character is missing')
+		local chardata = data.chardata:getById(charid)
+			or data.objectdata and data.objectdata:getById(charid)
+		assert(chardata, 'Test character is missing')
 		chardata.playonce = chardata.playonce or cfg.playonce
 		local char = Factory:create('object', chardata)
 		char.data.index = index
@@ -201,13 +203,26 @@ local Room = Scene { active = false }
 		return input(dir, z, action)
 	end
 
+	local function specialInput(player, frame)
+		local dir = player == 1 and 'right' or 'left'
+		local localFrame = frame - (frame < 30 and 6 or 66)
+		if localFrame < 0 or localFrame > 18 then
+			return nil
+		end
+		if once(localFrame, 6, 10, 14) then
+			return input('defend', dir, 'attack')
+		end
+		return input('defend', dir)
+	end
+
 	local function testInput(player, frame)
 		local test = data.test
 		local script = test and test.script
 		if script and script[player] and script[player][frame] then
 			return script[player][frame]
 		end
-		return pressureInput(player, frame)
+		return specialInput(player, frame)
+			or pressureInput(player, frame)
 			or runInput(player, frame)
 			or airInput(player, frame)
 			or chaosInput(player, frame)
@@ -228,9 +243,10 @@ local Room = Scene { active = false }
 		Input.delay = 0
 		Input:lock():reset(0)
 
+		local testChars = data.test.chars or { }
 		local chars = {
-			createFighter(1, 1, 1),
-			createFighter(2, 2, data.chardata.count >= 2 and 2 or 1),
+			createFighter(1, 1, testChars[1] or 1),
+			createFighter(2, 2, testChars[2] or (data.chardata.count >= 2 and 2 or 1)),
 		}
 		SceneManager:push('battle', Factory:create('map', createBackground()), chars)
 	end

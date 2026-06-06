@@ -1,5 +1,18 @@
 --- Dash
-return function (obj, data, params)
+local frame = require 'data.scripts.frame'
+
+local function applyJumpSpeed(data)
+	if data.jspeedx then
+		data.dvx = data.jspeedx
+		data.jspeedx = nil
+	end
+	if data.jspeedz then
+		data.dvz = data.jspeedz
+		data.jspeedz = nil
+	end
+end
+
+return function (obj, data)
 	local control = obj.C.controller
 	local frames = obj.C.frames
 	local attr = obj.C.attr
@@ -9,26 +22,21 @@ return function (obj, data, params)
 		data.facing = data.next_facing
 		data.next_facing = nil
 	end
-
 	if not data.isdashed then
-		data.dvy = attr.data().dash_height
+		local adata = attr.data()
+		data.dvy = adata.dash_height
 		data.isdashed = true
+		applyJumpSpeed(data)
+		return
+	elseif control.pressed('attack') then
+		frame.set(obj, 'dash_attack', true)
+		return
 	elseif data.ground then
-		return frames.set('crouch')
-	elseif control.pressed('attack') and (data.vx > 0) == (data.facing == 1) then
-		-- TODO: dash_weapon_attack
-		return frames.set('dash_attack')
+		frames.set(219)
+		return
 	end
 
-	if data.jspeedx then
-		data.dvx = data.jspeedx
-		data.jspeedx = nil
-	end
-	if data.jspeedz then
-		data.dvz = data.jspeedz
-		data.jspeedz = nil
-	end
-
+	applyJumpSpeed(data)
 	if data.dvx == 0 then
 		local left = control.pressed('left')
 		local right = control.pressed('right')
@@ -47,7 +55,6 @@ return function (obj, data, params)
 			end
 		end
 	end
-
 	if data.next == 0 then
 		data.next = data.frame.id
 	end

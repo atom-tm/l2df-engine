@@ -45,9 +45,10 @@ local Controller = Component:extend()
 	--- Check if button was double pressed.
 	-- @param l2df.class.entity obj  Entity's instance.
 	-- @param string button  Double pressed button.
+	-- @param number window  Optional input history window in frames.
 	-- @return boolean
-	function Controller:doubled(obj, button)
-		return InputManager:doubled(button, obj.data.player)
+	function Controller:doubled(obj, button, window)
+		return InputManager:doubled(button, obj.data.player, nil, window)
 	end
 
 	--- Check if button was pressed at current frame.

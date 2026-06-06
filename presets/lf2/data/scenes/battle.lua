@@ -4,6 +4,7 @@ local data = assert(data, 'Shared data is not available')
 -- UTILS
 local log = core.import 'class.logger'
 local json = core.import 'class.parser.json'
+local object = require 'data.scripts.object'
 
 -- MANAGERS
 local Input = core.import 'manager.input'
@@ -115,6 +116,7 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 	local function makeSnapshot()
 		-- IMPORTANT: SAVE GSID HERE
 		Sync:stage(GSID.sync, GSID.sync())
+		Sync:stage(object.syncDynamic, RoomMap, object.syncDynamic(RoomMap))
 		local hash = Sync:hash()
 		local index = 0
 		for obj in RoomMap:enum() do
@@ -227,6 +229,7 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 
 	local function startMatch()
 		local replay = data.replay or { }
+		data.lf2_objects = { }
 		math.randomseed(12564)
 		GSID:init { seed = 12564, salt = 3 }
 		Sync:mode(Sync.ROLLBACK):reset().persist(makeSnapshot)
@@ -247,6 +250,7 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 		stopReplayRecording()
 		data.isplaying = false
 		SceneManager:pop()
+		object.clearDynamic()
 		Room:detach(RoomMap)
 		for i = #objects, 1, -1 do
 			objects[i]:destroy()
@@ -262,6 +266,7 @@ local Room, RoomMap = data.layout('layout/battle.dat')
 		self.isTimerActive = false
 		self.timer = 3
 		RoomMap = map
+		data.lf2_objects = { }
 		LoadingNode.active = true
 		math.randomseed(12564)
 		GSID:init { seed = 12564, salt = 3 }

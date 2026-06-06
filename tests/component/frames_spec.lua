@@ -45,6 +45,7 @@ describe('class.component.frames', function()
 
 		assert.are.equal(2, entity.data.frame.id)
 		assert.are.equal('running', entity.data.pose)
+		assert.are.equal(2, entity.data.___frame_generation)
 	end)
 
 	it('adds and removes transient state fields on each preupdate', function()
@@ -66,5 +67,26 @@ describe('class.component.frames', function()
 		entity.C.frames:preupdate()
 		assert.are.equal('frame', entity.data.persisted)
 		assert.are.equal('value', entity.data.temporary)
+	end)
+
+	it('does not special-case LF2 frame sentinels', function()
+		local entity = Entity:new()
+		local component = Frames:new()
+
+		entity.data._lf2 = true
+		entity:addComponent(component, {
+			frame = 1,
+			frames = {
+				{ id = 1, wait = 0, next = 1000, bodies = { { x = 1 } }, itrs = { { x = 1 } } },
+			},
+		})
+
+		entity.C.frames:preupdate()
+		entity.C.frames:preupdate()
+
+		assert.is_not_true(entity.data.hidden)
+		assert.is_not_false(entity.active)
+		assert.are.equal(1, #entity.data.bodies)
+		assert.are.equal(1, #entity.data.itrs)
 	end)
 end)

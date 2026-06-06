@@ -162,6 +162,7 @@ local Frames = Component:extend({ unique = true })
 		data.frame = cloneFrame(nextFrame)
 		data.next = nextFrame.next
 		data.wait = nextFrame.wait or 0
+		data.___frame_generation = (data.___frame_generation or 0) + 1
 		storage.counter = counter or 0
 		if nextFrame.keyword and not data.playonce[nextFrame.keyword] then
 			storage.map[nextFrame.keyword] = nextFrame.id
@@ -176,7 +177,8 @@ local Frames = Component:extend({ unique = true })
 	function Frames:preupdate(obj)
 		local data = obj.data
 		local storage = self:data(obj)
-		local wait = core:convert(data.wait + 1)
+		local framewait = data.wait + 1
+		local wait = core:convert(framewait)
 		if storage.counter >= wait then
 			self:set(obj, data.next, storage.counter - wait)
 		end

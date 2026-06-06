@@ -64,6 +64,26 @@ describe('manager.input', function()
 		assert.is_true(Input:hitted('attack', 1, true))
 	end)
 
+	it('allows callers to use a longer double-tap window', function()
+		Input {
+			keys = { 'left' },
+			mappings = {
+				{ left = 'a' },
+			},
+		}
+		Input:reset(0)
+
+		local left = Input:encode({ left = true })
+		Input:setrawinput(left, 1, 1)
+		Input:setrawinput(0, 1, 2)
+		Input:setrawinput(left, 1, 18)
+		Input.frame = 18
+		Input:update(1 / 60, true)
+
+		assert.is_false(Input:doubled('left', 1, true))
+		assert.is_true(Input:doubled('left', 1, true, 18))
+	end)
+
 	it('stores deterministic input chains and can drop future input', function()
 		Input:addinput(1, 1, 1)
 		Input:addinput(3, 1, 2)
