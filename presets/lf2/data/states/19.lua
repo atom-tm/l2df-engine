@@ -1,3 +1,4 @@
+--- Fire Run
 local normalHit = require 'data.kinds.normal_hit'
 
 return function (obj, data)

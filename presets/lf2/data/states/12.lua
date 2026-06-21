@@ -17,6 +17,19 @@ return function (obj, data)
 	-- TODO: drop weapon
 	-- TODO: immune to any attack that has less than 41 fall
 	if data.ground then
+		if data._lf2_ice_landing_damage then
+			data._lf2_ice_landing_damage = nil
+			local attr = obj.C.attr
+			local adata = attr and attr.data()
+			if adata then
+				adata.hp = math.max(0, adata.hp - 10)
+				if adata.hp <= 0 then
+					adata.maxhp = 0
+				elseif adata.hp > adata.maxhp then
+					adata.hp = adata.maxhp
+				end
+			end
+		end
 		if frame < 184 + rshift then
 			frame = 184 + rshift -- falling
 			frames.set(frame)

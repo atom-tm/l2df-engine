@@ -31,6 +31,10 @@ return function (obj, data)
 	if processNext1000(obj, data) then
 		return
 	end
+	object.processHeal(obj, data)
+	if object.transformFromState(obj, data) then
+		return
+	end
 	local control = obj.C.controller
 	local frames = obj.C.frames
 	if control and frames then

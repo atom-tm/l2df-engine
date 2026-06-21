@@ -1,0 +1,754 @@
+State 0 - Standing
+Frames with this state automatically react to certain inputs:
+
+R = walking (Frame 5)
+R + R = running (Frame 9)
+A = punch (Frame 60)
+D = defend (Frame 110)
+J = jump (Frame 210)
+
+If you use state: 0 in the air, the character will automatically jump to frame 212. Some other states also have special reactions to key-inputs, so for those states, the following key is used to describe the inputs:
+
+R = Directions (Forward, backward, up, down)
+A = Attack
+D = Defend
+J = Jump
+
+
+ Technical note
+The standing state.
+
+If a character's hit_a parameter is 0, it will run the following check.
+If hit_a isn't 0, the parameter will override the whole check. (I assume later examples will also override unless specified)
+
+If the controlling player (including computer, I assume laters samples include computers unless specified) presses A, the system will check if the character is holding a weapon.
+
+If he is holding a weapon, he has 50% chance to go to frame 20 and 50% chance to go to frame 25.
+If he holds no weapon, he has 50% chance to go to frame 60 and 50% chance to go to frame 65.
+
+I will explain weapon usage and super punch in details later.
+
+If a character's hit_j parameter is 0, he will go to frame 210 when J is pressed. Otherwise the parameter overrides.
+
+If a character's hit_d parameter is 0, he will go to frame 110 when D is pressed. Otherwise the parameter overrides.
+
+If direction key is pressed, character will go to one of frames 5-8, but the initial frame it goes to is neither random nor fixed.
+
+However, if both of these happen (Left and right are both or neither pressed) (up and down are both or neither pressed), the direction keys are cancelled.
+This can be represented by logic condition (up XNOR dn) & (lt XNOR rt)
+
+A character (pragmatically, any object including weapon and projectile) has a hidden "walking counter" that counts from 0 to 5 whenever a tick has begun when the character is in state: 1.
+The counter starts at 0 when the character is spawned.
+The specific frame when a character goes to when he moves from state: 0 is:
+
+C=0 -> Frame 5
+C=1 -> Frame 6
+C=2 -> Frame 7
+C=3 -> Frame 8
+C=4 -> Frame 7
+C=5 -> Frame 6
+
+The period of a tick is equal to (walking_frame_rate+1) tu, but exe will crash if walking_frame_rate is set to 0.
+
+There is bad code hidden in lf2 that causes a simultaneous key input of JA and DA to go to frame 210 or 110 respectively, listed by Yinyin here (original source).
+
+If no button is pressed, a hidden standing counter will be incremented. Whenever this character leaves a frame with state: 0, this counter is reset to 0. The counter similar to walking counter except its highest possible number is equal to total tu of walking frames.
+For example, if a character has standing frames with wait 3,4,5,9, the counter can go to maximum of (3+4+5+9-4) = 17tu.
+Which standing frame the character goes to is determined by the counter.
+
+State: 0 machine (Click to Hide)
+I could add this pile of bad code in the beginning to simulate double input:
+This pile is NOT the actual thing and DO NOT TRY TO REPLICATE bad code
+if (buttonJ && buttonA)
+  goto 210
+if (buttonD && buttonA)
+  goto 110
+
+...
+
+  
+Actual psuedocode
+
+switch (button)
+  case A:
+    if (hit_a != 0)
+      goto hit_a
+    else if (hold_light_weapon)
+      if (rand(X) > X/2)
+        goto 20
+      else
+        goto 25
+    else
+      if (rand(X) > X/2)
+        goto 60
+      else
+        goto 65
+  case J:
+    if (hit_j != 0)
+      goto hit_j
+    else
+      goto 210
+  case D:
+    if (hit_d != 0)
+      goto hit_d
+    else
+      goto 110
+  case up
+  case dn
+  case lt
+  case rt:
+    if ((up XNOR dn) & (lt XNOR rt))
+      switch (walking_counter)
+        case 0:
+          walking_counter++
+          walking_counter %= 6
+          /* %= takes the left variable and modulus it by the right variable, then writes back to left variable space */
+          goto 5
+        case 1
+        case 5:
+          walking_counter++
+          walking_counter %= 6
+          goto 6
+        case 2
+        case 4:
+          walking_counter++
+          walking_counter %= 6
+          goto 7
+        case 3:
+          walking_counter++
+          walking_counter %= 6
+          goto 8
+  case NULL:
+  // This implies no button is pressed
+    standing_counter++
+    standing_counter %= max_standing_counter
+    int j = 0;
+    int new_standing_frame = -1
+    bool standing_determined =  false
+    for (int i=0; i < number_of_standing_frames && new_standing_frame = -1; i++)
+      j += tu of standing_frame_i
+      if (standing_counter < j)
+        new_standing_frame = i
+      end if
+    end for
+
+end switch
+Picking up a weapon is NOT related to state: 0.
+
+
+State 1 - Walking
+In frames with state: 1, the character moves with the speed noted in walking_speed and walking_speedz. All the inputs for this state are the same as state: 0.
+
+
+
+ Technical note
+The walking state, it acts very similar to state: 0 (there are some misconception regarding this state though)
+
+It acts identically as state: 0 regarding A, J and D buttons,
+
+If direction key is held, it will determine if walking should be continued.
+If direction key is released, although the character will go to standing, there is a hidden running initiation counter that records the last left/right key pressed and its initial press time.
+If the same direction key is pressed quickly after the last key press, it will trigger running.
+
+Also notice a hit_x tag leading to running frame grants the character automatic running.
+
+State: 1 machine (Click to Hide)
+switch (button)
+  case A:
+    ...
+  case J:
+    ...
+  case D:
+    ...
+  case up
+  case dn
+  case lt
+  case rt:
+    if ((buttonLt && last_buttonLt_time < small_number && last_run_dir = lt) || (buttonRt && last_buttonRt_time < small_number &&  last_run_dir = rt))
+    goto 8
+    // Running frames are less detailed, so a rough estimate on initial frame is shown
+    else
+      if ((up XNOR dn) & (lt XNOR rt))
+      ...
+  case NULL:
+     goto 0
+end switch
+Grabbing a stunned person is NOT related to state: 1.
+Picking up a weapon is NOT related to state: 1.
+
+
+State 2 - Running
+If a player presses left or right two times quickly, the character will run. State 2 is used for the running frames, and running_speed and running_speedz sets the speed. If you press J while running, your character go to frame 213 (dash), while pressing A and he'll go to frame 85 (run_attack). Pressing D will cause the character to jump to frame 102 (rowing).
+
+
+ Technical note
+The running state, this also has a hidden running timer which maximum number equals to 3. It is very similar to walking counter except with 4 transitions:
+
+C=0 -> Frame 9
+C=1 -> Frame 10
+C=2 -> Frame 11
+C=3 -> Frame 10
+
+If hit_d parameter is 0, character will go to frame 102 (rolling) when D is pressed.
+
+If hit_j parameter is 0, character will go to frame 213 (forward dash) when J is pressed.
+
+If hit_a parameter is 0, character will check if he holds a weapon when A is pressed.
+If he holds weapon he goes to frame 35 (run_weapon_attack)
+If he doesn't hold, he goes to frame 85 (run_attack)
+
+If an opposite direction key against his running direction is pressed, he will go to frame 218 (stop_running)
+
+hit_XX are disabled if a character is holding a heavy weapon via itr kind 2, state: 2 itself doesn't disable hit_XX. For details go the section for itr kind 2.
+
+State: 2 machine (Click to Hide)
+switch (button)
+  case A:
+    if (hit_a != 0)
+      goto hit_a
+    else if (hold_light_weapon)
+      goto 35
+    else
+      goto 85
+  case J:
+    if (hit_j != 0)
+      goto hit_j
+    else
+      goto 213
+  case D:
+    if (hit_d != 0)
+      goto hit_d
+    else
+      goto 102
+  case lt
+  case rt:
+    if ((facing == rt && button == lt) || (facing == lt && button == rt))
+      goto 218
+  case NULL:
+    switch (running_counter)
+      case 0:
+        running_counter++
+        running_counter %= 4
+        goto 9
+      case 1
+      case 3:
+        running_counter++
+        running_counter %= 4
+        goto 10
+      case 2:
+        walking_counter++
+        walking_counter %= 4
+        goto 11
+    end switch
+end switch
+
+State 3 - Attacks
+This state is always used in punch attacks. If there's an itr: within a frame with state: 3, the enemy will attempt to defend against it.
+
+
+ Technical note
+State 3 is the "Attack" state, which has NO state machine inserted into it.
+
+It is very similar to State 15 except State 15 does not provoke defense on computer characters.
+
+
+State 4 - Jumping
+state: 4 is used in the jump frames. When the character is in the air, you can press right or left to change the direction he is facing. Pressing A will take him to frame 80 (jump_attack).
+
+
+ Technical note
+The "Jump state" is an aerial state that takes some well-known and some hidden properties.
+
+If hit_a parameter is 0, character will check if he holds a weapon when A is pressed.
+If he holds weapon he goes to frame 30 (jump_weapon_attack)
+If he doesn't hold, he goes to frame 80 (jump_attack)
+It does not work when character is on ground.
+
+If an opposite direction key to what he's facing is pressed, he changes direction.
+It does not work when character is on ground.
+
+There's no J and D state machines here, but a hidden issue that if a character with state: 4 gains velocity in either direction, he will change into falling frame.
+This can be presented by the dazed Louis bug, where Louis tried to jump but his armor taking a hit will render him fall to ground instead.
+
+Landing in a frame with state: 4 does not mean character will go to frame 215. Frame 212 is actual cause, that regardless of its state will result in going to 215.
+
+State: 4 machine (Click to Hide)
+switch (button)
+  case A:
+    if (hit_a != 0)
+      goto hit_a
+    else if (hold_light_weapon)
+      goto 30
+    else
+      goto 80
+  case lt
+  case rt:
+    if ((facing == rt && button == lt) || (facing == lt && button == rt))
+      change_facing
+end switch
+
+State 5 - Dash
+state: 5 is used for the dash. As long as dvx is 0, you can use the direction-keys to change the direction of the character, like state: 4. If you run to the right and press left you'll go to frame 214. If you press right again you'll go back to frame 213. Pressing A will take your character to frame 90 (dash_attack).
+
+
+ Technical note
+The dashing state uses y-axis-velocity, direction control and initial direction to interchange between 4 frames, namely 213, 214, 216 and 217.
+The 4 frames represent the following:
+213: Forward dash 1
+214: Forward dash 2
+216: Back-facing dash 1
+217: Back-facing dash 2
+
+If a character is in frame 213, pressing opposite direction will go to 216, vice versa.
+If he is in frame 214, pressing opposite direction will go to 217, vice versa.
+If he changes into frame 213 or 216, there's no hidden cooldown and frame countdown is refreshed.
+
+If hit_a parameter is 0 and character is in frame 213 or 216, character will check if he holds a weapon when A is pressed.
+If he holds weapon he goes to frame 40 (dash_weapon_attack)
+If he doesn't hold, he goes to frame 90 (dash_attack)
+
+Henry and Hunter can use dash backward shoot because there is hit_a: 81 written on frame 214 and 217.
+
+State: 5 machine (Click to Hide)
+switch (button)
+  case A:
+    if (hit_a != 0)
+      goto hit_a
+    else if (hold_light_weapon)
+      goto 40
+    else
+      goto 90
+  case lt
+  case rt:
+    if ((facing == rt && button == lt) || (facing == lt && button == rt))
+      change_facing
+end switch
+
+if (frame == 216 && new_facing == initial_facing)
+  goto 213
+else if (frame == 213 && new_facing != initial_facing)
+  goto 216
+
+State 6 - Rowing
+Used for the frames that your character is rowing.
+
+
+ Technical note
+Rolling/Flipping State: 6 is identical to state: 15, has no effect on computer behavior and has NO state machines in it.
+
+When a player is rolling he can press A to pick a weapon, however it is NOT caused by state: 6, but itr kind: 7.
+
+If a character in state: 6 lands from air, he goes to frame 215. Character in frame 212 landing will also go to frame 215.
+
+
+State 7 - Defend
+Using state: 7 protects your character from attacks. He can block as long as he has enough bdefend: and fall: points to block the attack. If he loses all of his bdefend: and fall: points, his defense will break or he may fall down.
+
+
+ Technical note
+State 7, the defending state is a well-known state for developing special characters.
+Apart from its defense system which is well covered by others, there are something regarding hit_x keys about state: 7.
+
+If a character is in state 7 and frame 110, and takes a blow that doesn't break his defense, he will go to frame 111.
+
+Taking a blow that doesn't break defense outside frame 100 won't change frame.
+
+Breaking defense makes character go to 112, but if character is in air or grabbed into state: 7 frame, his state: 7 frame cannot be broken.
+
+Nonetheless an attack with bdefend >60 can negate state: 7.
+
+If a character in frame 110 (but not necessary in state: 7), he can change his direction if he presses opposite direction key as his current facing.
+This only affects frame 110.
+
+Frame 110 machine (Click to Hide)
+switch (button)
+  case lt
+  case rt:
+    if (((facing == rt && button == lt) || (facing == lt && button == rt)) && self_frame == 110)
+      change_facing
+end switch
+
+State 8 - Broken Defend
+This state is used when the character's defence is broken.
+
+
+ Technical note
+Broken defend State: 8 is identical to state: 15, has no effect on computer behavior and has NO state machines in it.
+
+When a player is in broken_defend frames, hostile character pressing A will go to frame 70 (super_punch), but it is not caused by state: 8 but itr kind: 6 emitted by the frames.
+
+
+State 9 - Catching
+This is the standard state used with cpoint:. To ensure that all parts of cpoint: work properly, it is best to use state: 9.
+
+
+ Technical note
+Catching, State 9 has no innate state machine.
+
+The catching properties is done by cpoint parameters.
+
+In an experiment, putting state: 0 on frame 121 overrides all cpoint properties, so there's little need for a separate state machine on state 9.
+
+
+State 10 - Caught
+State: 10 is used in the caught frames together with next: 0. The caught character cannot act at all and he/she drops any weapons that he/she is carrying.
+
+
+ Technical note
+Caught, State 10 has no innate state machine.
+
+Object from any team can interact with an object in state: 10.
+
+
+State 11 - Injured
+This state is used when the character is hit.
+
+
+ Technical note
+Injured, State 11 has no innate state machine.
+
+Knight and Julian lose innate armor in state 8, 10, 11, 16,
+Louis's armor is only effective in frame 0-19 or state: 4, 5 frames.
+
+
+State 12 - Falling
+state: 12 is used in the falling frames. If a character is knocked into the air by an attack (for example, by Davis' Dragon Punch), he/she goes to these frames. When he/she hits the ground, he/she jumps to the lying frames, 230 or 231, depending on the way he/she is facing. As the character lands, he/she'll also drop any weapons that he/she is holding.
+
+
+ Technical note
+Falling, State 12 has a state machine when the object is also a type: 0.
+Any non-character with state: 12 frames are not affected.
+
+The state machine is similar to dash system, using y-axis velocity and facing direction to display falling animation.
+
+Any characters being sent to falling frame will either start in 180 or 186.
+He will immediately go to frame the machine indicated after 1tu.
+The frame which the character will go to is as follows:
+
+Frame 180/186 = velocity_y-10 or lower
+Frame 181/187 = velocity_y>-10
+Frame 182/188 = velocity_y>0 (can flip)
+Frame 183/189 = velocity_y>6
+Frame 184/190 = (apparently unused according to rewlf2)
+Frame 185/191 = (bounce)
+Bounce happens when xspeed is >10 or yspeed >1. The bounce itself has a cap on its speed.
+
+If someone has a large negative yspeed, he will stay in frame 180 for some time before velocity_y exceeds -10.
+
+Putting a dvx tag in falling will not change facing direction of character, but dvy tag will change its frame because y-axis velocity is changed.
+
+Character hitting ground will be set to a fixed x and y-axis velocity which again is affected by gravity, and goes to frame 185 or 191 (forward or backward)
+
+An object with state: 12 is immune to any attack that has less than 41 fall, and will automatically drop weapon, like the effect of wpoint kind 3.
+
+State 12 machine (Click to Hide)
+
+if (self_frame >=180 && self_frame <= 191 && self_type == 0)
+
+  if (position_y <=0)
+    velocity_y = some_negative_constant
+    if (facing)
+      velocity_x = N
+      goto 185
+    else
+      velocity_x = -N
+      goto 191
+
+  if (facing)
+    if (velocity_y < -10)
+      goto 180
+    else if (velocity_y < 0)
+      goto 181
+    else if (velocity_y < 6)
+      goto 182
+    else
+      goto 183
+  else
+    if (velocity_y < -10)
+      goto 186
+    else if (velocity_y < 0)
+      goto 187
+    else if (velocity_y < 6)
+      goto 188
+    else
+      goto 189
+Flipping function in frame 183 and 188 are independent of state and type. I once stumbled with a glitch that allowed a type: 3 character to go to frame 108 when she's in frame 188. It appears 183 and 188 are separately hardcoded to allow flipping.
+
+Flipping machine (Click to Hide)
+
+if (self_frame ==183)
+  switch (button)
+    case J:
+      goto 100
+else if (self_frame ==188)
+  switch (button)
+    case J:
+      goto 108
+end switch
+  
+
+State 13 - Ice
+A character in a frame with state: 13 can be hit by his/her teammates. The character will fall down after getting punched just once, but landing on the floor will damage him/her by 10 hp. Also, when the ice breaks, the broken ice shards will appear.
+
+
+ Technical note
+Ice, State: 13 has no innate state machine, although it alters the reaction frame when attacked by an itr.
+
+There also seems to be a threshold for ice characters to not break if he lands on ground with too small x-axis and y-axis velocity.
+
+
+State 14 - Lying
+state: 14 is used in the lying frames. With this state, you can determine whether a character is alive or dead. If the character is alive, the frame with this state is performs normally - after the wait time is up, the character goes to the next frame.
+However, if the character is dead, the frame is repeated with a wait: 1. If you include an opoint: in the frame, it will activate, but be careful: it's activated every TU! That's the basic idea of the "move after death" -technique. Another thing is that the computer controled enemies don't won't pay attention to the character while he's in this state and will try to avoid him if he is still alive.
+
+
+ Technical note
+Lying, State: 14 has a condition-based state machine which either grants the character blinking status after he leaves the frame, gives a retreating warning to computer characters, or loops the frame every tu if the character has no current health.
+
+The computer-warning part is not explained here but the state machine is as follows:
+
+State 14 machine (Click to Hide)
+
+if (self_health >0)
+  emit_warning_to_hostile
+  // Counting down the frame normally won't be written here, should be elsewhere
+  goto same_frame
+  
+Note that if a character has 0 health is revived by F7, the lying frame countdown will start at when F7 is pressed.
+
+
+State 15 - Other
+This state has no special functions!
+
+
+ Technical note
+Normal action, State 15 has no innate state machine.
+
+
+State 16 - Injured 2
+state: 16 is used in the injured frames 226-229. You can catch a character who is in a frame with state: 16 by using an itr: kind: 1 (normal grab-move, in walking frames).
+
+
+ Technical note
+Stunned, State 11 has no innate state machine.
+
+Only a character with state: 16 can interact with a hostile's itr kind: 1. The hostile will perform a grab if hostile is pressing a direction key and itr collides with state: 16 character's bdy.
+
+A stunned character can trigger a super_punch for the hostile, but it is caused by itr kind: 6.
+
+
+State 17 - Drinking
+The id-numbers 122 (milk) and 123 (beer) have bonus functions - milk can add live and a bit energy, beer can only add energy. But these bonus functions aren't activated all the time - only, if a character holds one of the drinks with state: 17 (drinking-frames) the effect works.
+
+
+ Technical note
+Drinking, State 11 has no innate state machine.
+
+Frame 55-58 responsible for drinking action has NO state machine, if a character presses D in these frames, they stop drinking because there are hit_d: 999 in these frames.
+
+
+State 18 - Burning
+state: 18 creates the "burning_smoke" from broken_weapon.dat. An itr: with this state can also hit teammates, and if you spawn another object with state: 18 , you can have it hit yourself. However, be aware that some effects (namely, effect: 22) will disable the self-hit function of state: 18.
+
+
+ Technical note
+The fire state uses y-axis-velocity but has no direction control.
+There are 4 frames representing the following:
+203: Upward fire 1
+204: Upward fire 2
+205: Downward fire 1
+206: Downward fire 2
+
+Changing frame 203-206 to use state: 15 disables the state machine.
+
+When a type: 0 character is in state: 18 and in frame 203-206, the next frame is determined by current y-axis speed.
+
+If character is going up, next frame will be 203/204, otherwise will be 205/206
+The exact frames are not confirmed and it is unknown if non-type: 0 share this property.
+
+A state: 18 character landing will always be directed to frame 185 (forward bouncing)
+
+state: 18 characters are immune to itr held by state: 18, 19 objects and itr with effect 20.
+
+state: 18 characters can hit projectiles (example: soul bomb's explosion and firen's inferno), itr effect: 20 doesn't hit projectiles though.
+
+State 18 machine (Click to View)
+Note that state machine doesn't change frames if characters is rising in frame 203/204 or falling in frame 205/206
+
+
+State 19 - Firerun
+state: 19 is used in Firen's fire run. You can move along the z-axis, but you can't hurt teammates. Like state: 18, the burning smoke sprites are created when you use this state.
+
+
+ Technical note
+Firerun, State 19 is a state that allows a z-axis movement based on running_speedz, generates fire smoke and be immune to certain fire attacks. There is no state machine on this though.
+
+state: 19 characters are immune to itr held by state: 18 objects and itr with effect 20.
+
+State: 19 characters attacking state: 3000 projectiles will change their frame to 20 (hit) not 30 (rebounding)
+
+
+State 100 - Hit Ground
+This state is used in Louis' dash attack. When using state: 100, your character should be in the air, and the "wait" must be high enough so he'll have time to land on the ground, the "next" is not important in this case). When he lands back on floor, the character automatically goes to frame 94. You can customize this frame to make your character do an action when he lands.
+
+
+ Technical note
+Special landing, State 100 changes the mechanism on landing frames, character must be directed to frame 94 if he is landing.
+
+There is no state machine added, just altered.
+
+State 100 machine (Click to Hide)
+
+if (position_y > 0 && last_position_y <= 0 && self_state == 100)
+  goto 94
+  ...
+
+State 301 - Move Along Z-Axis
+state: 301 is used in Deep's Dashing Strafe to allow the character to move along z-axis at a fixed speed. Other than that, it's the same as state: 3.
+Alternatively, you can use state: 3 instead of state: 301 and include a special value for "dvz:" to allow movements along the z-axis.
+
+
+ Technical note
+No state machine
+
+
+State 400 / 401 - Teleport
+state: 400 and 401 are the two teleport states. With 400, the character will teleport to the nearest enemy (appears 120 pixels away from him), and with 401, the character will appear next to the most distant teammate (appears 60 pixels away from him).
+
+
+ Technical note
+No state machine
+
+
+State 500 / 501 - Transform
+state: 500 and 501, you can create an attack like Rudolf's Transform, but you also need to know about cpoint. If you want to make a transform move for your character, read the "Rudolf Transform " tutorial.
+
+Rudolf Transform
+
+
+ Technical note
+No state machine
+
+
+State 1700 - Heal
+With state: 1700, you can heal up to 100 healthpoints, but it won't heal past the dark red bar. When the healing occurs, the health bar will flicker white. itr: kind: 8 also has a similar heal effect, except you can set how much you want it to heal.
+
+
+ Technical note
+(thanks to STM1993 and Silverthorn)
+HP normally regenerates 1hp every 12tu.
+
+Healing spells recover 8hp every 8tu over 100tu; the 1st 8hp is applied within 4tu.
+
+John's heals (state 1700 or itr kind 8) do not stack with each other, stopping prematurely if Red HP = Dark HP.
+
+State 1700 only begins healing after leaving the frame, though the HP bar will start blinking when 1700 starts.
+
+Jan's heal(ball hit_Fa4) applies a "regeneration" status effect that lasts the full 100tu, and stacks with state1700 or itr kind 8.
+
+
+State 8000 - Transform
+With state: 8000, you can transform one character into another. There is another transform state, but it only works with id-numbers 6 and 50: the transformation of Louis to LouisEX (see state: 9995 in extra states). Here is some basic info about transforming:
+
+Use state: 8000 + id-number of the object you want to transform into (ex: state: 8030 to transform into id: 30).
+
+When you transform, the computer takes a frame's pic-number, adds 140 to it, and uses that pic instead. Because of this, you usually have to change the way the character's spritesheets are defined in the bmp_header at the beginning of each character. If you select the character from the menu, they'll use their normal sprites, but if you transform into him, they'll use the pic-number + 140 sprites.
+
+The computer calculates the number of pics using the product of the "row" and "col" parts of the file tag, so sometimes you'll have to "waste" pic-numbers to guarantee that the transformed character will use the proper sprites.
+
+In the bmp part, you have to remember that you are limited to 10 picture files!
+
+If a character has more than 140 pictures, you have to use pic 0 to 139 for the first 140 pictures and 280 to 419 for the following pictures.
+
+
+ Technical note
+This transformation will cause the character to go to frame 0 when id is changed.
+
+The character will try to use pic number with +140 offset. Transforming into Knight will try to use +140 offset sprites which normally will glitch display as the knight_b sprites are offset by +114. STM1993 found a workaround to this, available here.
+
+
+State 100X - Light Weapons
+State 1000 - Light Weapon in the Sky
+Light weapon fly freely in sky in this state. Whether it will damage others is dependent on if this frame has an itr.
+
+Light weapons in original LF2 have no itr in any state: 1000 frames.
+
+Baseball, milk and beer will not go to frame 0-15 (which have state: 1000) even if they are hit by itr with less than 60 fall.
+
+Others light weapons will go to frame 0-15, which frame it goes to is random.
+
+State 1001 - Light Weapon on Hand
+Held state. The weapon frame number and action is controlled by the object having wpoint interaction over it.
+
+State 1002 - Light Weapon Being Thrown
+Weapon thrown in this state. This is typically directed by a wpoint throw, but milk, beer and baseball will go to thrown frames even when hit by low fall frames.
+
+State 1003 - Light Weapon Just on Ground
+Weapon just on ground.
+
+
+ Technical note
+Studies on non-type: 0 characters revealed if a character with weapon type drops to ground, he will go to frame 20, 21 (heavy object) or 70, 60 (light objects). Therefore state: 1003 does not have state engine, the ground collision is determined by type of object.
+
+State 1004 - Light Weapon on Ground
+Object in this state can have a bdy that interacts with itr kind: 2 of the character, the character links the object via wpoint. 1004 will cause picking character to go to picking_light frame.
+
+
+State 200X - Heavy Weapons
+State 2000 - Heavy Weapon in the Sky
+Heavy weapon fly freely in sky in this state. Whether it will damage others is dependent on if this frame has an itr.
+
+Heavy weapons in original LF2 have itr in state: 2000 frames, thus the random stones hitting unlucky characters.
+
+If a heavy weapon is hit by itr with fall: 70+, it will change its frame to 0-5 in random.
+
+State 2001 - Heavy Weapon on Hand
+Held state. The weapon frame number and action is controlled by the object having wpoint interaction over it.
+
+State 2004 - Heavy Weapon on Ground
+Object in this state can have a bdy that interacts with itr kind: 2 of the character, the character links the object via wpoint. 2004 will cause picking character to go to picking_heavy frame.
+ Technical note
+A study revealed hit_d, hit_j and hit_a of which picking_heavy will lead to will be inherited exactly for the picking_heavy frame.
+
+If picking_heavy has next: 999 and frame 0 has hit_d: 99, when picking a heavy weapon and immediately pressing D, character will go to frame 99 but is incapable to use and commands inscribed in frame 99 (and following frames). Afterwards character goes back to heavy_walking. To fix it, set frame 117 to have next: 12 (heavy_walking)
+
+
+State 300X - Ball States
+State 3000 - Ball Flying
+State 3000 is the standard state for attacks.  If the ball hits other attacks with this state, it'll go to the hitting frame (10).  If it is hit by another ball or a character, it'll go to the the hit frame (20) or rebounding frame (30).
+
+State 3001 - Ball Flying / Hitting
+State 3001 is used in the hitting frames, but you can also use this state directly in the flying frames.  If the ball hits a character while it has state 3001, then it won't go to the hitting frame (20).  It's the same for states 3002 through 3004.
+
+State 3002 - Ball Flying / Hit
+State 3002 is used in the hit frames. If the ball hits a character while it has state 3002, then it won't go to the hitting frame (20).
+
+State 3003 - Ball Flying / Rebound
+State 3003 is used in the rebound frames.  If the ball hits a character while it has state 3003, then it won't go to the hitting frame (20).
+
+State 3004 - Ball Flying / Disappear
+State 3004 is used in the disappear frames (example: Davis_Ball, frame 40). If the ball hits a character while it has state 3004, then it won't go to the hitting frame (20).
+
+State 3005 - Ball Flying / No Shadow
+State 3005 is one of the only states that hides an object's shadow.  If you use it in a ball's flying frames, it'll destroy any other ball attack it hits (it's stronger than state 3000 and state 3006).
+
+State 3006 - Bally Flying / Piercing
+State 3006 is a stronger version of state 3000.  It cannot be rebounded and state 3000 balls won't destroy it.  However, if a state 3006 ball is hit by a state 3005 attack or another state 3006 attack, it'll be destroyed.
+
+
+Extra States
+State 9995 - Louis Transform
+This state is used to transform Louis into LouisEX. Normally, state: 8000 is used to transform, but because LouisEX has more than 140 single pictures and there isn't a need for two color themes for LouisEX, this state was created.
+If state: 9995 is used in a character, the character transforms into the character with id: 50 specified in data.txt and go to frame 0.
+
+State 9996 - Louis Armour
+State 9996 is used in Louis' transform move. It creates the armour weapons that appear during the transformation.  Four copies of id 217 are created in a square around LouisEX and one id 218 is spawned in the center.
+
+State 9997 - Message
+This state is used for messages (etc.dat).  A frame with this state has no shadow and the picture can be seen from anywhere in the arena (but be careful: if the picture is larger than 80 pixels, only part of the picture will be shown on the right side of the screen).  If you create a message with an opoint, you need to put a dvy: 550 in the frame, otherwise the object will fall.
+
+State 9998 - Delete Object
+State 9998 has the same effect as next: 1000: The object gets deleted from the game.  If you're working with cpoint or weapons, state 9998 is a safer to use than next: 1000.
+
+State 9999 - Broken Weapon
+This state is used in broken_weapon.dat, but it functions the same as state 15.

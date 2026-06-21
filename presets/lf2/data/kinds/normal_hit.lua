@@ -56,6 +56,22 @@ local function hitDirection(e1, e2)
 	return direction ~= 0 and direction or edata.facing or 1
 end
 
+local function hasState(obj, state)
+	return frame.hasState(obj and obj.data, state)
+end
+
+local function canBypassFriendly(e1, e2, itr)
+	if hasState(e2, 13) then
+		return true
+	end
+	return hasState(e1, 18) and (itr.effect or 0) ~= 22
+end
+
+local function isFireImmune(e1, e2, itr)
+	return hasState(e2, 18)
+		and (hasState(e1, 18) or hasState(e1, 19) or (itr.effect or 0) == 20)
+end
+
 local function terminalPunchFrame(data)
 	local current = data and data.frame
 	if not (current and current.keyword == 'punch') then
@@ -69,12 +85,22 @@ local function apply(e1, e2, itr)
 	if not (e1 and e2 and itr) then
 		return false
 	end
-	if itr.owner == e2 or relationship.isFriendly(e1, e2) then
+	if isFireImmune(e1, e2, itr) then
+		return false
+	end
+	if (itr.owner == e2 or relationship.isFriendly(e1, e2)) and not canBypassFriendly(e1, e2, itr) then
 		return false
 	end
 	debugHit('apply', e1, e2, itr)
 
 	local frames, attr, sound = e2.C.frames, e2.C.attr, e2.C.sound
+	if e2.data and e2.data._lf2_type == 3 then
+		if hasState(e1, 18) and (itr.effect or 0) ~= 20 then
+			object.projectileHit(e2)
+			return true
+		end
+		return false
+	end
 	if not (frames and attr) then
 		return false
 	end
@@ -83,7 +109,13 @@ local function apply(e1, e2, itr)
 		local pain = attr.data().pain
 		local direction = hitDirection(e1, e2)
 		e2.data._lf2_fall_ignore = pain < 0 and e1 or nil
-		if pain < 0 then
+		if hasState(e2, 13) then
+			frames.set(e2.data.next or 202)
+			e2.data._lf2_ice_airborne = not e2.data.ground or nil
+			e2.data._lf2_ice_landing_damage = true
+		elseif (itr.effect or 0) == 20 then
+			frames.set(203)
+		elseif pain < 0 then
 			frames.set(looks_in_same_direction and 186 or 180)
 		elseif pain == 0 then
 			frames.set(226)
@@ -115,6 +147,12 @@ end
 
 local function queue(e1, e2, itr)
 	if not (e1 and e2 and itr) then
+		return false
+	end
+	if isFireImmune(e1, e2, itr) then
+		return false
+	end
+	if relationship.isFriendly(e1, e2) and not canBypassFriendly(e1, e2, itr) then
 		return false
 	end
 	if itr.kind == 4 and e1.data and e1.data._lf2_fall_ignore == e2 then
@@ -209,10 +247,11 @@ local function processReaction(obj)
 end
 
 local function handle(e1, e2, itr, bdy)
-	if itr.owner == bdy.owner or bdy.owner == e1 then
+	local special_hit = canBypassFriendly(e1, e2, itr)
+	if (itr.owner == bdy.owner or bdy.owner == e1) and not (special_hit and hasState(e1, 18)) then
 		return
 	end
-	if relationship.isFriendly(e1, e2) then
+	if relationship.isFriendly(e1, e2) and not special_hit then
 		return
 	end
 	return queue(e1, e2, itr)
