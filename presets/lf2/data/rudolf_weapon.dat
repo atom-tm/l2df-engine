@@ -1,0 +1,574 @@
+<sprite> sprite/sys/rudolf_weapon.png w: 48 h: 48 x: 10 y: 10 s: 1 f: 100 ord: 0 kx: 1 ky: 1 </sprite>
+weapon_hp: 1000
+weapon_drop_hurt: 70
+weapon_hit_sound: data/027.wav
+weapon_drop_sound: data/026.wav
+weapon_broken_sound: data/026.wav
+
+frame: 0
+gravity: true
+shadow: true
+<constate> compatibility </constate>
+
+<sound> data/027.wav data/sounds/027.wav </sound>
+<sound> data/026.wav data/sounds/026.wav </sound>
+
+
+<weapon_strength> 1 normal
+   dvx: 2  fall: 20  vrest: 10  bdefend: 12  injury: 30  effect: 1
+</weapon_strength>
+<weapon_strength> 2 jump
+   dvx: 7  fall: 20  vrest: 10  bdefend: 12  injury: 30  effect: 1
+</weapon_strength>
+<weapon_strength> 3 run
+   dvx: 10  fall: 20  vrest: 10  bdefend: 12  injury: 30  effect: 1
+</weapon_strength>
+<weapon_strength> 4 dash
+   dvx: 12  fall: 60  vrest: 20  bdefend: 60  injury: 30  effect: 1
+</weapon_strength>
+
+<frame> 0 in_the_sky
+   pic: 0  wait: 0  next: 1  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 1 in_the_sky
+   pic: 1  wait: 0  next: 2  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 2 in_the_sky
+   pic: 2  wait: 0  next: 3  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 3 in_the_sky
+   pic: 3  wait: 0  next: 4  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 4 in_the_sky
+   pic: 0  wait: 0  next: 5  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 5 in_the_sky
+   pic: 1  wait: 0  next: 6  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 6 in_the_sky
+   pic: 2  wait: 0  next: 7  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 7 in_the_sky
+   pic: 3  wait: 0  next: 8  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 8 in_the_sky
+   pic: 0  wait: 0  next: 9  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 9 in_the_sky
+   pic: 1  wait: 0  next: 10  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 10 in_the_sky
+   pic: 2  wait: 0  next: 11  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 11 in_the_sky
+   pic: 3  wait: 0  next: 12  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 12 in_the_sky
+   pic: 0  wait: 0  next: 13  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 13 in_the_sky
+   pic: 1  wait: 0  next: 14  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 14 in_the_sky
+   pic: 2  wait: 0  next: 15  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 15 in_the_sky
+   pic: 3  wait: 0  next: 999  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1000 </state>
+</frame>
+
+<frame> 20 on_hand
+   pic: 20  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 24  y: 40
+   [/wpoint]
+   <itr>
+      kind: 5  x: 17  y: 2  w: 13  h: 44  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 21 on_hand
+   pic: 21  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 17  y: 41
+   [/wpoint]
+   <itr>
+      kind: 5  x: 23  y: 2  w: 13  h: 23  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 15  y: 20  w: 12  h: 23  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 22 on_hand
+   pic: 22  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 12  y: 37
+   [/wpoint]
+   <itr>
+      kind: 5  x: 13  y: 29  w: 9  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 28  y: 5  w: 14  h: 19  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 19  y: 18  w: 14  h: 16  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 23 on_hand
+   pic: 23  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 9  y: 33
+   [/wpoint]
+   <itr>
+      kind: 5  x: 33  y: 15  w: 13  h: 11  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 19  y: 18  w: 15  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 9  y: 25  w: 14  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 24 on_hand
+   pic: 24  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 10  y: 29
+   [/wpoint]
+   <itr>
+      kind: 5  x: 7  y: 23  w: 42  h: 14  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 25 on_hand
+   pic: 25  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 12  y: 23
+   [/wpoint]
+   <itr>
+      kind: 5  x: 6  y: 18  w: 24  h: 15  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 22  y: 25  w: 23  h: 16  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 26 on_hand
+   pic: 26  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 14  y: 15
+   [/wpoint]
+   <itr>
+      kind: 5  x: 26  y: 27  w: 16  h: 16  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 9  y: 10  w: 15  h: 14  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 17  y: 20  w: 16  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 27 on_hand
+   pic: 27  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 17  y: 13
+   [/wpoint]
+   <itr>
+      kind: 5  x: 12  y: 8  w: 14  h: 19  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 19  y: 22  w: 15  h: 23  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 28 on_hand
+   pic: 28  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 24  y: 11
+   [/wpoint]
+   <itr>
+      kind: 5  x: 18  y: 8  w: 13  h: 39  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 29 on_hand
+   pic: 29  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 29  y: 13
+   [/wpoint]
+   <itr>
+      kind: 5  x: 18  y: 6  w: 14  h: 24  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 11  y: 25  w: 16  h: 22  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 30 on_hand
+   pic: 30  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 36  y: 16
+   [/wpoint]
+   <itr>
+      kind: 5  x: 8  y: 32  w: 18  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 27  y: 11  w: 12  h: 15  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 5  x: 16  y: 22  w: 16  h: 12  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 31 on_hand
+   pic: 31  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 37  y: 19
+   [/wpoint]
+   <itr>
+      kind: 5  x: 19  y: 15  w: 22  h: 14  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 05  x: 0  y: 25  w: 28  h: 13  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 32 on_hand
+   pic: 32  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 37  y: 26
+   [/wpoint]
+   <itr>
+      kind: 05  x: 0  y: 19  w: 42  h: 16
+   </itr>
+</frame>
+
+<frame> 33 on_hand
+   pic: 33  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 38  y: 33
+   [/wpoint]
+   <itr>
+      kind: 05  x: 3  y: 15  w: 22  h: 16  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 05  x: 19  y: 22  w: 21  h: 16  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 34 on_hand
+   pic: 34  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 34  y: 36
+   [/wpoint]
+   <itr>
+      kind: 05  x: 26  y: 27  w: 11  h: 12  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 05  x: 5  y: 5  w: 17  h: 19  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 05  x: 14  y: 18  w: 17  h: 14  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 35 on_hand
+   pic: 35  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1001 </state>
+   [wpoint]
+      kind: 2  x: 29  y: 40
+   [/wpoint]
+   <itr>
+      kind: 05  x: 9  y: 1  w: 14  h: 22  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+   <itr>
+      kind: 05  x: 18  y: 17  w: 14  h: 22  dvx: 8  fall: 20  bdefend: 16  injury: 789
+   </itr>
+</frame>
+
+<frame> 40 throwing
+   pic: 1  wait: 1  next: 41  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 25  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 41 throwing
+   pic: 2  wait: 1  next: 42  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 42 throwing
+   pic: 3  wait: 1  next: 43  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 43 throwing
+   pic: 0  wait: 1  next: 44  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 44 throwing
+   pic: 1  wait: 1  next: 45  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 45 throwing
+   pic: 2  wait: 1  next: 46  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 46 throwing
+   pic: 3  wait: 1  next: 47  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 47 throwing
+   pic: 0  wait: 1  next: 46  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 48 throwing
+   pic: 1  wait: 1  next: 49  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 49 throwing
+   pic: 2  wait: 1  next: 50  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 50 throwing
+   pic: 3  wait: 1  next: 51  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 51 throwing
+   pic: 0  wait: 1  next: 52  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 52 throwing
+   pic: 1  wait: 1  next: 53  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 53 throwing
+   pic: 2  wait: 1  next: 54  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 54 throwing
+   pic: 3  wait: 1  next: 55  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 55 throwing
+   pic: 0  wait: 1  next: 40  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1002 </state>
+   <itr>
+      kind: 0  x: 3  y: 4  w: 40  h: 39  dvx: 2  fall: 20  bdefend: 12  injury: 22  effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 3  y: 4  w: 40  h: 39
+   </body>
+</frame>
+
+<frame> 60 on_ground
+   pic: 1  wait: 0  next: 61  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1003 </state>
+   <sound> data/026.wav </sound>
+</frame>
+
+<frame> 61 on_ground
+   pic: 2  wait: 0  next: 62  dvx: 0  dvy: 0  centerx: 24  centery: 36
+   <state> 9998 </state>
+</frame>
+
+<frame> 62 on_ground
+   pic: 3  wait: 2  next: 63  dvx: 0  dvy: 0  centerx: 24  centery: 34
+   <state> 1003 </state>
+   <sound> data/026.wav </sound>
+</frame>
+
+<frame> 63 on_ground
+   pic: 0  wait: 1  next: 64  dvx: 0  dvy: 0  centerx: 24  centery: 35
+   <state> 1003 </state>
+</frame>
+
+<frame> 70 just_on_ground
+   pic: 1  wait: 0  next: 71  dvx: 0  dvy: 0  centerx: 24  centery: 40
+   <state> 1003 </state>
+   <sound> data/026.wav </sound>
+   <itr>
+      kind: 0  x: 1  y: 19  w: 46  h: 15  dvx: 2  fall: 40  bdefend: 16  arest: 16
+   </itr>
+</frame>
+
+<frame> 71 just_on_on_ground
+   pic: 2  wait: 2  next: 72  dvx: 0  dvy: 0  centerx: 24  centery: 36
+   <state> 9998 </state>
+   <itr>
+      kind: 0  x: 1  y: 19  w: 46  h: 15  dvx: 2  fall: 40  bdefend: 16  arest: 16
+   </itr>
+</frame>
+
+<frame> 72 just_on_on_ground
+   pic: 3  wait: 2  next: 64  dvx: 0  dvy: 0  centerx: 24  centery: 34
+   <state> 1003 </state>
+   <itr>
+      kind: 0  x: 1  y: 19  w: 46  h: 15  dvx: 2  fall: 40  bdefend: 16  arest: 16
+   </itr>
+</frame>
+
+<frame> 64 on_ground
+   pic: 0  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 29
+   <state> 9998 </state>
+   <body>
+      kind: 0  x: 1  y: 19  w: 46  h: 15
+   </body>
+</frame>
+
+<frame> 399 dummy
+   pic: 0  wait: 0  next: 0  dvx: 0  dvy: 0  centerx: 24  centery: 29
+   <state> 0 </state>
+   <body>
+      kind: 0  x: 1  y: 19  w: 46  h: 15
+   </body>
+</frame>

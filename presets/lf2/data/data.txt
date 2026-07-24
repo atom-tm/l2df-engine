@@ -72,15 +72,73 @@ height: 550
 
 <character> file: data/template.dat </character>
 <character> file: data/ftemplate.dat </character>
-<character> id: 1 type: 0 file: data/deep.dat </character>
-<character> id: 30 type: 0 file: data/bandit.dat </character>
-<character> id: 11 type: 0 file: data/davis.dat </character>
 <character> id: 52 type: 0 file: data/julian.dat </character>
+<character> id: 51 type: 0 file: data/firzen.dat </character>
+<character> id: 50 type: 0 file: data/louisEX.dat </character>
+<character> id: 38 type: 0 file: data/bat.dat </character>
+<character> id: 39 type: 0 file: data/justin.dat </character>
+<character> id: 37 type: 0 file: data/knight.dat </character>
+<character> id: 36 type: 0 file: data/jan.dat </character>
+<character> id: 35 type: 0 file: data/monk.dat </character>
+<character> id: 34 type: 0 file: data/sorcerer.dat </character>
+<character> id: 33 type: 0 file: data/jack.dat </character>
+<character> id: 32 type: 0 file: data/mark.dat </character>
+<character> id: 31 type: 0 file: data/hunter.dat </character>
+<character> id: 30 type: 0 file: data/bandit.dat </character>
+<character> id: 1 type: 0 file: data/deep.dat </character>
+<character> id: 2 type: 0 file: data/john.dat </character>
+<character> id: 4 type: 0 file: data/henry.dat </character>
+<character> id: 5 type: 0 file: data/rudolf.dat </character>
+<character> id: 6 type: 0 file: data/louis.dat </character>
+<character> id: 7 type: 0 file: data/firen.dat </character>
+<character> id: 8 type: 0 file: data/freeze.dat </character>
+<character> id: 9 type: 0 file: data/dennis.dat </character>
+<character> id: 10 type: 0 file: data/woody.dat </character>
+<character> id: 11 type: 0 file: data/davis.dat </character>
+
 <object> id: 100 type: 1 file: data/weapon0.dat </object>
+<object> id: 101 type: 1 file: data/weapon2.dat </object>
+<object> id: 120 type: 1 file: data/weapon4.dat </object>
+<object> id: 121 type: 4 file: data/weapon5.dat </object>
+<object> id: 122 type: 6 file: data/weapon6.dat </object>
+<object> id: 150 type: 2 file: data/weapon1.dat </object>
+<object> id: 151 type: 2 file: data/weapon3.dat </object>
+<object> id: 123 type: 6 file: data/weapon8.dat </object>
+<object> id: 124 type: 1 file: data/weapon9.dat </object>
+<object> id: 217 type: 2 file: data/weapon10.dat </object>
+<object> id: 218 type: 2 file: data/weapon11.dat </object>
+<object> id: 300 type: 5 file: data/criminal.dat </object>
+
+<object> id: 200 type: 3 file: data/john_ball.dat </object>
+<object> id: 201 type: 1 file: data/henry_arrow1.dat </object>
+<object> id: 202 type: 1 file: data/rudolf_weapon.dat </object>
 <object> id: 203 type: 3 file: data/deep_ball.dat </object>
+<object> id: 204 type: 3 file: data/henry_wind.dat </object>
+<object> id: 205 type: 3 file: data/dennis_ball.dat </object>
+<object> id: 206 type: 3 file: data/woody_ball.dat </object>
 <object> id: 207 type: 3 file: data/davis_ball.dat </object>
+<object> id: 208 type: 3 file: data/henry_arrow2.dat </object>
+<object> id: 209 type: 3 file: data/freeze_ball.dat </object>
+<object> id: 210 type: 3 file: data/firen_ball.dat </object>
+<object> id: 211 type: 3 file: data/firen_flame.dat </object>
+<object> id: 212 type: 3 file: data/freeze_column.dat </object>
+<object> id: 213 type: 1 file: data/weapon7.dat </object>
+<object> id: 214 type: 3 file: data/john_biscuit.dat </object>
+<object> id: 215 type: 3 file: data/dennis_chase.dat </object>
+<object> id: 216 type: 3 file: data/jack_ball.dat </object>
+<object> id: 219 type: 3 file: data/jan_chaseh.dat </object>
+<object> id: 220 type: 3 file: data/jan_chase.dat </object>
+<object> id: 221 type: 3 file: data/firzen_chasef.dat </object>
+<object> id: 222 type: 3 file: data/firzen_chasei.dat </object>
+<object> id: 223 type: 3 file: data/firzen_ball.dat </object>
+<object> id: 224 type: 3 file: data/bat_ball.dat </object>
+<object> id: 225 type: 3 file: data/bat_chase.dat </object>
+<object> id: 226 type: 3 file: data/justin_ball.dat </object>
 <object> id: 228 type: 3 file: data/julian_ball.dat </object>
 <object> id: 229 type: 3 file: data/julian_ball2.dat </object>
+
+<object> id: 998 type: 5 file: data/etc.dat </object>
+<object> id: 999 type: 5 file: data/broken_weapon.dat </object>
 
 <background> file: bg/template/1/bg.dat </background>
 <background> file: bg/template/2/bg.dat </background>

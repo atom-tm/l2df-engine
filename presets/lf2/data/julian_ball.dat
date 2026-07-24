@@ -4,8 +4,8 @@ weapon_drop_sound: data/090.wav
 weapon_broken_sound: data/090.wav
 
 frame: 0
-<constate> compatibility </constate>
 shadow: true
+<constate> compatibility </constate>
 
 <sound> data/090.wav data/sounds/090.wav </sound>
 <sound> data/020.wav data/sounds/020.wav </sound>

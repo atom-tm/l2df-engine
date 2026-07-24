@@ -1,0 +1,293 @@
+<sprite> sprite/sys/criminal.png w: 79 h: 79 x: 10 y: 7 s: 1 f: 70 ord: 0 kx: 1 ky: 1 </sprite>
+
+frame: 0
+gravity: true
+shadow: true
+<constate> compatibility </constate>
+
+<sound> data/013.wav data/sounds/013.wav </sound>
+
+<frame> 0 monk
+   pic: 2  wait: 7  next: 1  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1003  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 1 monk
+   pic: 1  wait: 5  next: 2  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1003  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 2 monk
+   pic: 0  wait: 10  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1003  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 3 monk
+   <sound> data/013.wav </sound>
+   pic: 3  wait: 2  next: 4  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 4 monk
+   pic: 4  wait: 2  next: 5  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 5 monk
+   pic: 4  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8035 </state>
+</frame>
+
+<frame> 10 mark
+   pic: 5  wait: 7  next: 11  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1013  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 11 mark
+   pic: 6  wait: 5  next: 12  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1013  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 12 mark
+   pic: 7  wait: 10  next: 10  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1013  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 13 mark
+   <sound> data/013.wav </sound>
+   pic: 8  wait: 2  next: 14  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 14 mark
+   pic: 9  wait: 2  next: 15  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 15 mark
+   pic: 9  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8032 </state>
+</frame>
+
+<frame> 20 jack
+   pic: 10  wait: 7  next: 21  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1023  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 21 jack
+   pic: 11  wait: 5  next: 22  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1023  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 22 jack
+   pic: 12  wait: 10  next: 20  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1023  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 23 jack
+   <sound> data/013.wav </sound>
+   pic: 13  wait: 2  next: 24  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 24 jack
+   pic: 14  wait: 2  next: 25  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 25 jack
+   pic: 14  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8033 </state>
+</frame>
+
+<frame> 30 sorcerer
+   pic: 15  wait: 7  next: 31  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1033  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 31 sorcerer
+   pic: 16  wait: 5  next: 32  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1033  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 32 sorcerer
+   pic: 17  wait: 10  next: 30  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1033  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 33 sorcerer
+   <sound> data/013.wav </sound>
+   pic: 18  wait: 2  next: 34  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 34 sorcerer
+   pic: 19  wait: 2  next: 35  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 35 sorcerer
+   pic: 19  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8034 </state>
+</frame>
+
+<frame> 40 bandit
+   pic: 20  wait: 7  next: 41  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1043  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 41 bandit
+   pic: 21  wait: 5  next: 42  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1043  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 42 bandit
+   pic: 22  wait: 10  next: 40  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1043  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 43 bandit
+   <sound> data/013.wav </sound>
+   pic: 23  wait: 2  next: 44  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 44 bandit
+   pic: 24  wait: 2  next: 45  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 45 bandit
+   pic: 24  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8030 </state>
+</frame>
+
+<frame> 50 hunter
+   pic: 25  wait: 7  next: 51  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1053  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 51 hunter
+   pic: 26  wait: 5  next: 52  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1053  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 52 hunter
+   pic: 27  wait: 10  next: 50  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1053  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 53 hunter
+   <sound> data/013.wav </sound>
+   pic: 28  wait: 2  next: 54  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 54 hunter
+   pic: 29  wait: 2  next: 55  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 55 hunter
+   pic: 29  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8031 </state>
+</frame>
+
+<frame> 60 jan
+   pic: 30  wait: 7  next: 61  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1063  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 61 jan
+   pic: 31  wait: 5  next: 62  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1063  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 62 jan
+   pic: 32  wait: 10  next: 60  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 1063  x: 21  y: 18  w: 43  h: 62
+   </body>
+</frame>
+
+<frame> 63 jan
+   <sound> data/013.wav </sound>
+   pic: 33  wait: 2  next: 64  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 64 jan
+   pic: 34  wait: 2  next: 65  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>
+
+<frame> 65 jan
+   pic: 34  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 8036 </state>
+</frame>
+
+<frame> 399 come_here
+   pic: 0  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+</frame>

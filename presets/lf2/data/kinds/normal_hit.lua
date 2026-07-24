@@ -72,6 +72,29 @@ local function isFireImmune(e1, e2, itr)
 		and (hasState(e1, 18) or hasState(e1, 19) or (itr.effect or 0) == 20)
 end
 
+local function isFireEffect(effect)
+	return effect == 2 or effect == 20 or effect == 21 or effect == 22
+end
+
+local function isIceEffect(effect)
+	return effect == 3 or effect == 30
+end
+
+local function reflectProjectile(source, projectile)
+	local pdata = projectile and projectile.data
+	if not (pdata and pdata._lf2_type == 3) then
+		return false
+	end
+	local facing = source and source.data and source.data.facing or -(pdata.facing or 1)
+	local speed = math.abs(pdata._lf2_dvx or pdata.dvx or 8)
+	pdata.ownerid = source and source.data and relationship.ownerid(source.data) or pdata.ownerid
+	pdata.team = source and source.data and source.data.team or pdata.team
+	pdata.facing = facing
+	pdata._lf2_dvx = speed * facing
+	pdata.dvx = speed * facing
+	return true
+end
+
 local function terminalPunchFrame(data)
 	local current = data and data.frame
 	if not (current and current.keyword == 'punch') then
@@ -95,6 +118,10 @@ local function apply(e1, e2, itr)
 
 	local frames, attr, sound = e2.C.frames, e2.C.attr, e2.C.sound
 	if e2.data and e2.data._lf2_type == 3 then
+		local effect = itr.effect or 0
+		if effect == 4 or effect == 5 then
+			return reflectProjectile(e1, e2)
+		end
 		if hasState(e1, 18) and (itr.effect or 0) ~= 20 then
 			object.projectileHit(e2)
 			return true
@@ -109,11 +136,15 @@ local function apply(e1, e2, itr)
 		local pain = attr.data().pain
 		local direction = hitDirection(e1, e2)
 		e2.data._lf2_fall_ignore = pain < 0 and e1 or nil
+		local effect = itr.effect or 0
 		if hasState(e2, 13) then
 			frames.set(e2.data.next or 202)
 			e2.data._lf2_ice_airborne = not e2.data.ground or nil
 			e2.data._lf2_ice_landing_damage = true
-		elseif (itr.effect or 0) == 20 then
+		elseif isIceEffect(effect) then
+			frames.set(200)
+			e2.data._lf2_ice_airborne = not e2.data.ground or nil
+		elseif isFireEffect(effect) then
 			frames.set(203)
 		elseif pain < 0 then
 			frames.set(looks_in_same_direction and 186 or 180)
@@ -153,6 +184,9 @@ local function queue(e1, e2, itr)
 		return false
 	end
 	if relationship.isFriendly(e1, e2) and not canBypassFriendly(e1, e2, itr) then
+		return false
+	end
+	if hasState(e2, 12) and (itr.fall or 20) < 41 then
 		return false
 	end
 	if itr.kind == 4 and e1.data and e1.data._lf2_fall_ignore == e2 then

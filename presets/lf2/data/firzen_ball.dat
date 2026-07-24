@@ -1,0 +1,114 @@
+<sprite> sprite/sys/firzen_ball.png w: 129 h: 82 x: 4 y: 2 s: 1 f: 12 ord: 0 kx: 1 ky: 1 </sprite>
+weapon_hit_sound: data/020.wav
+weapon_drop_sound: data/020.wav
+weapon_broken_sound: data/020.wav
+
+frame: 0
+shadow: true
+<constate> compatibility </constate>
+
+<sound> data/020.wav data/sounds/020.wav </sound>
+
+<frame> 0 flying
+   pic: 0  wait: 1  next: 1  dvx: 15  dvy: 0  centerx: 90  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3000 </state>
+   <itr>
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 20  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 135
+   </itr>
+   <body>
+      kind: 0  x: 22  y: 27  w: 55  h: 27
+   </body>
+</frame>
+
+<frame> 1 flying
+   pic: 1  wait: 1  next: 999  dvx: 15  dvy: 0  centerx: 90  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3000 </state>
+   <itr>
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 20  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 135
+   </itr>
+   <body>
+      kind: 0  x: 22  y: 27  w: 55  h: 27
+   </body>
+</frame>
+
+<frame> 2 flying
+   pic: 2  wait: 1  next: 3  dvx: 15  dvy: 0  centerx: 90  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3000 </state>
+   <itr>
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 13  dvy: -8  fall: 20  vrest: 10  bdefend: 16  injury: 26
+   </itr>
+   <body>
+      kind: 0  x: 22  y: 27  w: 55  h: 27
+   </body>
+</frame>
+
+<frame> 3 flying
+   pic: 3  wait: 1  next: 2  dvx: 15  dvy: 0  centerx: 90  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3000 </state>
+   <itr>
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 13  dvy: -8  fall: 20  vrest: 10  bdefend: 16  injury: 26
+   </itr>
+   <body>
+      kind: 0  x: 22  y: 27  w: 55  h: 27
+   </body>
+</frame>
+
+<frame> 10 hiting
+   pic: 4  wait: 1  next: 11  dvx: 0  dvy: 0  centerx: 94  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 11 hiting
+   pic: 5  wait: 1  next: 12  dvx: 0  dvy: 0  centerx: 94  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 12 hiting
+   pic: 6  wait: 1  next: 13  dvx: 0  dvy: 0  centerx: 94  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 13 hiting
+   pic: 7  wait: 1  next: 1000  dvx: 0  dvy: 0  centerx: 94  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 20 hit
+   pic: 4  wait: 1  next: 21  dvx: 0  dvy: 0  centerx: 96  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 21 hit
+   pic: 5  wait: 1  next: 22  dvx: 0  dvy: 0  centerx: 96  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 22 hit
+   pic: 6  wait: 1  next: 23  dvx: 0  dvy: 0  centerx: 96  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 23 hit
+   pic: 7  wait: 1  next: 1000  dvx: 0  dvy: 0  centerx: 96  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 30 rebounding
+   pic: 4  wait: 1  next: 31  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 31 rebounding
+   pic: 5  wait: 1  next: 32  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 32 rebounding
+   pic: 6  wait: 1  next: 33  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 33 rebounding
+   pic: 7  wait: 1  next: 1000  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>

@@ -1,0 +1,111 @@
+<sprite> sprite/sys/weapon10.png w: 58 h: 58 x: 10 y: 10 s: 1 f: 100 ord: 0 kx: 1 ky: 1 </sprite>
+weapon_hp: 1200
+weapon_drop_hurt: 200
+weapon_hit_sound: data/084.wav
+weapon_drop_sound: data/084.wav
+weapon_broken_sound: data/084.wav
+
+frame: 0
+gravity: true
+shadow: true
+<constate> compatibility </constate>
+
+<sound> data/084.wav data/sounds/084.wav </sound>
+
+<frame> 0 in_the_sky
+   pic: 0  wait: 3  next: 1  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 1 in_the_sky
+   pic: 1  wait: 2  next: 2  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 2 in_the_sky
+   pic: 2  wait: 3  next: 3  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 3 in_the_sky
+   pic: 3  wait: 2  next: 4  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 4 in_the_sky
+   pic: 4  wait: 3  next: 5  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 5 in_the_sky
+   pic: 5  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 8  y: 21  w: 39  h: 39  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 21  w: 39  h: 39
+   </body>
+</frame>
+
+<frame> 10 on_hand
+   pic: 5  wait: 0  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2001 </state>
+   [wpoint]
+      kind: 2  x: 29  y: 56  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0
+   [/wpoint]
+</frame>
+
+<frame> 20 on_ground
+   pic: 5  wait: 0  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2004 </state>
+   <body>
+      kind: 0  x: 13  y: 43  w: 31  h: 14
+   </body>
+</frame>
+
+<frame> 21 just_on_ground
+   pic: 3  wait: 1  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 2000 </state>
+   <itr>
+      kind: 0  x: 19  y: 26  w: 21  h: 30  dvx: 5  dvy: -7  fall: 70  vrest: 17  bdefend: 30  injury: 60
+   </itr>
+</frame>
+
+<frame> 399 dummy
+   pic: 5  wait: 2  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 29  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 0 </state>
+   <body>
+      kind: 0  x: 12  y: 42  w: 31  h: 14
+   </body>
+</frame>

@@ -1,0 +1,57 @@
+<sprite> sprite/sys/etc.png w: 79 h: 79 x: 10 y: 7 s: 1 f: 70 ord: 0 kx: 1 ky: 1 </sprite>
+
+frame: 0
+
+<sound> data/080.wav data/sounds/080.wav </sound>
+<sound> data/081.wav data/sounds/081.wav </sound>
+<sound> data/082.wav data/sounds/082.wav </sound>
+<sound> data/093.wav data/sounds/093.wav </sound>
+
+<frame> 0 come_here
+   pic: 0  wait: 1  next: 1  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 1 come_here
+   <sound> data/080.wav </sound>
+   pic: 0  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 2 stay
+   pic: 1  wait: 1  next: 3  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 3 stay
+   <sound> data/081.wav </sound>
+   pic: 1  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 4 move
+   pic: 2  wait: 1  next: 5  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 5 move
+   <sound> data/082.wav </sound>
+   pic: 2  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 6 join
+   pic: 3  wait: 1  next: 7  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 7 join
+   <sound> data/093.wav </sound>
+   pic: 3  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>
+
+<frame> 399 come_here
+   pic: 0  wait: 60  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 105  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 9997 </state>
+</frame>

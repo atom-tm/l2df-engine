@@ -1,0 +1,201 @@
+<sprite> sprite/sys/john_biscuit.png w: 90 h: 20 x: 4 y: 3 s: 1 f: 13 ord: 0 kx: 1 ky: 1 </sprite>
+weapon_hit_sound: data/020.wav
+weapon_drop_sound: data/020.wav
+weapon_broken_sound: data/020.wav
+
+frame: 0
+shadow: true
+<constate> compatibility </constate>
+
+<sound> data/020.wav data/sounds/020.wav </sound>
+<sound> data/076.wav data/sounds/076.wav </sound>
+
+<frame> 0 flying
+   pic: 0  wait: 1  next: 1  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 7  hit_d: 4  hit_j: 0  hit_Fa: 1
+   <state> 3006 </state>
+   <sound> data/076.wav </sound>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 1 flying
+   pic: 1  wait: 1  next: 2  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 7  hit_d: 4  hit_j: 0  hit_Fa: 1
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 2 flying
+   pic: 2  wait: 1  next: 3  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 7  hit_d: 4  hit_j: 0  hit_Fa: 1
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 3 flying
+   pic: 3  wait: 1  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 7  hit_d: 4  hit_j: 0  hit_Fa: 1
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 4 flying
+   pic: 0  wait: 1  next: 5  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0  hit_Fa: 10
+   <state> 3006 </state>
+   <sound> data/076.wav </sound>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 5 flying
+   pic: 1  wait: 1  next: 6  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0  hit_Fa: 10
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 6 flying
+   pic: 2  wait: 1  next: 7  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0  hit_Fa: 10
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 7 flying
+   pic: 3  wait: 1  next: 4  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0  hit_Fa: 10
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>
+
+<frame> 10 hiting
+   pic: 8  wait: 1  next: 11  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 11 hiting
+   pic: 9  wait: 1  next: 12  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 12 hiting
+   pic: 10  wait: 1  next: 13  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 13 hiting
+   pic: 11  wait: 1  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3001 </state>
+</frame>
+
+<frame> 20 hit
+   pic: 8  wait: 1  next: 21  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 21 hit
+   pic: 9  wait: 1  next: 22  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 22 hit
+   pic: 10  wait: 1  next: 23  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 23 hit
+   pic: 11  wait: 1  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3002 </state>
+</frame>
+
+<frame> 30 rebounding
+   pic: 0  wait: 3  next: 1  dvx: -14  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3006 </state>
+</frame>
+
+<frame> 31 rebounding
+   pic: 9  wait: 1  next: 32  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 32 rebounding
+   pic: 10  wait: 1  next: 33  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 33 rebounding
+   pic: 11  wait: 1  next: 1000  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 40 borning
+   pic: 4  wait: 1  next: 41  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3000 </state>
+</frame>
+
+<frame> 41 borning
+   pic: 5  wait: 1  next: 42  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 42 borning
+   pic: 6  wait: 1  next: 43  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 43 borning
+   pic: 7  wait: 1  next: 44  dvx: 10  dvy: 0  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3003 </state>
+</frame>
+
+<frame> 44 flying
+   pic: 0  wait: 1  next: 999  dvx: 18  dvy: 3  dvz: 0  centerx: 45  centery: 38  hit_a: 0  hit_d: 0  hit_j: 0
+   <state> 3006 </state>
+   <itr>
+      kind: 0  x: 8  y: 1  w: 74  h: 19  dvx: 14  fall: 70  vrest: 25  bdefend: 20  injury: 50
+      effect: 1
+   </itr>
+   <body>
+      kind: 0  x: 8  y: 1  w: 74  h: 19
+   </body>
+</frame>

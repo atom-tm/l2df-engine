@@ -71,14 +71,14 @@ local function release(catcher, victim)
 	end
 end
 
-local function try(catcher, victim, itr)
+local function try(catcher, victim, itr, any_state)
 	if not (catcher and victim and itr and itr.catchingact and itr.caughtact) then
 		return false
 	end
 	if relationship.isFriendly(catcher, victim) or victim.data._lf2_catcher then
 		return false
 	end
-	if not (frame.hasState(victim.data, 16) or frame.hasState(victim.data, 11)) then
+	if not any_state and not (frame.hasState(victim.data, 16) or frame.hasState(victim.data, 11)) then
 		return false
 	end
 	local direction = sign((victim.data.x or 0) - (catcher.data.x or 0))

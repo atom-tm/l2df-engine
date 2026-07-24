@@ -779,10 +779,67 @@ function M.projectileHit(obj)
 	end
 end
 
-function M.pickupWeapon(obj)
+function M.dropWeapon(obj, options)
+	options = options or { }
+	local data = obj and obj.data
+	local id = data and data._lf2_weapon_id
+	local source = id and shared.objectdata and shared.objectdata:getById(id)
+	if not (data and source) then
+		return false
+	end
+	data._lf2_weapon = nil
+	data._lf2_weapon_id = nil
+	data._lf2_weapon_type = nil
+	data._lf2_weapon_swing = nil
+	data._lf2_weapon_run_used = nil
+	local kind = source._lf2_type == 2 and 'heavy' or 'light'
+	createObject(source, {
+		lf2id = id,
+		ownerid = data.syncid or data.gsid or data.player or data.index,
+		team = data.team,
+		facing = data.facing,
+		x = (data.x or 0) + (options.dx or 10) * (data.facing or 1),
+		y = data.y or 0,
+		z = data.z or 0,
+		dvx = options.dvx or 0,
+		dvy = options.dvy or 0,
+		dvz = options.dvz or 0,
+		frame = options.frame or (kind == 'heavy' and 20 or 60),
+		syncid = table.concat { syncidBase(data), ':drop:', tostring(id), ':', tostring(data.___frame_generation or 0) },
+		parent = obj.parent,
+	})
+	return true
+end
+
+function M.pickupWeapon(obj, item, options)
+	options = options or { }
 	local data = obj and obj.data
 	if not data then
 		return false
+	end
+	local function pick(item)
+		local idata = item and item.data
+		if not (idata and not idata.hidden) then
+			return false
+		end
+		local kind = idata._lf2_type == 2 and 'heavy'
+			or (idata._lf2_type == 1 or idata._lf2_type == 6) and 'light'
+			or nil
+		if not kind or options.light_only and kind ~= 'light' then
+			return false
+		end
+		idata.hidden = true
+		item.active = false
+		data._lf2_weapon = kind
+		data._lf2_weapon_id = idata.lf2id
+		data._lf2_weapon_type = idata._lf2_type
+		if not options.no_animation and obj.C.frames then
+			obj.C.frames.set(kind == 'heavy' and 116 or 115)
+		end
+		return true
+	end
+	if item then
+		return pick(item)
 	end
 	local list = shared.lf2_objects
 	if not list then
@@ -791,15 +848,10 @@ function M.pickupWeapon(obj)
 	for i = 1, #list do
 		local item = list[i]
 		local idata = item and item.data
-		if idata and (idata._lf2_type == 1 or idata._lf2_type == 6) and not idata.hidden then
+		if idata then
 			local dx = abs((idata.x or 0) - (data.x or 0))
 			local dz = abs((idata.z or 0) - (data.z or 0))
-			if dx <= 80 and dz <= 40 then
-				idata.hidden = true
-				item.active = false
-				data._lf2_weapon = 'light'
-				data._lf2_weapon_id = idata.lf2id
-				data._lf2_weapon_type = idata._lf2_type
+			if dx <= 80 and dz <= 40 and pick(item) then
 				return true
 			end
 		end

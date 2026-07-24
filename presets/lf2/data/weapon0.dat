@@ -7,8 +7,8 @@ weapon_broken_sound: data/094.wav
 
 frame: 0
 gravity: true
-<constate> compatibility </constate>
 shadow: true
+<constate> compatibility </constate>
 
 <sound> data/011.wav data/sounds/011.wav </sound>
 <sound> data/094.wav data/sounds/094.wav </sound>
